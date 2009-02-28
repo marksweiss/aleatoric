@@ -1,0 +1,16 @@
+; Function 1
+; GEN10 Parameters: 
+;	- str1, str2, str3 ... where str is a fixed harmonic partial
+;		- the value of str# is the relative strength of the partial in the final mixed timbre
+;		- partials to be skipped are given value 0
+;
+; Func # 	Loadtime 	Table Size 	GEN     Parameters ...
+
+; First partial variations
+
+ 
+f 1		    0		    4096		10		1.0 
+f 2		    0		    4096		10		.99  0.01  
+f 3		    0		    4096		10		.97  0.0  0.0  0.03  
+f 4		    0		    4096		10		.90  0.0  0.0  0.0  0.0 0.10
+f 5		    0		    4096		10		0.88  0.0  0.4  0.04 0.04

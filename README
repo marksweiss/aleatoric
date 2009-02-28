@@ -1,0 +1,46 @@
+----------------
+aleatoric README
+Mark Weiss
+2/27/2008
+----------------
+
+---------
+Overview
+---------
+
+Right now this library isn't even that, but is actually a one-off bit of code that renders Terry Riley's "In C" as a Score file in a format that the electronic music program CSound can consume in order to render a sound file.
+
+"In C" is a classic of aleatoric music composition, likely the most-recorded composition in this style.  There are for example renditions by hippie French-Canadian orchestras, modern Chinese orchestras, Japanese noise-rock bands, and so on.
+
+Two classes model general concepts that as the library evolves will remain in likely similar form.
+
+A Note (note.rb) models a musical event.  In this case the properties map to the core required properties for a Note in a CSound Score, which are instrument, amplitude, start time, duration and pitch.  Instrument refers to a definition of an electronic instrument in a CSound Orchestra file; the others are typical properties of any musical event, and so in the future I hope the library will implement a Note class that outputs MIDI.
+
+A Score (score.rb) simply models a sequence of Notes and is essentially a simple, useful collection class for this domain.
+
+A Player (ensemble.rb) suggests a useful generalization for future versions of the library -- it models a player in an ensemble performing a piece of music.  In the current version however, the player directly implements the prescriptive rules defined by the score for "In C."  Likewise, the Ensemble class (ensemble.rb) models an ensemble of players, who together perform a piece of music.  Again, this Ensemble implements the particular rules required to play "In C."
+
+But it is the idea of generalizing Player and Ensemble that is the motivation for this project.  In working on this piece, it struck me how aleatoric compositions align very well with a computational model.  In "In C," and in other compositions, musical raw material in small chunks is proscribed as the raw material of the composition.  Riley composed 53 short musical phrases for "In C" which the members of the ensemble play in sequence.  So one can think of the phrases as data input into a computation which produces the final performance.  In addition, aleatoric compositions always define a set of rules or instructions that performers are to follow.  For "In C" Riley provides a series of guidelines, several dozen, giving performers guidance on how many times to repeat a phrase, whether to transpose a phrase, whether to stop and listen and not play, and so on.  The rules purposely leave room for the performer to interpret them, another typical attribute of aleatoric composition.  The result is that no two performances of "In C" are the same, and that the styles of performances by different artists vary widely.
+
+The code in aleatoric models the Ensemble "interpreting" the rules of the score by defining a series of tunable parameters, all of which are contained in and documented in player.yml and ensemble.yml.  In each iteration of the performance rands are tested against the parameters in various predicate functions in Ensemble and Player, mimicing players making decisions in the a real performance.  Because of the nature of the performance, which can comprise hundreds or thousands of iterations, the tunable parameters actually vary the performance in subtle and aesthetically discernible and satisfying ways.
+
+So, this approach seems promising.  But working on this code so far revealed shortfalls with this first (apparently naive) approach.  First, there is no formal connection between the aleatoric rules of the original score and the code.  I attempt to make the connection by having comments in the code quote the rule from the score, next to the code implementing the rule.  This suggested to me the idea of using an approach similar to RSpec to try and unify the rule description and the code -- the approach promises to create structured but (partly) natural language descriptions which are in fact executable functions.  This approach also promises to lead to more unified primitives implementing composition logic.
+
+Besides greater coherence, this approach offers something much more powerful because aleatoric would become a system for specifying aesthetic goals -- a system for prescriptive rules defining a software system that produces art.  This seems like a very fertile and open-ended approach, if it can be realized.
+
+An added benefit of greater coherence in defining the code that implements each aleatoric rule is that testing becomes easier.  At this point I've essentially failed to figure out how to write reasonable tests that can judge aesthetic output reasonably.  Testing for correctness was a manual process of running code, listening to rendered musical output for unexpected behavior, bugs, and the trying fixes and running again.  This is slow and painful, and because the bugs were in a one-off implementation, this pattern would repeat to some extent for each musical piece attempted.
+
+In short, a general aleatoric library promises a better way.
+
+
+-----
+Usage
+-----
+
+All parameters are defined in three YAML configs, player.yml, ensemble.yml and csound.yml.  Comments describe the affect of the parameters on the output.  In order to really understand their effect, you need to tweak them, run the script and listen to the results.
+
+You need the CSound binary to render the Score file into a sound file.  CSound is a venerable open source project, and an incredibly rich and useful tool for electronic music synthesis and composition.  Versions exist for Linux, Mac and Windows, here: http://csound.sourceforge.net/#Downloads.
+
+To run the application and generate a Score file, you simply run the command line $ruby in_c.rb.  All configuation comes from the three .yml files.  Currently the script assumes csound in the directory where it's running, but you could add a config to csound.yml and modify in_c.rb.render_output() to change this.  The application is written in Ruby, and tested on 1.8.6 on Windows.  You'll need Ruby installed to run it.
+
+The repo includes a CSound .orc Orchestra file, defining a simple two-channel oscillator instrument.  This instrument eschews even basic FM synthesis and produces simple output in order to promote focus on the output from the parameterized system and the effect of changing parameters.

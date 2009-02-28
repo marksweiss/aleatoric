@@ -1,0 +1,7 @@
+# TODO and ROADMAP
+
+# Learn RSpec and design an RSpec-style tool for defining declarative compositions
+# Consider the balance of natural language strings and a DSL in this tool
+# Learn Archaeopteryx or another Ruby MIDI library
+# Develop MIDI Note implementation
+# Generalize Note backend to support CSound and Archaeopteryx MIDI bindings
