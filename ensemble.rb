@@ -209,7 +209,7 @@ up an octave what I'm playing?" etc.
     # crescendo and diminuendo a few times and each player drops out as he or she
     # wishes."
     # /REQS
-	
+    
     # Get a copy of the current phrase -- possibly manipulated before writing
     phrase = @phrases[@phrases_idx].dup
 	phrase.each do |note|
@@ -219,16 +219,10 @@ up an octave what I'm playing?" etc.
       note.player_id(@pid)
     end
 	
-    if last_phrase?    
-      adj = amp_adj phrase
-
-      # TEMP DEBUG
-      # puts "Player #{@eid} in last_phrase. adj = #{adj}"
-
-      phrase.transform! do |n|
-		n.amp((n.amp * adj).to_i)
-	  end
-      @score.append_score(set_phrase_player(phrase))	  
+    # Early return on last phrase
+    if last_phrase?
+      @score.append_score(set_phrase_player(phrase))
+      @cur_start += phrase.dur
 	  # Early return
 	  return
     end
@@ -263,6 +257,7 @@ up an octave what I'm playing?" etc.
       # rest.each {|r| puts "rest notes id = #{r.player_id}" if r.player_id > 4}
       
 	  @score.append_score rest
+      @cur_start += rest.dur
 	  # Early return
       return
     end
@@ -290,9 +285,18 @@ up an octave what I'm playing?" etc.
 
     # - "As an ensemble, it is very desirable to play very softly as well as very
     # loudly and to try to diminuendo and crescendo together."
+    
     adj = amp_adj phrase	
-    phrase.transform! do |n|
-	  n.amp((n.amp * adj).to_i)
+    phrase.each do |note|
+      
+      # TEMP DEBUG
+      #@amp_adj_count_DBG
+      #if (note.amp * adj).to_i > 750
+      #  puts "In play_phrase() amp_adj, (note.amp * adj).to_i = #{(note.amp * adj).to_i}"
+      #  puts "@pid #{@pid}"
+      #end        
+      
+	  note.amp((note.amp * adj).to_i)
 	end
 
     # If something is true, transpose the phrase
@@ -350,8 +354,7 @@ up an octave what I'm playing?" etc.
     # @phrases[@phrases_idx] = phrase
     
 	# Adjust @cur_start for this player, it's the moment right after end of last note in this phrase
-	last_note = phrase.notes.last
-	@cur_start = last_note.start + last_note.dur
+	@cur_start += phrase.dur
     	
     # Write It!
     
@@ -367,18 +370,18 @@ specified in the score to "In C."  First, no logic that could lead to rests,
 not playing, etc.  Second, takes an amp_adj value to adjust the value as part of 
 crescendo/decrescendo
 =end
-  def play_conclusion_phrase(amp_adj)
+  def play_conclusion_phrase(amp_adj)  
     phrase = @phrases[@phrases_idx].dup
-	phrase.each do |note| 
+	phrase.each do |note|     
 	  # Reset start times to current start time for this player
       # Adjust each notes amplitude by the crescendo amount
       note.
         start(note.start + @cur_start).
         amp(note.amp + amp_adj)
     end
-    last_note = phrase.notes.last
-	@cur_start = last_note.start + last_note.dur
 
+	@cur_start += phrase.dur
+    
     @score.append_score(set_phrase_player(phrase))
   end
 
@@ -412,8 +415,8 @@ Ensemble to trigger move to the Conclusion.
     #puts "@phrases.length - 1  = #{@phrases.length - 1}"
     
     @phrases == nil or 
-	@phrases.length == 0 or 
-	@phrases_idx == @phrases.length - 1
+	@phrases_idx == @phrases.length - 1 or
+	@phrases.length == 0
   end
 
   #
@@ -498,13 +501,18 @@ Predicate to implement composition rule. Probability and thus behavior modified 
     amp_ratio = max_phrase_amp / ensemble_max_amp
 
     # Do we adjust the volume?
+    ret = 1.0
     if seeking_crescendo? and amp_ratio <= @amp_adj_crescendo_ratio_threshold
-      return @amp_crescendo_adj_factor
+      ret = @amp_crescendo_adj_factor
     elsif seeking_diminuendo? and amp_ratio >= @amp_adj_diminuendo_ratio_threshold
-      return @amp_diminuendo_adj_factor
-	else
-      return 1.0
+      ret = @amp_diminuendo_adj_factor
     end
+    
+    # TEMP DEBUG
+    # puts "amp_adj != 1.0, amp_ratio #{amp_ratio}"\
+    #  if seeking_crescendo? and amp_ratio <= @amp_adj_crescendo_ratio_threshold
+    
+    ret
   end
 
 =begin RDoc
@@ -680,16 +688,16 @@ Collect as a list the values of a Player property, from each Player, a slice of 
 Collect as a list the values of a Player property, from each Player, a slice of the Player data by "column"
 =end
   def seeking_crescendo?
-    amp_range < @max_amp_range_for_seeking_crescendo and
-      (@reached_conclusion or test_rnd < @crescendo_prob_factor)
+    amp_range < @max_amp_range_for_seeking_crescendo and test_rnd < @crescendo_prob_factor
+      # (@reached_conclusion or test_rnd < @crescendo_prob_factor)
   end
 
 =begin RDoc
 Collect as a list the values of a Player property, from each Player, a slice of the Player data by "column"
 =end
   def seeking_diminuendo?
-    amp_range < @max_amp_range_for_seeking_diminuendo and
-      (@reached_conclusion or test_rnd < @diminuendo_prob_factor)
+    amp_range < @max_amp_range_for_seeking_diminuendo and test_rnd < @diminuendo_prob_factor
+      # (@reached_conclusion or test_rnd < @diminuendo_prob_factor)
   end
 
 =begin RDoc
@@ -720,27 +728,12 @@ and calls perform_conclusion
     while not reached_conclusion?
       @players.each do |player|
         # If all Players are on same phrase index, increment unison count, used by seeking_unison?     
-        @unison_count += 1 if players_attr_slice(:phrases_idx).all_items_equal?
+        players_attr_slice(:phrases_idx).all_items_equal? ? @unison_count += 1 : @unison_count = 0
         player.play_phrase
-	  end
-      
-      # Count the number of times the Ensemble iterates. This is used to have a number of crescendo
-      #  steps proportional to overall length
+	  end      
+      # Count the number of times the Ensemble iterates, for perform_conclusion()
       @perform_steps_count += 1        
-      
     end
-
-    # TEMP DEBUG
-    # puts "@perform_steps_count before adj #{@perform_steps_count}"
-
-    # Count the number of times the Ensemble iterates. This is more steps if there are more
-    #  players, because each player proceeds from one step to the next with probability
-    #  p(@phrase_adv_prob_factor).  And since this is used to have a number of crescendo
-    #  steps proportional to overall length, we divide by the number of players    
-    # @perform_steps_count /= @players.length
-    
-    # TEMP DEBUG
-    # puts "Iterations before crescendo #{@perform_steps_count}"
     
     perform_conclusion    
   end
@@ -755,29 +748,29 @@ Fulfills requirement to handle final coda crescendo/decrescendo, which has diffe
 than the loops prior to conclusion  
 =end
   def perform_conclusion
-    
+
+    # TEMP DEBUG
+    puts "NOW PERFORMING CONCLUSION"
+  
     # For each Player, have it output playing the final phrase for as long as it needs to 
     #  to catch up to the Player at max_start_time
-    # Get the start time past current latest start time so all crescendo notes start after that
-    max_start = players_attr_slice(:cur_start).max
     # Get current phrase of any player because all are on the last phrase
     last_phrase_length = @players[0].cur_phrase.duration
+    # Get the start time past current latest start time so all crescendo notes start after that
+    max_start = players_attr_slice(:cur_start).max
     
-    # TEMP DEBUG
-    # puts "last_phrase_length #{last_phrase_length}"
-    
+    amp_adj = 0
     @players.each do |player|
       num_plays_last_phrase = ((max_start - player.cur_start) / last_phrase_length).floor
       
       # TEMP DEBUG
       # puts "num_plays_last_phrase #{num_plays_last_phrase}"
-      
-      amp_adj = 0
-      j = 1
+      # j = 1
+    
       num_plays_last_phrase.times do 
         
         # TEMP DEBUG
-        # puts "player id #{player.id} play conclusion phrase loop # #{j}"
+        # puts "player pid #{player.pid}, player.cur_start #{player.cur_start} phrase loop # #{j}"
         # j += 1
         
         player.play_conclusion_phrase amp_adj
@@ -789,22 +782,18 @@ than the loops prior to conclusion
     num_crescendo_steps = (@perform_steps_count * @conclusion_steps_ratio).ceil    
     # Split the max allowed increase in amp for a crescendo evenly among the steps of the crescendo
     amp_adj = (@max_amp_range_for_seeking_crescendo / num_crescendo_steps).floor
-    
+        
     # TEMP DEBUG
-    # puts "num_crescendo_steps #{num_crescendo_steps}"
-    
-    # @players.each {|p| p.cur_start = max_start}
-
-    # TEMP DEBUG
-    adjusted_starts = []
+    #adjusted_starts = []
 
     max_start = players_attr_slice(:cur_start).max    
     @players.each do |p| 
+      
       # TEMP DEBUG
       #puts "p.cur_start #{p.cur_start}"
       #puts "max_start #{max_start}"
       #puts "p.cur_start adjusted #{p.cur_start + ((max_start - p.cur_start) * @conclusion_cur_start_offset_factor)}"
-      adjusted_starts.push(p.cur_start + ((max_start - p.cur_start) * @conclusion_cur_start_offset_factor))
+      # adjusted_starts.push(p.cur_start + ((max_start - p.cur_start) * @conclusion_cur_start_offset_factor))
       
       # See ensemble.yml for explanation of @conclusion_cur_start_offset_factor.
       # Basically this gives each player a slightly offset start time for starting it's conclustion
@@ -814,25 +803,22 @@ than the loops prior to conclusion
     
     # TEMP DEBUG
     # puts "Number of crescendo steps #{num_crescendo_steps}"    
-    puts "Max adjusted crescendo start time #{adjusted_starts.max}"
-    puts "Min adjusted crescendo start time #{adjusted_starts.min}"
-    puts "adjusted crescendo start time variance #{adjusted_starts.max - adjusted_starts.min}"
+    # puts "Max adjusted crescendo start time #{adjusted_starts.max}"
+    # puts "Min adjusted crescendo start time #{adjusted_starts.min}"
+    # puts "adjusted crescendo start time variance #{adjusted_starts.max - adjusted_starts.min}"
     
     # Walk half the steps and crescendo
-    j = 1
+    cur_amp_adj = amp_adj
     num_crescendo_steps.times do     
-      @players.each do |player|
-        player.play_conclusion_phrase(amp_adj * j)
-      end
-      j += 1
+      @players.each {|p| p.play_conclusion_phrase(cur_amp_adj)}
+      cur_amp_adj += amp_adj
     end
     # Walk the other half of the steps and descrescendo
-    j = 1
+    cur_amp_adj -= amp_adj
+    # num_crescendo_steps.times do
     num_crescendo_steps.times do
-      @players.each do |player|
-        player.play_conclusion_phrase((amp_adj * j) * -1)
-      end
-      j += 1
+      @players.each {|p| p.play_conclusion_phrase(cur_amp_adj)}
+      cur_amp_adj -= amp_adj
     end  
   end
   
@@ -856,17 +842,9 @@ Predicate to implement composition rule. Probability and thus behavior modified 
 This one triggers the Ensemble to play the Conclusion
 =end
   def reached_conclusion?
-    phrases_idxs = players_attr_slice(:phrases_idx)
-     
-    # TEMP DEBUG
-    # puts phrases_idxs
-    
+    phrases_idxs = players_attr_slice(:phrases_idx)         
     @reached_conclusion = (phrases_idxs.min == @conclusion_bound and 
-	                       phrases_idxs.max == @conclusion_bound)
-                           
-    # TEMP DEBUG
-    # puts @reached_conclusion
-    
+	                       phrases_idxs.max == @conclusion_bound)                           
     @reached_conclusion
   end
 

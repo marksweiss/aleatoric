@@ -240,8 +240,7 @@ a phrase of the same duration, which is silent
   def rest
 	ret = []
 	@notes.each do |n|
-      player_id = n.player_id
-	  ret.push CSnd::Note.rest(n, n.dur, player_id)
+	  ret.push CSnd::Note.rest(n, n.dur, n.player_id)
 	end
     Score.new ret
   end

@@ -1,6 +1,6 @@
 ensemble:
     # Number of players in the Ensemble
-    num_players: 24
+    num_players: 8
     # Threshold number of phrases behind the furthest ahead any Player is allowed to slip.
     # If they are more than 3 behind the leader, they must advance.
     phrases_idx_range_threshold: 3
@@ -15,10 +15,14 @@ ensemble:
     max_amp_range_for_seeking_crescendo: 1200
     # Maximum increase in volume (in CSound scale) that notes can gain in decrescendo 
     #  pursued during a unison or in the final Conclusion
-    max_amp_range_for_seeking_diminuendo: 1500
+    max_amp_range_for_seeking_diminuendo: 1200
     # Probability that the ensemble will crescendo in a unison (may be buggy)
+    # TODO: bug is that code to build up crescendo over successive iterations isn't there
+    #  and instead this just jumps the amplitude jarringly on one iteration
     crescendo_prob_factor: 0
     # Probability that the ensemble will decrescendo in a unison (may be buggy)
+    # TODO: bug is that code to build up crescendo over successive iterations isn't there
+    #  and instead this just jumps the amplitude jarringly on one iteration
     diminuendo_prob_factor: 0
     # Parameters governing the Conclusion
     # This is the ratio of steps in the Conclusion to the total steps before the Conclusion

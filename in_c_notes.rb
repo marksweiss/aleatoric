@@ -22,7 +22,7 @@ legato_prv = lambda {start(start - ((dur * LEGATO_FCTR) - dur)) if start >= 0}
 # Note these note properties can and are manipulated as Ensemble plays to generate
 #  the score.
 # TODO This, like all constants, should come from a YAML config
-DFLT_AMP = 1500
+DFLT_AMP = 750
 note = CSnd::Note.new.
   instr(1).
   start(0.0).dur(0.0).
@@ -46,7 +46,7 @@ note = CSnd::Note.new.
     add_custom_attr(:legato_prv, &legato_prv),
   note.dup.
     start($EITH + $QRTR).dur($EITH).
-    amp(1000).pitch($C4).
+    pitch($C4).
     add_custom_attr(:legato_nxt, &legato_nxt),
   note.dup.
     start($HLF).dur($QRTR).
@@ -54,7 +54,7 @@ note = CSnd::Note.new.
     add_custom_attr(:legato_prv, &legato_prv),
   note.dup.
     start($HLF + $QRTR).dur($EITH).
-    amp(1000).pitch($C4).
+    pitch($C4).
     add_custom_attr(:legato_nxt, &legato_nxt),
   note.dup.
     start($HLF + $QRTR + $EITH).dur($QRTR).

@@ -11,16 +11,15 @@ nchnls    	=         2
 ;#define NUMINSTR #62#
 ;#define FTABLETYPESPLIT #40#
 ;#define AMPFACTOR #3#
+#define NUMPLAYERS #8#
 
 
-
-instr	1
-						
+instr	1					
 	; Initialize variables
 	; Envelope shape
     ;iPhsFctr = .97
-    iRiseFctr = .15
-    iDecayFctr = .10
+    iRiseFctr = .13
+    iDecayFctr = .08
 	iDur1 = p3
 	iRise1 = iDur1 * iRiseFctr
 	iDec1 = iDur1 * iDecayFctr
@@ -31,6 +30,7 @@ instr	1
 	; Other note params
     iPitch = cpspch(p5) ; Convert from std. Western notation to frequency
 	iFuncNum = p6
+    iPlayerRatio = (p7 * 1.0) / ($NUMPLAYERS * 1.0)
     
         ; *(rnd(1)*iPhsFctr)
     	; 	Envelope
@@ -46,6 +46,7 @@ instr	1
 		;a3	oscil   ar3,	        iPitch,		iFuncNum
 		;a4	oscil   ar4,	        iPitch,		iFuncNum
 			;outs	( (((a1 + a2) / 2) + (a3 * .05))) , ( (((a1 + a2) / 2) + (a4 * .05)))
-            outs	 (a1 / 2) , (a2 / 2) 
+            ;outs	 (a1 / 2) , (a2 / 2)
+            outs (a1 * iPlayerRatio) , (a2 * (1.0 - iPlayerRatio))
             ; % 10000
 endin

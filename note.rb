@@ -19,8 +19,8 @@ class Note
   NUM_DEFAULT_ATTRS = 5
   @@id_counter = -1
   
-  attr_reader :nid, :player
-  attr_writer :player
+  attr_reader :nid # , :player
+  # attr_writer :player
   
   # This is an enumerable class; it defines an each iterator below.
   include Enumerable   # Include the methods of this module in this class  
@@ -52,10 +52,7 @@ ctor
 Writes a rest, a note with amp = 0
 =end
   def Note.rest(note, duration, player_id)
-    ret = note.dup
-    ret.player_id(player_id)
-	ret.dur(duration).amp(0)
-	ret
+    note.dup.player_id(player_id).dur(duration).amp(0)
   end
 
   # Sets the player_id of the Note, that is the Player which has the phrase in which the 
@@ -67,7 +64,6 @@ Writes a rest, a note with amp = 0
       @player_id = player_id
       return self
     end
-    
   end
   
 =begin RDoc
@@ -124,6 +120,10 @@ Get or set amplitude value of the Note
     if amplitude == nil
       return @note_attrs[:amplitude]
     else
+       
+      # TEMP DEBUG
+      # puts "big amp boost #{amplitude}, player = #{self.player_id}" if amplitude > 750
+    
       @note_attrs[:amplitude] = amplitude
       return self
     end 
@@ -251,8 +251,10 @@ Returns a string representation of the Note that is formatted to be included in 
         ret.concat("#{val} ")
       end	  
     end
-    # Concat the note's id for debugging ease. TODO parameterize turning this off
-	ret.concat("    ; player id: #{self.player_id}")
+    # Concat the note's player id for debugging ease. TODO parameterize turning this off
+    # TODO Now actually experimenting with this as note param to pan player output left to right
+	# ret.concat("    ; player id: #{self.player_id}")
+    ret.concat("#{self.player_id} ")
 	# ret.chomp(" ")
   end
   alias print to_s;
@@ -267,7 +269,8 @@ Returns a deep copy of the note
       start(self.start).
       dur(self.dur).
       amp(self.amp).
-      pitch(self.pitch)
+      pitch(self.pitch).
+      player_id(self.player_id)
     if @ordered_keys.length > 5
       # range op with three dot is half-open interval, not including right side val
       for j in 5...@ordered_keys.length
@@ -286,8 +289,6 @@ Returns a deep copy of the note
 	  note.add_custom_attr(k, &v) 
 	end
     
-    note.player_id(self.player_id)
-
     note
   end
   

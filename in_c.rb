@@ -59,6 +59,9 @@ end
 
 def main
   num_players, num_note_functions, score_file_name, score_include_file_name, orc_file_name, partition_output_by_player, out_file_name = load_config
+  
+  # Load cmd line args
+  opt_no_render = (ARGV.length > 0 and ARGV[0] == "--no_render")
     
   # Play the composition and generate the output Score Notes in memory
   score = CSnd::Score.new  
@@ -78,14 +81,16 @@ def main
     score.write(score_file_name, score_include_file_name)
   end
   
-  # Render the output score files into actual sound files, in this case by calling
-  #  CSound with the appropriate args and giving it the Score file(s) written
-  if partition_output_by_player then
-    render_output(partition_output_by_player, num_players, score_file_name, orc_file_name, out_file_name)
+  if not opt_no_render then
+    # Render the output score files into actual sound files, in this case by calling
+    #  CSound with the appropriate args and giving it the Score file(s) written
+    if partition_output_by_player then
+      render_output(partition_output_by_player, num_players, score_file_name, orc_file_name, out_file_name)
+    end
+    # Write unpartitioned no matter what so can hear output in one file -- useful when "debugging" different
+    #  configurations of parameters and you don't want to somehow consolidate the separate tracks
+    #  each time before hearing the result  
+    render_output(false, num_players, score_file_name, orc_file_name, out_file_name)
   end
-  # Write unpartitioned no matter what so can hear output in one file -- useful when "debugging" different
-  #  configurations of parameters and you don't want to somehow consolidate the separate tracks
-  #  each time before hearing the result  
-  render_output(false, num_players, score_file_name, orc_file_name, out_file_name)
 end
 main
