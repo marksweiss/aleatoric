@@ -4,13 +4,14 @@
 ;		- the value of str# is the relative strength of the partial in the final mixed timbre
 ;		- partials to be skipped are given value 0
 ;
-; Func # 	Loadtime 	Table Size 	GEN     Parameters ...
+; Func # 	Loadtm 	TblSize GEN   Parameters ...
 
 ; First partial variations
 
  
-f 1		    0		    4096		10		1.0 
-f 2		    0		    4096		10		.99  0.01  
-f 3		    0		    4096		10		.97  0.0  0.0  0.03  
-f 4		    0		    4096		10		.90  0.0  0.0  0.0  0.0 0.10
-f 5		    0		    4096		10		0.88  0.0  0.4  0.04 0.04
+f 1		    0		    8193		10		1  0 .333 0 .2 0 .143 0 .111 0 .091 0 .077
+f 2		    0		    8193		10		1  0 .333 0.01 .2 0 .143 0.01 .111 0.01 .091 0.01 .077
+f 3		    0		    8193		9		  1 .5 0  2 0 0  3 .5 90  4 0 0  5 .2 179
+
+f 4		    0		    8193		10		1  .5 .333 .25 .2 .166 .143 .125 .111 .1 .091 .083 .077    
+f 5		    0		    8193		10		1 .5 
