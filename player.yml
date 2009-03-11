@@ -1,17 +1,19 @@
 player:
     # The most important factor governing advance of Players through phrases, this is simply
     #  the percentage prob that they advance on any given iteration
-    phrase_adv_prob_factor: 25  # 100
+    phrase_adv_prob_factor: 28
     # Tunable parms for shifting playing of current phrase out of its current
     #  phase, and also to shift it more in alignment.  Shift simple pre-pends
     #  a rest Note to current phrase before writing it to Score.  Supports
     #  score directive to adjust phase, and another to move in and out of phase
     #  during a performance
     # Percentage prob that a Player will adjust phase on any given iteration
-    adj_phase_prob_factor: 5
+    adj_phase_prob_factor: 7
     # The length of the rest Note inserted if a Player is adjusting its phase
     # NOTE THE BELOW IS $WHL, a Global in globals.rb. MUST BE UPDATED IF globals.rb changes
-    phase_adj_dur: 4.0  # $WHL
+    # TODO centralize config!
+    # $EITH * 1.2, 1.2 is gbl_note_fctr in globals.rb  
+    phase_adj_dur: 0.55  
     # Percent prob that a Player will seek unison on any given iteration.  The idea is that
     #  to seek unison the Ensemble and all the Players must seek unison
     unison_prob_factor: 95
@@ -19,7 +21,7 @@ player:
     # Tunable parms for probability that Player will rest rather than playing a note.
     # Supports score directive to listen as well as play and not always play
     # Percentage prob that a Player will try to rest on a given iteration (not play)
-    rest_prob_factor: 15 # 0
+    rest_prob_factor: 10 # 0
     # Factor multiplied by rest_prob_factor if the Player is already at rest
     stay_at_rest_prob_factor: 1.5
 

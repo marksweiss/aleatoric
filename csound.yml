@@ -16,4 +16,4 @@ csound:
     #  are rendered in seprate output files
     partition_output_by_player: true    
     # Name of the output file CSound should render
-    out_file_name: in_c.wav
+    out_file_name: in_c_small_ensemble.wav
