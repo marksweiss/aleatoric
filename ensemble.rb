@@ -197,8 +197,7 @@ method tests the current state of the Player and the Ensebmle against rules of t
 and decides things like, "should I stop playing for one iteration?", "should I transpose
 up an octave what I'm playing?" etc.
 =end
-  def play_phrase
-    
+  def play_phrase    
 	# TEMP DEBUG
 	# @@phrase_loop_count = @@phrase_loop_count + 1
 	# puts "phrase_loop_count #{@@phrase_loop_count}"
@@ -221,9 +220,9 @@ up an octave what I'm playing?" etc.
 	
     # Early return on last phrase
     if last_phrase?
+      # Early return
+      play_phrase_set_post_conditions phrase
       @score.append_score(set_phrase_player(phrase))
-      @cur_start += phrase.dur
-	  # Early return
 	  return
     end
 	
@@ -251,14 +250,10 @@ up an octave what I'm playing?" etc.
     # - "... performers should stay within 2 or 3 patterns of each other."
     # /REQS
     if not must_play and rest?
-      rest = phrase.rest
-      
-      # TEMP DEBUG
-      # rest.each {|r| puts "rest notes id = #{r.player_id}" if r.player_id > 4}
-      
+      rest = phrase.rest      
+      # Early return
+      play_phrase_set_post_conditions rest
 	  @score.append_score rest
-      @cur_start += rest.dur
-	  # Early return
       return
     end
 
@@ -285,17 +280,8 @@ up an octave what I'm playing?" etc.
 
     # - "As an ensemble, it is very desirable to play very softly as well as very
     # loudly and to try to diminuendo and crescendo together."
-    
     adj = amp_adj phrase	
-    phrase.each do |note|
-      
-      # TEMP DEBUG
-      #@amp_adj_count_DBG
-      #if (note.amp * adj).to_i > 750
-      #  puts "In play_phrase() amp_adj, (note.amp * adj).to_i = #{(note.amp * adj).to_i}"
-      #  puts "@pid #{@pid}"
-      #end        
-      
+    phrase.each do |note|      
 	  note.amp((note.amp * adj).to_i)
 	end
 
@@ -314,9 +300,6 @@ up an octave what I'm playing?" etc.
     # So this approach allows any user to extend Note with inline lambdas
     #  and know they Player will call them on each iteration for each Note in its phrase
     phrase.each do |note| 	  
-	  # TEMP DEBUG
-      #puts 'player_id ' + note.player_id.to_s + '  BEFORE custom_attrs note.dur = ' + note.duration.to_s
-
 	  note.apply_custom_attrs 
 	end
 	
@@ -342,24 +325,21 @@ up an octave what I'm playing?" etc.
 	  end
     end
 
-    # Reset class var min_amp, max_amp after all phrase manipulation, 
-	#  right before write to score, return
-    @min_amp, @max_amp = min_max_phrase_amp(phrase)
-
-    # Now write modified phrase back into phrases. Composition is "stateful"
-    #  in that each interation adjusts the Player's current state vs. that of
-    #  the ensemble and based on the last thing he played.  
-	# The process is "evolving" over time ...
-    # NOTE: Didn't even come close to getting this right, so commented out	
-    # @phrases[@phrases_idx] = phrase
-    
-	# Adjust @cur_start for this player, it's the moment right after end of last note in this phrase
-	@cur_start += phrase.dur
+    # After all note manipulations done, set Player state that depends on them
+    play_phrase_set_post_conditions phrase
     	
     # Write It!
-    
     @score.append_score(set_phrase_player(phrase))
   end
+  
+  private
+  def play_phrase_set_post_conditions(phrase)
+    # Reset class var min_amp, max_amp after all phrase manipulation, 
+    @min_amp, @max_amp = min_max_phrase_amp(phrase)    
+	# Adjust @cur_start for this player, it's the moment right after end of last note in this phrase
+	@cur_start += phrase.dur
+  end
+  public
 
   #
   # Helpers for Ensemble to call to check Player state for it's global Ensemble state
@@ -627,6 +607,8 @@ ctor
 =end
   def initialize(players)
     @players = players
+    # See globals.rb for explanation of this global (I apologize :-) )
+    $NUM_PLAYERS = @players.length
     # Callback each Player to register this Ensemble with them
     @players.each {|player| player.join_ensemble self}
     # To hold dynamically added optional attributes
@@ -732,8 +714,14 @@ and calls perform_conclusion
         player.play_phrase
 	  end      
       # Count the number of times the Ensemble iterates, for perform_conclusion()
-      @perform_steps_count += 1        
+      @perform_steps_count += 1
+
+      # TEMP DEBUG
+      puts "perform() step #{@perform_steps_count}" if @perform_steps_count % 20 == 0     
     end
+    
+    # TEMP DEBUG
+    puts "performed #{@perform_steps_count} steps in perform()"    
     
     perform_conclusion    
   end
@@ -750,7 +738,7 @@ than the loops prior to conclusion
   def perform_conclusion
 
     # TEMP DEBUG
-    puts "NOW PERFORMING CONCLUSION"
+    puts "perform_conclusion()"
   
     # For each Player, have it output playing the final phrase for as long as it needs to 
     #  to catch up to the Player at max_start_time
@@ -759,24 +747,26 @@ than the loops prior to conclusion
     # Get the start time past current latest start time so all crescendo notes start after that
     max_start = players_attr_slice(:cur_start).max
     
+    # TEMP DEBUG
+    puts "play conclusion phrases until all Players catch up"
+    j = 1
+
     amp_adj = 0
     @players.each do |player|
-      num_plays_last_phrase = ((max_start - player.cur_start) / last_phrase_length).floor
-      
-      # TEMP DEBUG
-      # puts "num_plays_last_phrase #{num_plays_last_phrase}"
-      # j = 1
-    
+      num_plays_last_phrase = ((max_start - player.cur_start) / last_phrase_length).floor    
       num_plays_last_phrase.times do 
         
         # TEMP DEBUG
         # puts "player pid #{player.pid}, player.cur_start #{player.cur_start} phrase loop # #{j}"
-        # j += 1
+        j += 1
         
         player.play_conclusion_phrase amp_adj
       end
     end
     
+    # TEMP DEBUG
+    puts "played #{j} conclusion phrases"
+
     # Calculate the number of steps * a fraction of 1 to determine the length of the conclusion
     #  crescendo as a ratio of length of the whole performance
     num_crescendo_steps = (@perform_steps_count * @conclusion_steps_ratio).ceil    
@@ -785,6 +775,9 @@ than the loops prior to conclusion
         
     # TEMP DEBUG
     #adjusted_starts = []
+
+    # TEMP DEBUG
+    puts "reset Players' start time"
 
     max_start = players_attr_slice(:cur_start).max    
     @players.each do |p| 
@@ -807,12 +800,20 @@ than the loops prior to conclusion
     # puts "Min adjusted crescendo start time #{adjusted_starts.min}"
     # puts "adjusted crescendo start time variance #{adjusted_starts.max - adjusted_starts.min}"
     
+    # TEMP DEBUG
+    puts "crescendo"
+
     # Walk half the steps and crescendo
     cur_amp_adj = amp_adj
+    j = 0
     num_crescendo_steps.times do     
       @players.each {|p| p.play_conclusion_phrase(cur_amp_adj)}
       cur_amp_adj += amp_adj
     end
+
+    # TEMP DEBUG
+    puts "decrescendo"
+
     # Walk the other half of the steps and descrescendo
     cur_amp_adj -= amp_adj
     # num_crescendo_steps.times do

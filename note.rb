@@ -1,3 +1,5 @@
+require 'globals'
+
 module CSnd
 
 # Note and NoteTest #######################
@@ -239,9 +241,9 @@ end
 alias size length
 
 =begin RDoc
-Returns a string representation of the Note that is formatted to be included in a CSound Score file   
+Returns a string representation of the Note that is formatted to be included in a CSound Score file.  The optional num_players argument is a one-off hack, see comment in method body
 =end
-  def to_s
+  def to_s(num_players=nil)
     ret = "i "    
     @ordered_keys.each do |key|
       val = @note_attrs[key].to_s.strip	  
@@ -251,11 +253,14 @@ Returns a string representation of the Note that is formatted to be included in 
         ret.concat("#{val} ")
       end	  
     end
-    # Concat the note's player id for debugging ease. TODO parameterize turning this off
-    # TODO Now actually experimenting with this as note param to pan player output left to right
-	# ret.concat("    ; player id: #{self.player_id}")
+    # Concat the note's player id for debugging, also supports partitioning output with grep, etc.
     ret.concat("#{self.player_id} ")
-	# ret.chomp(" ")
+    # TODO Make this not be a hack added onto the Note.to_s(), since it has nothing to do with
+    #  it, and even worse it's just for the current CSound instrument I'm using.  What these
+    #  params do is let the instrument place each Player's notes in stereo space (more
+    #  output in one channel and less in another) based on the Player's number.  e.g. the 
+    #  first player is all in left channel, the N/2th player is exactly 50% left and 50% right, etc.    
+    ret.concat("#{$NUM_PLAYERS} ")
   end
   alias print to_s;
 

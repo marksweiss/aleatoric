@@ -109,7 +109,7 @@ note = CSnd::Note.new.
     pitch($F4),
   note.dup.
     start($QRTR + $EITH).dur($EITH).
-    pitch($E4)
+    pitch($G4)
 ])
 
 # 5
@@ -124,7 +124,10 @@ note = CSnd::Note.new.
     start($QRTR).dur($EITH).
     pitch($F4),
   note.dup.
-    start($QRTR + $EITH).dur($EITH).
+    start($QRTR).dur($EITH).
+    pitch($G4),
+  note.dup.
+    start($HLF).dur($EITH).
     amp($REST).pitch($C4)
 ])
 
@@ -158,25 +161,25 @@ note = CSnd::Note.new.
     start($HLF + $QRTR + $EITH).dur($EITH).
     pitch($C4),
   note.dup.
-    start($WHL).dur($EITH).
+    start($WHL).dur($SXTNTH).
     pitch($C4),
   note.dup.
-    start($WHL + $EITH).dur($EITH).
+    start($WHL + $SXTNTH).dur($EITH).
     pitch($C4),
   note.dup.
-    start($WHL + $QRTR).dur($EITH).
+    start($WHL + $EITH + $SXTNTH).dur($EITH).
     amp($REST).pitch($C4),
   note.dup.
-    start($WHL + $QRTR + $EITH).dur($QRTR).
+    start($WHL + $QRTR + $SXTNTH).dur($QRTR).
     amp($REST).pitch($C4),
   note.dup.
-    start($WHL + $HLF + $EITH).dur($QRTR).
+    start($WHL + $HLF + $SXTNTH).dur($QRTR).
     amp($REST).pitch($C4),
   note.dup.
-    start($WHL + $HLF + $QRTR + $EITH).dur($QRTR).
+    start($WHL + $HLF + $QRTR + $SXTNTH).dur($QRTR).
     amp($REST).pitch($C4),
   note.dup.
-    start(2.0 * $WHL + $EITH).dur($QRTR).
+    start($WHL + $HLF + $HLF + $SXTNTH).dur($QRTR).
     amp($REST).pitch($C4)
 ])
 
@@ -198,32 +201,32 @@ note = CSnd::Note.new.
 # 9
 @phrases.push CSnd::Score.new([
   note.dup.
-    start(0.0).dur($EITH).
+    start(0.0).dur($SXTNTH).
     pitch($B4),
   note.dup.
-    start($EITH).dur($EITH).
+    start($SXTNTH).dur($SXTNTH).
     pitch($G4),
   note.dup.
-    start($QRTR).dur($EITH).
+    start($EITH).dur($EITH).
     amp($REST).pitch($C4),
   note.dup.
-    start($QRTR + $EITH).dur($QRTR).
+    start($QRTR).dur($QRTR).
     amp($REST).pitch($C4),
   note.dup.
-    start($HLF + $EITH).dur($QRTR).
+    start($HLF).dur($QRTR).
     amp($REST).pitch($C4),
   note.dup.
-    start($HLF + $QRTR + $EITH).dur($QRTR).
+    start($HLF + $QRTR).dur($QRTR).
     amp($REST).pitch($C4),
 ])
 
 # 10
 @phrases.push CSnd::Score.new([
   note.dup.
-    start(0.0).dur($EITH).
+    start(0.0).dur($SXTNTH).
     pitch($B4),
   note.dup.
-    start($EITH).dur($EITH).
+    start($SXTNTH).dur($SXTNTH).
     pitch($G4)
 ])
 
@@ -271,26 +274,26 @@ note = CSnd::Note.new.
     start(0.0).dur($SXTNTH).
     pitch($B4),
   note.dup.
-    start($SXTNTH).dur($EITH + $SXTNTH).
+    start($SXTNTH).dur($SXTNTH + $THRTYSCND).
     pitch($G4),
   note.dup.
-    start($QRTR).dur($SXTNTH).
+    start($EITH + $THRTYSCND).dur($SXTNTH).
     pitch($G4),
   note.dup.
-    start($QRTR + $SXTNTH).dur($SXTNTH).
+    start($EITH + $SXTNTH + $THRTYSCND).dur($SXTNTH).
     pitch($F4),
   note.dup.
-    start($QRTR + $EITH).dur($EITH).
+    start($QRTR + $THRTYSCND).dur($EITH).
     pitch($G4),    
   note.dup.
-    start($HLF).dur($EITH + $SXTNTH).
+    start($QRTR + $EITH + $THRTYSCND).dur($EITH + $SXTNTH).
     amp($REST).pitch($C4),
   note.dup.
-    start($HLF + $EITH + $SXTNTH).dur($SXTNTH).
+    start($HLF + $SXTNTH + $THRTYSCND).dur($SXTNTH).
     pitch($G4).
     add_custom_attr(:legato_nxt, &legato_nxt), 
   note.dup.
-    start($HLF + $QRTR).dur($HLF + $QRTR).
+    start($HLF + $EITH + $THRTYSCND).dur($HLF + $QRTR).
     pitch($G4).
     add_custom_attr(:legato_prv, &legato_prv)    
 ])
@@ -337,7 +340,7 @@ note = CSnd::Note.new.
     pitch($G4),
   note.dup.
     start($EITH).dur($SXTNTH).
-    pitch($A4),
+    pitch($B4),
   note.dup.
     start($EITH + $SXTNTH).dur($SXTNTH).
     pitch($C5),    
@@ -415,22 +418,22 @@ note = CSnd::Note.new.
     start($QRTR).dur($SXTNTH).
     pitch($F4S),
   note.dup.
-    start($QRTR + $SXTNTH).dur($EITH + $SXTNTH).
+    start($QRTR + $SXTNTH).dur($SXTNTH + $THRTYSCND).
     pitch($G3),
   note.dup.
-    start($HLF).dur($EITH).
+    start($QRTR + $EITH + $THRTYSCND).dur($SXTNTH).
     pitch($E4),   
   note.dup.
-    start($HLF + $EITH).dur($EITH).
+    start($QRTR + $EITH + $SXTNTH + $THRTYSCND).dur($SXTNTH).
     pitch($F4S),
   note.dup.
-    start($HLF + $QRTR).dur($EITH).
+    start($HLF + $THRTYSCND).dur($SXTNTH).
     pitch($E4),
   note.dup.
-    start($HLF + $QRTR + $EITH).dur($EITH).
+    start($HLF + $SXTNTH + $THRTYSCND).dur($SXTNTH).
     pitch($F4S),
   note.dup.
-    start($WHL).dur($EITH).
+    start($HLF + $EITH + $THRTYSCND).dur($SXTNTH).
     pitch($E4)    
 ])
 
@@ -438,7 +441,7 @@ note = CSnd::Note.new.
 @phrases.push CSnd::Score.new([
   note.dup.
     start(0.0).dur($HLF + $QRTR).
-    amp($REST).pitch($F4S)
+    pitch($F4S)
 ])
 
 # 22
@@ -547,16 +550,16 @@ note = CSnd::Note.new.
     pitch($G4),    
   note.dup.
     start($HLF + $EITH).dur($QRTR + $EITH).
-    pitch($G4),
+    pitch($A4),
   note.dup.
     start($WHL).dur($QRTR + $EITH).
-    pitch($G4),
+    pitch($A4),
   note.dup.
     start($WHL + ($QRTR + $EITH)).dur($QRTR + $EITH).
-    pitch($G4),    
+    pitch($A4),    
   note.dup.
     start($WHL + (2.0 * ($QRTR + $EITH))).dur($QRTR + $EITH).
-    pitch($G4),
+    pitch($A4),
   note.dup.
     start($WHL + (3.0 * ($QRTR + $EITH))).dur($QRTR + $EITH).
     pitch($A4),
@@ -736,7 +739,7 @@ note = CSnd::Note.new.
     start($SXTNTH).dur($SXTNTH).
     pitch($F4),
   note.dup.
-    start($EITH).dur($SXTNTH).
+    start($EITH).dur($EITH).
     amp($REST).pitch($C4)  
 ])
 
@@ -802,60 +805,57 @@ note = CSnd::Note.new.
     pitch($G5),
   note.dup.
     start((2.0 * $WHL) + $HLF).dur($EITH).
-    pitch($G5),
-  note.dup.
-    start((2.0 * $WHL) + $HLF + $EITH).dur($EITH).
     pitch($A5),
   note.dup.
-    start((2.0 * $WHL) + $HLF + $QRTR).dur($EITH).
+    start((2.0 * $WHL) + $HLF + $EITH).dur($EITH).
     pitch($G5).
     add_custom_attr(:legato_nxt, &legato_nxt), 
   note.dup.
-    start((2.0 * $WHL) + $HLF + $QRTR + $EITH).dur($EITH).
+    start((2.0 * $WHL) + $HLF + $QRTR).dur($EITH).
     pitch($G5).
     add_custom_attr(:legato_prv, &legato_prv), 
   note.dup.
-    start(3.0 * $WHL).dur($EITH).
+    start((2.0 * $WHL) + $HLF + $QRTR + $EITH).dur($EITH).
     pitch($B5),
   note.dup.
-    start((3.0 * $WHL) + $EITH).dur($QRTR + $EITH).
+    start((3.0 * $WHL)).dur($QRTR + $EITH).
     pitch($A5),   
   note.dup.
-    start((3.0 * $WHL) + $HLF).dur($EITH).
+    start((3.0 * $WHL) + $QRTR + $EITH).dur($EITH).
     pitch($G5),
   note.dup.
-    start((3.0 * $WHL) + $HLF + $EITH).dur($HLF + $QRTR).
+    start((3.0 * $WHL) + $HLF).dur($HLF + $QRTR).
     pitch($E5),
   note.dup.
-    start((4.0 * $WHL) + $QRTR + $EITH).dur($EITH).
+    start((4.0 * $WHL) + $QRTR).dur($EITH).
     pitch($G5),
   note.dup.
-    start((4.0 * $WHL) + $HLF).dur($EITH).
+    start((4.0 * $WHL) + $QRTR + $EITH).dur($EITH).
     pitch($F5S).
     add_custom_attr(:legato_nxt, &legato_nxt),
   note.dup.
-    start((4.0 * $WHL) + $HLF + $EITH).dur($HLF + $QRTR).
+    start((4.0 * $WHL) + $HLF).dur($HLF + $QRTR).
     pitch($F5S).
     add_custom_attr(:legato_prv, &legato_prv),
   note.dup.
-    start((5.0 * $WHL) + $QRTR + $EITH).dur($QRTR).
+    start((5.0 * $WHL) + $QRTR).dur($QRTR).
     amp($REST).pitch($C4),
   note.dup.
-    start((5.0 * $WHL) + $HLF + $EITH).dur($QRTR).
+    start((5.0 * $WHL) + $HLF).dur($QRTR).
+    amp($REST).pitch($C4),
+  note.dup.
+    start((5.0 * $WHL) + $HLF + $QRTR).dur($EITH).
     amp($REST).pitch($C4),
   note.dup.
     start((5.0 * $WHL) + $HLF + $QRTR + $EITH).dur($EITH).
-    amp($REST).pitch($C4),
-  note.dup.
-    start(6.0 * $WHL).dur($EITH).
     pitch($E5).
     add_custom_attr(:legato_nxt, &legato_nxt),
   note.dup.
-    start((6.0 * $WHL) + $EITH).dur($HLF).
+    start((6.0 * $WHL)).dur($HLF).
     pitch($E5).
     add_custom_attr(:legato_prv, &legato_prv),
   note.dup.
-    start((6.0 * $WHL) + $HLF + $EITH).dur($WHL).
+    start((6.0 * $WHL) + $HLF).dur($WHL + $HLF).
     pitch($F5)     
 ])
 
@@ -923,7 +923,7 @@ note = CSnd::Note.new.
     pitch($B4),
   note.dup.
     start($QRTR + $SXTNTH).dur($SXTNTH).
-    pitch($C4)     
+    pitch($C5)     
 ])
 
 # 40
@@ -959,23 +959,23 @@ note = CSnd::Note.new.
     pitch($A4),
   note.dup.
     start(3.0 * $WHL).dur($WHL).
-    pitch($B4)    
+    pitch($C4)    
 ])
 
 # 43
 @phrases.push CSnd::Score.new([
   note.dup.
     start(0.0).dur($SXTNTH).
-    pitch($E5),
+    pitch($F5),
   note.dup.
     start($SXTNTH).dur($SXTNTH).
-    pitch($F5),
-  note.dup.
-    start($EITH).dur($SXTNTH).
     pitch($E5),
   note.dup.
-    start($EITH + $SXTNTH).dur($SXTNTH).
+    start($EITH).dur($SXTNTH).
     pitch($F5),
+  note.dup.
+    start($EITH + $SXTNTH).dur($SXTNTH).
+    pitch($E5),
   note.dup.
     start($QRTR).dur($EITH).
     pitch($E5),    
@@ -1018,10 +1018,10 @@ note = CSnd::Note.new.
 @phrases.push CSnd::Score.new([
   note.dup.
     start(0.0).dur($QRTR).
-    pitch($C5),
+    pitch($D5),
   note.dup.
     start($QRTR).dur($QRTR).
-    pitch($C5),
+    pitch($D5),
   note.dup.
     start($HLF).dur($QRTR).
     pitch($G4) 
@@ -1034,13 +1034,13 @@ note = CSnd::Note.new.
     pitch($G4),
   note.dup.
     start($SXTNTH).dur($SXTNTH).
-    pitch($C5),
+    pitch($D5),
   note.dup.
     start($EITH).dur($SXTNTH).
     pitch($E5),
   note.dup.
     start($EITH + $SXTNTH).dur($SXTNTH).
-    pitch($C5),
+    pitch($D5),
   note.dup.
     start($QRTR).dur($EITH).
     amp($REST).pitch($C4),
@@ -1064,26 +1064,26 @@ note = CSnd::Note.new.
     pitch($G4),
   note.dup.
     start($WHL + $SXTNTH).dur($SXTNTH).
-    pitch($C5),
+    pitch($D5),
   note.dup.
     start($WHL + $EITH).dur($SXTNTH).
     pitch($E5),
   note.dup.
     start($WHL + $EITH + $SXTNTH).dur($SXTNTH).
-    pitch($C5)
+    pitch($D5)
 ])
 
 # 47
 @phrases.push CSnd::Score.new([
   note.dup.
     start(0.0).dur($SXTNTH).
-    pitch($C5),
+    pitch($D5),
   note.dup.
     start($SXTNTH).dur($SXTNTH).
     pitch($E5),
   note.dup.
     start($EITH).dur($SXTNTH).
-    pitch($C5)
+    pitch($D5)
 ])
 
 # 48
