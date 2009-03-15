@@ -39,7 +39,7 @@ Because of the nature of the performance, which can comprise hundreds or thousan
 Motivation and Goals of the Project
 -----------------------------------
 
-Working on the first code revealed shortfalss, thus providing the motivation for the project.
+Working on the first code revealed shortfalls, thus providing the motivation for the project.
 
 First, there is no formal connection between the aleatoric rules of the original score and the code.  I attempt to make the connection by having comments in the code quote the rule from Riley's score, next to the code implementing the rule.  But this is convention only, and creates no formal, testable or self-documenting connection between prescriptive score rules and the code which implements them.  This suggested to me the idea of using an approach similar to RSpec to try and unify the rule description and the code.  RSpec derivative cucumber (http://github.com/aslakhellesoy/cucumber/tree/master), with it's highy natural and readable syntax, is a particular inspiration.  The approach aims to create structured but nearly natural language descriptions which are in fact executable functions, and also suggests it is possible to create and build on general primitives implementing common compositional goals.
 
@@ -53,11 +53,11 @@ In short, a general aleatoric library promises a better way.
 A Little About Me and the Help I'd Love to Have on This Project
 ---------------------------------------------------------------
 
-I'm quite non-expert in just about everything this project needs to reach it's potential.  I have very scant knowledge of music theory and composition.  I know just enough of CSound to scratch the surface.  I've never written MIDI software.  This is my first significant public project in Ruby.  I have little formal experience with DSLs.  I've never worked with RSpec and I'm even quite late to TDD.
+Aside from being an experienced programmer with a decade of professional experience and an advanced degree, I'm non-expert in much that this project needs to reach it's potential.  I have very scant knowledge of music theory and composition.  I know just enough of CSound to scratch the surface.  I've never written MIDI software.  This is my first significant public project in Ruby.  I have little formal experience with DSLs.  I've never worked with RSpec or BDD, and I'm even quite late to TDD.
 
-Finally, I'm pretty new to open source and have never promoted a project and have no idea, yet, how to do that.
+Finally, I'm pretty new to open source and have never before promoted a project.
 
-All I am right now is a person with an idea that is starting to take shape, and which I believe is powerful.  If you think you can help and are interested, please drop me a line: marksweiss at yahoo dot com.
+But I can code, and I have an idea which seems like it might be a good one.  If you think you can help and are interested, please drop me a line: marksweiss at yahoo dot com.
 
 -----
 Usage
@@ -65,11 +65,9 @@ Usage
 
 All parameters are defined in three YAML configs, player.yml, ensemble.yml and csound.yml.  Comments in these files describe the affect of the parameters on the output.  In order to really understand their effect, you need to tweak them, run the script and listen to the results.
 
-The application is written in Ruby, and tested on 1.8.6 on Windows.  You'll need Ruby installed to run it.
+The application is written in Ruby, and tested on 1.8.6.  You'll need Ruby installed to run it.
 
-To run the application and generate a Score file, you simply run the command line 'ruby in_c.rb'.  Right now there is one optional argument '--render_only' which you can use to run the program but not wait on CSound to render.  This is useful if you are just debugging an merely want to see stdout debugging messages, etc.
-
-All other configuration comes from the three .yml files.
+To run the application and generate a Score file, you simply run the command line 'ruby in_c.rb'.  Right now there is one optional argument '--render_only' which you can use to run the program but not wait on CSound to render.  This is useful if you are just debugging an merely want to see stdout debugging messages, etc.  All other configuration comes from the three .yml files.
 
 To render your Score into a sound file you can listen to, you need the CSound binary.  Running the script produces a CSound Score file, which it then passes to CSound to render into a binary sound file.  CSound is a venerable open source project, and happens to be an incredibly rich and useful tool for electronic music synthesis and composition.  Versions exist for Linux, Mac and Windows, available here: http://csound.sourceforge.net/#Downloads.
 
