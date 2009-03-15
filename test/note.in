@@ -1,0 +1,31 @@
+note 
+  instrument    1 
+  start         0.0 
+  duration      2.0
+  amplitude     1000
+  pitch         8.01
+  func_table    5
+  
+note 
+  instrument    2 
+  start         1.0 
+  duration      3.0
+  amplitude     2000
+  pitch         9.01
+
+note 
+  instrument    3 
+  start         2.0 
+  duration      4.0
+  amplitude     3000
+  pitch         10.01
+
+note :instrument => 4, :start => 3.0, :duration => 5.0, :amplitude => 4000, :pitch => 11.01
+
+note 
+  instrument    5 
+  start         4.0 
+  duration      6.0
+  amplitude     5000
+  pitch         12.01
+  func_table    5
