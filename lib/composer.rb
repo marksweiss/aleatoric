@@ -3,11 +3,19 @@ require 'score'
 module Aleatoric
 
 $SCORE = ScoreWriter.instance
+instrument = :instrument
 
 # handles Note file line keyword "note," construct new Note, makes it current Note
 def note(attrs=nil)
   $SCORE << Aleatoric::Note.new(attrs)  
 end
+
+#def instrument(val)
+  # TEMP DEBUG
+#  puts "val = #{val}"
+  
+#  $SCORE.method_missing_handler(:instrument, val)
+#end
   
 # handles all other Note file line keywords, adds name val as attr to curent Note
 def method_missing(name, val)

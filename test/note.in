@@ -1,3 +1,6 @@
+# Note: all of the below are actually valid Ruby and these are examples of using the Note DSL
+
+# Standard block notation for a Note, with additional attribute beyond the core, func_table
 note 
   instrument    1 
   start         0.0 
@@ -13,19 +16,25 @@ note
   amplitude     2000
   pitch         9.01
 
+# Or you can not indent and just put entries one to a line, but that seems less readable
 note 
-  instrument    3 
-  start         2.0 
-  duration      4.0
-  amplitude     3000
-  pitch         10.01
+instrument    3 
+start         2.0 
+duration      4.0
+amplitude     3000
+pitch         10.01
 
+# One-line notation for a note, with arrow notation for attrs and values. Entries must be delimited with commas
 note :instrument => 4, :start => 3.0, :duration => 5.0, :amplitude => 4000, :pitch => 11.01
 
+# Or indend as you please
 note 
   instrument    5 
-  start         4.0 
-  duration      6.0
+    start         4.0 
+    duration      6.0
   amplitude     5000
   pitch         12.01
   func_table    5
+
+# Alternate, unadorned one-line notation for a note, entries must be delimited with semicolon
+note; instrument 6; start 5.0; duration 7.0; amplitude 6000; pitch 13.01; func_table 6
