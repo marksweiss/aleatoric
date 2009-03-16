@@ -1,3 +1,4 @@
+module Aleatoric
 
 class Note    
   def initialize(attrs=nil)
@@ -7,7 +8,11 @@ class Note
     attrs ||= {}
     attrs.each {|name, val| self.method_missing(name, val)}
   end
-    
+  
+  # TODO Change to use adapters for specific output formats. Some kind of NoteWriter ...
+  # Which is presumably a singleton that is dependency injected into each note without
+  #  the client code needing to do more than set it once globally.  Every note passes itself
+  #  to the writer to write
   def to_s
     s = ""
     @ordered_keys.each {|k| s << "#{k.to_s} = #{@note_attrs[k]}\n"}
@@ -36,41 +41,4 @@ class Note
   end  
 end
 
-class Score
-  attr_reader :notes
-
-  def initialize
-    @notes = []
-  end
-  
-  def <<(note)
-    @notes << note
-  end
-  
-  def last_note
-    @notes.last
-  end
-  
-  def method_missing_handler(name, val)
-    last_note.method_missing(name, val)
-  end
-  
-  def to_s
-    s = ""
-    @notes.each {|note| s << note.to_s}
-    s
-  end
 end
-
-$Score = Score.new
-
-def note(attrs=nil)
-  $Score << Note.new(attrs)
-end
-
-def method_missing(name, val)
-  $Score.method_missing_handler(name, val)
-end
-
-load("note2.in")
-puts $Score
