@@ -16,6 +16,7 @@ class Note
   def to_s
     s = ""
     @ordered_keys.each {|k| s << "#{k.to_s} = #{@note_attrs[k]}\n"}
+    s << "\n"
     s
   end
 

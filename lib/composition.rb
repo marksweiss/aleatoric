@@ -10,10 +10,10 @@ load("../test/note.in")
 # Push a default note
 push
 # Push a new note with these attrs
-push :instrument => 8, :start => 0.0, :duration => 1.0, :amplitude => 1000, :pitch => 8.03
+push :instrument => 80, :start => 0.0, :duration => 1.0, :amplitude => 1000, :pitch => 8.03
 # Push a new note with these attrs
-push "{:instrument => 9, :start => 0.0, :duration => 2.0, :amplitude => 1200, :pitch => 8.06}"
+push "{:instrument => 90, :start => 0.0, :duration => 2.0, :amplitude => 1200, :pitch => 8.06}"
 # Push a new note
-push Note.new({:instrument => 10, :start => 0.0, :duration => 1.0, :amplitude => 1300, :pitch => 11.01})
+push note({:instrument => 100, :start => 0.0, :duration => 1.0, :amplitude => 1300, :pitch => 11.01})
 
-puts $SCORE
+# write csound

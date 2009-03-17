@@ -9,6 +9,7 @@ class Score
 
   def initialize
     @notes = []
+    @active = true
   end
   
   def <<(n)
@@ -21,6 +22,11 @@ class Score
     
   def last
     @notes.last
+  end
+  
+  def active?(flag=nil)
+    @active = flag unless flag == nil
+    @active
   end
   
   def method_missing_handler(name, val)
