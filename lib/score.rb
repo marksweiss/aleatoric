@@ -9,7 +9,7 @@ class Score
 
   def initialize
     @notes = []
-    @active = true
+    @active = false
   end
   
   def <<(n)
@@ -36,12 +36,25 @@ class Score
   def to_s
     s = ""
     @notes.each {|note| s << note.to_s}
+    s << @dummy.to_s # TODO get rid of
     s
+  end
+  
+  # TODO get rid of
+  def dummy(arg)
+    @dummy = arg
+    @dummy
   end
 end
 
 class ScoreWriter < Score
   include Singleton
+end
+
+class Phrase < Score
+end
+
+class Player < Score
 end
 
 end
