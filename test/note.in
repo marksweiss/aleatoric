@@ -1,40 +1,65 @@
-# Note: all of the below are actually valid Ruby and these are examples of using the Note DSL
+module Aleatoric
 
-# Standard block notation for a Note, with additional attribute beyond the core, func_table
+note; instrument 6; start 5.0; duration 7.0; amplitude 6000; pitch 13.01; func_table 6
+
 note 
   instrument    1 
   start         0.0 
-  duration      2.0
+  duration      0.5
   amplitude     1000
-  pitch         8.01
-  func_table    5
+  pitch         7.01
+  func_table    1
   
 note 
-  instrument    2 
+  instrument    1
   start         1.0 
-  duration      3.0
-  amplitude     2000
-  pitch         9.01
+  duration      1.0
+  amplitude     1100
+  pitch         7.05
+  func_table    1
 
-# Or you can not indent and just put entries one to a line, but that seems less readable
-note 
-instrument    3 
-start         2.0 
-duration      4.0
-amplitude     3000
-pitch         10.01
+add notes
+  phrase "1", "2"
+  player "bassist", "oboist"
 
-# One-line notation for a note, with arrow notation for attrs and values. Entries must be delimited with commas
-note :instrument => 4, :start => 3.0, :duration => 5.0, :amplitude => 4000, :pitch => 11.01
+# TODO HOW TO HANDLE ADDING PHRASES NEXT
+# TODO SCORE
+# add phrases "1", "2"
+#  player "drummer"
+  # score "intro"
+  
+write csound
 
-# Or indend as you please
-note 
-  instrument    5 
-    start         4.0 
-    duration      6.0
-  amplitude     5000
-  pitch         12.01
-  func_table    5
+
+# Or indent as you please
+# note 
+#  instrument    5 
+#    start         4.0 
+#    duration      6.0
+#  amplitude     5000
+#  pitch         12.01
+#  func_table    5
+
+
+# score "1" do
+#  adding_notes
+#  dummy 50  # TODO get rid of
+# end
 
 # Alternate, unadorned one-line notation for a note, entries must be delimited with semicolon
-note; instrument 6; start 5.0; duration 7.0; amplitude 6000; pitch 13.01; func_table 6
+# 
+
+# One-line notation for a note, with arrow notation for attrs and values. 
+# Entries must be delimited with commas, keys must be symbols
+# note :instrument => 4, :start => 3.0, :duration => 5.0, :amplitude => 4000, :pitch => 11.01
+
+# Or you can not indent and just put entries one to a line, but that seems less readable
+# note 
+# instrument    3 
+# start         2.0 
+# duration      4.0
+# amplitude     3000
+# pitch         10.01
+
+
+end
