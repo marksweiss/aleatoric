@@ -1,6 +1,7 @@
 module Aleatoric
 
-note; instrument 6; start 5.0; duration 7.0; amplitude 6000; pitch 13.01; func_table 6
+# Define some Notes, shows both legal syntaxes
+note; instrument 1; start 1.5; duration 3.0; amplitude 1500; pitch 8.01; func_table 1
 
 note 
   instrument    1 
@@ -18,17 +19,37 @@ note
   pitch         7.05
   func_table    1
 
+# Notes can be added to Phrases (which group added Notes under a name)
+#  and to Sections (which group added Notes or added Phrases under a name)
+#  and to Players (which can play any Notes, Phrases or Sections added to them)
 add notes
-  phrase "1", "2"
-  player "bassist", "oboist"
+to
+  phrase "intro", "intro_copy"
+#  section "intro 1"
+#  player "bassist", "oboist"
 
-# TODO HOW TO HANDLE ADDING PHRASES NEXT
-# TODO SCORE
-# add phrases "1", "2"
+# As per previous comment, here we add the phrases created in the previous step
+#  to both a Player and a Section
+# add phrases "intro", "intro copy" 
+# to
 #  player "drummer"
-  # score "intro"
-  
-write csound
+#  section "intro 2", "intro 3"
+
+# This writes output to a format that can be rendered into a sound file
+# The syntax for specifying this is first a "key" indicating the type of value 
+#  being specified -- in this case we are specifying a format to write to.
+#  The second element is the value for the type of value -- so we are specifying
+#  a format, and the format in this case is csound
+# write format => csound
+
+
+end
+
+
+
+
+
+
 
 
 # Or indent as you please
@@ -62,4 +83,3 @@ write csound
 # pitch         10.01
 
 
-end
