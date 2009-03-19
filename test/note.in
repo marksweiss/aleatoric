@@ -19,14 +19,17 @@ note
   pitch         7.05
   func_table    1
 
-# Notes can be added to Phrases (which group added Notes under a name)
-#  and to Sections (which group added Notes or added Phrases under a name)
-#  and to Players (which can play any Notes, Phrases or Sections added to them)
 add notes
 to
-  phrase "intro", "intro_copy"
-#  section "intro 1"
+  # Notes can be added to Phrases (which group added Notes under a name) ...
+  phrase "intro A", "intro B"
+  # ... and to Sections (which group added Notes or added Phrases under a name)
+  # section "introduction"
+  
+#  and to Players (which can play any Notes, Phrases or Sections added to them)  
 #  player "bassist", "oboist"
+
+write format => csound
 
 # As per previous comment, here we add the phrases created in the previous step
 #  to both a Player and a Section

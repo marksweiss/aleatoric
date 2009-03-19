@@ -11,7 +11,7 @@ class NoteState
     @state = false
     @pub_state = false
     @notes = []
-    @published_notes = []    
+    @published_notes = []
   end
   
   def add_note
@@ -32,8 +32,6 @@ class NoteState
   
   def off!
     @state = false
-    # Notes are cleared after each add() block
-    @notes = []
   end
   
   def published?
@@ -41,17 +39,15 @@ class NoteState
   end
     
   def publish  
-    @published_notes = @notes.collect {|note| note.dup}
+    # Notes are copied into the published buffer and cleared at
+    #  the start of each add block    
+    @published_notes = @notes.collect {|note| note.dup}    
     @notes = []
     @pub_state = true
   end
   
   def unpublish
-    @pub_state = false
-    
-    # TEMP DEBUG
-    # puts self.to_s
-    
+    @pub_state = false    
     @published_notes = []
   end
   
@@ -77,7 +73,7 @@ end
 # Composer language keyword handlers and helpers
 
 # handles Note file line keyword "note," construct new Note, makes it current Note
-def note
+def note 
   @note_state.add_note
   @note_state.on!
   @note_state.unpublish
@@ -86,8 +82,8 @@ end
 # handles keyword "phrase" which should always be a target of an "add"
 def phrase(*names)
   names.each do |name|     
-    @phrases[name] = Phrase.new unless @phrases.include? name    
-    @note_state.subscribe(@phrases[name]) if @note_state.published?    
+    @phrases[name] = Phrase.new unless @phrases.include? name        
+    @note_state.subscribe(@phrases[name]) if @note_state.published?        
   end
 end
 
@@ -121,6 +117,14 @@ def method_missing(name, *args)
   
   # Other handlers for other entities, e.g. Players, Ensembles, Scores, Instruments
   @note_state.last.method_missing(name, args[0]) if @note_state.on?
+end
+
+def csound; :csound; end
+def format; :format; end
+
+def write(fmt_map)
+  fmt = fmt_map[:format]
+  @phrases.keys.each {|k| puts @phrases[k].to_s} if fmt == :csound
 end
 
 

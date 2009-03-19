@@ -23,8 +23,3 @@ load file_name
 # push "{:instrument => 90, :start => 0.0, :duration => 2.0, :amplitude => 1200, :pitch => 8.06}"
 # Push a new note
 # push note({:instrument => 100, :start => 0.0, :duration => 1.0, :amplitude => 1300, :pitch => 11.01})
-
-# write csound
-
-puts @note_state.to_s
-puts @phrases.to_s
