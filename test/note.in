@@ -33,14 +33,14 @@ to
   section "intro copy", "coda"
 
 # TODO THIS IS BROKEN
-add phrases "intro A", "intro B"
-to
-  score
+# add phrases "intro A", "intro B"
+# to
+#  score
   
 # TODO THIS IS BROKEN
-add sections "intro copy", "coda"
-to
-  score
+# add sections "intro copy", "coda"
+# to
+#  score
   
 # Write the output, specifying a format, and possibly other settings in the future
 #  in the same format of setting_type_1 => setting_value_1, setting_type_2 => setting_value_2, ...
@@ -52,8 +52,8 @@ write "John_Cage_-_4'33''_of_Silence.sco"
 #  for fomrat => midi coming, and presumably for Mac and Linux sound file formats too.  MP3
 #  obviously makes sense too, not least because it's cross-platform -- and universal
 # TODO THIS IS BROKEN
-render "John_Cage_-_4'33''_of_Silence.wav"
-  format  wav
+# render "John_Cage_-_4'33''_of_Silence.wav"
+#  format  wav
 
 
 
