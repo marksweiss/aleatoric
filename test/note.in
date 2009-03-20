@@ -1,17 +1,18 @@
+# TODO wrap this in composition.rb, have it write and process a copy of the file with the module header
 module Aleatoric
+
+# TODO "repeat" keyword for looping, some math functions in this example
 
 # Define some Notes, shows both legal syntaxes
 note; instrument 1; start 1.5; duration 3.0; amplitude 1500; pitch 8.01; func_table 1
-
-note 
+note # OPTIONAL NAME HERE
   instrument    1 
   start         0.0 
   duration      0.5
   amplitude     1000
   pitch         7.01
   func_table    1
-  
-note 
+note # OPTIONAL NAME HERE
   instrument    1
   start         1.0 
   duration      1.0
@@ -19,18 +20,47 @@ note
   pitch         7.05
   func_table    1
 
-add notes
+# Notes can be added to Phrases (which group added Notes under a name)
+#  and to Sections (which group added Notes or added Phrases under a name)
+add notes # OPTIONAL NAMES HERE
 to
-  # Notes can be added to Phrases (which group added Notes under a name) ...
   phrase "intro A", "intro B"
-  # ... and to Sections (which group added Notes or added Phrases under a name)
-  # section "introduction"
+  section "introduction"
+
+# TODO THIS IS BROKEN
+add phrases "intro A", "intro B"
+to
+  section "intro copy", "coda"
+
+# TODO THIS IS BROKEN
+add phrases "intro A", "intro B"
+to
+  score
   
+# TODO THIS IS BROKEN
+add sections "intro copy", "coda"
+to
+  score
+  
+# Write the output, specifying a format, and possibly other settings in the future
+#  in the same format of setting_type_1 => setting_value_1, setting_type_2 => setting_value_2, ...
+# TODO SCRIPT NAME IS BROKEN
+write "John_Cage_-_4'33''_of_Silence.sco"
+  format  csound # TODO format wants a hash now, this standardizes on note attrs syntax 
+
+# Render the actual sound file from the output script created in write(). Some support for
+#  for fomrat => midi coming, and presumably for Mac and Linux sound file formats too.  MP3
+#  obviously makes sense too, not least because it's cross-platform -- and universal
+# TODO THIS IS BROKEN
+render "John_Cage_-_4'33''_of_Silence.wav"
+  format  wav
+
+
+
+
+
 #  and to Players (which can play any Notes, Phrases or Sections added to them)  
 #  player "bassist", "oboist"
-
-write format => csound
-
 # As per previous comment, here we add the phrases created in the previous step
 #  to both a Player and a Section
 # add phrases "intro", "intro copy" 
