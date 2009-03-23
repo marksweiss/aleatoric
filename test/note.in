@@ -5,8 +5,11 @@ module Aleatoric
 # note "1" has is nicer than "do"
 # write "Score" as is nicer than "do"
 
-phrase "intro" do
+# start outer section
 
+section "Intro Part 1" do
+
+phrase "Intro Phrase" do
   note "1" do
     instrument    1 
     start         0.0 
@@ -15,21 +18,36 @@ phrase "intro" do
     pitch         7.01
     func_table    1
   end
-
+  
   note do
     instrument    1
     start         1.0 
     duration      1.0
     amplitude     1100
-    pitch         7.05
+    pitch         7.02
     func_table    1
-  end
-  
+  end 
 end
 
+end # section Intro Part 1
+
+# Some Phrases on their own, with compact syntax for Notes shown
+phrase "Stuff in the Middle" do
+  note "3" do instrument 1; start 2.0; duration 0.5; amplitude 1000; pitch 7.03; func_table 1 end
+  note "4" do instrument 1; start 3.0; duration 0.5; amplitude 1000; pitch 7.04; func_table 1 end
+end
+
+phrase "Coda" do
+  note "3" do instrument 1; start 2.0; duration 0.5; amplitude 1000; pitch 7.05; func_table 1 end
+  note "4" do instrument 1; start 3.0; duration 0.5; amplitude 1000; pitch 7.06; func_table 1 end
+end
+
+# Specify format and write Sections and Phrases by name to the output Score
 write "Sample Score" do
   format          csound
-  phrases         "intro"      
+  sections        "Intro Part 1"
+  phrases         "Stuff in the Middle", "Coda"     
 end
+
 
 end

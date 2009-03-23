@@ -40,14 +40,22 @@ require 'score'
 
 module Aleatoric
 
+@cur_note = nil
 @notes = []
 @notes_by_name = {}
-@cur_note = nil
 @processing_note = false
+
 @cur_phrase = nil
+@cur_phrases = []
 @phrases = []
 @phrases_by_name = {}
 @processing_phrase = false
+
+@cur_section = nil
+@sections = []
+@sections_by_name = {}
+@processing_section = false
+
 @score_out = ScoreWriter.instance  
 @processing_score = false
 @score_notes = []
@@ -80,7 +88,10 @@ def phrase(name, &args_blk)
   # Init (clear) the queue of notes created -- this holds state contained by this block scope
   @notes.clear
   @cur_phrase = Phrase.new(name)
-  @phrases << @cur_phrase  
+  # State that persists for the life of the score
+  @phrases << @cur_phrase
+  # State that is built/torn down within current containing section block, if any, or just ignored
+  @cur_phrases << @cur_phrase
   # NOTE: nil name breaks because then Phrase can't be retrieved by key in write() block
   @phrases_by_name[name] = @cur_phrase
   # Construct and put into @notes queue all Notes in the block for this Phrase block
@@ -89,16 +100,38 @@ def phrase(name, &args_blk)
   @cur_phrase << @notes  
   # Phrase just copied the Notes, so clear the queue again (redundant, but a bug waiting to happen)
   @notes.clear
-  # Our work here is done
   @processing_phrase = false
 end
 
+# Handles keyword "section"
+def section(name, &args_blk)
+  @processing_section = true
+  @cur_phrases.clear
+  @cur_section = Section.new(name)
+  @sections << @cur_section
+  @sections_by_name[name] = @cur_section
+  yield args_blk
+  @cur_section << @cur_phrases  
+  @cur_phrases.clear
+  @processing_section = false
+end
+
+# Handles keyword "phrases", called inside write() block
 def phrases(*names)
   # Because Score is a singleton, this can just write its notes to Score's output notes
   # This is bad because it goes in the opposite direction of the nesting logic for Notes, Phrases, etc.
   # So, lurking bugs.  Also it breaks if we want to have more than on Score.  Fine for "now."
   names.each do |name| 
     @phrases_by_name[name].notes.each do |note|
+      @score_notes << note.dup
+    end
+  end
+end
+
+# Handles keyword "sections", called inside write() block
+def sections(*names)
+  names.each do |name| 
+    @sections_by_name[name].notes.each do |note|
       @score_notes << note.dup
     end
   end
