@@ -1,288 +1,135 @@
 require 'score'
-require 'singleton'
+
+# This module implements the basic parser/processor for the Composer language.
+# At the core of the language is a simple class hierarchy that models both the main entities
+#  (i.e. the "semantics") of the language and the main data structure for holding the
+#  state of what the script has declared at any point in time.  These are the notes and groupings
+#  of notes the script is working with, some or all of which end up in some form in the final
+#  output script.
+
+# The hierarchy looks like this:
+# Score (attrs: output format (csound | midi), grouping options, sorting options, etc.)
+#   - Section/Movement (attrs: ?)
+#     - Phrase/Measure (attrs: transposed?, transpose_action [i.e. - a block], etc.)
+#        - Note (attrs: instrument, start, end, amplitude, pitch, function_table, etc.)
+
+# Notes are the leaf of this tree, i.e. - Notes cannot contain Notes or any other objects 
+#  but can only have attributes which are either ints, reals or strings.
+# Phrases (or Measures, an alias), just as in standard musical notation, are collections of Notes.
+#  They may define attributes that transform the Notes they are holding.  Maybe other attrs
+#  as needed too.
+# Sections are intended to group Phrases into longer, well, sections of a composition.
+#  Movement is an alias.
+
+# However, this hierarchy can also be bypassed, partially.  Phrases and Sections are simply 
+#  conveniences -- for example, it can be really handy to create a a few bars of notes, give that a name
+#  and reuse that as needed.  It can also make a piece more understandable and is a common
+#  musical convention to have sections that group a series of measures/phrases 
+#  - "intro," "bridge," "coda" etc.  But you don't need to do this.  To produce an output that
+#  gets rendered into an audio file you need only create Notes, and then include the 'write'
+#  statement.
+
+# The one exception to this is that you do need at least one Phrase or Section wrapping the Notes
+#  in a piece that you want to include in the output.
+
+# Scores are structured in "blocks."  Sections contain Phrases, and Phrases containt Notes.
+# Then, when all Notes have been defined, a 'write' and then a 'render' statement follow, 
+#  specifying the format of output desired.  These are separate because it can be useful to
+#  write a script file without rendering a sound file, as the latter can sometimes take 
+#  some time and you may be trying to fix unexpected output and not want to wait on rendering.
 
 module Aleatoric
 
-# State
-class BatchState
-  attr_reader :items
-  
-  def initialize
-    @state = false
-    @pub_state = false
-    @items = []
-    @published_items = []
-  end
-    
-  # Add one or more at a time
-  def add(*items)
-    items.each {|item| @items << item}
-  end
-  
-  def items
-    @items
-  end
-    
-  def last
-    @items.last
-  end
-  
-  def on?
-    @state == true
-  end
-  
-  def on!
-    @state = true
-  end
-  
-  def off!
-    @state = false
-  end
-  
-  def published?
-    @pub_state == true
-  end
-    
-  def publish
-    # Notes are copied into the published buffer and cleared at
-    #  the start of each "add" block
-    # Duck-type requirement here, item type @cls must implement dup()
-    @published_items = @items.collect {|item| item.dup}    
-    @items = []
-    @pub_state = true
-  end
-  
-  def unpublish
-    @published_items = []
-    @pub_state = false
-  end
-  
-  def subscribe(obj)
-    obj << @published_items
-  end
-  
-  def to_s
-    @items.each {|i| i.to_s}
-    @published_items.each {|i| i.to_s}
-  end
-end
-
-class OngoingState
-  attr_reader :items, :items_map
-  
-  def initialize
-    @state = false
-    @pub_state = false
-    @items = []
-    @published_items = []
-    @items_map = {}
-  end
-  
-  # Add one or more at a time
-  private
-  def add(*items)
-    items.each {|item| @items << item}
-  end
-  public
-  
-  def add_by_key(key, item)
-    if not @items_map.include? key
-      @items_map[key] = item
-      add item
-    end
-  end
-  
-  def [](key)
-    return @items_map[key]
-  end
-  
-  def ordered_keys
-    @items
-  end
-  
-  def items_map
-    @items_map
-  end
-  
-  def last
-    @items_map[@items.last]
-  end
-  
-  def on?
-    @state == true
-  end
-  
-  def on!
-    @state = true
-  end
-  
-  def off!
-    @state = false
-  end
-  
-  def published?
-    @pub_state == true
-  end
-    
-  def publish(*item_keys)
-    @published_items = item_keys.collect {|key| item_map[key].dup}
-    @pub_state = true
-  end
-  
-  def unpublish
-    @published_items = []
-    @pub_state = false    
-  end
-  
-  def subscribe(obj)
-    obj << @published_items
-  end
-  
-  def to_s
-    @items.each {|i| i.to_s}
-    @published_items.each {|i| i.to_s}
-  end
-end
-
-# State management of entities being declared and added to each other in "add" blocks
-@note_state = BatchState.new
-@phrase_state = OngoingState.new
-@section_state = OngoingState.new
-
-# "add" Event types, these are things that can be added
-@nil_event = :nil_event
-@note_event = :note_event
-@phrase_event = :phrase_event    
-@section_event = :section_event
-
+@notes = []
+@notes_by_name = {}
+@cur_note = nil
+@processing_note = false
+@cur_phrase = nil
+@phrases = []
+@phrases_by_name = {}
+@processing_phrase = false
 @score_out = ScoreWriter.instance  
+@processing_score = false
+@score_notes = []
 
-
-################################################
-# Composer language keyword handlers and helpers
-
-# handles Note file line keyword "note," construct new Note, makes it current Note
-def note(name=nil)
-  @note_state.add Note.new
-  @note_state.on!
-  @note_state.unpublish
+# Handles keyword "note," assigns attrs in block to a new Note
+def note(name=nil, &args_blk)
+  # Set flag for method_missing() so it traps methods and adds to this Note
+  @processing_note = true
+  # Declare the new Note
+  @cur_note = Note.new(name)
+  # Now run the block. This call all the method_missing attribute functions, thus
+  #  passing their name and arg to Note.method_missing, and thus adding them as attrs of this Note
+  yield args_blk
+  # Notes must always be created in the context of a containing Phrase or Section
+  # This is the queue of Notes being created in that containing block, which that object
+  #  will then pick up and append to its collection of Notes.  So the containing block
+  #  is responsible for clearing this at the start and end of its block, before its yield.
+  @notes << @cur_note
+  # Notes are also stored by name, if they are named, for convenient random access by key
+  #  at any point later in the script. This is an internal data structure and these are not
+  #  put into the output Score
+  @notes_by_name[name] = @cur_note unless name == nil
+  # We're done with this Note, unset method_missing() flag
+  @processing_note = false
 end
 
-# handles keyword "phrase" which should always be a target of an "add" of "notes"
-def phrase(*names)
-  names.each do |name|    
-    # If it's the target of an "add" block, it's adding published notes
-    # Each name is a phrase in the list next to "phrase", each is adding the notes
-    if @note_state.published?
-      # Phrases can be declared for the first time in an add block, as add target
-      @phrase_state.add_by_key(name, Phrase.new)      
-      @note_state.subscribe(@phrase_state[name])
-    else
-      # It's a standard phrase block declaring phrase and 
-      #  setting attributes (in method missing), triggered by turning state on
-      @phrase_state.add_by_key(name, Phrase.new)
-      @phrase_state.on!
-    end
-  end
+# Handles keyword "phrase"
+def phrase(name, &args_blk)
+  @processing_phrase = true
+  # Init (clear) the queue of notes created -- this holds state contained by this block scope
+  @notes.clear
+  @cur_phrase = Phrase.new(name)
+  @phrases << @cur_phrase  
+  # NOTE: nil name breaks because then Phrase can't be retrieved by key in write() block
+  @phrases_by_name[name] = @cur_phrase
+  # Construct and put into @notes queue all Notes in the block for this Phrase block
+  yield args_blk
+  # Now add them to the Notes in this Phrase object
+  @cur_phrase << @notes  
+  # Phrase just copied the Notes, so clear the queue again (redundant, but a bug waiting to happen)
+  @notes.clear
+  # Our work here is done
+  @processing_phrase = false
 end
 
-# handles keyword "section" which should always be a target of an "add" of "notes" or "phrases"
-def section(*names)
-  names.each do |name|
-    # Sections can add notes or phrases in "add" block
-    if @note_state.published?
-      @section_state.add_by_key(name, Section.new)  
-      @note_state.subscribe(@section_state[name])
-    end
-    if @phrase_state.published?
-      @section_state.add_by_key(name, Section.new)  
-      @phrase_state.subscribe(@section_state[name])
-    else
-      # It's a standard phrase block declaring section and setting attributes
-      @section_state.add_by_key(name, Section.new)
-      @section_state.on!
-    end
-  end
-end
-
-# handles keyword "notes" which just passes a in indicator to "add" so add knows what
-#  type of entity is being added to the targets of the add
-def notes
-  @note_event
-end
-# handles keyword "phrases" which passes an event indicator to "add"
 def phrases(*names)
-  @phrase_event
-end
-
-# handles "add" keyword, which moves some stored state referred to as arg to add
-#  into targets which are listed one entity call to a line after the dummy keyword "to"
-#
-# add notes
-# to
-#   phrases "1", "2", "33"
-def add(event)
-  if event == @note_event
-    # Copy notes built up since last add() call into a buffer for targets of add() to copy
-    @note_state.publish
-    # Turn off state so that method_missing won't call Note.method_missing in add() block    
-    @note_state.off!
-  elsif event == @phrase_event
-    @phrase_state.publish
-    @phrase_state.off!
-  elsif event == @section_event
-    @section_state.publish
-    @section_state.off!    
-  end
-end
-
-def to; end
-
-def csound; :csound; end
-# def midi; :midi; end
-def format(fmt)
-  # TODO How to control how phrases and sections are actually ordered?
-  # Probably if you create sections, only they are written, in order
-  #  and if you create phrases then only they are in order
-  #  otherwise notes are, in order
-  if @write_flag and fmt == :csound
-    puts 'PHRASES'  
-    @phrase_state.ordered_keys.each do |k|
-      @score_out << @phrase_state[k]
-      puts "\n" + k.to_s + "\n" + "\n"
-      puts @phrase_state[k].to_s
+  # Because Score is a singleton, this can just write its notes to Score's output notes
+  # This is bad because it goes in the opposite direction of the nesting logic for Notes, Phrases, etc.
+  # So, lurking bugs.  Also it breaks if we want to have more than on Score.  Fine for "now."
+  names.each do |name| 
+    @phrases_by_name[name].notes.each do |note|
+      @score_notes << note.dup
     end
-    puts 'SECTIONS'  
-    @section_state.ordered_keys.each do |k|
-      @score_out << @section_state[k]
-      puts "\n" + k.to_s + "\n" + "\n"
-      puts v.to_s
-    end     
-  
-    @write_flag = false
   end
-  # TODO elsif write_flag == false raise exception, or better block state management
 end
 
-def write(name=nil)
+# Handles constant arg to method_missing "format" function in "write" block
+# NOTE: This didn't work returning a symbol, but did work returning a string, why?
+def csound; "csound"; end
+# handles keyword "write"
+def write(name=nil, &args_blk)
+  @processing_score = true
   @score_out.name = name
-  @write_flag = true
+  # Sets write properties, and writes all notes of all Phrases and Sections into a queue
+  yield args_blk
+  @score_out << @score_notes
+  # TODO write to file
+  puts @score_out.to_s
+  @processing_score = false
 end
 
-# handles all other Note file line keywords, adds name val as attr to curent Note
 def method_missing(name, *args)
-  # TEMP DEBUG
-  # puts @note_state.last
-  # puts "@note_state == nil  #{@note_state == nil}" 
-  # puts "method_missing() name =  #{name}" if @note_state == nil
-  # return if @note_state == nil
-  # puts "method_missing() @note_state.on?aaaaaaaaa aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa@note_state.on?}"
-  # puts "method_missing() args[0] #{args[0]}"
-  
-  # Other handlers for other entities, e.g. Players, Ensembles, Scores, Instruments
-  @note_state.last.method_missing(name, args[0]) if @note_state.on?
-  @phrase_state.last.method_missing(name, args[0]) if @phrase_state.on?
-  @section_state.last.method_missing(name, args[0]) if @section_state.on?
+  # Conditionals enforce the hierarchy from leaf to root:
+  #  Note -> Phrase -> Section -> Score
+  # This is in reverse order of the nested order of the blocks, so it's an implicit
+  #  stack of precedence -- Notes are deepest and so always evaluated first, Phrases
+  #  can contain Notes so a Note in scope should come first, but otherwise the Phrase
+  #  should be considered before a Section, and so on.
+  @cur_note.method_missing(name, args) if @processing_note
+  @phrase.method_missing(name, args) if @processing_phrase
+  # @section.method_missing(name, args) if @processing_section
+  @score_out.method_missing(name, args) if @processing_score
 end
 
 end

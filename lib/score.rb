@@ -6,44 +6,46 @@ module Aleatoric
 
 class Score
   attr_reader :notes
+  attr_accessor :name
 
-  def initialize
+  def initialize(name=nil)
+    @name = name
     @notes = []
-    @active = false
   end
   
-  def <<(n)
-    if n.is_array? # Defined on Object in util.rb
-      n.each {|note| @notes << note}
-    elsif n
-      @notes << n
-    end
+  def <<(notes)
+    notes.each do |note| 
+      @notes << note.dup
+    end    
   end
-    
-  def last
-    @notes.last
-  end
-  
-  def active?(flag=nil)
-    @active = flag unless flag == nil
-    @active
+       
+  def method_missing(name, val) 
+    def_accessor(name, val)
+    instance_eval("self.#{name}(#{val})")
   end
   
-  def method_missing_handler(name, val)
-    last.method_missing(name, val)
+  private
+  def def_accessor(name, val)
+    self.class.class_eval %Q{
+      def #{name}(val=nil)
+        if val == nil then
+          @#{name}
+        else
+          @#{name} = val
+          self
+        end
+      end
+    }
   end
+  public
   
+  # TODO Use format == midi, format == csound set in Composer
   def to_s
-    s = ""
-    @notes.each {|note| s << note.to_s}
-    s << @dummy.to_s # TODO get rid of
+    s = ""   
+    @notes.each do |note|
+      s << note.to_s
+    end
     s
-  end
-  
-  # TODO get rid of
-  def dummy(arg)
-    @dummy = arg
-    @dummy
   end
 end
 
@@ -52,6 +54,9 @@ class ScoreWriter < Score
 end
 
 class Phrase < Score
+end
+
+class Section < Score
 end
 
 class Player < Score

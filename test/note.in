@@ -1,118 +1,35 @@
 # TODO wrap this in composition.rb, have it write and process a copy of the file with the module header
 module Aleatoric
 
-# TODO "repeat" keyword for looping, some math functions in this example
+# TODO preprocess and make this not pure Ruby
+# note "1" has is nicer than "do"
+# write "Score" as is nicer than "do"
 
-# Define some Notes, shows both legal syntaxes
-note; instrument 1; start 1.5; duration 3.0; amplitude 1500; pitch 8.01; func_table 1
-note # OPTIONAL NAME HERE
-  instrument    1 
-  start         0.0 
-  duration      0.5
-  amplitude     1000
-  pitch         7.01
-  func_table    1
-note # OPTIONAL NAME HERE
-  instrument    1
-  start         1.0 
-  duration      1.0
-  amplitude     1100
-  pitch         7.05
-  func_table    1
+phrase "intro" do
 
-# Notes can be added to Phrases (which group added Notes under a name)
-#  and to Sections (which group added Notes or added Phrases under a name)
-add notes # OPTIONAL NAMES HERE
-to
-  phrase "intro A", "intro B"
-  section "introduction"
+  note "1" do
+    instrument    1 
+    start         0.0 
+    duration      0.5
+    amplitude     1000
+    pitch         7.01
+    func_table    1
+  end
 
-# TODO THIS IS BROKEN
-add phrases "intro A", "intro B"
-to
-  section "intro copy", "coda"
-
-# TODO THIS IS BROKEN
-# add phrases "intro A", "intro B"
-# to
-#  score
+  note do
+    instrument    1
+    start         1.0 
+    duration      1.0
+    amplitude     1100
+    pitch         7.05
+    func_table    1
+  end
   
-# TODO THIS IS BROKEN
-# add sections "intro copy", "coda"
-# to
-#  score
-  
-# Write the output, specifying a format, and possibly other settings in the future
-#  in the same format of setting_type_1 => setting_value_1, setting_type_2 => setting_value_2, ...
-# TODO SCRIPT NAME IS BROKEN
-write "John_Cage_-_4'33''_of_Silence.sco"
-  format  csound # TODO format wants a hash now, this standardizes on note attrs syntax 
-
-# Render the actual sound file from the output script created in write(). Some support for
-#  for fomrat => midi coming, and presumably for Mac and Linux sound file formats too.  MP3
-#  obviously makes sense too, not least because it's cross-platform -- and universal
-# TODO THIS IS BROKEN
-# render "John_Cage_-_4'33''_of_Silence.wav"
-#  format  wav
-
-
-
-
-
-#  and to Players (which can play any Notes, Phrases or Sections added to them)  
-#  player "bassist", "oboist"
-# As per previous comment, here we add the phrases created in the previous step
-#  to both a Player and a Section
-# add phrases "intro", "intro copy" 
-# to
-#  player "drummer"
-#  section "intro 2", "intro 3"
-
-# This writes output to a format that can be rendered into a sound file
-# The syntax for specifying this is first a "key" indicating the type of value 
-#  being specified -- in this case we are specifying a format to write to.
-#  The second element is the value for the type of value -- so we are specifying
-#  a format, and the format in this case is csound
-# write format => csound
-
-
 end
 
+write "Sample Score" do
+  format          csound
+  phrases         "intro"      
+end
 
-
-
-
-
-
-
-# Or indent as you please
-# note 
-#  instrument    5 
-#    start         4.0 
-#    duration      6.0
-#  amplitude     5000
-#  pitch         12.01
-#  func_table    5
-
-
-# score "1" do
-#  adding_notes
-#  dummy 50  # TODO get rid of
-# end
-
-# Alternate, unadorned one-line notation for a note, entries must be delimited with semicolon
-# 
-
-# One-line notation for a note, with arrow notation for attrs and values. 
-# Entries must be delimited with commas, keys must be symbols
-# note :instrument => 4, :start => 3.0, :duration => 5.0, :amplitude => 4000, :pitch => 11.01
-
-# Or you can not indent and just put entries one to a line, but that seems less readable
-# note 
-# instrument    3 
-# start         2.0 
-# duration      4.0
-# amplitude     3000
-# pitch         10.01
-
-
+end
