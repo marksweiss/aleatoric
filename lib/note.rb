@@ -16,13 +16,20 @@ class Note
   # TODO Change to use adapters for specific output formats. Some kind of NoteWriter ...
   # Which is presumably a singleton that is dependency injected into each note without
   #  the client code needing to do more than set it once globally.  Every note passes itself
-  #  to the writer to write
+  #  to the writer to write  
   def to_s
-    s = ""
-    @ordered_keys.each {|k| s << "#{k.to_s} = #{@note_attrs[k]}\n"}
-    s << "\n"
-    s
-  end
+    ret = "i "
+    @ordered_keys.each do |key|
+      val = @note_attrs[key].to_s.strip	  
+      if val.include? '.'
+        ret.concat(sprintf("%.3f", val) + " ")
+      else
+        ret.concat("#{val} ")
+      end	  
+    end
+    
+    ret
+  end  
 
   def dup
     ret = Note.new

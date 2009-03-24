@@ -1,4 +1,5 @@
 require 'score'
+require 'renderer'
 
 # This module implements the basic parser/processor for the Composer language.
 # At the core of the language is a simple class hierarchy that models both the main entities
@@ -56,9 +57,12 @@ module Aleatoric
 @sections_by_name = {}
 @processing_section = false
 
-@score_out = ScoreWriter.instance  
+@score_out = ScoreWriter.instance
 @processing_score = false
 @score_notes = []
+
+@renderer = Renderer.instance
+@processing_renderer = false
 
 # Handles keyword "note," assigns attrs in block to a new Note
 def note(name=nil, &args_blk)
@@ -141,28 +145,61 @@ end
 # NOTE: This didn't work returning a symbol, but did work returning a string, why?
 def csound; "csound"; end
 # handles keyword "write"
-def write(name=nil, &args_blk)
+# NOTE: MUST implement "format" keyword, because can't method_missing() it because there is a
+#  default private format() method on class Object. Nice.
+def format(name)
+  @format = name
+end
+
+def repeat(limit, &blk)
+  limit.times do
+    yield blk
+  end
+end
+
+def write(name, &args_blk)
   @processing_score = true
   @score_out.name = name
   # Sets write properties, and writes all notes of all Phrases and Sections into a queue
   yield args_blk
   @score_out << @score_notes
-  # TODO write to file
+  @score_out.format = @format
+  
+  # TEMP DEBUG
   puts @score_out.to_s
-  @processing_score = false
+  
+  File.open(name, "w") do |f|
+    f << @score_out.to_s
+  end
+  @processing_score = false  
 end
 
-def method_missing(name, *args)
+# Handles "render" keyword, renders for csound now, eventually midi support
+# score_file_name, orc_file_name=nil
+def render(out_file, &args_blk)
+  @processing_renderer = true
+  # Set rendering params as child keyword calls in the "render" block
+  yield args_blk  
+  renderer = @score_out.format; score_file = @score_out.name
+  @renderer.render(renderer, out_file, score_file)
+  @processing_renderer = false
+end
+
+def method_missing(name, arg)
+  # TEMP DEBUG
+  puts "method_missing() name = #{name}   arg = #{arg}" if @processing_renderer
+
   # Conditionals enforce the hierarchy from leaf to root:
   #  Note -> Phrase -> Section -> Score
   # This is in reverse order of the nested order of the blocks, so it's an implicit
   #  stack of precedence -- Notes are deepest and so always evaluated first, Phrases
   #  can contain Notes so a Note in scope should come first, but otherwise the Phrase
   #  should be considered before a Section, and so on.
-  @cur_note.method_missing(name, args) if @processing_note
-  @phrase.method_missing(name, args) if @processing_phrase
-  # @section.method_missing(name, args) if @processing_section
-  @score_out.method_missing(name, args) if @processing_score
+  @cur_note.method_missing(name, arg) if @processing_note
+  @phrase.method_missing(name, arg) if @processing_phrase
+  @section.method_missing(name, arg) if @processing_section
+  @score_out.method_missing(name, arg) if @processing_score
+  @renderer.method_missing(name, arg) if @processing_renderer
 end
 
 end

@@ -18,10 +18,10 @@ class Score
       @notes << note.dup
     end    
   end
-       
-  def method_missing(name, val) 
+
+  def method_missing(name, val)
     def_accessor(name, val)
-    instance_eval("self.#{name}(#{val})")
+    self.send(name.to_sym, val)
   end
   
   private
@@ -38,11 +38,11 @@ class Score
     }
   end
   public
-  
+         
   # TODO Use format == midi, format == csound set in Composer
-  def to_s
-    s = ""   
-    @notes.each do |note|
+  def to_s 
+    s = ''
+    @notes.each do |note|    
       s << note.to_s
     end
     s
@@ -51,6 +51,23 @@ end
 
 class ScoreWriter < Score
   include Singleton
+  attr_accessor :format
+
+  def to_s 
+    s = ''
+    if self.format.to_sym == :csound
+      # TODO THIS COMES FROM YAML CONFIG, it's optional in CSound so needs 
+      #  instr_include.length check etc.
+      s << "#include \"oscil_sine_ftables_1.txt\""
+      s << "\n"
+      s << "\n"
+    end
+    @notes.each do |note|
+      s << note.to_s
+      s << "\n"
+    end
+    s
+  end  
 end
 
 class Phrase < Score

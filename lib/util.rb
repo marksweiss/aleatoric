@@ -4,4 +4,3 @@ class Object
     self.class == [].class
   end
 end
-
