@@ -13,14 +13,29 @@ class Note
     
   end
   
+  def dup
+    ret = Note.new
+    ret.name = self.name
+    @note_attrs.each {|name, val| ret.method_missing(name, val)}
+    ret
+  end  
+  
   # TODO Change to use adapters for specific output formats. Some kind of NoteWriter ...
   # Which is presumably a singleton that is dependency injected into each note without
   #  the client code needing to do more than set it once globally.  Every note passes itself
   #  to the writer to write  
   def to_s
     ret = "i "
+    
+    # TEMP DEBUG
+    puts "Note.name = #{@name}"
+    
     @ordered_keys.each do |key|
-      val = @note_attrs[key].to_s.strip	  
+      val = @note_attrs[key].to_s.strip	
+
+      # TEMP DEBUG
+      puts val
+      
       if val.include? '.'
         ret.concat(sprintf("%.3f", val) + " ")
       else
@@ -28,17 +43,11 @@ class Note
       end	  
     end
     
+    ret.concat("; #{@name}")
+    
     ret
-  end  
-
-  def dup
-    ret = Note.new
-    @note_attrs.each {|name, val| ret.method_missing(name, val)}
-    ret
-  end  
+  end    
   
-  private
-
   def method_missing(name, val) 
    # TEMP DEBUG
    # puts "Note name #{name}"

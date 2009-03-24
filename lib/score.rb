@@ -44,6 +44,7 @@ class Score
     s = ''
     @notes.each do |note|    
       s << note.to_s
+      s << "\n"
     end
     s
   end
@@ -62,10 +63,7 @@ class ScoreWriter < Score
       s << "\n"
       s << "\n"
     end
-    @notes.each do |note|
-      s << note.to_s
-      s << "\n"
-    end
+    s << super.to_s
     s
   end  
 end

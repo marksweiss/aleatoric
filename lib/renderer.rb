@@ -28,7 +28,7 @@ class Renderer
 
   def render(renderer, out_file, score_file=nil)  
     if renderer.to_sym == :csound    
-      system("consound -m0 -d -s -W -o#{out_file} #{self.orchestra} #{score_file}")
+      system("consound -m0 -d -g -s -W -o#{out_file} #{self.orchestra} #{score_file}")
     elsif renderer.to_sym == :midi
       # TODO render midi
     end

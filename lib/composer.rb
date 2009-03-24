@@ -68,11 +68,11 @@ module Aleatoric
 def note(name=nil, &args_blk)
   # Set flag for method_missing() so it traps methods and adds to this Note
   @processing_note = true
-  # Declare the new Note
+  # Declare the new Note  
   @cur_note = Note.new(name)
   # Now run the block. This call all the method_missing attribute functions, thus
   #  passing their name and arg to Note.method_missing, and thus adding them as attrs of this Note
-  yield args_blk
+  yield
   # Notes must always be created in the context of a containing Phrase or Section
   # This is the queue of Notes being created in that containing block, which that object
   #  will then pick up and append to its collection of Notes.  So the containing block
@@ -114,7 +114,7 @@ def section(name, &args_blk)
   @cur_section = Section.new(name)
   @sections << @cur_section
   @sections_by_name[name] = @cur_section
-  yield args_blk
+  yield
   @cur_section << @cur_phrases  
   @cur_phrases.clear
   @processing_section = false
@@ -152,8 +152,10 @@ def format(name)
 end
 
 def repeat(limit, &blk)
+  index = limit
   limit.times do
-    yield blk
+    yield index
+    index -= 1
   end
 end
 
@@ -161,7 +163,7 @@ def write(name, &args_blk)
   @processing_score = true
   @score_out.name = name
   # Sets write properties, and writes all notes of all Phrases and Sections into a queue
-  yield args_blk
+  yield
   @score_out << @score_notes
   @score_out.format = @format
   
@@ -179,7 +181,7 @@ end
 def render(out_file, &args_blk)
   @processing_renderer = true
   # Set rendering params as child keyword calls in the "render" block
-  yield args_blk  
+  yield  
   renderer = @score_out.format; score_file = @score_out.name
   @renderer.render(renderer, out_file, score_file)
   @processing_renderer = false
@@ -187,7 +189,7 @@ end
 
 def method_missing(name, arg)
   # TEMP DEBUG
-  puts "method_missing() name = #{name}   arg = #{arg}" if @processing_renderer
+  # puts "method_missing() name = #{name}   arg = #{arg}" if @processing_renderer
 
   # Conditionals enforce the hierarchy from leaf to root:
   #  Note -> Phrase -> Section -> Score
