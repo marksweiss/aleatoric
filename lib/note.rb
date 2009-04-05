@@ -25,17 +25,13 @@ class Note
   #  the client code needing to do more than set it once globally.  Every note passes itself
   #  to the writer to write  
   def to_s
-    ret = "i "
-    
+    ret = "i "    
     # TEMP DEBUG
-    puts "Note.name = #{@name}"
-    
+    # puts "Note.name = #{@name}"    
     @ordered_keys.each do |key|
       val = @note_attrs[key].to_s.strip	
-
       # TEMP DEBUG
-      puts val
-      
+      # puts val      
       if val.include? '.'
         ret.concat(sprintf("%.3f", val) + " ")
       else

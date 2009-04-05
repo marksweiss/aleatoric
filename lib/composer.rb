@@ -84,6 +84,10 @@ def note(name=nil, &args_blk)
   @notes_by_name[name] = @cur_note unless name == nil
   # We're done with this Note, unset method_missing() flag
   @processing_note = false
+  
+  # Return the note, useful for testing purposes only. Allows independent testing of function
+  #  and no additional exposure of module state, e.g. @notes
+  @cur_note
 end
 
 # Handles keyword "phrase"
@@ -141,6 +145,20 @@ def sections(*names)
   end
 end
 
+def repeat(limit, &blk)
+  # NOTE: 1-based loops.  Shoot me now!  But 1-based loops make more sense in this domain,
+  #  particularly since the typical use case is to use the index as a factor of multiplication in
+  #  a loop.  In that case, identity is 1 (the base case, that has no effect) and 0 is a special
+  #  case returning no value.  The user should have to choose the 0 case,
+  #  not have it thrust on them silently.
+  index = 1
+  limit.times do
+    # Pass the index to the block
+    yield index
+    index += 1
+  end
+end
+
 # Handles constant arg to method_missing "format" function in "write" block
 # NOTE: This didn't work returning a symbol, but did work returning a string, why?
 def csound; "csound"; end
@@ -151,25 +169,15 @@ def format(name)
   @format = name
 end
 
-def repeat(limit, &blk)
-  index = limit
-  limit.times do
-    yield index
-    index -= 1
-  end
-end
-
 def write(name, &args_blk)
   @processing_score = true
   @score_out.name = name
   # Sets write properties, and writes all notes of all Phrases and Sections into a queue
   yield
   @score_out << @score_notes
-  @score_out.format = @format
-  
+  @score_out.format = @format  
   # TEMP DEBUG
-  puts @score_out.to_s
-  
+  # puts @score_out.to_s  
   File.open(name, "w") do |f|
     f << @score_out.to_s
   end
@@ -182,10 +190,45 @@ def render(out_file, &args_blk)
   @processing_renderer = true
   # Set rendering params as child keyword calls in the "render" block
   yield  
-  renderer = @score_out.format; score_file = @score_out.name
-  @renderer.render(renderer, out_file, score_file)
+  @renderer.render(renderer=@score_out.format, out_file=out_file, score_file=@score_out.name)
   @processing_renderer = false
 end
+
+# For testing
+def dump_notes
+  # TODO Read from config
+  File.open("c:\\projects\\aleatoric\\test\\composer_test_results.txt", "w") do |f|
+    @notes.each do |note|
+      f << (note.to_s + "\n")
+    end
+  end
+end
+
+def dump_last_note
+  # TODO Read from config
+  File.open("c:\\projects\\aleatoric\\test\\composer_test_results.txt", "w") do |f|
+    f << @notes.last.to_s
+  end
+end
+
+def dump_last_phrase
+  # TODO Read from config
+  File.open("c:\\projects\\aleatoric\\test\\composer_test_results.txt", "w") do |f|
+    @phrases.last.notes.each do |note|
+      f << (note.to_s + "\n")
+    end
+  end
+end
+
+def dump_last_section
+  # TODO Read from config
+  File.open("c:\\projects\\aleatoric\\test\\composer_test_results.txt", "w") do |f|
+    @sections.last.notes.each do |note|
+      f << (note.to_s + "\n")
+    end
+  end
+end
+# /For testing
 
 def method_missing(name, arg)
   # TEMP DEBUG

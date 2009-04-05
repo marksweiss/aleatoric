@@ -26,9 +26,10 @@ class Renderer
   end
   public
 
-  def render(renderer, out_file, score_file=nil)  
-    if renderer.to_sym == :csound    
-      system("consound -m0 -d -g -s -W -o#{out_file} #{self.orchestra} #{score_file}")
+  def render(renderer, out_file, score_file=nil)
+    if renderer.to_sym == :csound
+      # TODO From config, base path, should be a setting used all over project
+      system("c:\\projects\\aleatoric\\lib\\consound -m0 -d -g -s -W -o#{out_file} #{self.orchestra} #{score_file}")
     elsif renderer.to_sym == :midi
       # TODO render midi
     end
