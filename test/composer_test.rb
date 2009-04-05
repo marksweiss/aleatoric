@@ -30,11 +30,39 @@ class AleatoricTest
 
 end
 
-def write_test_script(script)
+def preprocess_script(script)
+  ret = []
+  keywords = ["note"]
+  stack = []
+  script.each do |line|
+    keywords.each do |kw|
+      kw_bound = kw.length - 1
+      line_len = line.strip.length
+      # Current line starts with a keyword      
+      if line[0..kw_bound] == kw
+        stack.push kw
+        line = line[0..line_len - 1] + " do\n"
+      elsif line_len == 0
+        cur_kw = stack.pop
+        line = "end\n" if cur_kw != nil
+      end
+      ret << line
+    end
+  end  
+  ret.join('')
+end
+
+def write_test_script(script, lite_syntax=false)
+  # TODO Include this in composition.rb preprocessing of load() call
+  # Read each line of script, and make necessary modifications to transform "almost Ruby" 
+  #  input into legaly Ruby
+  script = preprocess_script(script) if lite_syntax  
   # TODO Read from config  
   File.open("c:\\projects\\aleatoric\\test\\test.altc", "w") do |f|
-    f << "module Aleatoric\n\n"
-    f << script
+    f << "module Aleatoric\n\n"  
+    script.each do |line|
+      f << line
+    end    
     f << "\n\nend\n"
   end  
 end
@@ -50,9 +78,9 @@ def read_test_results
   results.map! {|r| r = r.strip}
 end
 
-def test_runner(test_name, throw_on_failure, script)
+def test_runner(test_name, throw_on_failure, script, lite_syntax=false)
   tester = AleatoricTest.new(test_name, throw_on_failure)
-  write_test_script script
+  write_test_script(script, lite_syntax)
   run_test_script
   results = read_test_results
   return tester, results
@@ -79,6 +107,32 @@ end
 dump_last_note
 }
   tester, results = test_runner(test_name, throw_on_failure, script)
+  actual = results.first
+  expected = "i 1 0.000 0.500 1000 7.010 1 ; note 1"  
+  tester.assert(expected == actual)
+  puts tester.to_s  
+end
+
+def test__stmt_note_with_name_lite_syntax
+  throw_on_failure = false
+  test_name = "test__stmt_note_with_name_lite_syntax"
+  lite_syntax = true
+  
+  script = 
+%Q{
+note "note 1"
+  instrument  1 
+  start       0.0 
+  duration    0.5
+  amplitude   1000
+  pitch       7.01
+  func_table  1
+
+  
+# FOR TESTING ONLY
+dump_last_note
+}
+  tester, results = test_runner(test_name, throw_on_failure, script, lite_syntax)
   actual = results.first
   expected = "i 1 0.000 0.500 1000 7.010 1 ; note 1"  
   tester.assert(expected == actual)
@@ -375,6 +429,7 @@ end
 # Call each test in here
 def run_tests
   test__stmt_note_with_name
+  test__stmt_note_with_name_lite_syntax
   test__stmt_note_without_name
   test__phrase
   test__phrase_alt_syntax
