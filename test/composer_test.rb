@@ -1,6 +1,7 @@
 # TODO Load from config
 $LOAD_PATH << "c:\\projects\\aleatoric\\lib"
 require 'composer'
+require 'composer_lang'
 include Aleatoric
 
 class AleatoricTestException < Exception; end
@@ -30,26 +31,9 @@ class AleatoricTest
 
 end
 
+
 def preprocess_script(script)
-  ret = []
-  keywords = ["note"]
-  stack = []
-  script.each do |line|
-    keywords.each do |kw|
-      kw_bound = kw.length - 1
-      line_len = line.strip.length
-      # Current line starts with a keyword      
-      if line[0..kw_bound] == kw
-        stack.push kw
-        line = line[0..line_len - 1] + " do\n"
-      elsif line_len == 0
-        cur_kw = stack.pop
-        line = "end\n" if cur_kw != nil
-      end
-      ret << line
-    end
-  end  
-  ret.join('')
+  ComposerAST.new(script).preprocess_script.to_s
 end
 
 def write_test_script(script, lite_syntax=false)
@@ -58,6 +42,11 @@ def write_test_script(script, lite_syntax=false)
   #  input into legaly Ruby
   script = preprocess_script(script) if lite_syntax  
   # TODO Read from config  
+
+  # TEMP DEBUG
+  # puts "AFTER preprocess"
+  # puts script
+
   File.open("c:\\projects\\aleatoric\\test\\test.altc", "w") do |f|
     f << "module Aleatoric\n\n"  
     script.each do |line|
@@ -68,7 +57,6 @@ def write_test_script(script, lite_syntax=false)
 end
 
 def run_test_script
-  # TODO Read from config
   load "c:\\projects\\aleatoric\\test\\test.altc"
 end
 
@@ -88,9 +76,11 @@ end
 
 ##################### TESTS ########################
 
+# TODO Add support for hash/rails style of passing args as hash
+
 def test__stmt_note_with_name
   throw_on_failure = false
-  test_name = "test__stmt_note_with"
+  test_name = "test__stmt_note_with_name"
   
   script = 
 %Q{
@@ -107,32 +97,6 @@ end
 dump_last_note
 }
   tester, results = test_runner(test_name, throw_on_failure, script)
-  actual = results.first
-  expected = "i 1 0.000 0.500 1000 7.010 1 ; note 1"  
-  tester.assert(expected == actual)
-  puts tester.to_s  
-end
-
-def test__stmt_note_with_name_lite_syntax
-  throw_on_failure = false
-  test_name = "test__stmt_note_with_name_lite_syntax"
-  lite_syntax = true
-  
-  script = 
-%Q{
-note "note 1"
-  instrument  1 
-  start       0.0 
-  duration    0.5
-  amplitude   1000
-  pitch       7.01
-  func_table  1
-
-  
-# FOR TESTING ONLY
-dump_last_note
-}
-  tester, results = test_runner(test_name, throw_on_failure, script, lite_syntax)
   actual = results.first
   expected = "i 1 0.000 0.500 1000 7.010 1 ; note 1"  
   tester.assert(expected == actual)
@@ -424,19 +388,102 @@ end
   tester.assert(File.size("C:\\projects\\aleatoric\\lib\\composer_test.wav") > 0)
   puts tester.to_s  
 end
+
+def test__phrase_lite_syntax
+  throw_on_failure = false
+  lite_syntax = true
+  test_name = "test__phrase"
+  script = 
+%Q{
+phrase "Intro Phrase"
+
+  note "1"
+    instrument  1 
+    start       0.0 
+    duration    0.5
+    amplitude   1000
+    pitch       7.01
+    func_table  1
+  
+  note "2"
+    instrument  1
+    start       1.0 
+    duration    1.0
+    amplitude   1100
+    pitch       7.02
+    func_table  1
+
+write %q{c:\\projects\\aleatoric\\test\\composer_test_results.txt}
+  format    csound
+  phrases   "Intro Phrase"
+}
+  tester, results = test_runner(test_name, throw_on_failure, script, lite_syntax)
+  actual = results
+  
+  expected0 = 'i 1 0.000 0.500 1000 7.010 1 ; 1'
+  expected1 = 'i 1 1.000 1.000 1100 7.020 1 ; 2'
+  tester.assert(expected0 == actual[2])
+  tester.assert(expected1 == actual[3])
+  puts tester.to_s  
+end
+
+def test__section_lite_syntax
+  throw_on_failure = false
+  lite_syntax = true
+  test_name = "test__section"
+  script = 
+%Q{
+section "Intro Section"
+
+phrase "Intro Phrase"
+
+  note "1"
+    instrument  1 
+    start       0.0 
+    duration    0.5
+    amplitude   1000
+    pitch       7.01
+    func_table  1
+  
+  note "2"
+    instrument  1
+    start       1.0 
+    duration    1.0
+    amplitude   1100
+    pitch       7.02
+    func_table  1
+
+write %q{c:\\projects\\aleatoric\\test\\composer_test_results.txt}
+  format    csound
+  sections   "Intro Section"
+}
+  tester, results = test_runner(test_name, throw_on_failure, script, lite_syntax)
+  actual = results
+  
+  # TEMP DEBUG
+  # puts actual
+  
+  expected0 = 'i 1 0.000 0.500 1000 7.010 1 ; 1'
+  expected1 = 'i 1 1.000 1.000 1100 7.020 1 ; 2'
+  tester.assert(expected0 == actual[2])
+  tester.assert(expected1 == actual[3])
+  puts tester.to_s  
+end
 ##################### /TESTS ########################
 
 # Call each test in here
 def run_tests
-  test__stmt_note_with_name
-  test__stmt_note_with_name_lite_syntax
-  test__stmt_note_without_name
-  test__phrase
-  test__phrase_alt_syntax
-  test__section
-  test__repeat_index
-  test__write_format_sections_phrases
-  test__render
+  # test__stmt_note_with_name
+  # test__stmt_note_without_name
+  # test__phrase
+  # test__phrase_alt_syntax
+  # test__section
+  # test__repeat_index
+  # test__write_format_sections_phrases
+  # test__render
+  
+  test__phrase_lite_syntax
+  test__section_lite_syntax   
 end
 
 run_tests
