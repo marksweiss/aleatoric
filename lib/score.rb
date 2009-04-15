@@ -41,6 +41,11 @@ class Score
   end
   public
   
+  def clear
+    @notes = []
+    @score_attrs = []  
+  end
+    
   def dup
     ret = Score.new
     ret.name = self.name
@@ -66,7 +71,7 @@ end
 class ScoreWriter < Score
   include Singleton
   attr_accessor :format
-
+  
   def to_s 
     s = ''
     if self.format.to_sym == :csound

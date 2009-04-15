@@ -111,6 +111,10 @@ def phrase(name, &args_blk)
   @processing_phrase = false
 end
 
+# TODO Sections can't have notes directly, just phrases
+# CHANGE lang rules and tests
+# NOTE THAT HERE IT JUST ADDS PHRASES SO BUG IS PROBABLY IN 'sections'
+
 # Handles keyword "section"
 def section(name, &args_blk)
   @processing_section = true
@@ -119,7 +123,7 @@ def section(name, &args_blk)
   @sections << @cur_section
   @sections_by_name[name] = @cur_section
   yield
-  @cur_section << @cur_phrases  
+  @cur_section.add_phrases @cur_phrases  
   @cur_phrases.clear
   @processing_section = false
 end
@@ -129,18 +133,27 @@ def phrases(*names)
   # Because Score is a singleton, this can just write its notes to Score's output notes
   # This is bad because it goes in the opposite direction of the nesting logic for Notes, Phrases, etc.
   # So, lurking bugs.  Also it breaks if we want to have more than on Score.  Fine for "now."
-  names.each do |name| 
-    @phrases_by_name[name].notes.each do |note|
+  names.each do |name|   
+    name = name.strip
+    phrase = @phrases_by_name[name]    
+    phrase.notes.each do |note|
       @score_notes << note.dup
     end
   end
 end
 
+# TODO Sections can't have notes directly, just phrases
+# CHANGE lang rules and tests
+
 # Handles keyword "sections", called inside write() block
 def sections(*names)
-  names.each do |name| 
-    @sections_by_name[name].notes.each do |note|
-      @score_notes << note.dup
+  names.each do |name|
+    name = name.strip
+    section = @sections_by_name[name]
+    section.phrases.each do |phrase|
+      phrase.notes.each do |note|
+        @score_notes << note.dup
+      end
     end
   end
 end
@@ -151,12 +164,17 @@ def repeat(limit, &blk)
   #  a loop.  In that case, identity is 1 (the base case, that has no effect) and 0 is a special
   #  case returning no value.  The user should have to choose the 0 case,
   #  not have it thrust on them silently.
+  @notes.clear
   index = 1
   limit.times do
     # Pass the index to the block
     yield index
     index += 1
   end
+  
+  # Now add them to the Notes in the currently nearest Phrase, which should be the parent of this node
+  @cur_phrase << @notes  
+  @notes.clear
 end
 
 # Handles constant arg to method_missing "format" function in "write" block
@@ -176,8 +194,7 @@ def write(name, &args_blk)
   yield
   @score_out << @score_notes
   @score_out.format = @format  
-  # TEMP DEBUG
-  # puts @score_out.to_s  
+  
   File.open(name, "w") do |f|
     f << @score_out.to_s
   end
@@ -194,7 +211,7 @@ def render(out_file, &args_blk)
   @processing_renderer = false
 end
 
-# For testing
+# FOR UNIT TESTING
 def dump_notes
   # TODO Read from config
   File.open("c:\\projects\\aleatoric\\test\\composer_test_results.txt", "w") do |f|
@@ -228,12 +245,34 @@ def dump_last_section
     end
   end
 end
-# /For testing
+
+def reset_script_state
+  @cur_note = nil
+  @notes = []
+  @notes_by_name = {}
+  @processing_note = false
+
+  @cur_phrase = nil
+  @cur_phrases = []
+  @phrases = []
+  @phrases_by_name = {}
+  @processing_phrase = false
+
+  @cur_section = nil
+  @sections = []
+  @sections_by_name = {}
+  @processing_section = false
+
+  @score_out.clear
+  @processing_score = false
+  @score_notes = []
+
+  @processing_renderer = false
+end
+
+# /FOR UNIT TESTING
 
 def method_missing(name, arg)
-  # TEMP DEBUG
-  # puts "method_missing() name = #{name}   arg = #{arg}" if @processing_renderer
-
   # Conditionals enforce the hierarchy from leaf to root:
   #  Note -> Phrase -> Section -> Score
   # This is in reverse order of the nested order of the blocks, so it's an implicit

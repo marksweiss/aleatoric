@@ -2,6 +2,7 @@
 $LOAD_PATH << "c:\\projects\\aleatoric\\lib"
 require 'composer'
 require 'composer_lang'
+require 'thread'
 include Aleatoric
 
 class AleatoricTestException < Exception; end
@@ -36,24 +37,35 @@ def preprocess_script(script)
   ComposerAST.new(script).preprocess_script.to_s
 end
 
+@mutex = Mutex.new
 def write_test_script(script, lite_syntax=false)
   # TODO Include this in composition.rb preprocessing of load() call
   # Read each line of script, and make necessary modifications to transform "almost Ruby" 
   #  input into legaly Ruby
   script = preprocess_script(script) if lite_syntax  
-  # TODO Read from config  
 
   # TEMP DEBUG
-  # puts "AFTER preprocess"
+  # puts "\nAFTER preprocess"
   # puts script
-
+  
+  # TODO Read from config
+  # NOTE !!!!!!!!!!!!!!!!!!!!!!!
+  # We needed a mutex here to guard from multiple method calls writing to the same file
+  #  even though each call comes from a separate function, which should complete
+  #  operation before the next is called, and each call makes a single call to this function,
+  #  and the docs promise that this syntax *closes the file* on block exit, and that block exit
+  #  is clearly within the stack scope of the calling function.  i.e. - the Ruby File IO library
+  #  has serious race condition concurrency problems and can't be trusted even in a single-threaded
+  #  program with proper scoping of all calls, at least on 1.8.6 on Windows
+  @mutex.lock
   File.open("c:\\projects\\aleatoric\\test\\test.altc", "w") do |f|
     f << "module Aleatoric\n\n"  
     script.each do |line|
       f << line
     end    
     f << "\n\nend\n"
-  end  
+  end 
+  @mutex.unlock
 end
 
 def run_test_script
@@ -392,9 +404,12 @@ end
 def test__phrase_lite_syntax
   throw_on_failure = false
   lite_syntax = true
-  test_name = "test__phrase"
+  test_name = "test__phrase_lite_syntax"
   script = 
 %Q{
+# TESTING PURPOSES ONLY
+reset_script_state
+
 phrase "Intro Phrase"
 
   note "1"
@@ -430,27 +445,30 @@ end
 def test__section_lite_syntax
   throw_on_failure = false
   lite_syntax = true
-  test_name = "test__section"
+  test_name = "test__section_lite_syntax"
   script = 
 %Q{
+# TESTING PURPOSES ONLY
+reset_script_state
+
 section "Intro Section"
 
 phrase "Intro Phrase"
 
-  note "1"
-    instrument  1 
+  note "3"
+    instrument  3 
     start       0.0 
     duration    0.5
     amplitude   1000
-    pitch       7.01
+    pitch       7.03
     func_table  1
   
-  note "2"
-    instrument  1
+  note "4"
+    instrument  4
     start       1.0 
     duration    1.0
     amplitude   1100
-    pitch       7.02
+    pitch       7.04
     func_table  1
 
 write %q{c:\\projects\\aleatoric\\test\\composer_test_results.txt}
@@ -463,8 +481,103 @@ write %q{c:\\projects\\aleatoric\\test\\composer_test_results.txt}
   # TEMP DEBUG
   # puts actual
   
+  expected0 = 'i 3 0.000 0.500 1000 7.030 1 ; 3'
+  expected1 = 'i 4 1.000 1.000 1100 7.040 1 ; 4'
+  tester.assert(expected0 == actual[2])
+  tester.assert(expected1 == actual[3])
+  puts tester.to_s  
+end
+
+def test__sections_phrases_lite_syntax
+  throw_on_failure = false
+  lite_syntax = true
+  test_name = "test__sections_phrases_lite_syntax"
+  script = 
+%Q{
+# TESTING PURPOSES ONLY
+reset_script_state
+
+section "Intro Section"
+  phrase "Intro Phrase"
+    note "1"
+      instrument  1 
+      start       0.0 
+      duration    0.5
+      amplitude   1000
+      pitch       7.01
+      func_table  1
+    
+    note "2"
+      instrument  1
+      start       1.0 
+      duration    1.0
+      amplitude   1100
+      pitch       7.02
+      func_table  1
+
+  phrase "Coda"
+    note "3"
+      instrument  1 
+      start       0.0 
+      duration    0.5
+      amplitude   1000
+      pitch       7.01
+      func_table  1
+
+    note "4"
+      instrument  1
+      start       1.0 
+      duration    1.0
+      amplitude   1100
+      pitch       7.02
+      func_table  1
+
+# TODO From config
+write %q{c:\\projects\\aleatoric\\test\\composer_test_results.txt}
+  format    csound
+  sections  "Intro Section"
+}
+  tester, results = test_runner(test_name, throw_on_failure, script, lite_syntax)
+  actual = results
   expected0 = 'i 1 0.000 0.500 1000 7.010 1 ; 1'
   expected1 = 'i 1 1.000 1.000 1100 7.020 1 ; 2'
+  expected2 = 'i 1 0.000 0.500 1000 7.010 1 ; 3'
+  expected3 = 'i 1 1.000 1.000 1100 7.020 1 ; 4'
+  tester.assert(expected0 == actual[2])
+  tester.assert(expected1 == actual[3])
+  tester.assert(expected2 == actual[4])
+  tester.assert(expected3 == actual[5])
+  puts tester.to_s  
+end
+
+def test__repeat_index_lite_syntax
+  throw_on_failure = false
+  lite_syntax = true
+  test_name = "test__repeat_index_lite_syntax"
+  script = 
+%Q{
+# TESTING PURPOSES ONLY
+reset_script_state
+
+phrase "Loop"
+  repeat 2
+    note
+      instrument 1
+      start       1.0 * index
+      duration    0.2
+      amplitude   1000 + (100 * index) 
+      pitch       7.02
+      func_table  1
+      
+# TODO From config
+write %q{c:\\projects\\aleatoric\\test\\composer_test_results.txt}
+  format    csound
+  phrases   "Loop"
+}
+  tester, results = test_runner(test_name, throw_on_failure, script, lite_syntax)
+  actual = results
+  expected0 = 'i 1 1.000 0.200 1100 7.020 1 ;'
+  expected1 = 'i 1 2.000 0.200 1200 7.020 1 ;'
   tester.assert(expected0 == actual[2])
   tester.assert(expected1 == actual[3])
   puts tester.to_s  
@@ -483,7 +596,9 @@ def run_tests
   # test__render
   
   test__phrase_lite_syntax
-  test__section_lite_syntax   
+  test__section_lite_syntax
+  test__sections_phrases_lite_syntax
+  test__repeat_index_lite_syntax
 end
 
 run_tests

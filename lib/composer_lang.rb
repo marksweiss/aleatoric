@@ -190,8 +190,20 @@ class ComposerAST
     # Test for keyword starting line or not, kw lines processed differently because they
     #  create grammar structure of script, non-kw lines just appended to current parent as attrs of it
     is_kw, kw = kw? expr
+    
+    # TEMP DEBUG
+    puts ''
+    puts "is_kw #{is_kw}"
+    puts "kw #{kw}"
+    
     # Add the kw completion to the line
     expr = append_completion(kw, expr)
+    
+    # TEMP DEBUG
+    puts expr
+    puts "append_completion(kw, expr) #{append_completion(kw, expr)}" # if expr[0,3] == 'note'
+    # puts is_kw
+    # puts kw
     
     if is_kw
       # Validate special rules for this kw, raise error if violated
@@ -243,6 +255,14 @@ class ComposerAST
   # process_expr() Helpers
   def append_completion(kw, expr)
     append_expr = @@kw_completions[kw]
+    
+    # TEMP DEBUG
+    puts ''
+    puts "(kw == '') = #{(kw == '')}"
+    puts "kw = #{kw}"
+    puts "@@kw_completions[kw] #{@@kw_completions[kw]}"
+    puts "append_expr #{append_expr}" # if kw == 'note'
+    
     append_expr = "\n" if append_expr == nil
     expr + append_expr
   end
@@ -257,21 +277,39 @@ class ComposerAST
   end
 
   def parse_kw(expr)
+    return nil if expr == nil or expr.length == 0
     bound = expr.index(' ')
-    if bound != nil      
-      return expr[0, bound]
-    else
-      return nil
-    end
+    bound = expr.length if bound == nil      
+    return expr[0, bound]
   end
   
   def valid_kw_arg?(kw, expr)
     is_valid = true
     # Get next token after kw, all syntax rules validate next token
     kw_arg = second_tkn expr
+    
+    # So, some validation rules test for proper type or args passed, e.g. the loop bound
+    #  value passed to 'repeat' which only makes sense as an Integer.  But all the args are
+    #  being read in from a text file and not evaled so they look like strings.  So test
+    #  if we can convert and do so and pass the Int if we can to the validation calls
+    is_int, kw_int_arg = integer? kw_arg
+    kw_arg = kw_int_arg if is_int    
     syntax_rule = @@syntax_rules[kw]
     is_valid = syntax_rule.call(kw_arg) if syntax_rule != nil
+    
     return is_valid, kw_arg
+  end
+  
+  def integer?(arg)
+    # Not the empty string and capable of being coerced by Integer()
+    is_int = true
+    ret = 0
+    begin
+      Integer(arg)
+    rescue
+      is_int = false
+    end
+    return is_int, ret
   end
 
   def second_tkn(expr)
@@ -281,11 +319,13 @@ class ComposerAST
     expr = expr[lidx, expr.length - lidx]
     expr = expr.strip
     lidx = 0
-    # Append marker to match if needed
+    # Append marker as delmiter of end of string to match on if needed
     expr = expr + "!"
-    # Already appended " do" to end of each line passed here that starts with a keyword
-    #  except 'format', so find final ' ' or find appended a marker '!' at end of line, with rindex()
-    ridx = expr.rindex(' ')
+    # If the arg is a string, then spaces within the string are not delimiting token
+    #  but rather the the quote and whitespace at the end of the string are
+    ridx = expr.index('" ', 1) if expr[0,1] == '"'
+    # Otherwise find delimiting ' ' or appended marker '!' (if the arg is not there at all)
+    ridx = expr.index(' ', 1)
     ridx = expr.rindex('!') if (ridx == nil or ridx == lidx)
     expr[lidx, ridx - lidx].strip
   end  
@@ -342,9 +382,6 @@ class ComposerAST
   def valid_grammar?(node)
     is_valid = true
     grammar_rule = @@grammar_rules[node.kw]
-    # TEMP DEBUG
-    # puts "node.children.first.kw #{node.children.first.kw}" if node.children.first.respond_to? :kw
-    # puts "node.children.first.expr #{node.children.first.expr}" if node.children.first.respond_to? :expr    
     is_valid = grammar_rule.call(node) if grammar_rule != nil
     is_valid
   end
@@ -370,3 +407,5 @@ class ComposerAST
   # /HELPERS
 
 end
+
+# TODO UNIT TEST THE HELPERS
