@@ -582,6 +582,43 @@ write %q{c:\\projects\\aleatoric\\test\\composer_test_results.txt}
   tester.assert(expected1 == actual[3])
   puts tester.to_s  
 end
+
+def test__render_lite_syntax
+  throw_on_failure = false
+  lite_syntax = true
+  test_name = "test__render_lite_syntax"
+  script = 
+%Q{
+phrase "Intro Phrase"
+
+  note "1"
+    instrument  1 
+    start       0.0 
+    duration    0.5
+    amplitude   1000
+    pitch       7.01
+    func_table  1
+  
+  note "2"
+    instrument  1
+    start       1.0 
+    duration    1.0
+    amplitude   1100
+    pitch       7.02
+    func_table  1
+
+# TODO From config
+write '..\\lib\\composer_test_results.txt'
+  format    csound
+  phrases   "Intro Phrase"
+
+render '..\\lib\\composer_test.wav'
+  orchestra  '..\\lib\\markov_opt_1.orc'
+}
+  tester, results = test_runner(test_name, throw_on_failure, script, lite_syntax)
+  tester.assert(File.size("C:\\projects\\aleatoric\\lib\\composer_test.wav") > 0)
+  puts tester.to_s  
+end
 ##################### /TESTS ########################
 
 # Call each test in here
@@ -599,6 +636,7 @@ def run_tests
   test__section_lite_syntax
   test__sections_phrases_lite_syntax
   test__repeat_index_lite_syntax
+  test__render_lite_syntax
 end
 
 run_tests
