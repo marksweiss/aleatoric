@@ -240,8 +240,10 @@ end
 def dump_last_section
   # TODO Read from config
   File.open("c:\\projects\\aleatoric\\test\\composer_test_results.txt", "w") do |f|
-    @sections.last.notes.each do |note|
-      f << (note.to_s + "\n")
+    @sections.last.phrases.each do |phrase|
+      phrase.notes.each do |note|
+        f << (note.to_s + "\n")
+      end
     end
   end
 end
@@ -269,7 +271,6 @@ def reset_script_state
 
   @processing_renderer = false
 end
-
 # /FOR UNIT TESTING
 
 def method_missing(name, arg)

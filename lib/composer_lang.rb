@@ -189,21 +189,9 @@ class ComposerAST
   
     # Test for keyword starting line or not, kw lines processed differently because they
     #  create grammar structure of script, non-kw lines just appended to current parent as attrs of it
-    is_kw, kw = kw? expr
-    
-    # TEMP DEBUG
-    puts ''
-    puts "is_kw #{is_kw}"
-    puts "kw #{kw}"
-    
+    is_kw, kw = kw? expr      
     # Add the kw completion to the line
     expr = append_completion(kw, expr)
-    
-    # TEMP DEBUG
-    puts expr
-    puts "append_completion(kw, expr) #{append_completion(kw, expr)}" # if expr[0,3] == 'note'
-    # puts is_kw
-    # puts kw
     
     if is_kw
       # Validate special rules for this kw, raise error if violated
@@ -253,16 +241,9 @@ class ComposerAST
   end
   
   # process_expr() Helpers
+  # TODO better comments
   def append_completion(kw, expr)
     append_expr = @@kw_completions[kw]
-    
-    # TEMP DEBUG
-    puts ''
-    puts "(kw == '') = #{(kw == '')}"
-    puts "kw = #{kw}"
-    puts "@@kw_completions[kw] #{@@kw_completions[kw]}"
-    puts "append_expr #{append_expr}" # if kw == 'note'
-    
     append_expr = "\n" if append_expr == nil
     expr + append_expr
   end
