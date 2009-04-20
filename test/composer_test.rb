@@ -34,14 +34,14 @@ end
 
 
 def preprocess_script(script)
-  ComposerAST.new(script).preprocess_script.to_s
+  ComposerAST.new(script).preprocess_script(__FILE__).to_s
 end
 
 @mutex = Mutex.new
 def write_test_script(script, lite_syntax=false)
   # TODO Include this in composition.rb preprocessing of load() call
   # Read each line of script, and make necessary modifications to transform "almost Ruby" 
-  #  input into legaly Ruby
+  #  input into legal Ruby
   script = preprocess_script(script) if lite_syntax    
   # TODO Read from config
   # NOTE !!!!!!!!!!!!!!!!!!!!!!!
@@ -438,17 +438,7 @@ phrase "Intro Phrase"
     pitch       7.01
     func_table  1
   
-  note "2"
-    instrument  1
-    start       1.0 
-    duration    1.0
-    amplitude   1100
-    pitch       7.02
-    func_table  1
 
-write "composer_test_results.txt"
-  format    csound
-  phrases   "Intro Phrase"
 }
   tester, results = test_runner(test_name, throw_on_failure, script, lite_syntax)
   actual = results

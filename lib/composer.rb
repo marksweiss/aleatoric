@@ -111,10 +111,6 @@ def phrase(name, &args_blk)
   @processing_phrase = false
 end
 
-# TODO Sections can't have notes directly, just phrases
-# CHANGE lang rules and tests
-# NOTE THAT HERE IT JUST ADDS PHRASES SO BUG IS PROBABLY IN 'sections'
-
 # Handles keyword "section"
 def section(name, &args_blk)
   @processing_section = true
@@ -141,9 +137,6 @@ def phrases(*names)
     end
   end
 end
-
-# TODO Sections can't have notes directly, just phrases
-# CHANGE lang rules and tests
 
 # Handles keyword "sections", called inside write() block
 def sections(*names)

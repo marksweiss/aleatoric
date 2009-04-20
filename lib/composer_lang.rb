@@ -14,21 +14,20 @@
 #10. Render can be child of Root
 
 # Data structure needed here
-# So, child precedence order
+# So, legal parent child relationships are:
 #
-# Root:
+# Root
 #  Note
+#  Section
+#   Phrase
 #  Phrase
 #   Note
 #   Repeat
-#  Section
-#   Phrase
 #  Repeat
 #   Note
 #  Write
 #  Render
 
-# Data strcuture needed here
 # Keyword completions
 # note : "do\n"
 # phrase : "do\n"
@@ -46,24 +45,31 @@
 #     Expression is the line
 #     Keyword is parsed and @keyword set
 #     Expression is appended with completion for the keyword
-#   ComposerAST.cur_parent adds new ASTNode as child, add_child
+#   ComposerAST.cur_parent adds new ASTNode with keyword 'end' as child, add_child
 #   NOTE: This insures that each block gets an END before next sibling, and all its children
 #     nest in a valid do/end block
 #   ComposerAST.cur_parent adds new END ASTNode as child, add_child
-# If keyword is lower precedence then ComposerAST.cur_parent, then do nothing
-# If keyword is equal precedence to ComposerAST.cur_parent, then cur_parent assigned to new node
-# If keyword is higher precedence than ComposerAST.cur_parent then RAISE ERROR and stop parse
+
+# Grammar Rules
+#--------------
+# If keyword is lower precedence then ComposerAST.cur_parent, then this is new child of cur_parent
+#  and parse is now nested under this new child which thus becomes new cur_parent
+# If keyword is equal precedence to ComposerAST.cur_parent, then new child is assigned as sibling
+#  of cur_parent, to cur_parent.parent, and cur_parent assigned to new node
+# If keyword is higher precedence than ComposerAST.cur_parent then we are backing out of current scope
+#  and we don't know how far so back up until valid parent of new node is found, attach new
+#  as child, and set new node as cur_parent
 #
-# Special Rules:
-# If keyword is Repeat then next token must be a positive integer, Else RAISE ERROR
-# If keyword is Render then next token must be present (not newline) and must be a string
-# If keyword is Write then next token must be present (not newline) and must be a string
-# NOTE: This must be checked after entire script is parsed or in some kind of backtrack queue after
-#  the Write block is closed
-# If keyword is Write then it must contain a child Format function
-# If keyword is Format then it must have Write parent
-# If keyword is Format then it must have a valid argument: {csound, midi}
-# Else RAISE ERROR
+# Syntax Rules
+#-------------
+# If keyword is 'repeat' then next token must be a positive integer, Else RAISE ERROR
+# If keyword is 'render' then next token must be present (not newline) and must be a string
+# If keyword is 'write' then next token must be present (not newline) and must be a string
+# If keyword is 'write' then it must contain a child 'format' keyword node
+# If keyword is 'format' then it must have 'write' parent
+# If keyword is 'format' then it must have a valid argument: {csound, midi}
+
+module Aleatoric
 
 class ComposerASTException < Exception; end
 
@@ -103,6 +109,16 @@ class ComposerAST
     'format' => "\n"
   }
   
+  @@kw_block_close_completions= {
+    'note' => "end\n",
+    'phrase' => "end\n",
+    'section' => "end\n",
+    'repeat' => "end\n",
+    'write' => "end\n",
+    'render' => "end\n",
+    'format' => ""
+  }
+  
   @@kw_children = {
     'root' => ['note', 'phrase', 'section', 'repeat', 'write', 'render'],
     'note' => [],
@@ -126,10 +142,13 @@ class ComposerAST
   @@kw = @@kw_children.keys
 
   @@syntax_rules = {
-    'repeat' => lambda {|x| x.kind_of? Fixnum},                       # 1st arg present, type
-    'render' => lambda {|x| x.kind_of? String and x.length > 0},      # 1st arg present, type
-    'write' => lambda {|x| x.kind_of? String and x.length > 0},       # 1st arg present, type
-    'format' => lambda {|x| x.to_s == 'csound' or x.to_s == 'midi'}   # 1st arg valid value
+    'note' => lambda {|x| x == nil or x.kind_of? String},             # 1st arg optional, valid type
+    'phrase' => lambda {|x| x == nil or x.kind_of? String},           # 1st arg optional, valid type
+    'section' => lambda {|x| x == nil or x.kind_of? String},          # 1st arg optional, valid type
+    'repeat' => lambda {|x| x.kind_of? Fixnum},                       # 1st arg required, valid type
+    'render' => lambda {|x| x.kind_of? String and x.length > 0},      # 1st arg required, valid type
+    'write' => lambda {|x| x.kind_of? String and x.length > 0},       # 1st arg required, valid type
+    'format' => lambda {|x| x != nil and (x.to_s == 'csound' or x.to_s == 'midi')}   # 1st arg required, valid value
   }
   
   @@grammar_rules = {
@@ -149,16 +168,15 @@ class ComposerAST
     @script = script
   end
 
-  def preprocess_script
+  def preprocess_script(src_file_name)
     line_no = 0
     @script.each do |expr|
       begin
         line_no += 1
-        process_expr(expr, line_no)
-      rescue ComposerASTException => e
-        # Make the tree have this error as its last appended element
+        process_expr(expr, src_file_name, line_no)
+      rescue Exception => e
         @parent.add_child(ASTNode.new(expr=e.to_s, kw='Composer_ERROR', parent=@parent))
-        break
+        break      
       end
     end
     self
@@ -182,8 +200,7 @@ class ComposerAST
   # HELPERS
   private
   
-  # TODO Must also pass file name for exception messages
-  def process_expr(expr, line_no)
+  def process_expr(expr, src_file_name, line_no)
     expr = expr.strip
     return if expr == nil or expr.length == 0 or expr[0,1] == '#'
   
@@ -195,10 +212,9 @@ class ComposerAST
     
     if is_kw
       # Validate special rules for this kw, raise error if violated
-      # TODO We know line number -- output with error
       is_valid, kw_arg = valid_kw_arg?(kw, expr)
       if not is_valid
-        raise ComposerASTException, "Line Number: #{line_no}. Illegal argument '#{kw_arg}' passed to function '#{kw}'."
+        raise ComposerASTException, "Source File Name: #{src_file_name}. Line Number: #{line_no}. Illegal argument '#{kw_arg}' passed to function '#{kw}'."
       end
       
       # If kw is valid child of @parent, new more nested parent, add_new node as child of @parent
@@ -228,7 +244,7 @@ class ComposerAST
         # If we get here, then we unwound to root, new node is new child of root, and new cur_parent
         if not found_parent
           if not root? cur_parent
-            raise ComposerASTException, "Line Number: #{line_no}. Invalid structure, '#{kw}' has no valid parent."
+            raise ComposerASTException, "Source File Name: #{src_file_name}. Line Number: #{line_no}. Illegal argument '#{kw_arg}' passed to function '#{kw}'."
           end
           new_node = insert_node(expr, kw, cur_parent)
           @parent = new_node          
@@ -241,7 +257,6 @@ class ComposerAST
   end
   
   # process_expr() Helpers
-  # TODO better comments
   def append_completion(kw, expr)
     append_expr = @@kw_completions[kw]
     append_expr = "\n" if append_expr == nil
@@ -273,8 +288,8 @@ class ComposerAST
     #  value passed to 'repeat' which only makes sense as an Integer.  But all the args are
     #  being read in from a text file and not evaled so they look like strings.  So test
     #  if we can convert and do so and pass the Int if we can to the validation calls
-    is_int, kw_int_arg = integer? kw_arg
-    kw_arg = kw_int_arg if is_int    
+    is_int, kw_arg_int = integer? kw_arg
+    kw_arg = kw_arg_int if is_int 
     syntax_rule = @@syntax_rules[kw]
     is_valid = syntax_rule.call(kw_arg) if syntax_rule != nil
     
@@ -282,14 +297,23 @@ class ComposerAST
   end
   
   def integer?(arg)
+    if arg == nil
+      return false, nil
+    end
+
+    # Integer() only throws on *strings* that aren't actually ints, e.g. Floats
+    arg = arg.to_s    
     # Not the empty string and capable of being coerced by Integer()
-    is_int = true
-    ret = 0
+    ret = nil
+    is_int = false
     begin
-      Integer(arg)
+      ret = Integer(arg)
+      is_int = true
     rescue
+      ret = nil
       is_int = false
     end
+
     return is_int, ret
   end
 
@@ -304,9 +328,15 @@ class ComposerAST
     expr = expr + "!"
     # If the arg is a string, then spaces within the string are not delimiting token
     #  but rather the the quote and whitespace at the end of the string are
-    ridx = expr.index('" ', 1) if expr[0,1] == '"'
-    # Otherwise find delimiting ' ' or appended marker '!' (if the arg is not there at all)
-    ridx = expr.index(' ', 1)
+    if expr[0,1] == '"'
+      ridx = expr.index('"', 1) 
+      # If we matched on a right-hand end of string quote, ridx += 1 so that the arg includes the quote
+      if ridx != nil and ridx > lidx
+        ridx += 1
+      end
+    end
+    ridx = expr.index(' ', 1) if (ridx == nil or ridx == lidx)
+    # If we got to here the only delmiter is the marker appended above, tokenize on that
     ridx = expr.rindex('!') if (ridx == nil or ridx == lidx)
     expr[lidx, ridx - lidx].strip
   end  
@@ -318,21 +348,29 @@ class ComposerAST
   def insert_node(expr, kw, parent)
     new_node = ASTNode.new(expr, kw, parent)
     parent.add_child(new_node)
-    # TODO FIX THIS SPECIAL CASE HACK
-    parent.add_child(create_end_node(parent)) unless kw == 'format'
+    block_close_node = create_block_close_node(kw, parent)
+    parent.add_child(block_close_node) unless block_close_node == nil
     new_node
   end  
   
   def root?(node)
     node.kw == 'root'
   end
-    
-  def create_end_node(parent)
-    ASTNode.new(expr="end\n", kw='end', parent=parent)
-  end  
+  
+  def create_block_close_node(kw, parent)
+    # NOTE: This breaks if anything other than 'end\n' or something similar is block closer
+    # Perhaps make more robust someday
+    close_expr = @@kw_block_close_completions[kw]    
+    if close_expr.length > 0
+      close_kw = close_expr.strip
+      ASTNode.new(expr=close_expr, kw=close_kw, parent=parent)
+    else
+      nil
+    end
+  end
+  
   # /process_expr() Helpers
     
-  # TODO We know line number -- output with error
   # DFS the tree and print nodes pre-order. ... See comment above on to_s()
   # Also validate_grammar() called on each node because we are traversing finished tree
   #  and semantically cleaner code would mean traversing twice, once to validate and once to output
@@ -386,6 +424,8 @@ class ComposerAST
   end
 
   # /HELPERS
+
+end
 
 end
 
