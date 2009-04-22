@@ -12,7 +12,7 @@
 #10. Phrase can be child of 
 # 9. Write can be child of Root
 #10. Render can be child of Root
-
+ 
 # Data structure needed here
 # So, legal parent child relationships are:
 #
@@ -27,7 +27,7 @@
 #   Note
 #  Write
 #  Render
-
+ 
 # Keyword completions
 # note : "do\n"
 # phrase : "do\n"
@@ -35,7 +35,7 @@
 # repeat : "do |index|\n"
 # write : "do\n"
 # render : "do\n"
-
+ 
 # AST building rules
 #
 # Script is processed one line at a time
@@ -49,7 +49,7 @@
 #   NOTE: This insures that each block gets an END before next sibling, and all its children
 #     nest in a valid do/end block
 #   ComposerAST.cur_parent adds new END ASTNode as child, add_child
-
+ 
 # Grammar Rules
 #--------------
 # If keyword is lower precedence then ComposerAST.cur_parent, then this is new child of cur_parent
@@ -68,13 +68,13 @@
 # If keyword is 'write' then it must contain a child 'format' keyword node
 # If keyword is 'format' then it must have 'write' parent
 # If keyword is 'format' then it must have a valid argument: {csound, midi}
-
+ 
 module Aleatoric
-
+ 
 class ComposerASTException < Exception; end
-
+ 
 class ComposerAST
-
+ 
   # Node nested class
   class ASTNode
     attr_reader :kw, :expr, :parent, :children
@@ -140,7 +140,7 @@ class ComposerAST
     'format' => ['write']
   }
   @@kw = @@kw_children.keys
-
+ 
   @@syntax_rules = {
     'note' => lambda {|x| x == nil or x.kind_of? String},             # 1st arg optional, valid type
     'phrase' => lambda {|x| x == nil or x.kind_of? String},           # 1st arg optional, valid type
@@ -167,7 +167,7 @@ class ComposerAST
     @parent = @@root
     @script = script
   end
-
+ 
   def preprocess_script(src_file_name)
     line_no = 0
     @script.each do |expr|
@@ -191,7 +191,7 @@ class ComposerAST
   #   ...                 # back up
   # end                   # print block close, continue at this level of nesting
   def to_s  
-    out_lines = []
+    out_lines = []    
     out_lines = to_s_helper_validate_grammar(node=@@root, out_lines=[], line_no=0)
     out_lines.join('')
   end
@@ -271,7 +271,7 @@ class ComposerAST
       return false, nil
     end
   end
-
+ 
   def parse_kw(expr)
     return nil if expr == nil or expr.length == 0
     bound = expr.index(' ')
@@ -300,7 +300,7 @@ class ComposerAST
     if arg == nil
       return false, nil
     end
-
+ 
     # Integer() only throws on *strings* that aren't actually ints, e.g. Floats
     arg = arg.to_s    
     # Not the empty string and capable of being coerced by Integer()
@@ -313,10 +313,10 @@ class ComposerAST
       ret = nil
       is_int = false
     end
-
+ 
     return is_int, ret
   end
-
+ 
   def second_tkn(expr)
     lidx = expr.index(' ')    
     return nil if lidx == nil
@@ -353,8 +353,13 @@ class ComposerAST
     new_node
   end  
   
+	# This is not a standard accessor because want it only privat because should only be used for testing
+	def root
+		@@root
+	end
+	
   def root?(node)
-    node.kw == 'root'
+    node.object_id == @@root.object_id
   end
   
   def create_block_close_node(kw, parent)
@@ -422,11 +427,9 @@ class ComposerAST
       pp_helper(child, out_lines, depth + 1)
     end
   end
-
+ 
   # /HELPERS
-
+ 
 end
-
+ 
 end
-
-# TODO UNIT TEST THE HELPERS

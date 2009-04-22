@@ -1,4 +1,5 @@
 require 'note'
+require 'conf_csound'
 require 'util'
 require 'singleton'
 
@@ -20,7 +21,7 @@ class Score
     end    
   end
 
-  def method_missing(name, val)
+  def method_missing(name, val)  
     def_accessor(name, val)
     @score_attrs.push name.to_sym
     self.send(name.to_sym, val)
@@ -57,8 +58,7 @@ class Score
     ret
   end   
          
-  # TODO Use format == midi, format == csound set in Composer
-  def to_s 
+  def to_s
     s = ''
     @notes.each do |note|    
       s << note.to_s
@@ -70,20 +70,27 @@ end
 
 class ScoreWriter < Score
   include Singleton
-  attr_accessor :format
+  attr_reader :format
+  
+  def to_s_format(format)  
+    @format = format.to_sym
+    Note.to_s_format = @format
+  end
   
   def to_s 
     s = ''
-    if self.format.to_sym == :csound
-      # TODO THIS COMES FROM YAML CONFIG, it's optional in CSound so needs 
-      #  instr_include.length check etc.
-      s << "#include \"oscil_sine_ftables_1.txt\""
+    case @format
+    when :csound
+      s << "#include \"#{$csound_score_include_file_name}\""
       s << "\n"
       s << "\n"
+    when :midi
+      # TODO Really support MIDI
     end
+    
     s << super.to_s
     s
-  end  
+  end
 end
 
 class Phrase < Score

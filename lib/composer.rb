@@ -186,7 +186,7 @@ def write(name, &args_blk)
   # Sets write properties, and writes all notes of all Phrases and Sections into a queue
   yield
   @score_out << @score_notes
-  @score_out.format = @format  
+  @score_out.to_s_format @format  
   
   File.open(name, "w") do |f|
     f << @score_out.to_s
@@ -206,8 +206,7 @@ end
 
 # FOR UNIT TESTING
 def dump_notes
-  # TODO Read from config
-  File.open("c:\\projects\\aleatoric\\test\\composer_test_results.txt", "w") do |f|
+  File.open("..\\test\\composer_test_results.txt", "w") do |f|
     @notes.each do |note|
       f << (note.to_s + "\n")
     end
@@ -215,15 +214,13 @@ def dump_notes
 end
 
 def dump_last_note
-  # TODO Read from config
-  File.open("c:\\projects\\aleatoric\\test\\composer_test_results.txt", "w") do |f|
+  File.open("..\\test\\composer_test_results.txt", "w") do |f|
     f << @notes.last.to_s
   end
 end
 
 def dump_last_phrase
-  # TODO Read from config
-  File.open("c:\\projects\\aleatoric\\test\\composer_test_results.txt", "w") do |f|
+  File.open("..\\test\\composer_test_results.txt", "w") do |f|
     @phrases.last.notes.each do |note|
       f << (note.to_s + "\n")
     end
@@ -231,8 +228,7 @@ def dump_last_phrase
 end
 
 def dump_last_section
-  # TODO Read from config
-  File.open("c:\\projects\\aleatoric\\test\\composer_test_results.txt", "w") do |f|
+  File.open("..\\test\\composer_test_results.txt", "w") do |f|
     @sections.last.phrases.each do |phrase|
       phrase.notes.each do |note|
         f << (note.to_s + "\n")

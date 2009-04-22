@@ -1,3 +1,4 @@
+require 'conf_csound'
 require 'util'
 require 'singleton'
 
@@ -26,11 +27,13 @@ class Renderer
   end
   public
 
+ # TODO add orchestra keyword to write? 
   def render(renderer, out_file, score_file=nil)
-    if renderer.to_sym == :csound
+    case renderer.to_sym
+    when :csound
       # TODO From config, base path, should be a setting used all over project
-      system("c:\\projects\\aleatoric\\lib\\consound -m0 -d -g -s -W -o#{out_file} #{self.orchestra} #{score_file}")
-    elsif renderer.to_sym == :midi
+      system("consound -m0 -d -g -s -W -o#{out_file} #{$csound_orc_file_name} #{score_file}")
+    when :midi
       # TODO render midi
     end
   end
