@@ -98,7 +98,7 @@ class ComposerAST
   
   # Class attributes that are the state and rules of the parse
   @@root = ASTNode.new(expr='root', kw='root', parent=nil)
-  
+      
   @@kw_completions = {
     'note' => " do\n",
     'phrase' => " do\n",
@@ -106,7 +106,8 @@ class ComposerAST
     'repeat' => " do |index|\n",
     'write' => " do\n",
     'render' => " do\n",
-    'format' => "\n"
+    'format' => "\n",
+    'def' => "\n"
   }
   
   @@kw_block_close_completions= {
@@ -116,18 +117,20 @@ class ComposerAST
     'repeat' => "end\n",
     'write' => "end\n",
     'render' => "end\n",
-    'format' => ""
+    'format' => "",
+    'def' => "end\n"
   }
-  
+    
   @@kw_children = {
-    'root' => ['note', 'phrase', 'section', 'repeat', 'write', 'render'],
+    'root' => ['note', 'phrase', 'section', 'repeat', 'write', 'render', 'def'],
     'note' => [],
     'phrase' => ['note', 'repeat'],
     'section' => ['phrase'],
     'repeat' => ['note'],
     'write' => ['format'],
     'render' => [],
-    'format' => []
+    'format' => [],
+    'def' => []
   }
   @@kw_parents = {
     'root' => [],
@@ -137,7 +140,8 @@ class ComposerAST
     'repeat' => ['root', 'phrase'],
     'write' => ['root'],
     'render' => ['root'],
-    'format' => ['write']
+    'format' => ['write'],
+    'def' => ['root']
   }
   @@kw = @@kw_children.keys
  
@@ -160,7 +164,17 @@ class ComposerAST
       node.parent.kw == 'write'
     end # 'format' has 'write' parent
   }
+  
+  @@operators = {:assignment => '='}
+  @@var_map = {}
+  @@assignment_states = [:declaring, :invoking]
+
+  # NOTE: A hack to support testing. This must be first line in test scripts but it breaks the
+  #  assignment preprocessing which assumes all assignment statements start the file.
+  @@debug_stmts = ['reset_script_state']
+    
   # /Class attributes that are the state and rules of the parse
+  
    
   # Public parse interface
   def initialize(script)
@@ -169,16 +183,8 @@ class ComposerAST
   end
  
   def preprocess_script(src_file_name)
-    line_no = 0
-    @script.each do |expr|
-      begin
-        line_no += 1
-        process_expr(expr, src_file_name, line_no)
-      rescue Exception => e
-        @parent.add_child(ASTNode.new(expr=e.to_s, kw='Composer_ERROR', parent=@parent))
-        break      
-      end
-    end
+		@script = preprocess_text_subs @script
+    preprocess_expressions(@script, src_file_name)
     self
   end
   
@@ -199,8 +205,94 @@ class ComposerAST
   
   # HELPERS
   private
+
+  def preprocess_text_subs(script_in)
+    script_in = preprocess_assignment script_in
+    script_in = preprocess_func_dec script_in
+		script_in = preprocess_func_call script_in
+    script_in
+  end
   
-  def process_expr(expr, src_file_name, line_no)
+  def preprocess_assignment(script_in)  
+    state = :declaring
+    script_out = []
+    
+    script_in.each do |expr|  
+      # Skip comment lines, empty lines, special debug statemenets
+      if (expr != nil && expr.strip.length != 0 && expr[0,1] != '#' &&  !@@debug_stmts.include?(expr.strip))        
+        # Read all vars as a block at the start of the script, only support for vars right now
+        if state == :declaring
+          if (expr[0,1] == '"' || expr[0,1] == "'")
+            # First non-assignment statement, toggle state. This logic assumes all assignments
+            #  at top of file, before anything else, so anything else stops binding names to vars
+            state = :invoking
+          else 
+            tkns = expr.split(@@operators[:assignment])            
+            # '=' not found in expr, so split doesn't return list of the two tokens, so length == 1
+            if tkns.length < 2
+              # First non-assignment statement, toggle state
+              state = :invoking
+            elsif tkns.length == 2
+              # Found an assignment, store value mapped to name, for substituting once state is :invocation
+              @@var_map[tkns[0].strip] = tkns[1].strip
+            end
+          end
+        # Not assigning vars so look for var invocations and substitute the value for the var name in the script
+        else # if state == :invoking
+          # For all the variables declared, sub the value for any appearance of the name in the expression
+          # TODO - This is an obvious bug not doing it at the discrete token level but instead doing
+          #  a cheap sub.  Must get array of tokens and sub token, NOT substring
+          @@var_map.each do |name, val|             
+            expr.sub!(name, val)
+          end
+        end
+      end
+      
+      # Copy the possibly transformed line to output
+      script_out << expr
+    end
+    
+    script_out
+  end
+	
+	def preprocess_func_dec(script_in)  
+    script_out = []
+    script_in.each do |expr|
+      if func_dec?(expr)
+        expr.sub!(': ', ':')
+        expr = 'def ' + expr.strip.sub(':', '(') + ")\n"
+      end
+			script_out << expr
+		end
+		script_out
+	end
+
+	def preprocess_func_call(script_in)  
+    script_out = []
+    script_in.each do |expr|
+      if func_call?(expr)
+        expr.sub!(': ', ':')
+        expr = expr.rstrip.sub(':', '(') + ")\n"
+			end
+      script_out << expr
+		end
+		script_out
+	end
+	
+	def preprocess_expressions(script_in, src_file_name)
+	  line_no = 0
+    script_in.each do |expr|
+      begin
+        line_no += 1
+        preprocess_expression(expr, src_file_name, line_no)
+      rescue Exception => e
+        @parent.add_child(ASTNode.new(expr=e.to_s, kw='Composer_ERROR', parent=@parent))
+        break      
+      end
+    end	
+	end
+  
+  def preprocess_expression(expr, src_file_name, line_no)  
     expr = expr.strip
     return if expr == nil or expr.length == 0 or expr[0,1] == '#'
   
@@ -209,7 +301,7 @@ class ComposerAST
     is_kw, kw = kw? expr      
     # Add the kw completion to the line
     expr = append_completion(kw, expr)
-    
+        
     if is_kw
       # Validate special rules for this kw, raise error if violated
       is_valid, kw_arg = valid_kw_arg?(kw, expr)
@@ -219,7 +311,7 @@ class ComposerAST
       
       # If kw is valid child of @parent, new more nested parent, add_new node as child of @parent
       #  and make it the new @parent
-      if valid_child_kw?(parent=@parent.kw, child=kw)
+      if valid_child_kw?(parent=@parent.kw, child=kw)      
         new_node = insert_node(expr, kw, @parent)
         @parent = new_node
       # If same as @parent or valid child of @parent.parent, add new_node 
@@ -250,7 +342,7 @@ class ComposerAST
           @parent = new_node          
         end        
       end
-    # Note a new grammar node, just an attribute node of the current parent, so just add child
+    # Not a new grammar node, just an attribute node of the current parent, so just add child
     else    
       @parent.add_child(ASTNode.new(expr=expr, kw='', parent=@parent))
     end    
@@ -279,17 +371,54 @@ class ComposerAST
     return expr[0, bound]
   end
   
+	def func_call?(expr)
+		is_func_dec, is_func_call = func? expr
+		is_func_call
+	end
+	
+	def func_dec?(expr)
+		is_func_dec, is_func_call = func? expr
+		is_func_dec
+	end	
+	
+  def func?(expr)
+    is_func_dec = false
+    is_func_call = false
+    
+    return false, is_func_call if expr == nil or expr.length == 0 or expr[0,1] == '"'
+    # If no colon it's not a func dec
+    # This is a syntax error, can't have colon as first character of the token
+    colon_idx = expr.strip.index(':')
+    return false, is_func_call if colon_idx == nil or colon_idx == 0
+    ws_idx = expr.strip.index(' ')    
+    # If colon_idx > 0 and ws_idx == nil then this is a func_dec for func taking no args
+    return true, is_func_call if ws_idx == nil
+    
+    # So if we got to here, there is a colon and it's before any delmiting ws, i.e. - it's tacked
+    #  onto the leftmost token, i.e. this token is the name of a function
+    is_func_dec = true if ws_idx == colon_idx + 1
+    # Otherwise there is a token with a colon but it's not the first token, this is a func_call stmt
+    is_func_call = true if ws_idx > 0 and ws_idx < colon_idx
+
+    return is_func_dec, is_func_call
+  end
+  
   def valid_kw_arg?(kw, expr)
     is_valid = true
     # Get next token after kw, all syntax rules validate next token
-    kw_arg = second_tkn expr
-    
+    kw_arg = second_tkn expr     
+    # Test whether an arg is not actually a string, keyword, etc.
+    #  but rather a name, bound to a variable assigned a value in the script, if so use
+    #  the bound value in the validation
+    kw_arg_var = var_val kw_arg
+    kw_arg = kw_arg_var if kw_arg_var != nil    
     # So, some validation rules test for proper type or args passed, e.g. the loop bound
     #  value passed to 'repeat' which only makes sense as an Integer.  But all the args are
     #  being read in from a text file and not evaled so they look like strings.  So test
     #  if we can convert and do so and pass the Int if we can to the validation calls
     is_int, kw_arg_int = integer? kw_arg
     kw_arg = kw_arg_int if is_int 
+    
     syntax_rule = @@syntax_rules[kw]
     is_valid = syntax_rule.call(kw_arg) if syntax_rule != nil
     
@@ -364,8 +493,8 @@ class ComposerAST
   
   def create_block_close_node(kw, parent)
     # NOTE: This breaks if anything other than 'end\n' or something similar is block closer
-    # Perhaps make more robust someday
-    close_expr = @@kw_block_close_completions[kw]    
+    # Perhaps make more robust someday    
+    close_expr = @@kw_block_close_completions[kw]
     if close_expr.length > 0
       close_kw = close_expr.strip
       ASTNode.new(expr=close_expr, kw=close_kw, parent=parent)

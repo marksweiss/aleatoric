@@ -1,7 +1,4 @@
-# TODO Load from config
 $LOAD_PATH << "..\\lib"
-require 'composer'
-require 'composer_lang'
 require 'test/unit'
 
 # Super-elegant solution for temporarily getting access to private methods to test stolen from here:
@@ -42,8 +39,6 @@ class ComposerAST_Test < Test::Unit::TestCase
   # end
   # def teardown
   # end
-  
-  puts "TESTING Class ComposerAST"
     
   def test__append_completion
     puts "test__append_completion ENTERED"   
@@ -114,6 +109,10 @@ class ComposerAST_Test < Test::Unit::TestCase
     actual1, actual2 = lang.kw?(expr)
     assert(actual1 == true && actual2 == 'format')
 
+    expr = 'def start_f(factor, idx)'    
+    actual1, actual2 = lang.kw?(expr)
+    assert(actual1 == true && actual2 == 'def')    
+    
     expr = 'some other random line'    
     actual1, actual2 = lang.kw?(expr)
     assert(actual1 == false && actual2 == nil)
@@ -156,7 +155,7 @@ class ComposerAST_Test < Test::Unit::TestCase
     
     script = ''
     lang = ComposerAST.new(script)
-    
+
     kw = 'note'; expr = 'note'    
     actual1, actual2 = lang.valid_kw_arg?(kw, expr)    
     assert(actual1 == true && actual2 == nil)
@@ -221,52 +220,127 @@ class ComposerAST_Test < Test::Unit::TestCase
     actual1, actual2 = lang.valid_kw_arg?(kw, expr)    
     assert(actual1 == true && actual2 == '"In C.wav"') 
     
+    kw = 'def'; expr = 'def start_f(factor, idx)'    
+    actual1, actual2 = lang.valid_kw_arg?(kw, expr)    
+    assert(actual1 == true)    
+       
     end
     puts "test__valid_kw_arg? COMPLETED"
   end  
   
-  # TODO
-  def test__valid_child_kw?
+  def test__root?
     puts "test__valid_child_kw? ENTERED"   
     ComposerAST.publicize_methods do
+		
+    lang = ComposerAST.new('')
+		assert(lang.root?(lang.root))
         
     end
     puts "test__valid_child_kw? COMPLETED"
   end
-
-  # TODO
+  
   def test__valid_child_kw?
     puts "test__valid_child_kw? ENTERED"   
     ComposerAST.publicize_methods do
-        
+    
+    script = ''
+    lang = ComposerAST.new(script)		
+		
+		# parent == 'root'
+    assert(lang.valid_child_kw?('root', 'note'))
+    assert(lang.valid_child_kw?('root', 'phrase')) 
+    assert(lang.valid_child_kw?('root', 'section'))
+    assert(lang.valid_child_kw?('root', 'repeat'))
+    assert(lang.valid_child_kw?('root', 'write'))
+    assert(lang.valid_child_kw?('root', 'render'))
+    assert(! lang.valid_child_kw?('root', 'format'))
+		
+		# parent == 'note'
+    assert(! lang.valid_child_kw?('note', 'note'))
+    assert(! lang.valid_child_kw?('note', 'phrase')) 
+    assert(! lang.valid_child_kw?('note', 'section'))
+    assert(! lang.valid_child_kw?('note', 'repeat'))
+    assert(! lang.valid_child_kw?('note', 'write'))
+    assert(! lang.valid_child_kw?('note', 'render'))		
+    assert(! lang.valid_child_kw?('note', 'format'))		
+
+		# parent == 'phrase'
+    assert(lang.valid_child_kw?('phrase', 'note'))
+    assert(! lang.valid_child_kw?('phrase', 'phrase')) 
+    assert(! lang.valid_child_kw?('phrase', 'section'))
+    assert(lang.valid_child_kw?('phrase', 'repeat'))
+    assert(! lang.valid_child_kw?('phrase', 'write'))
+    assert(! lang.valid_child_kw?('phrase', 'render'))
+    assert(! lang.valid_child_kw?('phrase', 'format'))
+
+		# parent == 'section'
+    assert(! lang.valid_child_kw?('section', 'note'))
+    assert(lang.valid_child_kw?('section', 'phrase')) 
+    assert(! lang.valid_child_kw?('section', 'section'))
+    assert(! lang.valid_child_kw?('section', 'repeat'))
+    assert(! lang.valid_child_kw?('section', 'write'))
+    assert(! lang.valid_child_kw?('section', 'render'))
+    assert(! lang.valid_child_kw?('section', 'format'))
+		
+		# parent == 'repeat'
+    assert(lang.valid_child_kw?('repeat', 'note'))
+    assert(! lang.valid_child_kw?('repeat', 'phrase')) 
+    assert(! lang.valid_child_kw?('repeat', 'section'))
+    assert(! lang.valid_child_kw?('repeat', 'repeat'))
+    assert(! lang.valid_child_kw?('repeat', 'write'))
+    assert(! lang.valid_child_kw?('repeat', 'render'))
+    assert(! lang.valid_child_kw?('repeat', 'format'))
+		
+		# parent == 'write'
+    assert(! lang.valid_child_kw?('write', 'note'))
+    assert(! lang.valid_child_kw?('write', 'phrase')) 
+    assert(! lang.valid_child_kw?('write', 'section'))
+    assert(! lang.valid_child_kw?('write', 'repeat'))
+    assert(! lang.valid_child_kw?('write', 'write'))
+    assert(! lang.valid_child_kw?('write', 'render'))		
+    assert(lang.valid_child_kw?('write', 'format'))
+
+		# parent == 'render'
+    assert(! lang.valid_child_kw?('render', 'note'))
+    assert(! lang.valid_child_kw?('render', 'phrase')) 
+    assert(! lang.valid_child_kw?('render', 'section'))
+    assert(! lang.valid_child_kw?('render', 'repeat'))
+    assert(! lang.valid_child_kw?('render', 'write'))
+    assert(! lang.valid_child_kw?('render', 'render'))
+    assert(! lang.valid_child_kw?('render', 'format'))
+
+		# parent == 'format'
+    assert(! lang.valid_child_kw?('format', 'note'))
+    assert(! lang.valid_child_kw?('format', 'phrase')) 
+    assert(! lang.valid_child_kw?('format', 'section'))
+    assert(! lang.valid_child_kw?('format', 'repeat'))
+    assert(! lang.valid_child_kw?('format', 'write'))
+    assert(! lang.valid_child_kw?('format', 'render'))
+    assert(! lang.valid_child_kw?('format', 'format'))
+		
     end
     puts "test__valid_child_kw? COMPLETED"
   end
-
-  # TODO
-  def test__valid_root?
-    puts "test__valid_root? ENTERED"   
+  
+  def test__func?
+    puts "test__func? ENTERED"   
     ComposerAST.publicize_methods do
-        
+		
+    lang = ComposerAST.new('')
+
+    is_func_dec, is_func_call = lang.func?('foo: a, b, c')
+    assert(is_func_dec && ! is_func_call)
+		
+    is_func_dec, is_func_call = lang.func?('snippy foo: a, b, c')
+    assert(! is_func_dec && is_func_call)
+    
+    is_func_dec, is_func_call = lang.func?('note "my note"')
+    assert(! is_func_dec && ! is_func_call)
+            
     end
-    puts "test__valid_root? COMPLETED"
+    puts "test__func? COMPLETED"
   end
   
-  # TODO
-  def test__valid_grammar?
-    puts "test__valid_grammar? ENTERED"   
-    ComposerAST.publicize_methods do
-        
-    end
-    puts "test__valid_grammar? COMPLETED"
-  end
-  
-end    
-  
-# /Note and NoteTest #######################
+end   
 
-end  
-#/CSnd Module
-
-
-
+end

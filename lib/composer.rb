@@ -129,9 +129,9 @@ def phrases(*names)
   # Because Score is a singleton, this can just write its notes to Score's output notes
   # This is bad because it goes in the opposite direction of the nesting logic for Notes, Phrases, etc.
   # So, lurking bugs.  Also it breaks if we want to have more than on Score.  Fine for "now."
-  names.each do |name|   
+  names.each do |name| 
     name = name.strip
-    phrase = @phrases_by_name[name]    
+    phrase = @phrases_by_name[name]
     phrase.notes.each do |note|
       @score_notes << note.dup
     end
@@ -203,6 +203,11 @@ def render(out_file, &args_blk)
   @renderer.render(renderer=@score_out.format, out_file=out_file, score_file=@score_out.name)
   @processing_renderer = false
 end
+
+# TODO NEW SYNTAX NOT TESTED YET, NOT COMMITTED YET
+
+# END TODO
+
 
 # FOR UNIT TESTING
 def dump_notes

@@ -39,7 +39,7 @@ class Note
         val = @note_attrs[key].to_s.strip	
         # NOTE: This is a pretty terrible check for a float
         if val.include? '.'
-          ret.concat(sprintf("%.3f", val) + " ")
+          ret.concat(sprintf("%.5f", val) + " ")
         else
           ret.concat("#{val} ")
         end	  
