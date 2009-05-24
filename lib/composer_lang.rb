@@ -207,9 +207,8 @@ class ComposerAST
   private
 
   def preprocess_text_subs(script_in)
+    script_in = preprocess_func script_in
     script_in = preprocess_assignment script_in
-    script_in = preprocess_func_dec script_in
-		script_in = preprocess_func_call script_in
     script_in
   end
   
@@ -232,9 +231,14 @@ class ComposerAST
             if tkns.length < 2
               # First non-assignment statement, toggle state
               state = :invoking
-            elsif tkns.length == 2
+            elsif tkns.length == 2              
+              # Replace anything on right side with previously identified variables
+              # So assignments can take previously declared vars as values
+              tkn = tkns[1].strip
+              @@var_map.each {|name, val| tkn.sub!(name, val)}
+              expr = tkns[0].strip + ' ' + @@operators[:assignment] + ' ' + tkn              
               # Found an assignment, store value mapped to name, for substituting once state is :invocation
-              @@var_map[tkns[0].strip] = tkns[1].strip
+              @@var_map[tkns[0].strip] = tkn
             end
           end
         # Not assigning vars so look for var invocations and substitute the value for the var name in the script
@@ -254,30 +258,46 @@ class ComposerAST
     
     script_out
   end
-	
-	def preprocess_func_dec(script_in)  
-    script_out = []
-    script_in.each do |expr|
-      if func_dec?(expr)
-        expr.sub!(': ', ':')
-        expr = 'def ' + expr.strip.sub(':', '(') + ")\n"
-      end
-			script_out << expr
-		end
-		script_out
-	end
 
-	def preprocess_func_call(script_in)  
+  def preprocess_func(script_in)
     script_out = []
     script_in.each do |expr|
-      if func_call?(expr)
-        expr.sub!(': ', ':')
-        expr = expr.rstrip.sub(':', '(') + ")\n"
-			end
-      script_out << expr
+      script_out << preprocess_func_helper(expr)
 		end
-		script_out
-	end
+		script_out  
+  end
+
+  def preprocess_func_helper(expr)
+    # Empty expr or expr is a string, or it has no colons then it's not a func dec or func call
+    return expr if expr == nil or expr.length == 0 or expr[0,1] == '"' or not expr.include? ':'  
+    
+    tkns = expr.split(' ')    
+    # Warning: this is a hack. Further proof that eventually this needs a real parser. 
+    # Scanning instead of really building AST.  Only allowing nested functions as last args in parent expression
+    num_tkns = tkns.size
+    func_cnt = 0
+    tkns_out = []
+    num_tkns.times do |j|
+      tkn = tkns[j].strip
+      if tkn.include?(':')
+        func_cnt += 1
+        tkn = tkn.sub(':', '(')
+        # If this is the first token in the line, then this is a function delcaration, do
+        #  precede with 'def ' keyword so statement preprocessing that follows will make this a block
+        tkn = 'def ' + tkn if j == 0
+      end    
+      tkns_out << tkn
+    end
+
+    if func_cnt > 0
+      last_tkn = tkns_out[num_tkns-1].strip
+      func_cnt.times {last_tkn += ')'}
+      last_tkn += "\n"
+      tkns_out[num_tkns-1] = last_tkn
+    end
+
+    tkns_out.join(' ')
+  end
 	
 	def preprocess_expressions(script_in, src_file_name)
 	  line_no = 0

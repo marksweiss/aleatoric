@@ -321,24 +321,35 @@ class ComposerAST_Test < Test::Unit::TestCase
     end
     puts "test__valid_child_kw? COMPLETED"
   end
-  
-  def test__func?
-    puts "test__func? ENTERED"   
+   
+  def test__preprocess_func_helper
+    puts "test__preprocess_func_helper ENTERED"   
     ComposerAST.publicize_methods do
 		
     lang = ComposerAST.new('')
 
-    is_func_dec, is_func_call = lang.func?('foo: a, b, c')
-    assert(is_func_dec && ! is_func_call)
-		
-    is_func_dec, is_func_call = lang.func?('snippy foo: a, b, c')
-    assert(! is_func_dec && is_func_call)
+    actual = lang.preprocess_func_helper('foo: a, b, c')
+    expected = "foo( a, b, c)\n"    
+    assert(actual == expected)
     
-    is_func_dec, is_func_call = lang.func?('note "my note"')
-    assert(! is_func_dec && ! is_func_call)
-            
+    actual = lang.preprocess_func_helper('foo: a, b, bar: c, d')
+    expected = "foo( a, b, bar( c, d))\n"
+    assert(actual == expected)    
+
+    actual = lang.preprocess_func_helper('foo: a, b, bar: c, baz: d')
+    expected = "foo( a, b, bar( c, baz( d)))\n"
+    assert(actual == expected)
+
+    actual = lang.preprocess_func_helper('instrument foo: a, b, bar: c, baz: d')
+    expected = "instrument foo( a, b, bar( c, baz( d)))\n"
+    assert(actual == expected)
+    
+    actual = lang.preprocess_func_helper('instrument 1, 2, 3')
+    expected = "instrument 1, 2, 3"
+    assert(actual == expected)    
+    
     end
-    puts "test__func? COMPLETED"
+    puts "test__preprocess_func_helper COMPLETED"  
   end
   
 end   
