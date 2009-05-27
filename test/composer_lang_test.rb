@@ -1,4 +1,5 @@
 $LOAD_PATH << "..\\lib"
+require 'composer_lang'
 require 'test/unit'
 
 # Super-elegant solution for temporarily getting access to private methods to test stolen from here:
@@ -40,35 +41,35 @@ class ComposerAST_Test < Test::Unit::TestCase
   # def teardown
   # end
     
-  def test__append_completion
-    puts "test__append_completion ENTERED"   
-    ComposerAST.publicize_methods do
+#  def test__append_completion
+#    puts "test__append_completion ENTERED"   
+#    ComposerAST.publicize_methods do
     
-    script = ''
-    lang = ComposerAST.new(script)
+#    script = ''
+#    lang = ComposerAST.new(script)
     
-    kw = 'note'; expr = 'note'
-    assert(lang.append_completion(kw, expr) == "note do\n")
-    kw = 'note'; expr = 'note "Note 1"'
-    assert(lang.append_completion(kw, expr) == "note \"Note 1\" do\n")
-    kw = 'phrase'; expr = 'phrase "Phrase 1"'
-    assert(lang.append_completion(kw, expr) == "phrase \"Phrase 1\" do\n")
-    kw = 'section'; expr = 'section "Section 1"'
-    assert(lang.append_completion(kw, expr) == "section \"Section 1\" do\n")
-    kw = 'repeat'; expr = 'repeat 20'
-    assert(lang.append_completion(kw, expr) == "repeat 20 do |index|\n")
-    kw = 'write'; expr = 'write "In C.sco"'
-    assert(lang.append_completion(kw, expr) == "write \"In C.sco\" do\n")
-    kw = 'render'; expr = 'render "In C.wav"'
-    assert(lang.append_completion(kw, expr) == "render \"In C.wav\" do\n")
-    kw = 'format'; expr = 'format csound'
-    assert(lang.append_completion(kw, expr) == "format csound\n")
-    kw = ''; expr = 'some other random line'
-    assert(lang.append_completion(kw, expr) == "some other random line\n")
+#    kw = 'note'; expr = 'note'
+#    assert(lang.append_completion(kw, expr) == "note do\n")
+#    kw = 'note'; expr = 'note "Note 1"'
+#    assert(lang.append_completion(kw, expr) == "note \"Note 1\" do\n")
+#    kw = 'phrase'; expr = 'phrase "Phrase 1"'
+#    assert(lang.append_completion(kw, expr) == "phrase \"Phrase 1\" do\n")
+#    kw = 'section'; expr = 'section "Section 1"'
+#    assert(lang.append_completion(kw, expr) == "section \"Section 1\" do\n")
+#    kw = 'repeat'; expr = 'repeat 20'
+#    assert(lang.append_completion(kw, expr) == "repeat 20 do |index|\n")
+#    kw = 'write'; expr = 'write "In C.sco"'
+#    assert(lang.append_completion(kw, expr) == "write \"In C.sco\" do\n")
+#    kw = 'render'; expr = 'render "In C.wav"'
+#    assert(lang.append_completion(kw, expr) == "render \"In C.wav\" do\n")
+#    kw = 'format'; expr = 'format csound'
+#    assert(lang.append_completion(kw, expr) == "format csound\n")
+#    kw = ''; expr = 'some other random line'
+#    assert(lang.append_completion(kw, expr) == "some other random line\n")
     
-    end
-    puts "test__append_completion COMPLETED"
-  end
+#    end
+#    puts "test__append_completion COMPLETED"
+#  end
  
   def test__kw?
     puts "test__kw? ENTERED"   
@@ -81,39 +82,35 @@ class ComposerAST_Test < Test::Unit::TestCase
     actual1, actual2 = lang.kw?(expr)
     assert(actual1 == true && actual2 == 'note')
 
-    expr = 'note "Note 1"'    
-    actual1, actual2 = lang.kw?(expr)
-    assert(actual1 == true && actual2 == 'note')
-
-    expr = 'phrase "Phrase 1"'    
+    expr = 'phrase'    
     actual1, actual2 = lang.kw?(expr)
     assert(actual1 == true && actual2 == 'phrase')
     
-    expr = 'section "Section 1"'    
+    expr = 'section'    
     actual1, actual2 = lang.kw?(expr)
     assert(actual1 == true && actual2 == 'section')
 
-    expr = 'repeat 20'    
+    expr = 'repeat'    
     actual1, actual2 = lang.kw?(expr)
     assert(actual1 == true && actual2 == 'repeat')
 
-    expr = 'write "In C.sco"'    
+    expr = 'write'    
     actual1, actual2 = lang.kw?(expr)
     assert(actual1 == true && actual2 == 'write')
     
-    expr = 'render "In C.wav"'    
+    expr = 'render'    
     actual1, actual2 = lang.kw?(expr)
     assert(actual1 == true && actual2 == 'render')
 
-    expr = 'format csound'    
+    expr = 'format'    
     actual1, actual2 = lang.kw?(expr)
     assert(actual1 == true && actual2 == 'format')
 
-    expr = 'def start_f(factor, idx)'    
+    expr = 'def'    
     actual1, actual2 = lang.kw?(expr)
     assert(actual1 == true && actual2 == 'def')    
     
-    expr = 'some other random line'    
+    expr = 'NOT_A_KEYWORD'    
     actual1, actual2 = lang.kw?(expr)
     assert(actual1 == false && actual2 == nil)
     
@@ -156,71 +153,71 @@ class ComposerAST_Test < Test::Unit::TestCase
     script = ''
     lang = ComposerAST.new(script)
 
-    kw = 'note'; expr = 'note'    
-    actual1, actual2 = lang.valid_kw_arg?(kw, expr)    
+    kw = 'note'; expr = ['note']    
+    actual1, actual2 = lang.valid_kw_arg?(kw, expr)     
     assert(actual1 == true && actual2 == nil)
     
-    kw = 'note'; expr = 'note "Note 1"'    
+    kw = 'note'; expr = ['note', '"Note 1"']    
     actual1, actual2 = lang.valid_kw_arg?(kw, expr)    
     assert(actual1 == true && actual2 == '"Note 1"')
 
-    kw = 'note'; expr = 'note 1'    
+    kw = 'note'; expr = ['note', '1']    
     actual1, actual2 = lang.valid_kw_arg?(kw, expr)    
     assert(actual1 == false)    
  
-    kw = 'phrase'; expr = 'phrase "Phrase 1"'    
+    kw = 'phrase'; expr = ['phrase', '"Phrase 1"']    
     actual1, actual2 = lang.valid_kw_arg?(kw, expr)    
     assert(actual1 == true && actual2 == '"Phrase 1"')
 
-    kw = 'phrase'; expr = 'phrase 1'    
+    kw = 'phrase'; expr = ['phrase', '1']   
     actual1, actual2 = lang.valid_kw_arg?(kw, expr)    
     assert(actual1 == false)
 
-    kw = 'section'; expr = 'section "Section 1"'    
+    kw = 'section'; expr = ['section', '"Section 1"']  
     actual1, actual2 = lang.valid_kw_arg?(kw, expr)    
     assert(actual1 == true && actual2 == '"Section 1"')
 
-    kw = 'section'; expr = 'section 1'    
+    kw = 'section'; expr = ['section', '1']   
     actual1, actual2 = lang.valid_kw_arg?(kw, expr)    
     assert(actual1 == false)
 
-    kw = 'repeat'; expr = 'repeat'    
+    kw = 'repeat'; expr = ['repeat']    
     actual1, actual2 = lang.valid_kw_arg?(kw, expr)    
     assert(actual1 == false)
 
-    kw = 'repeat'; expr = 'repeat "1"'    
+    kw = 'repeat'; expr = ['repeat', '"1"']    
     actual1, actual2 = lang.valid_kw_arg?(kw, expr)    
     assert(actual1 == false)
     
-    kw = 'repeat'; expr = 'repeat 1'    
+    kw = 'repeat'; expr = ['repeat', '1']    
     actual1, actual2 = lang.valid_kw_arg?(kw, expr)    
     assert(actual1 == true && actual2 == 1)
 
-    kw = 'render'; expr = 'render'    
+    kw = 'render'; expr = ['render']    
     actual1, actual2 = lang.valid_kw_arg?(kw, expr)    
     assert(actual1 == false)
 
-    kw = 'render'; expr = 'render 100'    
+    kw = 'render'; expr = ['render', '100']    
     actual1, actual2 = lang.valid_kw_arg?(kw, expr)    
     assert(actual1 == false)
     
-    kw = 'render'; expr = 'render "In C.sco"'    
+    kw = 'render'; expr = ['render', '"In C.sco"']    
     actual1, actual2 = lang.valid_kw_arg?(kw, expr)    
     assert(actual1 == true && actual2 == '"In C.sco"')     
  
-    kw = 'write'; expr = 'write'    
+    kw = 'write'; expr = ['write']    
     actual1, actual2 = lang.valid_kw_arg?(kw, expr)    
     assert(actual1 == false)
 
-    kw = 'write'; expr = 'write 100'    
+    kw = 'write'; expr = ['write', '100']    
     actual1, actual2 = lang.valid_kw_arg?(kw, expr)    
     assert(actual1 == false)
     
-    kw = 'write'; expr = 'write "In C.wav"'    
+    kw = 'write'; expr = ['write', '"In C.wav"']    
     actual1, actual2 = lang.valid_kw_arg?(kw, expr)    
     assert(actual1 == true && actual2 == '"In C.wav"') 
     
-    kw = 'def'; expr = 'def start_f(factor, idx)'    
+    kw = 'def'; expr = ['def', 'start_f(factor, idx)']    
     actual1, actual2 = lang.valid_kw_arg?(kw, expr)    
     assert(actual1 == true)    
        
@@ -321,36 +318,70 @@ class ComposerAST_Test < Test::Unit::TestCase
     end
     puts "test__valid_child_kw? COMPLETED"
   end
-   
+
+  def test__tokenize
+    puts "test__tokenize ENTERED"   
+    ComposerAST.publicize_methods do
+		
+    lang = ComposerAST.new('')
+
+    actual = lang.tokenize("foo: a, b, c\n")    
+    expected = [['foo:', 'a', ',', 'b', ',', 'c']]
+    assert(actual == expected)
+
+    actual = lang.tokenize("instrument foo: a, b, c\n")
+    expected = [['instrument', 'foo:', 'a', ',', 'b', ',', 'c']]
+    assert(actual == expected)
+    
+    actual = lang.tokenize("instrument 100\n")
+    expected = [['instrument', '100']]
+    assert(actual == expected)
+
+    actual = lang.tokenize("note \"intro\"\n")    
+    expected = [['note', '"intro"']]
+    assert(actual == expected)
+
+    actual = lang.tokenize("instrument 100*5+2; amplitude 200\n")
+    expected = [['instrument', '100', '*', '5', '+', '2', ';', 'amplitude', '200']]
+    assert(actual == expected)
+
+    actual = lang.tokenize("note \"Note 1\"\n")
+    expected = [['note', '"Note 1"']]
+    assert(actual == expected)
+    
+    end
+    puts "test__tokenize COMPLETED"  
+  end  
+  
   def test__preprocess_func_helper
     puts "test__preprocess_func_helper ENTERED"   
     ComposerAST.publicize_methods do
 		
     lang = ComposerAST.new('')
 
-    actual = lang.preprocess_func_helper('foo: a, b, c')
-    expected = "foo( a, b, c)\n"    
+    actual = lang.preprocess_func_helper(lang.tokenize("foo: a, b, c\n")[0])        
+    expected = ['def', 'foo(', 'a', ',', 'b', ',', 'c', ')']    
     assert(actual == expected)
     
-    actual = lang.preprocess_func_helper('foo: a, b, bar: c, d')
-    expected = "foo( a, b, bar( c, d))\n"
+    actual = lang.preprocess_func_helper(lang.tokenize('foo: a, b, bar: c, d')[0])
+    expected = ['def', 'foo(', 'a', ',', 'b', ',', 'bar(', 'c', ',', 'd', ')', ')']  
     assert(actual == expected)    
 
-    actual = lang.preprocess_func_helper('foo: a, b, bar: c, baz: d')
-    expected = "foo( a, b, bar( c, baz( d)))\n"
+    actual = lang.preprocess_func_helper(lang.tokenize('foo: a, b, bar: c, baz: d')[0])    
+    expected = ['def', 'foo(', 'a', ',', 'b', ',', 'bar(', 'c', ',', 'baz(', 'd', ')', ')', ')']  
     assert(actual == expected)
 
-    actual = lang.preprocess_func_helper('instrument foo: a, b, bar: c, baz: d')
-    expected = "instrument foo( a, b, bar( c, baz( d)))\n"
+    actual = lang.preprocess_func_helper(lang.tokenize('instrument foo: a, b, bar: c, baz: d')[0])
+    expected = ['instrument', 'foo(', 'a', ',', 'b', ',', 'bar(', 'c', ',', 'baz(', 'd', ')', ')', ')']  
     assert(actual == expected)
     
-    actual = lang.preprocess_func_helper('instrument 1, 2, 3')
-    expected = "instrument 1, 2, 3"
+    actual = lang.preprocess_func_helper(lang.tokenize('instrument 1, 2, 3')[0])    
+    expected = ['instrument', '1', ',', '2', ',', '3']  
     assert(actual == expected)    
     
     end
     puts "test__preprocess_func_helper COMPLETED"  
-  end
+  end  
   
 end   
 

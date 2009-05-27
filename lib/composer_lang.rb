@@ -1,3 +1,9 @@
+class Array
+  def intersects?(ar)
+    (self & ar).length > 0
+  end
+end
+
 # Parse Rules
 #
 # 1. Note can be child of Root
@@ -165,7 +171,10 @@ class ComposerAST
     end # 'format' has 'write' parent
   }
   
-  @@operators = {:assignment => '='}
+  @@operators = {:delim => [',', ';', "\n", '"'], 
+                 :native_ruby => ['`','~','!','%','^','&&','&','*','(',')','-=', '-','+=','+','||','|','{','}','[',']'],
+                 :assignment => ['=']
+                }
   @@var_map = {}
   @@assignment_states = [:declaring, :invoking]
 
@@ -183,7 +192,8 @@ class ComposerAST
   end
  
   def preprocess_script(src_file_name)
-		@script = preprocess_text_subs @script
+    @tkns = tokenize @script
+		@tkns = preprocess_text_subs @tkns
     preprocess_expressions(@script, src_file_name)
     self
   end
@@ -205,106 +215,164 @@ class ComposerAST
   
   # HELPERS
   private
-
-  def preprocess_text_subs(script_in)
-    script_in = preprocess_func script_in
-    script_in = preprocess_assignment script_in
-    script_in
+  
+  def tokenize(script_in, op_list=nil)
+    tkns = []    
+    op_list ||= @@operators.values.flatten
+      # For each operator token, replace it with the token plus ws on each side of it
+      # This lets us split the line and make sure all delimiting characters become their own token
+      #  along with all 'words'.  Build up a list (one entry per line), of lists (each line a list of tkns)
+      script_in.each do |expr|
+        op_list.each do |op|        
+          expr.gsub!(op, ' ' + op + ' ')
+        end
+        # NOTE: This strips trailing '\n' which we will restore at the end of all line preprocessing
+        expr_tkns = expr.split(' ').collect{|tkn| tkn.strip}            
+        # Need this because strip() strips the "\n" that is there from line incoming
+        # expr_tkns << "\n"
+        expr_tkns = tokenize_join_str expr_tkns
+        tkns << expr_tkns
+      end
+    tkns
   end
   
-  def preprocess_assignment(script_in)  
-    state = :declaring
-    script_out = []
+  def tokenize_join_str(tkns)    
+    tkns_out = []
+    str_expr_tkns = []
+    str_delim_flag = false
+    delim = ""
+    tkns.length.times do |j|
+      tkn = tkns[j]
+
+      if ! str_delim_flag and (tkn != '"' and tkn != "'")
+        tkns_out << tkn
+      elsif ! str_delim_flag and (tkn == '"' or tkn == "'")
+        str_delim_flag = true
+        delim = tkn
+      elsif (str_delim_flag && (tkn != delim))
+        str_expr_tkns << tkn
+      elsif (str_delim_flag && (tkn == delim))
+        str_delim_flag = false
+        expr = delim + str_expr_tkns.join(' ') + delim
+        tkns_out << expr
+        delim = ""
+        str_expr_tkns = []
+      end
+    end
     
-    script_in.each do |expr|  
-      # Skip comment lines, empty lines, special debug statemenets
-      if (expr != nil && expr.strip.length != 0 && expr[0,1] != '#' &&  !@@debug_stmts.include?(expr.strip))        
+    tkns_out.flatten
+  end
+
+  def preprocess_text_subs
+    @tkns = preprocess_assignment
+    @tkns = preprocess_func @tkns
+    @tkns
+  end
+
+  def debug_stmt?(expr)
+    expr.each do |tkn|
+      return true if @@debug_stmts.include?(tkn)
+    end
+    false
+  end
+  
+  def ass_replace_tkns_helper(tkn_line, lidx)
+    (tkn_line.length - lidx).times do |j|
+      idx = j + lidx
+      @@var_map.each {|name, val| tkn_line[idx] = val if tkn_line[idx] == name}
+    end
+    tkn_line
+  end
+  
+  def validate_skip_line(tkn_line)
+    tkn_line == nil or tkn_line.length == 0 or tkn_line[0] == '"' or tkn_line[0] == "'" or ((@@debug_stmts & tkn_line).length > 0)  
+  end  
+  
+  def preprocess_assignment(tkns)
+    state = :declaring
+    tkns_out = []
+    
+    tkns.each do |tkn_line|  
+    # Skip comment lines, empty lines, special debug statemenets
+      if not validate_skip_line tkn_line
         # Read all vars as a block at the start of the script, only support for vars right now
         if state == :declaring
-          if (expr[0,1] == '"' || expr[0,1] == "'")
+          if (tkn_line[0] == '"' || tkn_line[0] == "'" || tkn_line.length < 3 || tkn_line[1] != @@operators[:assignment][0])
             # First non-assignment statement, toggle state. This logic assumes all assignments
             #  at top of file, before anything else, so anything else stops binding names to vars
             state = :invoking
           else 
-            tkns = expr.split(@@operators[:assignment])            
-            # '=' not found in expr, so split doesn't return list of the two tokens, so length == 1
-            if tkns.length < 2
-              # First non-assignment statement, toggle state
-              state = :invoking
-            elsif tkns.length == 2              
-              # Replace anything on right side with previously identified variables
-              # So assignments can take previously declared vars as values
-              tkn = tkns[1].strip
-              @@var_map.each {|name, val| tkn.sub!(name, val)}
-              expr = tkns[0].strip + ' ' + @@operators[:assignment] + ' ' + tkn              
-              # Found an assignment, store value mapped to name, for substituting once state is :invocation
-              @@var_map[tkns[0].strip] = tkn
-            end
+            # Replace anything on right side with previously identified variables
+            # So assignments can take previously declared vars as values
+            lidx = 2 # because we are skipping ['x', '=', ...]
+            tkn_line = ass_replace_tkns_helper(tkn_line, lidx)
+            # Found an assignment, store value mapped to name, for substituting once state is :invocation
+            @@var_map[tkn_line[0]] = tkn_line[2..tkn_line.length]
           end
         # Not assigning vars so look for var invocations and substitute the value for the var name in the script
         else # if state == :invoking
           # For all the variables declared, sub the value for any appearance of the name in the expression
-          # TODO - This is an obvious bug not doing it at the discrete token level but instead doing
-          #  a cheap sub.  Must get array of tokens and sub token, NOT substring
-          @@var_map.each do |name, val|             
-            expr.sub!(name, val)
-          end
+          lidx = 0
+          tkn_line = ass_replace_tkns_helper(tkn_line, lidx)
         end
       end
       
-      # Copy the possibly transformed line to output
-      script_out << expr
+      tkns_out << tkn_line
     end
     
-    script_out
+    tkns_out
   end
 
-  def preprocess_func(script_in)
-    script_out = []
-    script_in.each do |expr|
-      script_out << preprocess_func_helper(expr)
-		end
-		script_out  
-  end
-
-  def preprocess_func_helper(expr)
-    # Empty expr or expr is a string, or it has no colons then it's not a func dec or func call
-    return expr if expr == nil or expr.length == 0 or expr[0,1] == '"' or not expr.include? ':'  
-    
-    tkns = expr.split(' ')    
-    # Warning: this is a hack. Further proof that eventually this needs a real parser. 
-    # Scanning instead of really building AST.  Only allowing nested functions as last args in parent expression
-    num_tkns = tkns.size
-    func_cnt = 0
+  def preprocess_func(tkns)  
     tkns_out = []
+    tkns.each do |tkn_line|
+      tkns_out << preprocess_func_helper(tkn_line)
+		end
+		tkns_out  
+  end
+  
+  # Warning: this is a hack. Further proof that eventually this needs a real parser. 
+  # Scanning instead of really building AST.  Only allowing nested functions as last args in parent expression
+  def preprocess_func_helper(tkn_line)
+    # Empty expr or expr is a string, or it has no colons then it's not a func dec or func call
+    return tkn_line if validate_skip_line tkn_line
+    
+    num_tkns = tkn_line.size
+    func_cnt = 0
+    tkn_line_out = []
     num_tkns.times do |j|
-      tkn = tkns[j].strip
+      # Skipping length == 0 tkns, which should never happen since we stripped newlines
+      #  and delimited on ws and made all deliting chars separate tokens
+      tkn = tkn_line[j].strip
+      next if tkn.length == 0
+      # Do subsititutions for function tkns
+      # Converts foo: a, b, c -> def foo(a,b,c)
+      # Conerts instrument foo: a, b, c -> instrument foo(a,b,c)
       if tkn.include?(':')
         func_cnt += 1
         tkn = tkn.sub(':', '(')
+        # tkn_line[j] = tkn
         # If this is the first token in the line, then this is a function delcaration, do
         #  precede with 'def ' keyword so statement preprocessing that follows will make this a block
-        tkn = 'def ' + tkn if j == 0
-      end    
-      tkns_out << tkn
-    end
+        tkn_line_out = ['def'] + tkn_line_out if j == 0
+      end
 
-    if func_cnt > 0
-      last_tkn = tkns_out[num_tkns-1].strip
-      func_cnt.times {last_tkn += ')'}
-      last_tkn += "\n"
-      tkns_out[num_tkns-1] = last_tkn
+      tkn_line_out << tkn
     end
-
-    tkns_out.join(' ')
+    # Put closing parens on end of statement
+    # TODO This is lame because not a real tree, only supports nested function calls as last
+    #  token in their subexpression
+    func_cnt.times {tkn_line_out << ')'} if func_cnt > 0
+    
+    tkn_line_out
   end
 	
-	def preprocess_expressions(script_in, src_file_name)
+	def preprocess_expressions(tkns, src_file_name)
 	  line_no = 0
-    script_in.each do |expr|
+    tkns.each do |tkn_line|
       begin
         line_no += 1
-        preprocess_expression(expr, src_file_name, line_no)
+        preprocess_expression(tkn_line, src_file_name, line_no)
       rescue Exception => e
         @parent.add_child(ASTNode.new(expr=e.to_s, kw='Composer_ERROR', parent=@parent))
         break      
@@ -312,32 +380,32 @@ class ComposerAST
     end	
 	end
   
-  def preprocess_expression(expr, src_file_name, line_no)  
-    expr = expr.strip
-    return if expr == nil or expr.length == 0 or expr[0,1] == '#'
+  def preprocess_expression(tkn_line, src_file_name, line_no)  
+    return tkn_line if validate_skip_line tkn_line
   
     # Test for keyword starting line or not, kw lines processed differently because they
     #  create grammar structure of script, non-kw lines just appended to current parent as attrs of it
-    is_kw, kw = kw? expr      
-    # Add the kw completion to the line
-    expr = append_completion(kw, expr)
+    is_kw, kw = kw? tkn_line[0]      
         
     if is_kw
       # Validate special rules for this kw, raise error if violated
-      is_valid, kw_arg = valid_kw_arg?(kw, expr)
+      is_valid, kw_arg = valid_kw_arg?(kw, tkn_line)
       if not is_valid
         raise ComposerASTException, "Source File Name: #{src_file_name}. Line Number: #{line_no}. Illegal argument '#{kw_arg}' passed to function '#{kw}'."
       end
+
+      # Add the kw completion tokens to the end of the line
+      tkn_line.insert(1, tokenize(@@kw_completions[kw]))
       
       # If kw is valid child of @parent, new more nested parent, add_new node as child of @parent
       #  and make it the new @parent
       if valid_child_kw?(parent=@parent.kw, child=kw)      
-        new_node = insert_node(expr, kw, @parent)
+        new_node = insert_node(tkn_line, kw, @parent)
         @parent = new_node
       # If same as @parent or valid child of @parent.parent, add new_node 
       #  as next child of @parent.parent and make new_node the new @parent
       elsif @parent.kw == kw or valid_child_kw?(parent=@parent.parent.kw, child=kw)
-        new_node = insert_node(expr, kw, @parent.parent)
+        new_node = insert_node(tkn_line, kw, @parent.parent)
         @parent = new_node
       # Otherwise previous block ends and new block starts at a higher level. Nodes can be children 
       #  at multiple levels, and all can be child of root, so pop until first valid parent of new_node
@@ -346,7 +414,7 @@ class ComposerAST
         cur_parent = @parent.parent
         while cur_parent != nil
           if valid_child_kw?(parent=cur_parent.kw, child=kw)
-            new_node = insert_node(expr, kw, cur_parent)
+            new_node = insert_node(tkn_line, kw, cur_parent)
             @parent = new_node 
             found_parent = true
             break
@@ -358,85 +426,81 @@ class ComposerAST
           if not root? cur_parent
             raise ComposerASTException, "Source File Name: #{src_file_name}. Line Number: #{line_no}. Illegal argument '#{kw_arg}' passed to function '#{kw}'."
           end
-          new_node = insert_node(expr, kw, cur_parent)
+          new_node = insert_node(tkn_line, kw, cur_parent)
           @parent = new_node          
         end        
       end
     # Not a new grammar node, just an attribute node of the current parent, so just add child
     else    
-      @parent.add_child(ASTNode.new(expr=expr, kw='', parent=@parent))
+      @parent.add_child(ASTNode.new(expr=tkns_to_expr(tkn_line, append_newline=true), kw='', parent=@parent))
     end    
   end
   
   # process_expr() Helpers
-  def append_completion(kw, expr)
-    append_expr = @@kw_completions[kw]
-    append_expr = "\n" if append_expr == nil
-    expr + append_expr
-  end
+  #def append_completion(kw, expr)
+  #  append_expr = @@kw_completions[kw]
+  #  append_expr = "\n" if append_expr == nil
+  #  expr + append_expr
+  #end
         
-  def kw?(expr)
-    kw = parse_kw expr    
-    if @@kw.include? kw
-      return true, kw
+  def kw?(tkn)
+    if @@kw.include? tkn
+      return true, tkn
     else
       return false, nil
     end
   end
  
-  def parse_kw(expr)
-    return nil if expr == nil or expr.length == 0
-    bound = expr.index(' ')
-    bound = expr.length if bound == nil      
-    return expr[0, bound]
-  end
+  # TODO Get rid of because now input already tokenized
+#  def parse_kw(tkn)
+#    return nil if expr == nil or expr.length == 0
+#    bound = expr.index(' ')
+#    bound = expr.length if bound == nil      
+#    return expr[0, bound]
+#  end
   
-	def func_call?(expr)
-		is_func_dec, is_func_call = func? expr
-		is_func_call
-	end
+	#def func_call?(expr)
+	#	is_func_dec, is_func_call = func? expr
+	#	is_func_call
+	#end
 	
-	def func_dec?(expr)
-		is_func_dec, is_func_call = func? expr
-		is_func_dec
-	end	
+	#def func_dec?(expr)
+	#	is_func_dec, is_func_call = func? expr
+	#	is_func_dec
+	#end	
 	
-  def func?(expr)
-    is_func_dec = false
-    is_func_call = false
+  #def func?(expr)
+  #  is_func_dec = false
+  #  is_func_call = false
     
-    return false, is_func_call if expr == nil or expr.length == 0 or expr[0,1] == '"'
+  #  return false, is_func_call if expr == nil or expr.length == 0 or expr[0,1] == '"'
     # If no colon it's not a func dec
     # This is a syntax error, can't have colon as first character of the token
-    colon_idx = expr.strip.index(':')
-    return false, is_func_call if colon_idx == nil or colon_idx == 0
-    ws_idx = expr.strip.index(' ')    
+  #  colon_idx = expr.strip.index(':')
+  #  return false, is_func_call if colon_idx == nil or colon_idx == 0
+   # ws_idx = expr.strip.index(' ')    
     # If colon_idx > 0 and ws_idx == nil then this is a func_dec for func taking no args
-    return true, is_func_call if ws_idx == nil
+  #  return true, is_func_call if ws_idx == nil
     
     # So if we got to here, there is a colon and it's before any delmiting ws, i.e. - it's tacked
     #  onto the leftmost token, i.e. this token is the name of a function
-    is_func_dec = true if ws_idx == colon_idx + 1
+  #  is_func_dec = true if ws_idx == colon_idx + 1
     # Otherwise there is a token with a colon but it's not the first token, this is a func_call stmt
-    is_func_call = true if ws_idx > 0 and ws_idx < colon_idx
+  #  is_func_call = true if ws_idx > 0 and ws_idx < colon_idx
 
-    return is_func_dec, is_func_call
-  end
+   # return is_func_dec, is_func_call
+  #end
   
-  def valid_kw_arg?(kw, expr)
+  def valid_kw_arg?(kw, tkns)
+    return [false, nil] if tkns == nil or tkns.length == 0
+  
     is_valid = true
-    # Get next token after kw, all syntax rules validate next token
-    kw_arg = second_tkn expr     
-    # Test whether an arg is not actually a string, keyword, etc.
-    #  but rather a name, bound to a variable assigned a value in the script, if so use
-    #  the bound value in the validation
-    kw_arg_var = var_val kw_arg
-    kw_arg = kw_arg_var if kw_arg_var != nil    
+    kw_arg = (tkns.length == 1 ? nil : tkns[1]) 
     # So, some validation rules test for proper type or args passed, e.g. the loop bound
     #  value passed to 'repeat' which only makes sense as an Integer.  But all the args are
     #  being read in from a text file and not evaled so they look like strings.  So test
     #  if we can convert and do so and pass the Int if we can to the validation calls
-    is_int, kw_arg_int = integer? kw_arg
+    is_int, kw_arg_int = integer?(kw_arg) if kw_arg != nil
     kw_arg = kw_arg_int if is_int 
     
     syntax_rule = @@syntax_rules[kw]
@@ -466,36 +530,44 @@ class ComposerAST
     return is_int, ret
   end
  
-  def second_tkn(expr)
-    lidx = expr.index(' ')    
-    return nil if lidx == nil
+#  def second_tkn(expr)
+#    lidx = expr.index(' ')    
+#    return nil if lidx == nil
     # Rebase lbound of string range working with
-    expr = expr[lidx, expr.length - lidx]
-    expr = expr.strip
-    lidx = 0
+#    expr = expr[lidx, expr.length - lidx]
+#    expr = expr.strip
+#    lidx = 0
     # Append marker as delmiter of end of string to match on if needed
-    expr = expr + "!"
+ #   expr = expr + "!"
     # If the arg is a string, then spaces within the string are not delimiting token
     #  but rather the the quote and whitespace at the end of the string are
-    if expr[0,1] == '"'
-      ridx = expr.index('"', 1) 
+#    if expr[0,1] == '"'
+ #     ridx = expr.index('"', 1) 
       # If we matched on a right-hand end of string quote, ridx += 1 so that the arg includes the quote
-      if ridx != nil and ridx > lidx
-        ridx += 1
-      end
-    end
-    ridx = expr.index(' ', 1) if (ridx == nil or ridx == lidx)
+ #     if ridx != nil and ridx > lidx
+ #       ridx += 1
+ #     end
+ #   end
+#    ridx = expr.index(' ', 1) if (ridx == nil or ridx == lidx)
     # If we got to here the only delmiter is the marker appended above, tokenize on that
-    ridx = expr.rindex('!') if (ridx == nil or ridx == lidx)
-    expr[lidx, ridx - lidx].strip
-  end  
+ #   ridx = expr.rindex('!') if (ridx == nil or ridx == lidx)
+ #   expr[lidx, ridx - lidx].strip
+ # end  
   
   def valid_child_kw?(parent, child)
     @@kw_children[parent].include? child
   end
   
-  def insert_node(expr, kw, parent)
-    new_node = ASTNode.new(expr, kw, parent)
+  def tkns_to_expr(tkns, append_newline=false)
+    if append_newline
+      tkns = tkns.join(' ') + "\n"
+    else
+      tkns = tkns.join(' ')
+    end
+  end
+  
+  def insert_node(tkns, kw, parent)
+    new_node = ASTNode.new(tkns_to_expr(tkns, append_newline=true), kw, parent)
     parent.add_child(new_node)
     block_close_node = create_block_close_node(kw, parent)
     parent.add_child(block_close_node) unless block_close_node == nil
