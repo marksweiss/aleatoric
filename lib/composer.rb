@@ -262,7 +262,6 @@ def reset_script_state
   @score_out.clear
   @processing_score = false
   @score_notes = []
-
   @processing_renderer = false
 end
 # /FOR UNIT TESTING

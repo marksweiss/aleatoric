@@ -53,12 +53,12 @@ class AleatoricTest
 
 end
 
-
 def preprocess_script(script)
-  ComposerAST.new(script).preprocess_script(__FILE__).to_s
+  File.open("test_preprocess.altc", "w") {|f| script.each {|line| f << line}}
+  ComposerAST.new.preprocess_script("test_preprocess.altc").to_s
 end
 
-@mutex = Mutex.new
+@write_mutex = Mutex.new
 def write_test_script(script, lite_syntax=false)
   # TODO Include this in composition.rb preprocessing of load() call
   # Read each line of script, and make necessary modifications to transform "almost Ruby" 
@@ -72,7 +72,7 @@ def write_test_script(script, lite_syntax=false)
   #  is clearly within the stack scope of the calling function.  i.e. - the Ruby File IO library
   #  has race condition related to not releasing file handles at block exit and can't be trusted 
   #  even in a single-threaded program properly scoping all calls, at least on 1.8.6 on Windows
-  @mutex.lock
+  @write_mutex.lock
   File.open("test.altc", "w") do |f|
     f << "module Aleatoric\n\n"  
     script.each do |line|
@@ -80,7 +80,7 @@ def write_test_script(script, lite_syntax=false)
     end    
     f << "\n\nend\n"
   end 
-  @mutex.unlock
+  @write_mutex.unlock
 end
 
 def run_test_script
@@ -467,7 +467,7 @@ end
 end
 
 def test__phrase_lite_syntax
-  throw_on_failure = false
+  throw_on_failure = true
   lite_syntax = true
   test_name = "test__phrase_lite_syntax"
   script = 
@@ -543,7 +543,7 @@ write "composer_test_results.txt"
   sections   "Intro Section"
 }
   tester, results = test_runner(test_name, throw_on_failure, script, lite_syntax)
-  actual = results  
+  actual = results   
   expected0 = 'i 3 0.00000 0.50000 1000 7.03000 1 ; 3'
   expected1 = 'i 4 1.00000 1.00000 1100 7.04000 1 ; 4'
   tester.assert(expected0 == actual[2])
@@ -563,7 +563,7 @@ reset_script_state
 
 section "Intro Section"
   phrase "Intro Phrase"
-    note "1"
+    note "5"
       instrument  1 
       start       0.0 
       duration    0.5
@@ -571,7 +571,7 @@ section "Intro Section"
       pitch       7.01
       func_table  1
     
-    note "2"
+    note "6"
       instrument  1
       start       1.0 
       duration    1.0
@@ -580,7 +580,7 @@ section "Intro Section"
       func_table  1
 
   phrase "Coda"
-    note "3"
+    note "7"
       instrument  1 
       start       0.0 
       duration    0.5
@@ -588,7 +588,7 @@ section "Intro Section"
       pitch       7.01
       func_table  1
 
-    note "4"
+    note "8"
       instrument  1
       start       1.0 
       duration    1.0
@@ -602,10 +602,10 @@ write "composer_test_results.txt"
 }
   tester, results = test_runner(test_name, throw_on_failure, script, lite_syntax)
   actual = results
-  expected0 = 'i 1 0.00000 0.50000 1000 7.01000 1 ; 1'
-  expected1 = 'i 1 1.00000 1.00000 1100 7.02000 1 ; 2'
-  expected2 = 'i 1 0.00000 0.50000 1000 7.01000 1 ; 3'
-  expected3 = 'i 1 1.00000 1.00000 1100 7.02000 1 ; 4'
+  expected0 = 'i 1 0.00000 0.50000 1000 7.01000 1 ; 5'
+  expected1 = 'i 1 1.00000 1.00000 1100 7.02000 1 ; 6'
+  expected2 = 'i 1 0.00000 0.50000 1000 7.01000 1 ; 7'
+  expected3 = 'i 1 1.00000 1.00000 1100 7.02000 1 ; 8'
   tester.assert(expected0 == actual[2])
   tester.assert(expected1 == actual[3])
   tester.assert(expected2 == actual[4])
@@ -807,6 +807,10 @@ write "composer_test_results.txt"
 }
   tester, results = test_runner(test_name, throw_on_failure, script, lite_syntax)
   actual = results
+  
+  # TEMP 
+  puts actual
+  
   expected0 = 'i 1 1.00000 0.20000 1100 7.02000 1 ;'
   expected1 = 'i 1 2.00000 0.20000 1200 7.02000 1 ;'
   tester.assert(expected0 == actual[2])
@@ -858,6 +862,7 @@ end
 def run_tests
   all_pass = true
   begin
+    #
     test__stmt_note_with_name
     test__stmt_note_without_name
     test__stmt_note_alt_syntax
@@ -866,17 +871,19 @@ def run_tests
     test__section
     test__repeat_index
     test__write_format_sections_phrases
-    test__render
     #  
     test__phrase_lite_syntax
     test__section_lite_syntax
     test__repeat_index_lite_syntax
-    test__render_lite_syntax
     test__sections_phrases_lite_syntax
     test__assignment
     test__assignment_2
     test__repeat_assignment
     test__func
+    #
+    test__render
+    test__render_lite_syntax
+    #
   rescue AleatoricTestException => e
     puts e.to_s
     all_pass = false

@@ -46,7 +46,7 @@ class ComposerAST_Test < Test::Unit::TestCase
 #    ComposerAST.publicize_methods do
     
 #    script = ''
-#    lang = ComposerAST.new(script)
+#    lang = ComposerAST.new
     
 #    kw = 'note'; expr = 'note'
 #    assert(lang.append_completion(kw, expr) == "note do\n")
@@ -76,7 +76,7 @@ class ComposerAST_Test < Test::Unit::TestCase
     ComposerAST.publicize_methods do
     
     script = ''
-    lang = ComposerAST.new(script)
+    lang = ComposerAST.new
     
     expr = 'note'    
     actual1, actual2 = lang.kw?(expr)
@@ -123,7 +123,7 @@ class ComposerAST_Test < Test::Unit::TestCase
     ComposerAST.publicize_methods do
     
     script = ''
-    lang = ComposerAST.new(script)  
+    lang = ComposerAST.new  
     
     actual1, actual2 = lang.integer? nil    
     assert(actual1 == false && actual2 == nil)
@@ -151,7 +151,7 @@ class ComposerAST_Test < Test::Unit::TestCase
     ComposerAST.publicize_methods do
     
     script = ''
-    lang = ComposerAST.new(script)
+    lang = ComposerAST.new
 
     kw = 'note'; expr = ['note']    
     actual1, actual2 = lang.valid_kw_arg?(kw, expr)     
@@ -229,7 +229,7 @@ class ComposerAST_Test < Test::Unit::TestCase
     puts "test__valid_child_kw? ENTERED"   
     ComposerAST.publicize_methods do
 		
-    lang = ComposerAST.new('')
+    lang = ComposerAST.new
 		assert(lang.root?(lang.root))
         
     end
@@ -241,7 +241,7 @@ class ComposerAST_Test < Test::Unit::TestCase
     ComposerAST.publicize_methods do
     
     script = ''
-    lang = ComposerAST.new(script)		
+    lang = ComposerAST.new		
 		
 		# parent == 'root'
     assert(lang.valid_child_kw?('root', 'note'))
@@ -323,7 +323,7 @@ class ComposerAST_Test < Test::Unit::TestCase
     puts "test__tokenize ENTERED"   
     ComposerAST.publicize_methods do
 		
-    lang = ComposerAST.new('')
+    lang = ComposerAST.new
 
     actual = lang.tokenize("foo: a, b, c\n")    
     expected = [['foo:', 'a', ',', 'b', ',', 'c']]
@@ -357,7 +357,7 @@ class ComposerAST_Test < Test::Unit::TestCase
     puts "test__preprocess_func_helper ENTERED"   
     ComposerAST.publicize_methods do
 		
-    lang = ComposerAST.new('')
+    lang = ComposerAST.new
 
     actual = lang.preprocess_func_helper(lang.tokenize("foo: a, b, c\n")[0])        
     expected = ['def', 'foo(', 'a', ',', 'b', ',', 'c', ')']    
