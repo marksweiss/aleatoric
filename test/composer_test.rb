@@ -1,9 +1,12 @@
 $LOAD_PATH << "..\\lib"
 require 'composer'
-require 'composer_lang'
 require 'composer_lang_test'
+require 'meter_test'
 require 'set'
 require 'thread'
+require 'rubygems'
+require 'ruby-debug' ; Debugger.start
+
 include Aleatoric
 
 # Functional tests for composer require a custom testing framework because the code runs from 
@@ -508,6 +511,191 @@ write "composer_test_results.txt"
   puts tester.to_s  
 end
 
+def test__measure_lite_syntax
+  throw_on_failure = false
+  lite_syntax = true
+  test_name = "test__measure_lite_syntax"
+  script = 
+%Q{
+# TESTING PURPOSES ONLY
+reset_script_state
+# test__measure_lite_syntax
+
+measure "Measure 1"
+
+  note "1"
+    instrument  1 
+    start       0.0 
+    duration    0.5
+    amplitude   1000
+    pitch       7.01
+    func_table  1
+
+  note "2"
+    instrument  1 
+    start       1.0 
+    duration    1.0
+    amplitude   1100
+    pitch       7.02
+    func_table  1
+
+measure "Measure 2"
+
+  note "3"
+    instrument  1 
+    start       0.0 
+    duration    0.5
+    amplitude   1200
+    pitch       7.03
+    func_table  1
+
+  note "4"
+    instrument  1 
+    start       1.0 
+    duration    1.0
+    amplitude   1300
+    pitch       7.04
+    func_table  1
+    
+write "composer_test_results.txt"
+  format    csound
+  measures   "Measure 1", "Measure 2"
+}
+  tester, results = test_runner(test_name, throw_on_failure, script, lite_syntax)
+  actual = results  
+  expected0 = 'i 1 0.00000 0.50000 1000 7.01000 1 ; 1'
+  expected1 = 'i 1 1.00000 1.00000 1100 7.02000 1 ; 2'
+  expected2 = 'i 1 2.00000 0.50000 1200 7.03000 1 ; 3'
+  expected3 = 'i 1 3.00000 1.00000 1300 7.04000 1 ; 4'
+  tester.assert(expected0 == actual[2])
+  tester.assert(expected1 == actual[3])
+  tester.assert(expected2 == actual[4])
+  tester.assert(expected3 == actual[5])
+  puts tester.to_s  
+end
+
+def test__copy_measure_lite_syntax
+  throw_on_failure = true
+  lite_syntax = true
+  test_name = "test__copy_measure_lite_syntax"
+  script = 
+%Q{
+# TESTING PURPOSES ONLY
+reset_script_state
+# test__copy_measure_lite_syntax
+
+measure "Measure 1"
+
+  note "1"
+    instrument  1 
+    start       0.0 
+    duration    0.5
+    amplitude   1000
+    pitch       7.01
+    func_table  1
+
+  note "2"
+    instrument  1 
+    start       1.0 
+    duration    1.0
+    amplitude   1100
+    pitch       7.02
+    func_table  1
+
+# NOTE: copy_measure automatically adjusts start times of new measure to be in NEXT position
+#  after end of last note in measure being copied, intended for sequence of notes
+# TODO: IS THIS USEFUL? MODERATELY, but only serves that one use case, NOT a really useful general
+#  cloning mechanism
+copy_measure "Measure 1", "Measure 2"
+    
+write "composer_test_results.txt"
+  format    csound
+  measures
+}
+  tester, results = test_runner(test_name, throw_on_failure, script, lite_syntax)
+  actual = results  
+  expected0 = 'i 1 0.00000 0.50000 1000 7.01000 1 ; 1'
+  expected1 = 'i 1 1.00000 1.00000 1100 7.02000 1 ; 2'
+  expected2 = 'i 1 2.00000 0.50000 1000 7.01000 1 ; 1'
+  expected3 = 'i 1 3.00000 1.00000 1100 7.02000 1 ; 2'
+  tester.assert(expected0 == actual[2])
+  tester.assert(expected1 == actual[3])
+  tester.assert(expected2 == actual[4])
+  tester.assert(expected3 == actual[5])
+  puts tester.to_s  
+end
+
+def test__meter_lite_syntax
+  throw_on_failure = true
+  lite_syntax = true
+  test_name = "test__meter_lite_syntax"
+  script = 
+%Q{
+# TESTING PURPOSES ONLY
+reset_script_state
+# test__meter_lite_syntax
+meter 4,4
+  quantize on
+
+# This tests case of not needing to quantize. Two HLF notes at correct start times that
+#  take up exactly the correct length of the measure
+measure "Measure 1"
+
+  note "1"
+    instrument  1 
+    start       0.0 
+    duration    HLF
+    amplitude   1000
+    pitch       7.01
+    func_table  1
+
+  note "2"
+    instrument  1 
+    start       HLF 
+    duration    HLF
+    amplitude   1100
+    pitch       7.02
+    func_table  1
+
+# This tests quantize
+# Each note is first mapped to QRTR, but that is only half the beat length of the meter
+#  so then each is increased to reach the total necessary duration, and each maintains the same
+#  percentage of the total duration, so then each is moved from QRTR to HLF, since the meter
+#  is 4/4, which is 4 beats of QRTR notes, or one WHL note. Note this adjusts start time of second
+#  note correctly also
+measure "Measure 2"
+
+  note "1"
+    instrument  1 
+    start       0.0 
+    duration    QRTR
+    amplitude   1000
+    pitch       7.01
+    func_table  1
+
+  note "2"
+    instrument  1 
+    start       QRTR 
+    duration    QRTR
+    amplitude   1100
+    pitch       7.02
+    func_table  1    
+
+write "composer_test_results.txt"
+  format    csound
+  measures
+}
+  tester, results = test_runner(test_name, throw_on_failure, script, lite_syntax)
+  actual = results
+  expected0 = 'i 1 0.00000 2.00000 1000 7.01000 1 ; 1'
+  expected1 = 'i 1 2.00000 2.00000 1100 7.02000 1 ; 2'
+  expected2 = 'i 1 0.00000 2.00000 1000 7.01000 1 ; 1'
+  expected3 = 'i 1 2.00000 2.00000 1100 7.02000 1 ; 2'
+  tester.assert(expected0 == actual[2])
+  tester.assert(expected1 == actual[3])
+  puts tester.to_s  
+end
+
 def test__section_lite_syntax
   throw_on_failure = false
   lite_syntax = true
@@ -806,11 +994,7 @@ write "composer_test_results.txt"
   phrases   "Loop"
 }
   tester, results = test_runner(test_name, throw_on_failure, script, lite_syntax)
-  actual = results
-  
-  # TEMP 
-  puts actual
-  
+  actual = results  
   expected0 = 'i 1 1.00000 0.20000 1100 7.02000 1 ;'
   expected1 = 'i 1 2.00000 0.20000 1200 7.02000 1 ;'
   tester.assert(expected0 == actual[2])
@@ -856,37 +1040,102 @@ write "composer_test_results.txt"
   tester.assert(expected1 == actual[3])
   puts tester.to_s  
 end
+
+def test__next
+  throw_on_failure = false
+  test_name = "test__next"
+  lite_syntax = true
+  script = 
+%Q{
+# TESTING PURPOSES ONLY
+reset_script_state
+# test__next
+
+measure "Loop"
+    note
+      instrument 1
+      start       0.0
+      duration    1.0
+      amplitude   1000
+      pitch       7.01
+      func_table  1
+
+    note
+      instrument 1
+      start       NEXT
+      duration    1.0
+      amplitude   1100
+      pitch       7.02
+      func_table  1
+      
+write "composer_test_results.txt"
+  format    csound
+  measures   "Loop"
+}
+  tester, results = test_runner(test_name, throw_on_failure, script, lite_syntax)
+  actual = results    
+  expected0 = 'i 1 0.00000 1.00000 1000 7.01000 1 ;'
+  expected1 = 'i 1 1.00000 1.00000 1100 7.02000 1 ;'
+  tester.assert(expected0 == actual[2])
+  tester.assert(expected1 == actual[3])
+  puts tester.to_s  
+end
 ##################### /TESTS ########################
 
 # Call each test in here
-def run_tests
-  all_pass = true
-  begin
-    #
-    test__stmt_note_with_name
-    test__stmt_note_without_name
-    test__stmt_note_alt_syntax
-    test__phrase
-    test__phrase_alt_syntax
-    test__section
-    test__repeat_index
-    test__write_format_sections_phrases
-    #  
-    test__phrase_lite_syntax
-    test__section_lite_syntax
-    test__repeat_index_lite_syntax
-    test__sections_phrases_lite_syntax
-    test__assignment
-    test__assignment_2
-    test__repeat_assignment
-    test__func
-    #
-    test__render
-    test__render_lite_syntax
-    #
-  rescue AleatoricTestException => e
-    puts e.to_s
-    all_pass = false
+def run_tests(flags)  
+  # TODO - shore this up someday
+  # Right now just a way to run just the tests in the else block below
+  # Should eventually be able to take a list of tests or 'all' or something like that
+  run_only = 'run_only' if flags.length > 0 # just needs to be non-nil for now
+    
+  if run_only == nil
+  
+    all_pass = true
+    begin
+      #
+      test__stmt_note_with_name
+      test__stmt_note_without_name
+      test__stmt_note_alt_syntax
+      test__phrase
+      test__phrase_alt_syntax
+      test__section
+      test__repeat_index
+      test__write_format_sections_phrases
+      test__render
+      #  
+      test__phrase_lite_syntax
+      test__measure_lite_syntax
+      test__copy_measure_lite_syntax
+      test__section_lite_syntax
+      test__repeat_index_lite_syntax
+      test__sections_phrases_lite_syntax
+      test__assignment
+      test__assignment_2
+      test__repeat_assignment
+      test__func
+      test__next
+      test__render_lite_syntax
+      #    
+      test__meter_lite_syntax
+    rescue AleatoricTestException => e
+      puts e.to_s
+      all_pass = false
+    end
+
+  # else if run_only != nil, then run the run_only block
+  else # run_only
+    
+    all_pass = true
+    begin    
+      
+      # run_only tests go here
+    
+    rescue AleatoricTestException => e
+      puts e.to_s
+      all_pass = false
+    end 
+    
   end
   
   if AleatoricTest.all_pass? and all_pass
@@ -899,4 +1148,4 @@ def run_tests
   puts "composer_lang_test: UNIT TESTING composer_lang\n\n"
 end
 
-run_tests
+run_tests ARGV

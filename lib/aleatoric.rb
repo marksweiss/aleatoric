@@ -1,13 +1,21 @@
 require 'composer'
 require 'composer_lang'
+require 'rubygems'
+require 'ruby-debug' ; Debugger.start
 # require 'instrument'
 include Aleatoric
+
+# SAMPLE DEBUGGER CALLS
+#  Debugger.tracing = true
+#  breakpoint if true == false
+#  Debugger.tracing = false
 
 def main
   script = ""
   
   # Get the name of the Composer score to render into a sound file
   file_name = ARGV[0]
+    
   # Append to the file name, this is the file processed by this job, opaque to user, not
   #  the script file they work with.  In default case we add all the do/end syntax, for example,
   #  and hide that from them.  And in all cases we add the module directive.
@@ -31,7 +39,7 @@ def main
       f << line
     end    
     f << "\n\nend\n"
-  end   
+  end  
   
   # Run the script in Ruby, as a Ruby script, in the context of the 'Aleatoric' namespace included above
   load file_name_tmp

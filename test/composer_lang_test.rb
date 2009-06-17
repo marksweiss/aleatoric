@@ -1,6 +1,8 @@
 $LOAD_PATH << "..\\lib"
 require 'composer_lang'
 require 'test/unit'
+require 'rubygems'
+require 'ruby-debug' ; Debugger.start
 
 # Super-elegant solution for temporarily getting access to private methods to test stolen from here:
 #  http://blog.jayfields.com/2007/11/ruby-testing-private-methods.html
@@ -154,72 +156,72 @@ class ComposerAST_Test < Test::Unit::TestCase
     lang = ComposerAST.new
 
     kw = 'note'; expr = ['note']    
-    actual1, actual2 = lang.valid_kw_arg?(kw, expr)     
-    assert(actual1 == true && actual2 == nil)
+    actual = lang.valid_kw_arg?(kw, expr)    
+    assert(actual == true)
     
     kw = 'note'; expr = ['note', '"Note 1"']    
-    actual1, actual2 = lang.valid_kw_arg?(kw, expr)    
-    assert(actual1 == true && actual2 == '"Note 1"')
+    actual = lang.valid_kw_arg?(kw, expr)    
+    assert(actual == true)
 
     kw = 'note'; expr = ['note', '1']    
-    actual1, actual2 = lang.valid_kw_arg?(kw, expr)    
-    assert(actual1 == false)    
+    actual = lang.valid_kw_arg?(kw, expr)    
+    assert(actual == false)    
  
     kw = 'phrase'; expr = ['phrase', '"Phrase 1"']    
-    actual1, actual2 = lang.valid_kw_arg?(kw, expr)    
-    assert(actual1 == true && actual2 == '"Phrase 1"')
+    actual = lang.valid_kw_arg?(kw, expr)    
+    assert(actual == true)
 
     kw = 'phrase'; expr = ['phrase', '1']   
-    actual1, actual2 = lang.valid_kw_arg?(kw, expr)    
-    assert(actual1 == false)
+    actual = lang.valid_kw_arg?(kw, expr)    
+    assert(actual == false)
 
     kw = 'section'; expr = ['section', '"Section 1"']  
-    actual1, actual2 = lang.valid_kw_arg?(kw, expr)    
-    assert(actual1 == true && actual2 == '"Section 1"')
+    actual = lang.valid_kw_arg?(kw, expr)    
+    assert(actual == true)
 
     kw = 'section'; expr = ['section', '1']   
-    actual1, actual2 = lang.valid_kw_arg?(kw, expr)    
-    assert(actual1 == false)
+    actual = lang.valid_kw_arg?(kw, expr)    
+    assert(actual == false)
 
     kw = 'repeat'; expr = ['repeat']    
-    actual1, actual2 = lang.valid_kw_arg?(kw, expr)    
-    assert(actual1 == false)
+    actual = lang.valid_kw_arg?(kw, expr)    
+    assert(actual == false)
 
     kw = 'repeat'; expr = ['repeat', '"1"']    
-    actual1, actual2 = lang.valid_kw_arg?(kw, expr)    
-    assert(actual1 == false)
+    actual = lang.valid_kw_arg?(kw, expr)    
+    assert(actual == false)
     
     kw = 'repeat'; expr = ['repeat', '1']    
-    actual1, actual2 = lang.valid_kw_arg?(kw, expr)    
-    assert(actual1 == true && actual2 == 1)
+    actual = lang.valid_kw_arg?(kw, expr)    
+    assert(actual == true)
 
     kw = 'render'; expr = ['render']    
-    actual1, actual2 = lang.valid_kw_arg?(kw, expr)    
-    assert(actual1 == false)
+    actual = lang.valid_kw_arg?(kw, expr)    
+    assert(actual == false)
 
     kw = 'render'; expr = ['render', '100']    
-    actual1, actual2 = lang.valid_kw_arg?(kw, expr)    
-    assert(actual1 == false)
+    actual = lang.valid_kw_arg?(kw, expr)    
+    assert(actual == false)
     
     kw = 'render'; expr = ['render', '"In C.sco"']    
-    actual1, actual2 = lang.valid_kw_arg?(kw, expr)    
-    assert(actual1 == true && actual2 == '"In C.sco"')     
+    actual = lang.valid_kw_arg?(kw, expr)    
+    assert(actual == true)     
  
     kw = 'write'; expr = ['write']    
-    actual1, actual2 = lang.valid_kw_arg?(kw, expr)    
-    assert(actual1 == false)
+    actual = lang.valid_kw_arg?(kw, expr)    
+    assert(actual == false)
 
     kw = 'write'; expr = ['write', '100']    
-    actual1, actual2 = lang.valid_kw_arg?(kw, expr)    
-    assert(actual1 == false)
+    actual = lang.valid_kw_arg?(kw, expr)    
+    assert(actual == false)
     
     kw = 'write'; expr = ['write', '"In C.wav"']    
-    actual1, actual2 = lang.valid_kw_arg?(kw, expr)    
-    assert(actual1 == true && actual2 == '"In C.wav"') 
+    actual = lang.valid_kw_arg?(kw, expr)    
+    assert(actual == true) 
     
     kw = 'def'; expr = ['def', 'start_f(factor, idx)']    
-    actual1, actual2 = lang.valid_kw_arg?(kw, expr)    
-    assert(actual1 == true)    
+    actual = lang.valid_kw_arg?(kw, expr)    
+    assert(actual == true)    
        
     end
     puts "test__valid_kw_arg? COMPLETED"

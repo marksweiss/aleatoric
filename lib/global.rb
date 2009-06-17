@@ -3,7 +3,7 @@ module Aleatoric
 # TODO implement this to load both csound and midi from a config and then fill in values from the first
 #  'format' statement it encounters
 # TODO Add all of these consts and put them in a '' conf somewhere
-REST = 0
+REST = 0.0
 
 WHL = 4.0 
 HLF = 2.0

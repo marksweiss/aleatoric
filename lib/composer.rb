@@ -1,4 +1,5 @@
 require 'score'
+require 'meter'
 require 'renderer'
 
 # This module implements the basic parser/processor for the Composer language.
@@ -57,12 +58,21 @@ module Aleatoric
 @sections_by_name = {}
 @processing_section = false
 
+@meter = Meter.new(quantizing=false)
+
+@cur_start = 0.0
+@cur_measure = nil
+@measures = []
+@measures_by_name = {}
+@processing_measure = false
+
 @score_out = ScoreWriter.instance
 @processing_score = false
 @score_notes = []
 
 @renderer = Renderer.instance
 @processing_renderer = false
+
 
 # Handles keyword "note," assigns attrs in block to a new Note
 def note(name=nil, &args_blk)
@@ -84,6 +94,10 @@ def note(name=nil, &args_blk)
   @notes_by_name[name] = @cur_note unless name == nil
   # We're done with this Note, unset method_missing() flag
   @processing_note = false
+  
+  # Each note can adjust @cur_start, which supports start NEXT in 'measure' blocks
+  # Sort of lame we have to list-ify it, but the same method takes a list for 'copy_measure'
+  adjust_cur_start [@cur_note]
   
   # Return the note, useful for testing purposes only. Allows independent testing of function
   #  and no additional exposure of module state, e.g. @notes
@@ -111,6 +125,73 @@ def phrase(name, &args_blk)
   @processing_phrase = false
 end
 
+def meter(beat_per_measure, beat_length, &args_blk)  
+  @meter.beat_per_measure beat_per_measure
+  @meter.beat_length beat_length
+  # This will end up firing quantize() immediately below, won't go to method_missing
+  #  because there is a local match
+  yield
+end
+
+def on; 'on'; end
+def off; 'off'; end
+def quantize(flag_str)
+  @meter.quantizing?(true) if flag_str == on
+  @meter.quantizing?(false) if flag_str == off
+end
+
+def measure(name, &args_blk)
+  @processing_measure = true
+  @notes.clear
+  # A measure is a Phrase but it's also passed a position, which is the ordinal position of the
+  #  measure among all measures, and a start offset
+  # This lets sequences of measures not need to figure out their offset from the beginning
+  # So you have this:
+  #   note
+  #     start QRTR
+  # instead of this:
+  #   note
+  #     start running_total_since_start + QRTR  
+  @cur_measure = Measure.new(name, @cur_start)
+  # NOTE: Need to wrap yield call (which processes notes) to put Note in scope as the 
+  #  method_missing() handler or else the 'start' attribute from the script is trapped
+  #  by Measure, which has a 'start' property, and doesn't reach the note, and changes
+  #  the value for Measure.start inadvertantly. i.e. - but that took 90 minutes to find
+  @processing_measure = false
+  @processing_note = true
+  yield args_blk
+  @processing_note = false
+  @processing_measure = true
+
+  # TODO This is subject of next test to pass in composer_test
+  @notes = @meter.quantize(@notes) if @meter.quantizing?
+  @cur_measure << @notes  
+  @measures << @cur_measure
+  @measures_by_name[name] = @cur_measure
+
+  @notes.clear
+  @processing_measure = false  
+end
+
+# TODO Why not also have copy_section, copy_phrase and copy_note?
+# Only reason is they's stack up on the same start time ...
+def copy_measure(src_name, target_name)
+  @cur_measure = @measures_by_name[src_name].dup
+  @cur_measure.name = target_name 
+  @cur_measure.reset_notes @cur_start
+  @cur_measure.notes.each do |note|
+    @notes << note
+  end  
+  @measures << @cur_measure
+  @measures_by_name[target_name] = @cur_measure
+  adjust_cur_start @cur_measure.notes
+end
+
+def adjust_cur_start(notes)
+  new_start = (notes.collect {|note| note.start + note.duration}).max  
+  @cur_start = new_start if new_start > @cur_start
+end
+
 # Handles keyword "section"
 def section(name, &args_blk)
   @processing_section = true
@@ -119,7 +200,7 @@ def section(name, &args_blk)
   @sections << @cur_section
   @sections_by_name[name] = @cur_section
   yield
-  @cur_section.add_phrases @cur_phrases  
+  @cur_section << @cur_phrases  
   @cur_phrases.clear
   @processing_section = false
 end
@@ -134,6 +215,24 @@ def phrases(*names)
     phrase = @phrases_by_name[name]
     phrase.notes.each do |note|
       @score_notes << note.dup
+    end
+  end
+end
+
+def measures(*names)
+  if names != nil and names.length > 0
+    names.each do |name| 
+      name = name.strip
+      measure = @measures_by_name[name]    
+      measure.notes.each do |note|
+        @score_notes << note.dup
+      end
+    end
+  else
+    @measures.length.times do |j|
+      @measures[j].notes.each do |note|
+        @score_notes << note.dup
+      end
     end
   end
 end
@@ -204,11 +303,6 @@ def render(out_file, &args_blk)
   @processing_renderer = false
 end
 
-# TODO NEW SYNTAX NOT TESTED YET, NOT COMMITTED YET
-
-# END TODO
-
-
 # FOR UNIT TESTING
 def dump_notes
   File.open("..\\test\\composer_test_results.txt", "w") do |f|
@@ -258,6 +352,14 @@ def reset_script_state
   @sections = []
   @sections_by_name = {}
   @processing_section = false
+  
+  @meter = Meter.new(quantizing=false)
+  
+  @cur_measure = nil
+  @measures = []
+  @processing_measure = false
+  @measures_by_name = {}
+  @cur_start = 0.0
 
   @score_out.clear
   @processing_score = false
@@ -274,8 +376,9 @@ def method_missing(name, arg)
   #  can contain Notes so a Note in scope should come first, but otherwise the Phrase
   #  should be considered before a Section, and so on.
   @cur_note.method_missing(name, arg) if @processing_note
-  @phrase.method_missing(name, arg) if @processing_phrase
-  @section.method_missing(name, arg) if @processing_section
+  @cur_phrase.method_missing(name, arg) if @processing_phrase
+  @cur_section.method_missing(name, arg) if @processing_section
+  @cur_measure.method_missing(name, arg) if @processing_measure
   @score_out.method_missing(name, arg) if @processing_score
   @renderer.method_missing(name, arg) if @processing_renderer
 end

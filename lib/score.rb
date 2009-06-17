@@ -7,13 +7,16 @@ module Aleatoric
 class Score
   attr_reader :notes
   attr_accessor :name
-
+  attr_accessor :score_attrs
+  public :name, :notes
+  protected :score_attrs
+  
   def initialize(name=nil)
     @name = name
     @notes = []
     @score_attrs = []
   end
-  
+    
   def <<(notes)
     notes.each do |note| 
       @notes << note.dup
@@ -95,6 +98,41 @@ end
 class Phrase < Score
 end
 
+
+class Measure < Score
+  attr_reader :start
+  
+  def initialize(name, start=0.0)
+    super(name)
+    @start = start    
+  end
+  
+  def reset_notes(start)
+    @start = start
+    @notes = @notes.collect do |note| 
+      new_note = note.dup
+      new_note.start(new_note.start + @start)
+      new_note
+    end
+  end
+  
+  def <<(notes)  
+    notes.each do |note|
+      new_note = note.dup
+      new_note = new_note.start(new_note.start + self.start)       
+      @notes << new_note
+    end    
+  end
+  
+  def dup
+    # TODO better than this ugly hack
+    ret = Measure.new(self.name, self.start)
+    ret << self.notes
+    ret.score_attrs = self.score_attrs    
+    ret
+  end
+end
+
 #TODO THIS IS BEGGING FOR A MIX-IN - identical code, different 'types'
 class Section
   attr_reader :phrases
@@ -104,9 +142,9 @@ class Section
     @name = name
     @phrases = []
   end
-  
-  def add_phrases(phrases)
-    phrases.each do |phrase| 
+    
+  def <<(phrases)
+     phrases.each do |phrase| 
       @phrases << phrase.dup
     end    
   end

@@ -1,3 +1,5 @@
+# TODO Rewrite as a real parser using Treetop: http://treetop.rubyforge.org/
+
 module Aleatoric
  
 class ComposerASTException < Exception; end
@@ -36,7 +38,11 @@ class ComposerAST
     'write' => " do\n",
     'render' => " do\n",
     'format' => "\n",
-    'def' => "\n"
+    'def' => "\n",
+    'measure' => " do\n",
+    'copy_measure' => " do\n",
+    'meter' => " do\n",
+    'quantize' => "\n"
   }
   
   @@kw_block_close_completions= {
@@ -47,41 +53,59 @@ class ComposerAST
     'write' => "end\n",
     'render' => "end\n",
     'format' => "",
-    'def' => "end\n"
+    'def' => "end\n",
+    'measure' => "end\n",
+    'copy_measure' => "end\n",
+    'meter' => "end\n",
+    'quantize' => ""
   }
     
   @@kw_children = {
-    'root' => ['note', 'phrase', 'section', 'repeat', 'write', 'render', 'def'],
+    'root' => ['note', 'phrase', 'section', 'repeat', 'write', 'render', 'def', 'measure', 'copy_measure', 'meter'],
     'note' => [],
     'phrase' => ['note', 'repeat'],
-    'section' => ['phrase'],
-    'repeat' => ['note'],
+    'section' => ['phrase', 'measure', 'copy_measure'],
+    'repeat' => ['note', 'measure'],
     'write' => ['format'],
     'render' => [],
     'format' => [],
-    'def' => []
+    'def' => [],
+    'measure' => ['note'],
+    'copy_measure' => [],
+    'meter' => ['quantize'],
+    'quantize' => []
   }
   @@kw_parents = {
     'root' => [],
-    'note' => ['root', 'phrase', 'repeat'],
+    'note' => ['root', 'phrase', 'repeat', 'measure'],
     'phrase' => ['root', 'section'],
     'section' => ['root'],
     'repeat' => ['root', 'phrase'],
     'write' => ['root'],
     'render' => ['root'],
     'format' => ['write'],
-    'def' => ['root']
+    'def' => ['root'],
+    'measure' => ['root', 'section', 'repeat'],
+    'copy_measure' => ['root', 'section'],
+    'meter' => ['root'],
+    'quantize' => ['meter']
   }
   @@kw = @@kw_children.keys
  
+  # TODO - only supports one arg, 'copy_measure' needs to validate two
+	# TODO - Modified to support multiple args
   @@syntax_rules = {
-    'note' => lambda {|x| x == nil or x.kind_of? String},             # 1st arg optional, valid type
-    'phrase' => lambda {|x| x == nil or x.kind_of? String},           # 1st arg optional, valid type
-    'section' => lambda {|x| x == nil or x.kind_of? String},          # 1st arg optional, valid type
-    'repeat' => lambda {|x| x.kind_of? Fixnum},                       # 1st arg required, valid type
-    'render' => lambda {|x| x.kind_of? String and x.length > 0},      # 1st arg required, valid type
-    'write' => lambda {|x| x.kind_of? String and x.length > 0},       # 1st arg required, valid type
-    'format' => lambda {|x| x != nil and (x.to_s == 'csound' or x.to_s == 'midi')}   # 1st arg required, valid value
+    'note' =>     lambda {|x| x == nil or x[0] == nil or x[0].kind_of? String},     # 1st arg optional, valid type
+    'phrase' => 	lambda {|x| x == nil or x[0] == nil or x[0].kind_of? String},     # 1st arg optional, valid type
+    'section' => 	lambda {|x| x == nil or x[0] == nil or x[0].kind_of? String},     # 1st arg optional, valid type
+    'repeat' => 	lambda {|x| x != nil and x[0] != nil and x[0].kind_of? Fixnum},                       		      # 1st arg required, valid type
+    'render' => 	lambda {|x| x != nil and x[0] != nil and (x[0].kind_of? String and x[0].length > 0)},            # 1st arg required, valid type
+    'write' => 		lambda {|x| x != nil and x[0] != nil and (x[0].kind_of? String and x[0].length > 0)},            # 1st arg required, valid type
+    'format' => 	lambda {|x| x != nil and x[0] != nil and (x[0].to_s == 'csound' or x[0].to_s == 'midi')},        # 1st arg required, valid value
+    'measure' => 	lambda {|x| x == nil or x[0] == nil or x[0].kind_of? String},     # 1st arg optional, valid type
+    'copy_measure' => lambda {|x| x != nil and x.length == 2 and x[0] != nil and x[1] != nil and x[0].kind_of? String and x[1].kind_of? String},   # 1st and second arg required, valid types    
+    'meter' =>    lambda {|x| x != nil and x.length == 2 and x[0] != nil and x[1] != nil and x[0].kind_of? Fixnum and x[1].kind_of? Fixnum},       # 1st and second arg required, valid types    
+    'quantize' => lambda {|x| x != nil and x[0] != nil and (x[0].to_s == 'on' or x[0].to_s == 'off')}
   }
   
   @@grammar_rules = {
@@ -91,7 +115,7 @@ class ComposerAST
     end, # 'write' has 'format' child
     'format' => lambda do |node|
       node.parent.kw == 'write'
-    end # 'format' has 'write' parent
+    end  # 'format' has 'write' parent
   }
   
   @@operators = {:delim => [',', ';', "\n", '"'], 
@@ -99,7 +123,9 @@ class ComposerAST
                  :assignment => ['=']
                 }
   @@op_values = @@operators.values.flatten
-  @@var_map = {}
+	# NOTE: This includes the biggest hack ever, which supports 'NEXT' keyword by mapping it to the variable used to store
+	#  current running start time dynamically when script is being evaluated
+  @@var_map = {'NEXT' => '@cur_start'}
   @@assignment_states = [:declaring, :invoking]
 
   # NOTE: A hack to support testing. This must be first line in test scripts but it breaks the
@@ -133,7 +159,7 @@ class ComposerAST
   # end                   # print block close, continue at this level of nesting
   def to_s  
     out_lines = []    
-    out_lines = to_s_helper_validate_grammar(node=@@root, out_lines=[], line_no=0)
+    out_lines = to_s_helper_validate_grammar(node=@@root, out_lines=[], line_no=0)    
     out_lines.join('')
   end
   # /Public parse interface
@@ -264,8 +290,8 @@ class ComposerAST
       next if tkn.length == 0
       # Do subsititutions for function tkns
       # Converts foo: a, b, c -> def foo(a,b,c)
-      # Conerts instrument foo: a, b, c -> instrument foo(a,b,c)
-      if tkn.include?(':')
+      # Conerts instrument foo: a, b, c -> instrument foo(a,b,c)      
+      if tkn.include?(':') and not tkn.include?('::') # [tkn.length - 1] == ':' and tkn.length > 1 and tkn[tkn.length - 2] != ':'
         func_cnt += 1
         tkn = tkn.sub(':', '(')
         # tkn_line[j] = tkn
@@ -299,11 +325,11 @@ class ComposerAST
   def preprocess_expression(tkn_line, src_file_name, line_no)  
     # Test for keyword starting line or not, kw lines processed differently because they
     #  create grammar structure of script, non-kw lines just appended to current parent as attrs of it
-    is_kw, kw = kw? tkn_line[0]      
+    is_kw, kw = kw? tkn_line[0]
         
     if is_kw
       # Validate special rules for this kw, raise error if violated
-      is_valid, kw_arg = valid_kw_arg?(kw, tkn_line)
+      is_valid = valid_kw_arg?(kw, tkn_line)
       if not is_valid
         raise ComposerASTException, "Source File Name: #{src_file_name}. Line Number: #{line_no}. Illegal argument '#{kw_arg}' passed to function '#{kw}'."
       end
@@ -358,22 +384,33 @@ class ComposerAST
     end
   end
  
-  def valid_kw_arg?(kw, tkns)
-    return [false, nil] if tkns == nil or tkns.length == 0
-  
+  def valid_kw_arg?(kw, kw_args)
     is_valid = true
-    kw_arg = (tkns.length == 1 ? nil : tkns[1]) 
-    # So, some validation rules test for proper type or args passed, e.g. the loop bound
-    #  value passed to 'repeat' which only makes sense as an Integer.  But all the args are
-    #  being read in from a text file and not evaled so they look like strings.  So test
-    #  if we can convert and do so and pass the Int if we can to the validation calls
-    is_int, kw_arg_int = integer?(kw_arg) if kw_arg != nil
-    kw_arg = kw_arg_int if is_int 
+    # kw_args is the slice of tkns after the first tkn, which is the keyword
+    arg_tkns = nil
+    arg_tkns = kw_args.slice(1, kw_args.length - 1) if kw_args != nil
     
+    # If any args are a single comma, these are just delimiters for a list of args, so toss them
+    arg_tkns_filtered = []
+    arg_tkns.each {|arg_tkn| arg_tkns_filtered << arg_tkn if arg_tkn != ','}
+		
+    # Only test to convert int args if we actually need to call a validation function
+    # And, obviously only go into block to call it if we need it
     syntax_rule = @@syntax_rules[kw]
-    is_valid = syntax_rule.call(kw_arg) if syntax_rule != nil
-    
-    return is_valid, kw_arg
+    if syntax_rule != nil
+      # So, some validation rules test for proper type or args passed, e.g. the loop bound
+      #  value passed to 'repeat' which only makes sense as an Integer.  But all the args are
+      #  being read in from a text file and not evaled so they look like strings.  So test
+      #  if we can convert and do so and pass the Int if we can to the validation calls
+      if arg_tkns_filtered != nil
+        arg_tkns_filtered.length.times do |j|
+          is_int, kw_arg_int = integer?(arg_tkns_filtered[j]) if arg_tkns_filtered[j] != nil
+          arg_tkns_filtered[j] = kw_arg_int if is_int 
+        end
+      end
+      is_valid = syntax_rule.call(arg_tkns_filtered) 
+    end
+    is_valid
   end
   
   def integer?(arg)
@@ -444,10 +481,9 @@ class ComposerAST
   # DFS the tree and print nodes pre-order. ... See comment above on to_s()
   # Also validate_grammar() called on each node because we are traversing finished tree
   #  and semantically cleaner code would mean traversing twice, once to validate and once to output
-  def to_s_helper_validate_grammar(node, out_lines, line_no)
+  def to_s_helper_validate_grammar(node, out_lines, line_no)  
     # Post-order append node to output
     s_out = node.to_s
-    
     @@op_values.each do |op|
       s_out.gsub!(' ' + op, op) if op != '"'
       s_out.gsub!(op + ' ', op) if op != '"'
@@ -456,8 +492,6 @@ class ComposerAST
     out_lines << s_out if s_out != 'root'
     # Loop over node's children
     node.children.each do |child|
-      # TEMP DEBUG
-      # puts child.expr    
       line_no += 1
       # Toss job if grammar rules violated      
       if not valid_grammar? child
