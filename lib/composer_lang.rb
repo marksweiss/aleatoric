@@ -42,7 +42,13 @@ class ComposerAST
     'measure' => " do\n",
     'copy_measure' => " do\n",
     'meter' => " do\n",
-    'quantize' => "\n"
+    'quantize' => "\n",
+    'ensemble' => " do\n",
+    'ensembles' => "\n",
+    'player' => "do\n",
+    'players' => "\n",
+    'play' => "do\n",
+    'instruction' => "do\n"
   }
   
   @@kw_block_close_completions= {
@@ -57,55 +63,75 @@ class ComposerAST
     'measure' => "end\n",
     'copy_measure' => "end\n",
     'meter' => "end\n",
-    'quantize' => ""
+    'quantize' => "",
+    'ensemble' => "end\n",
+    'ensembles' => "",
+    'player' => "end\n",
+    'players' => "",
+    'play' => "end\n",
+    'instruction' => "end\n" 
   }
     
   @@kw_children = {
-    'root' => ['note', 'phrase', 'section', 'repeat', 'write', 'render', 'def', 'measure', 'copy_measure', 'meter'],
+    'root' => ['note', 'phrase', 'section', 'repeat', 'write', 'render', 'def', 'measure', 'copy_measure', 'meter', 'ensemble', 'play', 'instruction'],
     'note' => [],
     'phrase' => ['note', 'repeat'],
     'section' => ['phrase', 'measure', 'copy_measure'],
     'repeat' => ['note', 'measure'],
-    'write' => ['format'],
+    'write' => ['format', 'players', 'ensembles'],
     'render' => [],
     'format' => [],
     'def' => [],
     'measure' => ['note'],
     'copy_measure' => [],
     'meter' => ['quantize'],
-    'quantize' => []
+    'quantize' => [],
+    'ensemble' => ['players', 'note', 'section', 'phrase', 'measure', 'copy_measure'],
+    'ensembles' => [],
+    'players' => [],
+    'player' => ['note', 'section', 'phrase', 'measure', 'copy_measure'],
+    'play' => ['players', 'ensembles'],
+    'instruction' => ['players', 'ensembles']
   }
   @@kw_parents = {
     'root' => [],
-    'note' => ['root', 'phrase', 'repeat', 'measure'],
-    'phrase' => ['root', 'section'],
-    'section' => ['root'],
+    'note' => ['root', 'phrase', 'repeat', 'measure', 'ensemble', 'player'],
+    'phrase' => ['root', 'section', 'ensemble', 'player'],
+    'section' => ['root', 'ensemble', 'player'],
     'repeat' => ['root', 'phrase'],
     'write' => ['root'],
     'render' => ['root'],
     'format' => ['write'],
     'def' => ['root'],
-    'measure' => ['root', 'section', 'repeat'],
-    'copy_measure' => ['root', 'section'],
+    'measure' => ['root', 'section', 'repeat', 'ensemble', 'player'],
+    'copy_measure' => ['root', 'section', 'ensemble', 'player'],
     'meter' => ['root'],
-    'quantize' => ['meter']
+    'quantize' => ['meter'],
+    'ensemble' => ['root'],
+    'ensembles' => ['play', 'write'],
+    'player' => ['root', 'ensemble'],
+    'players' => ['ensemble', 'play', 'write'],
+    'play' => ['root'],
+    'instruction' => ['root']
   }
   @@kw = @@kw_children.keys
  
-  # TODO - only supports one arg, 'copy_measure' needs to validate two
-	# TODO - Modified to support multiple args
   @@syntax_rules = {
     'note' =>     lambda {|x| x == nil or x[0] == nil or x[0].kind_of? String},     # 1st arg optional, valid type
     'phrase' => 	lambda {|x| x == nil or x[0] == nil or x[0].kind_of? String},     # 1st arg optional, valid type
     'section' => 	lambda {|x| x == nil or x[0] == nil or x[0].kind_of? String},     # 1st arg optional, valid type
-    'repeat' => 	lambda {|x| x != nil and x[0] != nil and x[0].kind_of? Fixnum},                       		      # 1st arg required, valid type
+    'repeat' => 	lambda {|x| x != nil and x[0] != nil and x[0].kind_of? Fixnum},                       		       # 1st arg required, valid type
     'render' => 	lambda {|x| x != nil and x[0] != nil and (x[0].kind_of? String and x[0].length > 0)},            # 1st arg required, valid type
     'write' => 		lambda {|x| x != nil and x[0] != nil and (x[0].kind_of? String and x[0].length > 0)},            # 1st arg required, valid type
     'format' => 	lambda {|x| x != nil and x[0] != nil and (x[0].to_s == 'csound' or x[0].to_s == 'midi')},        # 1st arg required, valid value
     'measure' => 	lambda {|x| x == nil or x[0] == nil or x[0].kind_of? String},     # 1st arg optional, valid type
     'copy_measure' => lambda {|x| x != nil and x.length == 2 and x[0] != nil and x[1] != nil and x[0].kind_of? String and x[1].kind_of? String},   # 1st and second arg required, valid types    
     'meter' =>    lambda {|x| x != nil and x.length == 2 and x[0] != nil and x[1] != nil and x[0].kind_of? Fixnum and x[1].kind_of? Fixnum},       # 1st and second arg required, valid types    
-    'quantize' => lambda {|x| x != nil and x[0] != nil and (x[0].to_s == 'on' or x[0].to_s == 'off')}
+    'quantize' => lambda {|x| x != nil and x[0] != nil and (x[0].to_s == 'on' or x[0].to_s == 'off')},
+    'ensemble' => lambda {|x| x != nil and x[0] != nil and (x[0].kind_of? String and x[0].length > 0)},            # 1st arg required, valid type    
+    'players' => lambda {|x| x != nil and x[0] != nil and (x[0].kind_of? String and x[0].length > 0)},             # 1st arg required, valid type    
+    'ensembles' => lambda {|x| x != nil and x[0] != nil and (x[0].kind_of? String and x[0].length > 0)},           # 1st arg required, valid type    
+    'instruction' => 	lambda {|x| x != nil and x[0] != nil and x[0].kind_of? String}                       		     # 1st arg required, valid type
   }
   
   @@grammar_rules = {
@@ -115,7 +141,19 @@ class ComposerAST
     end, # 'write' has 'format' child
     'format' => lambda do |node|
       node.parent.kw == 'write'
-    end  # 'format' has 'write' parent
+    end, # 'format' has 'write' parent,
+    'ensemble' => lambda do |node|
+      child_kws = node.children.collect {|child| child.kw}      
+      child_kws.include? 'players' or child_kws.include? 'player'
+    end,  # 'ensemble' has 'players' or 'player' child
+    'play' => lambda do |node|
+      child_kws = node.children.collect {|child| child.kw} 
+      child_kws.include? 'players' or child_kws.include? 'ensembles'
+    end,  # 'play' has 'players' or 'ensembles' child    
+    'instruction' => lambda do |node|
+      child_kws = node.children.collect {|child| child.kw} 
+      child_kws.include? 'players' or child_kws.include? 'ensembles'
+    end,  # 'instruction' has 'players' or 'ensembles' child    
   }
   
   @@operators = {:delim => [',', ';', "\n", '"'], 
@@ -131,7 +169,7 @@ class ComposerAST
   # NOTE: A hack to support testing. This must be first line in test scripts but it breaks the
   #  assignment preprocessing which assumes all assignment statements start the file.
   @@debug_stmts = ['reset_script_state']
-    
+      
   # /Class attributes that are the state and rules of the parse
   
    
@@ -510,6 +548,10 @@ class ComposerAST
   
   def valid_grammar?(node)
     is_valid = true
+    
+    # TEMP DEBUG
+    #breakpoint
+    
     grammar_rule = @@grammar_rules[node.kw]
     is_valid = grammar_rule.call(node) if grammar_rule != nil
     is_valid

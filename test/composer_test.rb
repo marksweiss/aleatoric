@@ -2,6 +2,7 @@ $LOAD_PATH << "..\\lib"
 require 'composer'
 require 'composer_lang_test'
 require 'meter_test'
+require 'player_test'
 require 'set'
 require 'thread'
 require 'rubygems'
@@ -77,7 +78,7 @@ def write_test_script(script, lite_syntax=false)
   #  even in a single-threaded program properly scoping all calls, at least on 1.8.6 on Windows
   @write_mutex.lock
   File.open("test.altc", "w") do |f|
-    f << "module Aleatoric\n\n"  
+    f << "$LOAD_PATH << \"..\\lib\"\nrequire 'composer'\nrequire 'test_user_instruction'\nmodule Aleatoric\n\n"  
     script.each do |line|
       f << line
     end    
@@ -1080,16 +1081,224 @@ write "composer_test_results.txt"
   tester.assert(expected1 == actual[3])
   puts tester.to_s  
 end
+
+def test__ensemble
+  throw_on_failure = false
+  test_name = "test__ensemble"
+  lite_syntax = false
+  script = 
+%Q{
+# TESTING PURPOSES ONLY
+reset_script_state
+# test__ensemble
+
+# NOTE: CANNOT do non-block "lite" syntax with 'dump*' calls !!!
+# The dump call ends up within the block scope because it's not specified
+#  in composer_lang as a block closing keyword
+ensemble "In C Orchestra" do
+  players "Player 1", "Player 2"  
+end
+
+# FOR TESTING ONLY    
+dump_last_ensemble  
+}
+  tester, results = test_runner(test_name, throw_on_failure, script, lite_syntax)
+  actual = results    
+  
+  # TODO Have a better test against actual notes and not these bogus 'dump*' methods
+
+  expected0 = 'In C Orchestra'
+  expected1 = '2'
+  expected2 = 'Player 1'
+  expected3 = 'Player 2'
+  tester.assert(expected0 == actual[0] && expected1 == actual[1] && expected2 == actual[2] && expected3 == actual[3])
+  puts tester.to_s  
+end
+
+def test__ensemble_phrase_play_players
+  throw_on_failure = false
+  test_name = "test__ensemble_phrase_play_players"
+  lite_syntax = true
+  script = 
+%Q{
+# TESTING PURPOSES ONLY
+reset_script_state
+# test__ensemble_phrase_play_players
+
+ensemble "In C Orchestra"
+  players "Player 1", "Player 2"  
+  
+  phrase "Phrase 1"
+    note "1"
+      instrument  1 
+      start       1.0 
+      duration    0.5
+      amplitude   1000
+      pitch       7.01
+      func_table  1
+      
+    note "2"
+      instrument  2 
+      start       2.0 
+      duration    1.0
+      amplitude   1100
+      pitch       7.02
+      func_table  1
+
+play
+  players "Player 1", "Player 2" 
+  
+write "composer_test_results.txt"
+  format    csound
+  players "Player 1", "Player 2"
+  # ensembles "In C Orchestra"
+}
+  tester, results = test_runner(test_name, throw_on_failure, script, lite_syntax)
+  actual = results  
+  expected0 = 'i 1 1.00000 0.50000 1000 7.01000 1 ; 1'
+  expected1 = 'i 2 2.00000 1.00000 1100 7.02000 1 ; 2'
+  expected2 = 'i 1 1.00000 0.50000 1000 7.01000 1 ; 1'
+  expected3 = 'i 2 2.00000 1.00000 1100 7.02000 1 ; 2'
+  tester.assert(expected0 == actual[2])
+  tester.assert(expected1 == actual[3])
+  tester.assert(expected2 == actual[4])
+  tester.assert(expected3 == actual[5])
+  puts tester.to_s  
+end
+
+def test__ensemble_phrase_play_ensembles
+  throw_on_failure = false
+  test_name = "test__ensemble_phrase_play_ensembles"
+  lite_syntax = true
+  script = 
+%Q{
+# TESTING PURPOSES ONLY
+reset_script_state
+# test__ensemble_phrase_play_ensembles
+
+ensemble "In C Orchestra"
+  players "Player 1", "Player 2"  
+  
+  phrase "Phrase 1"
+    note "1"
+      instrument  1 
+      start       1.0 
+      duration    0.5
+      amplitude   1000
+      pitch       7.01
+      func_table  1
+      
+    note "2"
+      instrument  2 
+      start       2.0 
+      duration    1.0
+      amplitude   1100
+      pitch       7.02
+      func_table  1
+
+play
+  ensembles "In C Orchestra"
+  
+write "composer_test_results.txt"
+  format    csound
+  ensembles "In C Orchestra"
+}
+  tester, results = test_runner(test_name, throw_on_failure, script, lite_syntax)
+  actual = results  
+  expected0 = 'i 1 1.00000 0.50000 1000 7.01000 1 ; 1'
+  expected1 = 'i 2 2.00000 1.00000 1100 7.02000 1 ; 2'
+  expected2 = 'i 1 1.00000 0.50000 1000 7.01000 1 ; 1'
+  expected3 = 'i 2 2.00000 1.00000 1100 7.02000 1 ; 2'
+  tester.assert(expected0 == actual[2])
+  tester.assert(expected1 == actual[3])
+  tester.assert(expected2 == actual[4])
+  tester.assert(expected3 == actual[5])
+  puts tester.to_s  
+end
+
+# - TODO - implement various instructions using the full Player and Ensemble class API
+# -- including: preplay hooks, postplay hooks, relying on setting and getting state, improvising
+
+def test__instruction
+  throw_on_failure = false
+  test_name = "test__instruction"
+  lite_syntax = true
+  script = 
+%Q{
+# TESTING PURPOSES ONLY
+reset_script_state
+# test__instruction
+
+ensemble "In C Orchestra"
+  players "Player 1", "Player 2"  
+  
+  phrase "Phrase 1"
+    note "1"
+      instrument  1 
+      start       1.0 
+      duration    0.5
+      amplitude   1000
+      pitch       7.01
+      func_table  1
+      
+    note "2"
+      instrument  2 
+      start       2.0 
+      duration    1.0
+      amplitude   1100
+      pitch       7.02
+      func_table  1
+
+# Just tell one player in the ensemble to follow this instruction
+# impl. in test_user_instruction.rb
+instruction "Fortissimo"
+  description "Player should play each note twice as loud as the notated volume of the note."
+  players     "Player 1"
+
+# Just tell one player in the ensemble to follow this instruction
+# impl. in test_user_instruction.rb
+instruction "Pianissimo"
+  description "Player should play each note half as loud as the notated volume of the note."
+  players     "Player 2"
+
+# Tell all players in the ensemble to play
+play
+  ensembles "In C Orchestra"
+  
+# Output notes from all players in the ensemble, generated by 'play' statement
+write "composer_test_results.txt"
+  format    csound
+  ensembles "In C Orchestra"
+}
+  tester, results = test_runner(test_name, throw_on_failure, script, lite_syntax)
+  actual = results  
+  # Amplitude double what is notated in 'note' statements because of 'instruction' implementation
+  # Player 1's notes
+  expected0 = 'i 1 1.00000 0.50000 2000 7.01000 1 ; 1'
+  expected1 = 'i 2 2.00000 1.00000 2200 7.02000 1 ; 2'
+  # Amplitude half what is notated in 'note' statements because of 'instruction' implementation
+  # Player 2's notes
+  expected2 = 'i 1 1.00000 0.50000 500 7.01000 1 ; 1'
+  expected3 = 'i 2 2.00000 1.00000 550 7.02000 1 ; 2'
+  
+  tester.assert(expected0 == actual[2])
+  tester.assert(expected1 == actual[3])
+  tester.assert(expected2 == actual[4])
+  tester.assert(expected3 == actual[5])
+  puts tester.to_s  
+end
 ##################### /TESTS ########################
 
 # Call each test in here
-def run_tests(flags)  
+def run_tests(flags='all')
+
   # TODO - shore this up someday
   # Right now just a way to run just the tests in the else block below
   # Should eventually be able to take a list of tests or 'all' or something like that
-  run_only = 'run_only' if flags.length > 0 # just needs to be non-nil for now
+  run_only = false
+  run_only = true if flags.grep(/[!]*run_only/).length > 0
     
-  if run_only == nil
+  if not run_only
   
     all_pass = true
     begin
@@ -1103,7 +1312,6 @@ def run_tests(flags)
       test__repeat_index
       test__write_format_sections_phrases
       test__render
-      #  
       test__phrase_lite_syntax
       test__measure_lite_syntax
       test__copy_measure_lite_syntax
@@ -1116,8 +1324,12 @@ def run_tests(flags)
       test__func
       test__next
       test__render_lite_syntax
-      #    
       test__meter_lite_syntax
+      test__ensemble
+      test__ensemble_phrase_play_players
+      test__ensemble_phrase_play_ensembles
+      test__instruction
+      
     rescue AleatoricTestException => e
       puts e.to_s
       all_pass = false
@@ -1129,7 +1341,9 @@ def run_tests(flags)
     all_pass = true
     begin    
       
-      # run_only tests go here
+      # *** run_only TESTS GO HERE ***
+
+      # *** run_only TESTS GO HERE ***
     
     rescue AleatoricTestException => e
       puts e.to_s

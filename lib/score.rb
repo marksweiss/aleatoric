@@ -63,8 +63,7 @@ class Score
   def to_s
     s = ''
     @notes.each do |note|    
-      s << note.to_s
-      s << "\n"
+      s << (note.to_s + "\n")
     end
     s
   end

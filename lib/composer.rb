@@ -1,5 +1,9 @@
+require 'util'
 require 'score'
 require 'meter'
+require 'player'
+require 'ensemble'
+require 'instruction'
 require 'renderer'
 
 # This module implements the basic parser/processor for the Composer language.
@@ -53,6 +57,7 @@ module Aleatoric
 @phrases_by_name = {}
 @processing_phrase = false
 
+@cur_sections = []
 @cur_section = nil
 @sections = []
 @sections_by_name = {}
@@ -65,6 +70,41 @@ module Aleatoric
 @measures = []
 @measures_by_name = {}
 @processing_measure = false
+
+@processing_instruction = false
+@cur_instruction = nil
+@instructions_by_name = {}
+# NOTE: these need to be module scope across all files in the module, which is
+#  true @@ 'module scope' rather than @ 'module scope'.  The latter is visible
+#  across translation units in the module, but is not guaranteed to be 
+#  initialized when called from another translation unit.  @@ is true module scope
+#  and is guaranteed to be initialized when referenced by any methods in the module
+#  in any translation unit.
+# These guys are referred to by the set_*instruction() methods, which live here but are called
+#  from the 'user_instructions.rb' translation unit, where the programmer/composer
+#  puts 'instruction' keyword definitions and maps them to their name with the set_*_instruction() call
+@@preplay_instructions = {}
+@@postplay_instructions = {}
+@@improvisation_instructions = {}
+def set_preplay_instruction(instruction_name, &instr_blk)
+  @@preplay_instructions[instruction_name] = instr_blk
+end
+def set_postplay_instruction(instruction_name, &instr_blk)
+  @@postplay_instructions[instruction_name] = instr_blk
+end
+def set_improvisation_instruction(instruction_name, &instr_blk)
+  @@improvisation_instructions[instruction_name] = instr_blk
+end
+
+@processing_play = false
+@processing_ensemble = false
+@cur_ensemble = nil
+@ensembles = []
+@ensembles_by_name = {}
+@cur_player = nil
+@cur_players = []
+@players = []
+@players_by_name = {}
 
 @score_out = ScoreWriter.instance
 @processing_score = false
@@ -162,13 +202,10 @@ def measure(name, &args_blk)
   yield args_blk
   @processing_note = false
   @processing_measure = true
-
-  # TODO This is subject of next test to pass in composer_test
   @notes = @meter.quantize(@notes) if @meter.quantizing?
   @cur_measure << @notes  
   @measures << @cur_measure
   @measures_by_name[name] = @cur_measure
-
   @notes.clear
   @processing_measure = false  
 end
@@ -198,11 +235,116 @@ def section(name, &args_blk)
   @cur_phrases.clear
   @cur_section = Section.new(name)
   @sections << @cur_section
+  @cur_sections << @cur_section
   @sections_by_name[name] = @cur_section
-  yield
+  yield args_blk
   @cur_section << @cur_phrases  
   @cur_phrases.clear
   @processing_section = false
+end
+
+# NOTE: CANNOT mix section and phrase in an ensemble block
+# CAN have 1 or more sections or 0 sections and instead 1 or more phrases
+# So supports either but still hierarchical structure with ensemble a parent 
+#  of sections or phrases but not both
+def ensemble(name, &args_blk)
+  @processing_ensemble = true
+  @cur_players.clear
+  @cur_sections.clear
+  @cur_phrases.clear
+  
+  @cur_ensemble = Ensemble.new(name)
+  @ensembles << @cur_ensemble
+  @ensembles_by_name[name] = @cur_ensemble
+
+  yield
+
+  @cur_players.each do |player| 
+    player.ensemble = @cur_ensemble
+    
+    if @cur_sections.length > 0
+      @cur_sections.each do |section|
+        section.phrases.each do |phrase|
+          player.add_score phrase
+        end
+      end
+    end
+    
+    if @cur_phrases.length > 0
+      @cur_phrases.each do |phrase|
+        player.add_score phrase
+      end
+    end
+  end
+  
+  @cur_ensemble << @cur_players
+
+  @cur_players.clear
+  @cur_sections.clear
+  @cur_phrases.clear  
+  @processing_ensemble = false  
+end
+
+def play(&args_blk)
+  @processing_play = true
+  yield
+  @processing_play = false
+end
+
+def players(*names)
+  if @processing_ensemble
+    names.each do |name| 
+      name = name.strip
+      if not @players_by_name.include? name
+        @players_by_name[name] = Player.new(name)
+        @players << @players_by_name[name]
+      end
+      @cur_players << @players_by_name[name]
+    end
+  end
+  
+  if @processing_instruction
+    names.each do |name| 
+      player = @players_by_name[name.strip]
+      instr_name = @cur_instruction.name
+      # Note the pass by '&' to pass as a lambda which the recieving method in Player stores as a Proc and then calls 'call()' to run it
+      player.add_preplay_hook(instr_name, &@@preplay_instructions[instr_name]) if @@preplay_instructions.include? instr_name
+      player.add_postplay_hook(instr_name, &@@postplay_instructions[instr_name]) if @postplay_instructions.include? instr_name
+      player.add_improvisation_hook(instr_name, &@@improvisation_instructions[instr_name]) if @improvisation_instructions.include? instr_name
+    end    
+  end
+  
+  if @processing_play
+    names.each do |name| 
+      name = name.strip
+      @players_by_name[name].play if @players_by_name.include? name
+    end 
+  end
+  
+  if @processing_score
+    names.each do |name| 
+      name = name.strip
+      player = @players_by_name[name]
+      if player != nil
+        player.output.each do |note|
+          @score_notes << note
+        end
+        player.clear_output
+      end
+    end
+  end
+end
+
+def instruction(name)
+  @processing_instruction = true  
+  @cur_instruction = Instruction.new(name)  
+  @instructions_by_name[name] = @cur_instruction  
+  yield
+  @processing_instruction = false  
+end
+
+def description(desc)
+  @cur_instruction.description = desc
 end
 
 # Handles keyword "phrases", called inside write() block
@@ -229,6 +371,8 @@ def measures(*names)
       end
     end
   else
+  
+    # TODO replace with @measures_by_name[name].keys.each and get rid of @measures
     @measures.length.times do |j|
       @measures[j].notes.each do |note|
         @score_notes << note.dup
@@ -248,6 +392,32 @@ def sections(*names)
       end
     end
   end
+end
+
+# Handles keyword "ensembles", called inside write() block
+def ensembles(*names)
+  if @processing_play
+    names.each do |name| 
+      name = name.strip
+      ensemble = @ensembles_by_name[name]
+      ensemble.players.each do |player|
+        player.play
+      end
+    end 
+  end
+  
+  if @processing_score
+    names.each do |name| 
+      name = name.strip
+      ensemble = @ensembles_by_name[name]
+      ensemble.players.each do |player|
+        player.output.each do |note|
+          @score_notes << note
+        end
+        player.clear_output
+      end
+    end    
+  end  
 end
 
 def repeat(limit, &blk)
@@ -336,7 +506,27 @@ def dump_last_section
   end
 end
 
+def dump_last_ensemble
+  File.open("..\\test\\composer_test_results.txt", "w") do |f|
+    f << @ensembles.last.name + "\n"
+    f << @ensembles.last.players.length.to_s + "\n"
+    @ensembles.last.players.each do |player|
+      f <<  player.name + "\n"
+    end
+  end
+end
+
+def dump_last_player
+  File.open("..\\test\\composer_test_results.txt", "w") do |f|
+    f << @players.last.name
+  end
+end
+
 def reset_script_state
+  # *** KEEP THIS HERE ALWAYS ***
+  @score_out.clear
+  # *** KEEP THIS HERE ALWAYS ***
+
   @cur_note = nil
   @notes = []
   @notes_by_name = {}
@@ -348,6 +538,7 @@ def reset_script_state
   @phrases_by_name = {}
   @processing_phrase = false
 
+  @cur_sections = []
   @cur_section = nil
   @sections = []
   @sections_by_name = {}
@@ -360,11 +551,35 @@ def reset_script_state
   @processing_measure = false
   @measures_by_name = {}
   @cur_start = 0.0
+  
+  @processing_instruction = false
+  @cur_instruction = nil
+  @instructions_by_name = {}
+  # *** KEEP THIS HERE ALWAYS ***
+  # Don't reset, because these are set at beginning of run
+  #  and live for lifetime of run of a process
+  #  because they are set by a require at top of overall
+  #  test.altc file, which includes all of the separate test scripts
+  # @@preplay_instructions = {}
+  # @@postplay_instructions = {}
+  # @@improvisation_instructions = {}
+  # *** KEEP THIS HERE ALWAYS ***
+  
+  @processing_play = false
+  @processing_ensemble = false
+  @cur_ensemble = nil
+  @ensembles = []
+  @ensembles_by_name = {}
+  @cur_player = nil
+  @cur_players = []
+  @players = []
+  @players_by_name = {}
 
-  @score_out.clear
   @processing_score = false
   @score_notes = []
+  
   @processing_renderer = false
+
 end
 # /FOR UNIT TESTING
 

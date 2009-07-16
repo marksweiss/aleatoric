@@ -1,13 +1,5 @@
 module Aleatoric
 
-# class Sequence or Instrument
-# a function that takes a hash of args
-
-# Basically a functor
-# Bind an object to an impl and set of args, then can keep passing args
-#  and as long as the @player can handle them you're good
-# play() returns a note
-
 class Instrument
   attr_accessor :func, :args
   protected :func, :args
