@@ -97,6 +97,7 @@ def set_improvisation_instruction(instruction_name, &instr_blk)
 end
 
 @processing_play = false
+@processing_player = false
 @processing_ensemble = false
 @cur_ensemble = nil
 @ensembles = []
@@ -243,6 +244,37 @@ def section(name, &args_blk)
   @processing_section = false
 end
 
+def player(name, &args_blk)
+  @processing_player = true
+  if not @players_by_name.include? name
+    @cur_player = Player.new(name)
+    @players_by_name[name] = @cur_player
+    @players << @cur_player
+  else
+    @cur_player = @players_by_name[name]
+  end
+  @cur_player.ensemble = @cur_ensemble
+  
+  @cur_sections.clear
+  @cur_phrases.clear
+  
+  yield
+  
+  @cur_sections.each do |section|
+    section.phrases.each do |phrase|
+      @cur_player.add_score(phrase.name, phrase)
+    end
+  end
+    
+  @cur_phrases.each do |phrase|
+    @cur_player.add_score(phrase.name, phrase)
+  end
+
+  @cur_sections.clear
+  @cur_phrases.clear 
+  @processing_player = false
+end
+
 # NOTE: CANNOT mix section and phrase in an ensemble block
 # CAN have 1 or more sections or 0 sections and instead 1 or more phrases
 # So supports either but still hierarchical structure with ensemble a parent 
@@ -261,24 +293,23 @@ def ensemble(name, &args_blk)
 
   @cur_players.each do |player| 
     player.ensemble = @cur_ensemble
+    @cur_ensemble.add_player(player.name, player)
     
     if @cur_sections.length > 0
       @cur_sections.each do |section|
         section.phrases.each do |phrase|
-          player.add_score phrase
+          player.add_score(phrase.name, phrase)
         end
       end
     end
     
     if @cur_phrases.length > 0
       @cur_phrases.each do |phrase|
-        player.add_score phrase
+        player.add_score(phrase.name, phrase)
       end
     end
   end
-  
-  @cur_ensemble << @cur_players
-
+      
   @cur_players.clear
   @cur_sections.clear
   @cur_phrases.clear  
@@ -299,7 +330,7 @@ def players(*names)
         @players_by_name[name] = Player.new(name)
         @players << @players_by_name[name]
       end
-      @cur_players << @players_by_name[name]
+      @cur_players << @players_by_name[name]      
     end
   end
   
@@ -396,13 +427,25 @@ end
 
 # Handles keyword "ensembles", called inside write() block
 def ensembles(*names)
+  if @processing_instruction
+    names.each do |name| 
+      ensemble = @ensembles_by_name[name.strip]
+      instr_name = @cur_instruction.name      
+      # Note the pass by '&' to pass as a lambda which the recieving method in Player stores as a Proc and then calls 'call()' to run it
+      ensemble.add_preplay_hook(instr_name, &@@preplay_instructions[instr_name]) if @@preplay_instructions.include? instr_name
+      ensemble.add_postplay_hook(instr_name, &@@postplay_instructions[instr_name]) if @@postplay_instructions.include? instr_name
+    end    
+  end
+  
   if @processing_play
     names.each do |name| 
       name = name.strip
       ensemble = @ensembles_by_name[name]
-      ensemble.players.each do |player|
-        player.play
-      end
+      # Will run ensemble.play_all, which plays ensemble preplay hooks,
+      #  calls play on each player in ensemble (running their preplay hooks, 
+      #  then generating their output, then running their postplay hooks),
+      #  then calls ensemble postplay hooks
+      ensemble.play_all if ensemble != nil
     end 
   end
   
@@ -507,11 +550,13 @@ def dump_last_section
 end
 
 def dump_last_ensemble
-  File.open("..\\test\\composer_test_results.txt", "w") do |f|
-    f << @ensembles.last.name + "\n"
-    f << @ensembles.last.players.length.to_s + "\n"
-    @ensembles.last.players.each do |player|
-      f <<  player.name + "\n"
+  File.open("..\\test\\composer_test_results.txt", "w") do |f|    
+    ensemble = @ensembles.last
+    players = ensemble.players
+    f << ensemble.name + "\n"
+    f << players.length.to_s + "\n"
+    players.each do |player|        
+      f << player.name + "\n"
     end
   end
 end
@@ -566,6 +611,7 @@ def reset_script_state
   # *** KEEP THIS HERE ALWAYS ***
   
   @processing_play = false
+  @processing_player = false
   @processing_ensemble = false
   @cur_ensemble = nil
   @ensembles = []

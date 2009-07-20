@@ -50,7 +50,7 @@ module Aleatoric
 class Player
 
   attr_accessor :ensemble, :name
-  attr_accessor :scores, :scores_idx
+  attr_accessor :scores, :scores_ordered_names, :scores_idx
   attr_accessor :preplay_hooks_ordered_names, :postplay_hooks_ordered_names, :improvising_hooks_ordered_names
   attr_accessor :state, :is_playing, :is_improvising, :out_notes
   attr_accessor :preplay_hooks, :postplay_hooks, :improvising_hooks
@@ -62,8 +62,9 @@ class Player
   
   def initialize(name)
     @name = name
-    @scores = []
+    @scores = {}
     @scores_idx = 0
+    @scores_ordered_names = []
     @preplay_hooks_ordered_names = []
     @preplay_hooks = {}
     @postplay_hooks_ordered_names = []
@@ -75,9 +76,12 @@ class Player
     @is_improvising = false    
     @out_notes = []  
   end
-    
-  def add_score(score)
-    @scores << score
+  
+  # TODO Some code is adding scores with name = nil, not a valid key!
+  #  All the code searched for this call has an arg, so it's nil somewhere
+  def add_score(name, score)
+    @scores[name] = score
+    @scores_ordered_names << name
     # If there were no scores, set index to new first score
     @scores_idx = 0 if @scores_idx == -1
     self
@@ -86,15 +90,16 @@ class Player
     
   def remove_score(score_name)
     dead_score = nil
-    @scores.each do |score|
-      if score.name == score_name
-        dead_score = score
+    @scores_ordered_names.each do |name|
+      if name == score_name
+        dead_score = @scores[score_name]
         break
       end
     end
     # If score_idx is on last position and we're deleting that position, move it into a valid position
     @scores_idx -= 1 if @scores_idx == @scores.length - 1
     @scores.delete dead_score
+    @scores_ordered_names.delete score_name
     self
   end
   alias delete_score remove_score
@@ -103,26 +108,27 @@ class Player
   def set_score(score_name, score)
     # Start out in invalid position and index for each score until we match
     idx = -1
-    @scores.each do |score|
+    @scores_ordered_names.each do |name|
       idx += 1
-      break if score.name == score_name
+      break if name == score_name
     end
-    @scores[idx] = score if valid_scores_idx? idx
+    @scores[score_name] = score if valid_scores_idx? idx
   end
   
   def clear_scores
     @scores.clear
+    @scores_ordered_names.clear
     @scores_idx = -1
     self
   end
   
   def scores_length
-    @scores.length
+    @scores_ordered_names.length
   end
   alias scores_size scores_length
   
   def scores_empty?
-    @scores.length == 0
+    @scores_ordered_names.length == 0
   end
   
   def scores_index
@@ -131,9 +137,9 @@ class Player
   alias phrases_index scores_index
 
   def current_score
-    @scores[@scores_idx] if valid_scores_idx? @scores_idx
+    @scores[@scores_ordered_names[@scores_idx]] if valid_scores_idx? @scores_idx
   end
-  alias current_phrase current_score 
+  alias current_phrase current_score
   
   def increment_scores_index
     @scores_idx +=1 if valid_scores_idx?(@scores_idx + 1)
@@ -150,12 +156,14 @@ class Player
   alias dec decrement_scores_index  
   
   # TODO Regression unit testing
-  def play(reset_score_flag=false, &blk)
+  def play(name=nil, &blk) # TODO GET RID OF THIS reset_score_flag=false
     ret = []
     # NOTE: Default is to NOT change the state of score but to make a copy for each play call.
-    #  Client can call 
-    cur_score = current_score.dup
-    
+    #  Client can call
+    cur_score = @scores[name] if name != nil
+    cur_score = current_score if name == nil
+    cur_score = cur_score.dup
+        
     # NOTE: hooks can have whatever side effects they want, based on the access they have through
     #  the Player public API.  But barring that the promise the class makes in play() is like a 
     #  a functional map idea -- each hook is called, in order, and transforms the current state
@@ -185,8 +193,9 @@ class Player
       @postplay_hooks[hook_name].call
     end    
     
+    # TODO GET RID TO THIS
     # If reset_score_flag passed, update the current score stored by object to the result of this call to play()
-    self.set_score(cur_score.name, cur_score) if reset_score_flag
+    # self.set_score(cur_score.name, cur_score) if reset_score_flag
     
     # Also return the notes written, for client convenience in case they want a local copy, 
     #  and, more so, for convenience of unit testing
@@ -286,8 +295,33 @@ class Player
   #alias flush_scores flush_scores_to_output
   #alias flush flush_scores_to_output
   
-  def output
-    @out_notes.dup
+  def get_output
+    ret = []
+    @out_notes.each {|note| ret << note.dup}
+    ret
+  end
+  alias output get_output
+  
+  # TODO Unit Test
+  def set_output(notes)
+    @out_notes.clear
+    notes.each {|note | @out_notes << note}
+    self
+  end
+  
+  # TODO Unit Test
+  def append_note_to_output(note)
+    @out_notes << note.dup
+  end
+  
+  # TODO Unit Test
+  def append_score_to_output(score)
+    score.notes.each {|note| @out_notes << note.dup}
+  end
+  
+  # TODO Unit Test
+  def output_empty?
+    @out_notes.length == 0
   end
   
   def clear_output
@@ -299,11 +333,13 @@ class Player
     ret = Player.new(self.name)
     
     # TODO Make sure this works, was commented out
-    @scores.each do |score| 
-      ret.add_score score.dup
+    @scores.keys.each do |score_name| 
+      add_score = @scores[score_name].dup      
+      ret.add_score(add_score.name, add_score)
     end
     
     # TODO - CHANGE THIS BACK TO self.* now that there are accessors
+    ret.scores_ordered_names = @scores_ordered_names
     ret.scores_idx = @scores_idx
     ret.preplay_hooks_ordered_names = @preplay_hooks_ordered_names
     ret.postplay_hooks_ordered_names = @postplay_hooks_ordered_names
@@ -325,29 +361,6 @@ class Player
   end
     
 end
-
-class In_C_Player < Player
-
-  def initialize
-    set_state("RND_RNG", 100)
-    set
-    
-  end
-
-  # Helper used by the predicate functions to test probability in nice, readable "100%" form
-  RND_RNG = 100
-  def test_rnd
-    if @override_tst_rnd_min
-      0
-    elsif @override_tst_rnd_max
-      RND_RNG
-    else
-      rand(RND_RNG)
-    end
-  end
-
-end
-
 
 end
 

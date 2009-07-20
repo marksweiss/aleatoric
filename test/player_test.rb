@@ -21,9 +21,13 @@ class Player_Test < Test::Unit::TestCase
     puts "test__add_score__append_score__scores_length__scores_size ENTERED"
 
     player = Player.new("Test Player")
-    player.add_score Score.new
+    score_name = "Score 1"
+    score1 = Score.new(score_name)
+    player.add_score(score1.name, score1)
     assert(player.scores_length == 1)
-    player.append_score Score.new
+    score_name = "Score 2"
+    score2 = Score.new(score_name)
+    player.append_score(score2.name, score2)
     assert(player.scores_size == 2)
     
     puts "test__add_score__append_score__scores_length__scores_size COMPLETED"
@@ -33,24 +37,34 @@ class Player_Test < Test::Unit::TestCase
     puts "test__scores_index__scores_empty__clear_scores__scores_index_increment__scores_index_decrement ENTERED"
 
     player = Player.new("Test Player")
-    player.add_score Score.new
+    score_1_name = "score 1"
+    score_1 = Score.new(score_1_name)
+    player.add_score(score_1_name, score_1)
     assert(player.scores_length == 1)
-    player.append_score Score.new
+    score_2_name = "score 2"
+    score_2 = Score.new(score_2_name)    
+    player.append_score(score_2_name, score_2)
     assert(player.scores_size == 2)
     player.clear_scores
     assert(player.scores_size == 0)    
     assert(player.scores_empty?)
     assert(player.scores_index == Player.no_index)
-    player.add_score Score.new
+    score_3_name = "score 3"
+    score_3 = Score.new(score_3_name)
+    player.add_score(score_3_name, score_3)
     assert(player.scores_index == 0)
     # Test don't increment past end of scores
     player.increment_scores_index
     assert(player.scores_index == 0)
-    player.add_score Score.new
+    score_4_name = "score 4"
+    score_4 = Score.new(score_4_name)
+    player.add_score(score_4_name, score_4)    
     # Use alias for 'increment', 'inc' is also valid
     player.increment        
     assert(player.scores_index == 1)
-    player.add_score Score.new 
+    score_5_name = "score 5"
+    score_5 = Score.new(score_5_name)
+    player.add_score(score_5_name, score_5) 
     # Use alias for 'decrement', 'decrement' is also valid
     player.dec
     assert(player.scores_index == 0)
@@ -66,16 +80,17 @@ class Player_Test < Test::Unit::TestCase
     note_2_name = "note 2"
     note_1 = Note.new note_1_name
     note_2 = Note.new note_2_name
-    score_1 = Score.new
+    score_1_name = "score 1"
+    score_1 = Score.new(score_1_name)
     score_1 << [note_1, note_2]
-    player.add_score score_1
+    player.add_score(score_1.name, score_1)
     note_3_name = "note 3"
     note_4_name = "note 4"
     note_3 = Note.new note_3_name
     note_4 = Note.new note_4_name
     score_2 = Score.new    
     score_2 << [note_3, note_4]
-    player.add_score score_2
+    player.add_score(score_2.name, score_2)
     expected = score_1.notes
     actual = player.current_score.notes    
     assert(expected == actual)
@@ -89,7 +104,7 @@ class Player_Test < Test::Unit::TestCase
     player = Player.new("Test Player")
     score_name = "score 1"
     score_1 = Score.new(score_name)
-    player.add_score score_1
+    player.add_score(score_1.name, score_1)
     assert(player.scores_length == 1)
     player.remove_score(score_1.name)
     assert(player.scores_size == 0)
@@ -106,9 +121,10 @@ class Player_Test < Test::Unit::TestCase
     note_1 = Note.new note_1_name
     note_2 = Note.new note_2_name
     expected_1 = [note_1, note_2]
-    score = Score.new
-    score << expected_1
-    player.add_score score
+    score_1_name = "score 1"
+    score_1 = Score.new(score_1_name)
+    score_1 << expected_1
+    player.add_score(score_1_name, score_1)
 
     player.play
     actual = player.output
@@ -121,23 +137,23 @@ class Player_Test < Test::Unit::TestCase
     note_3 = Note.new note_3_name
     note_4 = Note.new note_4_name
     expected_2 = [note_3, note_4]
-    score_2 = Score.new
+    score_2_name = "score 2"
+    score_2 = Score.new(score_2_name)
     score_2 << expected_2
     
-    player.clear_output
-    player.add_score score_2
+    player.clear_output    
+    player.add_score(score_2_name, score_2)
     player.play
     player.increment
     player.play
-    actual = player.output
-        
+    actual = player.output        
     assert(actual.length == expected_1.length + expected_2.length)
     assert(actual[0].name == expected_1[0].name && actual[1].name == expected_1[1].name)
     assert(actual[2].name == expected_2[0].name && actual[3].name == expected_2[1].name)
     
     player.clear_scores
     player.clear_output
-    player.add_score score
+    player.add_score(score_1_name, score_1)
     player.play
     actual = player.output    
     assert(actual[0].name == expected_1[0].name && actual[1].name == expected_1[1].name)

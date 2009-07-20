@@ -1,11 +1,9 @@
 # $LOAD_PATH << "..\\test"        # ugly, need to include this to support unit testing
 require 'composer'
 require 'composer_lang'
-# require 'user_instruction'
-# require 'test_user_instruction' # ugly, need to include this to support unit testing
 require 'rubygems'
 require 'ruby-debug' ; Debugger.start
-# require 'instrument'
+
 include Aleatoric
 
 # SAMPLE DEBUGGER CALLS
@@ -34,8 +32,7 @@ def main
     script = File.readlines file_name
   end
   
-  # Wrap the script in ruby module directive, this is just so user doesn't have to 
-  #  pollute their script with this
+  # Wrap the script in necessary directives, so user doesn't have to 
   File.open(file_name_tmp, "w") do |f|
     f << "require 'util'\nrequire 'global'\nrequire 'user_instruction'\nmodule Aleatoric\n\n"  
     script.each do |line|

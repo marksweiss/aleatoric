@@ -47,6 +47,7 @@ class ComposerAST
     'ensembles' => "\n",
     'player' => "do\n",
     'players' => "\n",
+    'player' => "do\n",
     'play' => "do\n",
     'instruction' => "do\n"
   }
@@ -68,12 +69,13 @@ class ComposerAST
     'ensembles' => "",
     'player' => "end\n",
     'players' => "",
+    'player' => "end\n",
     'play' => "end\n",
     'instruction' => "end\n" 
   }
     
   @@kw_children = {
-    'root' => ['note', 'phrase', 'section', 'repeat', 'write', 'render', 'def', 'measure', 'copy_measure', 'meter', 'ensemble', 'play', 'instruction'],
+    'root' => ['note', 'phrase', 'section', 'repeat', 'write', 'render', 'def', 'measure', 'copy_measure', 'meter', 'ensemble', 'player', 'play', 'instruction'],
     'note' => [],
     'phrase' => ['note', 'repeat'],
     'section' => ['phrase', 'measure', 'copy_measure'],
@@ -108,7 +110,7 @@ class ComposerAST
     'meter' => ['root'],
     'quantize' => ['meter'],
     'ensemble' => ['root'],
-    'ensembles' => ['play', 'write'],
+    'ensembles' => ['instruction', 'play', 'write'],
     'player' => ['root', 'ensemble'],
     'players' => ['ensemble', 'play', 'write'],
     'play' => ['root'],

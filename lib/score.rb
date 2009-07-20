@@ -12,7 +12,9 @@ class Score
   protected :score_attrs
   
   def initialize(name=nil)
-    @name = name
+    # reasonable default value transparent to user (who didn't provide a name after all)
+    #  and that is guaranteed to be unique
+    @name = name ||= self.object_id.to_s 
     @notes = []
     @score_attrs = []
   end
