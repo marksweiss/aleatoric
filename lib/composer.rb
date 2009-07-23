@@ -340,8 +340,8 @@ def players(*names)
       instr_name = @cur_instruction.name
       # Note the pass by '&' to pass as a lambda which the recieving method in Player stores as a Proc and then calls 'call()' to run it
       player.add_preplay_hook(instr_name, &@@preplay_instructions[instr_name]) if @@preplay_instructions.include? instr_name
-      player.add_postplay_hook(instr_name, &@@postplay_instructions[instr_name]) if @postplay_instructions.include? instr_name
-      player.add_improvisation_hook(instr_name, &@@improvisation_instructions[instr_name]) if @improvisation_instructions.include? instr_name
+      player.add_postplay_hook(instr_name, &@@postplay_instructions[instr_name]) if @@postplay_instructions.include? instr_name
+      player.add_improvisation_hook(instr_name, &@@improvisation_instructions[instr_name]) if @@improvisation_instructions.include? instr_name
     end    
   end
   

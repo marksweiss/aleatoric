@@ -74,7 +74,11 @@ class Player
     @state = {}
     @is_playing = true
     @is_improvising = false    
-    @out_notes = []  
+    @out_notes = []
+    
+    
+    # TEMP DEBUG
+    @container = self
   end
   
   # TODO Some code is adding scores with name = nil, not a valid key!
@@ -169,7 +173,7 @@ class Player
     #  a functional map idea -- each hook is called, in order, and transforms the current state
     #  of the current score and passes that to the next hook    
     @preplay_hooks_ordered_names.each do |hook_name|
-      cur_score = @preplay_hooks[hook_name].call cur_score    
+      cur_score = @preplay_hooks[hook_name].call(self, cur_score)    
     end
     
     # If user passed in additional one-time-only block for this play() call, run it on current score
@@ -189,8 +193,9 @@ class Player
     #  here is they'll get called by each play() call AFTER notes are written to output.
     # Typical use would be get_state()/set_state() and perhaps also manipulate the score or
     #  the score_index. The *state() calls are the generic API for holding state between play() calls
+    # Must pass in reference to containing object since method was passed in from outside this object as lambda
     @postplay_hooks_ordered_names.each do |hook_name|
-      @postplay_hooks[hook_name].call
+      @postplay_hooks[hook_name].call self
     end    
     
     # TODO GET RID TO THIS
@@ -221,6 +226,10 @@ class Player
   def add_postplay_hook(name, &f)
     @postplay_hooks_ordered_names << name
     @postplay_hooks[name] = f
+    
+    # TEMP DEBUG
+    debug_log "add_postplay_hook " + name.to_s
+    
     self
   end
   

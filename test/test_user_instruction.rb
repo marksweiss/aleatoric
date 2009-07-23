@@ -1,11 +1,14 @@
+require 'util'
+
 include Aleatoric
 
 ##########################################################
 # PLACE YOUR MAPPINGS AND INSTRUCTION IMPLEMENTATIONS HERE
 
+# NOTE: ALL nooks MUST take a container arg, the object they are loaded into
 
-# NOTE: Instruction hooks must take a Score as an argument and return a Score
-fortissimo = lambda do |score|
+# NOTE: Instruction hooks must ALSO take a Score as an argument and return a Score
+fortissimo = lambda do |container, score|
   score.notes.each do |note|
     note.amplitude(note.amplitude * 2)
   end
@@ -13,7 +16,7 @@ fortissimo = lambda do |score|
 end
 set_preplay_instruction("Fortissimo", &fortissimo)
 
-pianissimo = lambda do |score|
+pianissimo = lambda do |container, score|
   score.notes.each do |note|
     note.amplitude((note.amplitude.to_f * 0.5).to_i)
   end
@@ -22,8 +25,6 @@ end
 set_preplay_instruction("Pianissimo", &pianissimo)
 
 # "Each Player Appends Another Player's First Note"
-# NOTE: ensemble nooks must take a container arg, which is the object
-#  they are loaded into
 # NOTE: containr type == Ensemble
 each_player = lambda do |container|
   # Get players for this ensemble once, since order not guaranteed, and use the local var
@@ -50,6 +51,28 @@ end
 # Postplay because descriptiont indicates players repeat notes played by other players
 # We want to include any preplay changes to the note played before its copied here
 set_postplay_instruction("Each Player Appends Another Player's First Note", &each_player)
+
+get_alternate_before_play = lambda do |container, score|
+  alt_flg = container.get_state("alternate_flag")
+  if alt_flg == nil or alt_flg = false    
+    score.notes.each do |note|
+      note.amplitude(0)
+    end
+  end
+  score
+end
+# NOTE: postplay Player hooks take containing object argument and return nothing
+set_alternate_after_play = lambda do |container|
+  alt_flg = container.get_state("alternate_flag") 
+  if alt_flg == nil or alt_flg == false
+    container.set_state("alternate_flag", true) 
+  else
+    container.set_state("alternate_flag", false) 
+  end
+end
+# NOTE: Set both hooks, each a different type, under the same name from the Composer score
+set_preplay_instruction("Alternate", &get_alternate_before_play)
+set_postplay_instruction("Alternate", &set_alternate_after_play)
 
 # /PLACE YOUR MAPPINGS AND INSTRUCTION IMPLEMENTATIONS HERE
 ##########################################################

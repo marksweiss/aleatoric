@@ -106,15 +106,9 @@ class Ensemble
       return
     end
     
-    # Ensemble doesn't output score, so this is only called for side effects
-    #  presumably on ensemble state and/or state of some/all players
-    
-    # TEMP DEBUG
-    debug_log @postplay_hooks_ordered_names.class
-    debug_log @postplay_hooks_ordered_names.length
-    
+    # Ensemble outputs score for each player    
     @preplay_hooks_ordered_names.each do |hook_name|
-      @preplay_hooks[hook_name].call   
+      @preplay_hooks[hook_name].call(self, nil)      
     end
     
     # If user passed in additional one-time-only block for this play() call, run it on current score
@@ -127,7 +121,7 @@ class Ensemble
     # Ensemble doesn't output score, so this is only called for side effects
     #  presumably on ensemble state and/or state of some/all players
     @postplay_hooks_ordered_names.each do |hook_name|
-      @postplay_hooks[hook_name].call
+      @postplay_hooks[hook_name].call self
     end    
   end
   
@@ -140,7 +134,7 @@ class Ensemble
     #  presumably on ensemble state and/or state of some/all players
     @preplay_hooks_ordered_names.each do |hook_name|
       # NOTE: Ensemble hooks take a reference to their containing ensemble
-      @preplay_hooks[hook_name].call self
+      @preplay_hooks[hook_name].call(self, nil)
     end
     
     # If user passed in additional one-time-only block for this play() call, run it on current score

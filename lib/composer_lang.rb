@@ -79,7 +79,7 @@ class ComposerAST
     'note' => [],
     'phrase' => ['note', 'repeat'],
     'section' => ['phrase', 'measure', 'copy_measure'],
-    'repeat' => ['note', 'measure'],
+    'repeat' => ['note', 'measure', 'play'],
     'write' => ['format', 'players', 'ensembles'],
     'render' => [],
     'format' => [],
@@ -113,7 +113,7 @@ class ComposerAST
     'ensembles' => ['instruction', 'play', 'write'],
     'player' => ['root', 'ensemble'],
     'players' => ['ensemble', 'play', 'write'],
-    'play' => ['root'],
+    'play' => ['root', 'repeat'],
     'instruction' => ['root']
   }
   @@kw = @@kw_children.keys
