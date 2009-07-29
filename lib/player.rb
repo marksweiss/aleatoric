@@ -75,14 +75,8 @@ class Player
     @is_playing = true
     @is_improvising = false    
     @out_notes = []
-    
-    
-    # TEMP DEBUG
-    @container = self
   end
   
-  # TODO Some code is adding scores with name = nil, not a valid key!
-  #  All the code searched for this call has an arg, so it's nil somewhere
   def add_score(name, score)
     @scores[name] = score
     @scores_ordered_names << name
@@ -108,7 +102,6 @@ class Player
   end
   alias delete_score remove_score
   
-  # TODO Unit Test
   def set_score(score_name, score)
     # Start out in invalid position and index for each score until we match
     idx = -1
@@ -225,11 +218,7 @@ class Player
 
   def add_postplay_hook(name, &f)
     @postplay_hooks_ordered_names << name
-    @postplay_hooks[name] = f
-    
-    # TEMP DEBUG
-    debug_log "add_postplay_hook " + name.to_s
-    
+    @postplay_hooks[name] = f    
     self
   end
   
@@ -311,24 +300,21 @@ class Player
   end
   alias output get_output
   
-  # TODO Unit Test
-  def set_output(notes)
+  def set_output_notes(notes)
     @out_notes.clear
     notes.each {|note | @out_notes << note}
     self
   end
+  alias set_output set_output_notes
   
-  # TODO Unit Test
   def append_note_to_output(note)
     @out_notes << note.dup
   end
   
-  # TODO Unit Test
   def append_score_to_output(score)
     score.notes.each {|note| @out_notes << note.dup}
   end
   
-  # TODO Unit Test
   def output_empty?
     @out_notes.length == 0
   end
@@ -341,7 +327,6 @@ class Player
   def dup  
     ret = Player.new(self.name)
     
-    # TODO Make sure this works, was commented out
     @scores.keys.each do |score_name| 
       add_score = @scores[score_name].dup      
       ret.add_score(add_score.name, add_score)

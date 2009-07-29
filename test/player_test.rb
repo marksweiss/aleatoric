@@ -17,8 +17,8 @@ class Player_Test < Test::Unit::TestCase
     puts "test__initialize COMPLETED"
   end
 
-  def test__add_score__append_score__scores_length__scores_size
-    puts "test__add_score__append_score__scores_length__scores_size ENTERED"
+  def test__add_score__append_score__scores_length__scores_size__scores_empty
+    puts "test__add_score__append_score__scores_length__scores_size__scores_empty ENTERED"
 
     player = Player.new("Test Player")
     score_name = "Score 1"
@@ -29,8 +29,11 @@ class Player_Test < Test::Unit::TestCase
     score2 = Score.new(score_name)
     player.append_score(score2.name, score2)
     assert(player.scores_size == 2)
+    assert(player.scores_empty? == false)
+    player.clear_scores
+    assert(player.scores_empty? == true)
     
-    puts "test__add_score__append_score__scores_length__scores_size COMPLETED"
+    puts "test__add_score__append_score__scores_length__scores_size__scores_empty COMPLETED"
   end
 
   def test__scores_index__scores_empty__clear_scores__scores_index_increment__scores_index_decrement
@@ -111,10 +114,24 @@ class Player_Test < Test::Unit::TestCase
     
     puts "test__remove_score COMPLETED"
   end
+  
+  def test__set_score
+    puts "test__set_score ENTERED"
 
-  def test__play
-    puts "test__play ENTERED"
+    player = Player.new("Test Player")
+    score_name = "score 1"
+    score_1 = Score.new(score_name)
+    player.add_score(score_name, score_1)
+    assert(player.current_score.object_id == score_1.object_id)
+    score_2 = Score.new(score_name)
+    player.set_score(score_name, score_2)
+    assert(player.current_score.object_id == score_2.object_id)
+    
+    puts "test__set_score COMPLETED"
+  end  
 
+  def test__set_output
+    puts "test__set_output ENTERED"
     player = Player.new("Test Player")
     note_1_name = "note 1"
     note_2_name = "note 2"
@@ -128,6 +145,109 @@ class Player_Test < Test::Unit::TestCase
 
     player.play
     actual = player.output
+    
+    assert(actual.length == expected_1.length)
+    assert(actual[0].name == expected_1[0].name && actual[1].name == expected_1[1].name)
+
+    note_3_name = "note 3"
+    note_4_name = "note 4"
+    note_3 = Note.new note_3_name
+    note_4 = Note.new note_4_name
+    expected_2 = [note_3, note_4]
+    
+    player.set_output(expected_2)    
+    actual = player.output        
+    assert(actual.length == expected_2.length)
+    assert(actual[0].name == expected_2[0].name && actual[1].name == expected_2[1].name)
+        
+    puts "test__set_output COMPLETED"
+  end   
+  
+  def test__append_note_to_output
+    puts "test__append_note_to_output ENTERED"
+    player = Player.new("Test Player")
+    note_1_name = "note 1"
+    note_2_name = "note 2"
+    note_1 = Note.new note_1_name
+    note_2 = Note.new note_2_name
+    expected_1 = [note_1, note_2]
+    score_1_name = "score 1"
+    score_1 = Score.new(score_1_name)
+    score_1 << expected_1
+    player.add_score(score_1_name, score_1)
+
+    player.play
+    actual = player.output
+    
+    assert(actual.length == expected_1.length)
+    assert(actual[0].name == expected_1[0].name && actual[1].name == expected_1[1].name)
+
+    note_3_name = "note 3"
+    note_3 = Note.new note_3_name
+    player.append_note_to_output(note_3)
+
+    actual = player.output
+    assert(actual.length == expected_1.length + 1)
+    assert(actual[2].name == note_3.name)
+        
+    puts "test__append_note_to_output COMPLETED"
+  end  
+
+  def test__append_score_to_output
+    puts "test__append_score_to_output ENTERED"
+    
+    player = Player.new("Test Player")
+    
+    note_1_name = "note 1"
+    note_2_name = "note 2"
+    note_1 = Note.new note_1_name
+    note_2 = Note.new note_2_name
+    expected_1 = [note_1, note_2]
+    score_1_name = "score 1"
+    score_1 = Score.new(score_1_name)
+    score_1 << expected_1
+    player.add_score(score_1_name, score_1)
+
+    actual = player.play  
+    assert(actual.length == expected_1.length)
+    assert(actual[0].name == expected_1[0].name && actual[1].name == expected_1[1].name)
+
+    note_3_name = "note 3"
+    note_4_name = "note 4"
+    note_3 = Note.new note_3_name
+    note_4 = Note.new note_4_name
+    expected_2 = [note_3, note_4]
+    score_2_name = "score 2"
+    score_2 = Score.new(score_2_name)
+    score_2 << expected_2
+    player.append_score_to_output(score_2)
+    
+    actual = player.output
+    assert(actual.length == expected_1.length + expected_2.length)
+    assert(actual[0].name == expected_1[0].name && actual[1].name == expected_1[1].name)
+    assert(actual[2].name == expected_2[0].name && actual[3].name == expected_2[1].name)
+            
+    puts "test__append_score_to_output COMPLETED"
+  end
+  
+  def test__play__output_empty
+    puts "test__play ENTERED"
+
+    player = Player.new("Test Player")
+    note_1_name = "note 1"
+    note_2_name = "note 2"
+    note_1 = Note.new note_1_name
+    note_2 = Note.new note_2_name
+    expected_1 = [note_1, note_2]
+    score_1_name = "score 1"
+    score_1 = Score.new(score_1_name)
+    score_1 << expected_1
+    player.add_score(score_1_name, score_1)
+
+    # Watch out! This only works because we are in the simple case of one call
+    #  to play() when output was previously empty.  Problem is that notes accrue
+    #  but the method only returns the notes written on the current call
+    actual = player.play
     
     assert(actual.length == expected_1.length)
     assert(actual[0].name == expected_1[0].name && actual[1].name == expected_1[1].name)
@@ -153,6 +273,7 @@ class Player_Test < Test::Unit::TestCase
     
     player.clear_scores
     player.clear_output
+    assert(player.output_empty? == true)
     player.add_score(score_1_name, score_1)
     player.play
     actual = player.output    
