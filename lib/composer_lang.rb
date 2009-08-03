@@ -49,7 +49,9 @@ class ComposerAST
     'players' => "\n",
     'player' => "do\n",
     'play' => "do\n",
-    'instruction' => "do\n"
+    'instruction' => "do\n",
+    'improvisation' => "do\n",  
+    'improvise' => "do\n"  
   }
   
   @@kw_block_close_completions= {
@@ -71,15 +73,19 @@ class ComposerAST
     'players' => "",
     'player' => "end\n",
     'play' => "end\n",
-    'instruction' => "end\n" 
+    'instruction' => "end\n",
+    'improvisation' => "end\n",
+    'improvise' => "end\n" 
   }
-    
+ 
+  # NOTE: ANY TOP_LEVEL KW **MUST** BE ADDED TO LIST OF CHILDREN OF ROOT
+  #       THIS IS EASY TO FORGET. SYMPTOM IS TEST.ALTC DOESN'T RENDER BLOCK FOR KW
   @@kw_children = {
-    'root' => ['note', 'phrase', 'section', 'repeat', 'write', 'render', 'def', 'measure', 'copy_measure', 'meter', 'ensemble', 'player', 'play', 'instruction'],
+    'root' => ['note', 'phrase', 'section', 'repeat', 'write', 'render', 'def', 'measure', 'copy_measure', 'meter', 'ensemble', 'player', 'play', 'instruction', 'improvise', 'improvisation'],
     'note' => [],
     'phrase' => ['note', 'repeat'],
     'section' => ['phrase', 'measure', 'copy_measure'],
-    'repeat' => ['note', 'measure', 'play'],
+    'repeat' => ['note', 'measure', 'play', 'improvise'],
     'write' => ['format', 'players', 'ensembles'],
     'render' => [],
     'format' => [],
@@ -93,7 +99,9 @@ class ComposerAST
     'players' => [],
     'player' => ['note', 'section', 'phrase', 'measure', 'copy_measure'],
     'play' => ['players', 'ensembles'],
-    'instruction' => ['players', 'ensembles']
+    'instruction' => ['players', 'ensembles'],
+    'improvisation' => ['players'],
+    'improvise' => ['players']
   }
   @@kw_parents = {
     'root' => [],
@@ -114,7 +122,9 @@ class ComposerAST
     'player' => ['root', 'ensemble'],
     'players' => ['ensemble', 'play', 'write'],
     'play' => ['root', 'repeat'],
-    'instruction' => ['root']
+    'instruction' => ['root'],    
+    'improvisation' => ['root'],
+    'improvise' => ['root', 'repeat']
   }
   @@kw = @@kw_children.keys
  
@@ -131,9 +141,10 @@ class ComposerAST
     'meter' =>    lambda {|x| x != nil and x.length == 2 and x[0] != nil and x[1] != nil and x[0].kind_of? Fixnum and x[1].kind_of? Fixnum},       # 1st and second arg required, valid types    
     'quantize' => lambda {|x| x != nil and x[0] != nil and (x[0].to_s == 'on' or x[0].to_s == 'off')},
     'ensemble' => lambda {|x| x != nil and x[0] != nil and (x[0].kind_of? String and x[0].length > 0)},            # 1st arg required, valid type    
-    'players' => lambda {|x| x != nil and x[0] != nil and (x[0].kind_of? String and x[0].length > 0)},             # 1st arg required, valid type    
-    'ensembles' => lambda {|x| x != nil and x[0] != nil and (x[0].kind_of? String and x[0].length > 0)},           # 1st arg required, valid type    
-    'instruction' => 	lambda {|x| x != nil and x[0] != nil and x[0].kind_of? String}                       		     # 1st arg required, valid type
+    'players' =>  lambda {|x| x != nil and x[0] != nil and (x[0].kind_of? String and x[0].length > 0)},            # 1st arg required, valid type    
+    'ensembles' =>     lambda {|x| x != nil and x[0] != nil and (x[0].kind_of? String and x[0].length > 0)},       # 1st arg required, valid type    
+    'instruction' =>   lambda {|x| x != nil and x[0] != nil and x[0].kind_of? String},                       		   # 1st arg required, valid type
+    'improvisation' => lambda {|x| x != nil and x[0] != nil and x[0].kind_of? String}                       		   # 1st arg required, valid type
   }
   
   @@grammar_rules = {
@@ -156,6 +167,14 @@ class ComposerAST
       child_kws = node.children.collect {|child| child.kw} 
       child_kws.include? 'players' or child_kws.include? 'ensembles'
     end,  # 'instruction' has 'players' or 'ensembles' child    
+    'improvisation' => lambda do |node|
+      child_kws = node.children.collect {|child| child.kw} 
+      child_kws.include? 'players'
+    end,  # 'improvisation' has 'players' child    
+    'improvise' => lambda do |node|
+      child_kws = node.children.collect {|child| child.kw} 
+      child_kws.include? 'players'
+    end,  # 'improvise' has 'players' child    
   }
   
   @@operators = {:delim => [',', ';', "\n", '"'], 
@@ -218,9 +237,7 @@ class ComposerAST
           expr.gsub!(op, ' ' + op + ' ')
         end
         # NOTE: This strips trailing '\n' which we will restore at the end of all line preprocessing
-        expr_tkns = expr.split(' ').collect{|tkn| tkn.strip}            
-        # Need this because strip() strips the "\n" that is there from line incoming
-        # expr_tkns << "\n"
+        expr_tkns = expr.split(' ').collect{|tkn| tkn.strip} 
         expr_tkns = tokenize_join_str expr_tkns
         tkns << expr_tkns
       end
@@ -478,7 +495,6 @@ class ComposerAST
     @@kw_children[parent].include? child
   end
   
-  # TODO Get rid of this append_neline and put them back on in to_s!!!!
   def tkns_to_expr(tkns, append_newline=false)
     if append_newline
       tkns = tkns.join(' ') + "\n"
@@ -495,7 +511,7 @@ class ComposerAST
     new_node
   end  
   
-	# This is not a standard accessor because want it only privat because should only be used for testing
+	# This is not a standard accessor because want it only private because should only be used for testing
 	def root
 		@@root
 	end
@@ -549,11 +565,7 @@ class ComposerAST
   end
   
   def valid_grammar?(node)
-    is_valid = true
-    
-    # TEMP DEBUG
-    #breakpoint
-    
+    is_valid = true    
     grammar_rule = @@grammar_rules[node.kw]
     is_valid = grammar_rule.call(node) if grammar_rule != nil
     is_valid

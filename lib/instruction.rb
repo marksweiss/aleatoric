@@ -16,4 +16,7 @@ class Instruction
 
 end
 
+class Improvisation < Instruction
+end
+
 end

@@ -74,6 +74,10 @@ module Aleatoric
 @processing_instruction = false
 @cur_instruction = nil
 @instructions_by_name = {}
+@processing_improvisation = false  
+@cur_improvisation = nil  
+@improvisations_by_name = {}
+@ordered_improvisations = []
 # NOTE: these need to be module scope across all files in the module, which is
 #  true @@ 'module scope' rather than @ 'module scope'.  The latter is visible
 #  across translation units in the module, but is not guaranteed to be 
@@ -83,20 +87,33 @@ module Aleatoric
 # These guys are referred to by the set_*instruction() methods, which live here but are called
 #  from the 'user_instructions.rb' translation unit, where the programmer/composer
 #  puts 'instruction' keyword definitions and maps them to their name with the set_*_instruction() call
-@@preplay_instructions = {}
-@@postplay_instructions = {}
-@@improvisation_instructions = {}
-def set_preplay_instruction(instruction_name, &instr_blk)
-  @@preplay_instructions[instruction_name] = instr_blk
+@@player_preplay_instructions = {}
+@@player_postplay_instructions = {}
+# Supports syntax of passing an improve name (play by key) or not passing a name
+#  and then just playing the last 'improvisation' kw improv hook defined, i.e. @@ordered_improv_instructions.last 
+@@improvisations = {}
+#
+def set_player_preplay_instruction(instruction_name, &instr_blk)
+  @@player_preplay_instructions[instruction_name] = instr_blk
 end
-def set_postplay_instruction(instruction_name, &instr_blk)
-  @@postplay_instructions[instruction_name] = instr_blk
+def set_player_postplay_instruction(instruction_name, &instr_blk)
+  @@player_postplay_instructions[instruction_name] = instr_blk
 end
-def set_improvisation_instruction(instruction_name, &instr_blk)
-  @@improvisation_instructions[instruction_name] = instr_blk
+def set_improvisation(instruction_name, &instr_blk)
+  @@improvisations[instruction_name] = instr_blk
+end
+
+@@ensemble_preplay_instructions = {}
+@@ensemble_postplay_instructions = {}
+def set_ensemble_preplay_instruction(instruction_name, &instr_blk)
+  @@ensemble_preplay_instructions[instruction_name] = instr_blk
+end
+def set_ensemble_postplay_instruction(instruction_name, &instr_blk)
+  @@ensemble_postplay_instructions[instruction_name] = instr_blk
 end
 
 @processing_play = false
+@processing_improvise = false
 @processing_player = false
 @processing_ensemble = false
 @cur_ensemble = nil
@@ -272,7 +289,7 @@ def player(name, &args_blk)
 
   @cur_sections.clear
   @cur_phrases.clear 
-  @processing_player = false
+  @processing_player = false  
 end
 
 # NOTE: CANNOT mix section and phrase in an ensemble block
@@ -316,10 +333,24 @@ def ensemble(name, &args_blk)
   @processing_ensemble = false  
 end
 
-def play(&args_blk)
+def play
   @processing_play = true
   yield
   @processing_play = false
+end
+
+def improvise(name=nil)
+  @processing_improvise = true
+  # If no name passed, set current improv to the most recent one declared, else
+  #  set it to the one matching the name passed in
+  if name == nil  
+    @cur_improvisation = @ordered_improvisations.last
+  else
+    @cur_improvisation = @improvisations_by_name[name]
+  end
+  #
+  yield
+  @processing_improvise = false
 end
 
 def players(*names)
@@ -339,25 +370,37 @@ def players(*names)
       player = @players_by_name[name.strip]
       instr_name = @cur_instruction.name
       # Note the pass by '&' to pass as a lambda which the recieving method in Player stores as a Proc and then calls 'call()' to run it
-      player.add_preplay_hook(instr_name, &@@preplay_instructions[instr_name]) if @@preplay_instructions.include? instr_name
-      player.add_postplay_hook(instr_name, &@@postplay_instructions[instr_name]) if @@postplay_instructions.include? instr_name
-      player.add_improvisation_hook(instr_name, &@@improvisation_instructions[instr_name]) if @@improvisation_instructions.include? instr_name
+      player.add_preplay_hook(instr_name, &@@player_preplay_instructions[instr_name]) if @@player_preplay_instructions.include? instr_name
+      player.add_postplay_hook(instr_name, &@@player_postplay_instructions[instr_name]) if @@player_postplay_instructions.include? instr_name
+    end    
+  end
+
+  if @processing_improvisation
+    names.each do |name| 
+      player = @players_by_name[name.strip]
+      improv_name = @cur_improvisation.name      
+      player.add_improvisation_hook(improv_name, &@@improvisations[improv_name]) if @@improvisations.include? improv_name
     end    
   end
   
   if @processing_play
     names.each do |name| 
-      name = name.strip
-      @players_by_name[name].play if @players_by_name.include? name
+      @players_by_name[name.strip].play if @players_by_name.include? name
     end 
   end
+  
+  if @processing_improvise
+    names.each do |name| 
+      @players_by_name[name.strip].improvise(@cur_improvisation.name) if @players_by_name.include? name
+    end 
+  end  
   
   if @processing_score
     names.each do |name| 
       name = name.strip
       player = @players_by_name[name]
       if player != nil
-        player.output.each do |note|
+        player.output.each do |note|        
           @score_notes << note
         end
         player.clear_output
@@ -374,8 +417,18 @@ def instruction(name)
   @processing_instruction = false  
 end
 
+def improvisation(name)
+  @processing_improvisation = true  
+  @cur_improvisation = Improvisation.new(name)   
+  @improvisations_by_name[name] = @cur_improvisation
+  @ordered_improvisations << @cur_improvisation
+  yield
+  @processing_improvisation = false  
+end
+
 def description(desc)
-  @cur_instruction.description = desc
+  @cur_instruction.description = desc if @processing_instruction
+  @cur_improvisation.description = desc if @processing_improvisation
 end
 
 # Handles keyword "phrases", called inside write() block
@@ -432,8 +485,8 @@ def ensembles(*names)
       ensemble = @ensembles_by_name[name.strip]
       instr_name = @cur_instruction.name      
       # Note the pass by '&' to pass as a lambda which the recieving method in Player stores as a Proc and then calls 'call()' to run it
-      ensemble.add_preplay_hook(instr_name, &@@preplay_instructions[instr_name]) if @@preplay_instructions.include? instr_name
-      ensemble.add_postplay_hook(instr_name, &@@postplay_instructions[instr_name]) if @@postplay_instructions.include? instr_name
+      ensemble.add_preplay_hook(instr_name, &@@ensemble_preplay_instructions[instr_name]) if @@ensemble_preplay_instructions.include? instr_name
+      ensemble.add_postplay_hook(instr_name, &@@ensemble_postplay_instructions[instr_name]) if @@ensemble_postplay_instructions.include? instr_name
     end    
   end
   
@@ -600,17 +653,22 @@ def reset_script_state
   @processing_instruction = false
   @cur_instruction = nil
   @instructions_by_name = {}
+  @processing_improvisation = false  
+  @cur_improvisation = nil  
+  @improvisations_by_name = {}
+  @@ordered_improv_instructions = []
   # *** KEEP THIS HERE ALWAYS ***
   # Don't reset, because these are set at beginning of run
   #  and live for lifetime of run of a process
   #  because they are set by a require at top of overall
   #  test.altc file, which includes all of the separate test scripts
-  # @@preplay_instructions = {}
-  # @@postplay_instructions = {}
-  # @@improvisation_instructions = {}
+  # @@player_preplay_instructions = {}
+  # @@player_postplay_instructions = {}
+  # @@improvisations = {}
   # *** KEEP THIS HERE ALWAYS ***
   
   @processing_play = false
+  @processing_improvise = false
   @processing_player = false
   @processing_ensemble = false
   @cur_ensemble = nil

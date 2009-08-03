@@ -153,7 +153,7 @@ class Player
   alias dec decrement_scores_index  
   
   # TODO Regression unit testing
-  def play(name=nil, &blk) # TODO GET RID OF THIS reset_score_flag=false
+  def play(name=nil, &blk)
     ret = []
     # NOTE: Default is to NOT change the state of score but to make a copy for each play call.
     #  Client can call
@@ -191,12 +191,18 @@ class Player
       @postplay_hooks[hook_name].call self
     end    
     
-    # TODO GET RID TO THIS
-    # If reset_score_flag passed, update the current score stored by object to the result of this call to play()
-    # self.set_score(cur_score.name, cur_score) if reset_score_flag
-    
     # Also return the notes written, for client convenience in case they want a local copy, 
     #  and, more so, for convenience of unit testing
+    ret
+  end
+  
+  def improvise(name)
+    ret = []    
+    return ret if @improvising_hooks.empty? or not @improvising_hooks.include? name    
+    @improvising_hooks[name].call.notes.each do |note| 
+      @out_notes << note
+      ret << note.dup
+    end
     ret
   end
   
@@ -232,21 +238,24 @@ class Player
     @postplay_hooks[name]
   end
   
-  def add_improvising_hook(name, &f)
+  def add_improvising_hook(name, &f)  
     @improvising_hooks_ordered_names << name
     @improvising_hooks[name] = f
     self
   end
+  alias add_improvisation_hook add_improvising_hook
   
   def remove_improvising_hook(name)
     @improvising_hooks_ordered_names.delete(name)
     @improvising_hooks.delete(name)
     self
   end
+  alias remove_improvisation_hook remove_improvising_hook
   
   def get_improvising_hook(name)
     @improvising_hooks[name]
-  end  
+  end
+  alias get_improvisation_hook get_improvising_hook
   
   # Store a value by keyname, generic interface for hooks to store state for later use
   # Supports a network of hooks working togther with shared state in this generic design
@@ -279,19 +288,6 @@ class Player
     @is_improvising = is_improvising if is_improvising != nil
     @is_improvising
   end
-  
-  # TODO GET RID OF THIS
-  #def flush_score_to_output(scores_index)
-  #  @out_notes << @scores[scores_index].notes if valid_scores_idx? scores_index
-  #  self
-  #end
-  #alias flush_score flush_score_to_output
-  #def flush_scores_to_output
-  #  @out_notes << (@scores.collect{|score| score.notes}).flatten
-  #  self
-  #end
-  #alias flush_scores flush_scores_to_output
-  #alias flush flush_scores_to_output
   
   def get_output
     ret = []
