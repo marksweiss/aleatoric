@@ -1,0 +1,252 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+  <head>
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" href="style.css" type="text/css" charset="utf-8" />
+<link rel="stylesheet" href="custom.css" type="text/css" charset="utf-8" />
+<link rel="stylesheet" href="syntax_highlight.css" type="text/css" charset="utf-8" />
+
+    <title>README</title>
+  </head>
+  <body>
+    <div id="content">
+      <div class="section docstring readme">
+        <hr size="10"></hr><p>
+aleatoric README Mark Weiss v .1.02 last updated: 3/15/2008
+</p>
+<hr size="10"></hr><hr size="10"></hr><p>
+Background and Code Overview
+</p>
+<hr size="10"></hr><p>
+Right now this library is just starting, with a nice DSL for defining
+musical notes that is as minimal and flexible as possible.
+</p>
+<p>
+The rest of the working code is in the /compositions/Terry_Riley-In_C tree.
+It is one-off initial code that served as a proof-of-concept to form the
+basic ideas of the library, and can be used to render Terry Riley&#8217;s
+&quot;In C&quot; as a Score file in a format that the electronic music
+composition program CSound can consume in order to render a sound file. To
+hear a sample performance rendered as an MP3, go to
+/compositions/Terry_Riley-In_C/render_out.
+</p>
+<p>
+Two classes model general concepts that are likely to remain in a similar
+form as the library evolves.
+</p>
+<p>
+First, a Note (lib/note.rb) models a musical event. In the current test
+code in test/note.in properties map to the core required properties for a
+Note in a CSound Score, which are instrument, amplitude, start time,
+duration and pitch. Instrument refers to a definition of an electronic
+instrument in a CSound Orchestra file; the others are typical properties of
+any musical event. Given the common model for a musical event in various
+synthesis systems, a goal of aleatoric is a generic Note API that binds to
+different back ends for actual sound rendering. In particular I plan to
+implement MIDI bindings, and along the way investigate Archaeopteryx
+(http://github.com/gilesbowkett/archaeopteryx/tree/master) and perhaps
+other Ruby MIDI libraries.
+</p>
+<p>
+The second general concept already present in the code &#8212; in a nascent
+form (lib/note.rb) and in a full form here
+(/compositions/Terry_Riley-In_C/code/score.rb) &#8212; is a Score. A Score
+models a sequence of Notes. This is essentially a simple collection class
+with some behavior and naming semantics particular to this domain.
+</p>
+<p>
+Two other classes are currently particular implementations for implementing
+a system that can render &quot;In C,&quot; but were written with future
+generalization in mind. In fact, the idea of generalizing the Player and
+Ensemble classes is the motivation for aleatoric, and one can infer future
+directions for the library from them.
+</p>
+<p>
+A Player (/compositions/Terry_Riley-In_C/code/ensemble.rb) models a player
+in an ensemble performing a piece of music. In the current version,
+however, the player directly implements the prescriptive rules defined by
+the score for &quot;In C.&quot; But the concept itself is general and the
+library will generalize it, with the goal of not specifying the degree of
+freedom given the Player relative to any real-world score or musical
+direction; aleatoric seeks to support the composer in defining the
+composition and instructions to the Player as he sees fit.
+</p>
+<p>
+Similarly, the Ensemble class
+(/compositions/Terry_Riley-In_C/code/ensemble.rb) models an ensemble of
+players, who together perform a piece of music. Again, this first version
+of Ensemble implements the particular rules required to play &quot;In
+C.&quot;
+</p>
+<hr size="10"></hr><p>
+Composition as Computation
+</p>
+<hr size="10"></hr><p>
+In working on this piece, it struck me how aleatoric compositions align
+very well with a computational model. For &quot;In C,&quot; for example,
+Riley composed 53 short musical phrases which the members of the ensemble
+work through sequentially. In addition the score includes a series of
+instructions from the composer to the players. The instructions are
+guidelines and leave room for the players to make their own choices,
+reacting to characteristics of a phrase, where they are in the sequence,
+and most of all to what they are hearing the rest of the ensemble play.
+Aleatoric compositions often follow this approach, providing some musical
+material (input) and some instructions (an algorithm). So one can think of
+the ensemble&#8217;s performance as a computation (actions on input
+following an algorithm) that produces the final performance (output). The
+result of this approach is that no two performances of &quot;In C&quot; or
+other aleatoric compositions are the same, and that the performances of the
+same composition by different artists can vary widely.
+</p>
+<p>
+The code in aleatoric models the Ensemble &quot;interpreting&quot; the
+rules of the score by defining a series of tunable parameters, all of which
+are contained in and documented in
+/compositions/Terry_Riley-In_C/code_param/player.yml and
+/compositions/Terry_Riley-In_C/code_param/ensemble.yml. In each iteration
+of the performance random numbers are tested against the parameters in
+various predicate functions in Ensemble and Player, mimicking players
+making decisions in the real performance.
+</p>
+<p>
+Because of the nature of the performance, which can comprise hundreds or
+thousands of iterations, the tunable parameters actually vary the
+performance in subtle and aesthetically discernible and satisfying ways.
+So, this approach seems promising, and I consider this first output of
+&quot;In C&quot; a promising proof of concept, if not totally rocking.
+We&#8217;ll get there &#8230;
+</p>
+<hr size="10"></hr><p>
+Motivation and Goals of the Project
+</p>
+<hr size="10"></hr><p>
+Working on the first code revealed shortfalls, thus providing the
+motivation for the project.
+</p>
+<p>
+First, there is no formal connection between the aleatoric rules of the
+original score and the code. I attempt to make the connection by having
+comments in the code quote the rule from Riley&#8217;s score, next to the
+code implementing the rule. But this is convention only, and creates no
+formal, testable or self-documenting connection between prescriptive score
+rules and the code which implements them. This suggested to me the idea of
+using an approach similar to RSpec to try and unify the rule description
+and the code. RSpec derivative cucumber
+(http://github.com/aslakhellesoy/cucumber/tree/master), with it&#8217;s
+highy natural and readable syntax, is a particular inspiration. The
+approach aims to create structured but nearly natural language descriptions
+which are in fact executable functions, and also suggests it is possible to
+create and build on general primitives implementing common compositional
+goals.
+</p>
+<p>
+Besides greater coherence, this approach promises something much more
+powerful: aleatoric will become a system for specifying aesthetic output
+&#8212; a system for defining and implementing arbitrary, nearly natural
+language rules to define a software system that produces art. This seems
+like a very fertile and open-ended approach, if it can be realized.
+</p>
+<p>
+An added benefit of such coherence between description and implementation
+is that testing will become easier. At this point I&#8217;ve essentially
+failed to figure out how to write reasonable tests for judging aesthetic
+output. Testing for correctness was a manual process of running code,
+listening to rendered musical output for unexpected behavior, (i.e. -
+bugs), and then trying fixes and running again. This is slow and painful,
+and some human verification (i.e. - listening to the musical output) is
+unavoidable, because here &quot;bug&quot; is defined as &quot;not what I
+expected to hear&quot; and &quot;expected&quot; is a human conceptual move
+from what you are hearing back to what score the code is producing and how
+that is supposed to sound. But with cucumber-style declarations the
+expected output could at least be described, documenting composer intent
+and giving guidance to any implementor of the score in a form that was
+itself part of the program realizing the output.
+</p>
+<p>
+In short, a general aleatoric library promises a better way.
+</p>
+<hr size="10"></hr><p>
+A Little About Me and the Help I&#8217;d Love to Have on This Project
+</p>
+<hr size="10"></hr><p>
+Aside from being an experienced programmer with a decade of professional
+experience and an advanced degree, I&#8217;m non-expert in much that this
+project needs to reach it&#8217;s potential. I have very scant knowledge of
+music theory and composition. I know just enough of CSound to scratch the
+surface. I&#8217;ve never written MIDI software. This is my first
+significant public project in Ruby. I have little formal experience with
+DSLs. I&#8217;ve never worked with RSpec or BDD, and I&#8217;m even quite
+late to TDD.
+</p>
+<p>
+Finally, I&#8217;m pretty new to open source and have never before promoted
+a project.
+</p>
+<p>
+But I can code, and I have an idea which seems like it might be a good one.
+If you think you can help and are interested, please drop me a line:
+marksweiss at yahoo dot com.
+</p>
+<hr size="3"></hr><p>
+Usage
+</p>
+<hr size="3"></hr><p>
+All parameters are defined in three YAML configs, player.yml, ensemble.yml
+and csound.yml. Comments in these files describe the affect of the
+parameters on the output. In order to really understand their effect, you
+need to tweak them, run the script and listen to the results.
+</p>
+<p>
+The application is written in Ruby, and tested on 1.8.6. You&#8217;ll need
+Ruby installed to run it.
+</p>
+<p>
+To run the application and generate a Score file, you simply run the
+command line &#8216;ruby in_c.rb&#8217;. Right now there is one optional
+argument &#8217;--render_only&#8217; which you can use to run the
+program but not wait on CSound to render. This is useful if you are just
+debugging an merely want to see stdout debugging messages, etc. All other
+configuration comes from the three .yml files.
+</p>
+<p>
+To render your Score into a sound file you can listen to, you need the
+CSound binary. Running the script produces a CSound Score file, which it
+then passes to CSound to render into a binary sound file. CSound is a
+venerable open source project, and happens to be an incredibly rich and
+useful tool for electronic music synthesis and composition. Versions exist
+for Linux, Mac and Windows, available here:
+http://csound.sourceforge.net/#Downloads.
+</p>
+<p>
+Currently, all the code is set up to run in one directory. You&#8217;ll
+need to clone the /aleatoric/compositions/Terry_Riley-In_C tree and put the
+files from code, code_param, and render_param in one flat directory. This
+is annoying, but this code is only proof-of-concept. I may fix this code to
+run in the directory strucure in the future &#8212; if I do there will be
+clear check-in comment indicating that.
+</p>
+<p>
+For rendering, the script assumes CSound in the directory where it&#8217;s
+running, but you could add a config entry to csound.yml and modify
+in_c.rb::render_output() to change this. The Windows binary of CSound is in
+/aleatoric/compositions/render/csound, for (my) convenience.
+</p>
+<p>
+The render_param files are a CSound .orc Orchestra file, defining a simple
+two-channel oscillator instrument. This instrument eschews even basic FM
+synthesis and produces simple output in order to promote focus on the
+output from the parameterized system and on the effect of changing
+parameters.
+</p>
+
+      </div>
+    </div>
+    <div id="yard_info">
+  Generated on Wednesday, August 12 2009 at  by 
+  <abbr class="yard" title="Yay! A Ruby Documentation Tool"><a href="http://yard.soen.ca">YARD</a></abbr> 
+  0.2.3.3 (ruby-1.8.6).
+</div>
+
+  </body>
+</html>

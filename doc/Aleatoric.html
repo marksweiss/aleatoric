@@ -1,0 +1,4203 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+  <head>
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" href="style.css" type="text/css" charset="utf-8" />
+<link rel="stylesheet" href="custom.css" type="text/css" charset="utf-8" />
+<link rel="stylesheet" href="syntax_highlight.css" type="text/css" charset="utf-8" />
+
+    <script src="jquery.js" type="text/javascript" charset="utf-8"></script>
+    <script src="app.js" type="text/javascript" charset="utf-8"></script>
+    <title>Module: Aleatoric</title>
+  </head>
+  <body>
+    <div id="content">
+      <div class="section module Aleatoric">
+  <h1 class="title">Module: Aleatoric</h1>
+  <div class="section docstring">
+  <p>
+TODO Rewrite as a real parser using Treetop: http://treetop.rubyforge.org/
+</p>
+
+</div><div class="section constants">
+  <div class="thisclass">
+  <h1>Constants</h1>
+  <dl>
+    
+      <dt id="A1-constant">A1</dt>
+      <dd>5.09</dd>
+    
+      <dt id="A1F-constant">A1F</dt>
+      <dd>5.08</dd>
+    
+      <dt id="A1S-constant">A1S</dt>
+      <dd>5.10</dd>
+    
+      <dt id="A2-constant">A2</dt>
+      <dd>6.09</dd>
+    
+      <dt id="A2F-constant">A2F</dt>
+      <dd>6.08</dd>
+    
+      <dt id="A2S-constant">A2S</dt>
+      <dd>6.10</dd>
+    
+      <dt id="A3-constant">A3</dt>
+      <dd>7.09</dd>
+    
+      <dt id="A3F-constant">A3F</dt>
+      <dd>7.08</dd>
+    
+      <dt id="A3S-constant">A3S</dt>
+      <dd>7.10</dd>
+    
+      <dt id="A4-constant">A4</dt>
+      <dd>8.09</dd>
+    
+      <dt id="A4F-constant">A4F</dt>
+      <dd>8.08</dd>
+    
+      <dt id="A4S-constant">A4S</dt>
+      <dd>8.10</dd>
+    
+      <dt id="A5-constant">A5</dt>
+      <dd>9.09</dd>
+    
+      <dt id="A5F-constant">A5F</dt>
+      <dd>9.08</dd>
+    
+      <dt id="A5S-constant">A5S</dt>
+      <dd>9.10</dd>
+    
+      <dt id="A6-constant">A6</dt>
+      <dd>10.09</dd>
+    
+      <dt id="A6F-constant">A6F</dt>
+      <dd>10.08</dd>
+    
+      <dt id="A6S-constant">A6S</dt>
+      <dd>10.10</dd>
+    
+      <dt id="A7-constant">A7</dt>
+      <dd>11.09</dd>
+    
+      <dt id="A7F-constant">A7F</dt>
+      <dd>11.08</dd>
+    
+      <dt id="A7S-constant">A7S</dt>
+      <dd>11.10</dd>
+    
+      <dt id="A8-constant">A8</dt>
+      <dd>12.09</dd>
+    
+      <dt id="A8F-constant">A8F</dt>
+      <dd>12.08</dd>
+    
+      <dt id="A8S-constant">A8S</dt>
+      <dd>12.10</dd>
+    
+      <dt id="B1-constant">B1</dt>
+      <dd>5.11</dd>
+    
+      <dt id="B1F-constant">B1F</dt>
+      <dd>5.10</dd>
+    
+      <dt id="B2-constant">B2</dt>
+      <dd>6.11</dd>
+    
+      <dt id="B2F-constant">B2F</dt>
+      <dd>6.10</dd>
+    
+      <dt id="B3-constant">B3</dt>
+      <dd>7.11</dd>
+    
+      <dt id="B3F-constant">B3F</dt>
+      <dd>7.10</dd>
+    
+      <dt id="B4-constant">B4</dt>
+      <dd>8.11</dd>
+    
+      <dt id="B4F-constant">B4F</dt>
+      <dd>8.10</dd>
+    
+      <dt id="B5-constant">B5</dt>
+      <dd>9.11</dd>
+    
+      <dt id="B5F-constant">B5F</dt>
+      <dd>9.10</dd>
+    
+      <dt id="B6-constant">B6</dt>
+      <dd>10.11</dd>
+    
+      <dt id="B6F-constant">B6F</dt>
+      <dd>10.10</dd>
+    
+      <dt id="B7-constant">B7</dt>
+      <dd>11.11</dd>
+    
+      <dt id="B7F-constant">B7F</dt>
+      <dd>11.10</dd>
+    
+      <dt id="B8-constant">B8</dt>
+      <dd>12.11</dd>
+    
+      <dt id="B8F-constant">B8F</dt>
+      <dd>12.10</dd>
+    
+      <dt id="C1-constant">C1</dt>
+      <dd>5.00</dd>
+    
+      <dt id="C1S-constant">C1S</dt>
+      <dd>5.01</dd>
+    
+      <dt id="C2-constant">C2</dt>
+      <dd>6.00</dd>
+    
+      <dt id="C2LIM-constant">C2LIM</dt>
+      <dd>5.12</dd>
+    
+      <dt id="C2S-constant">C2S</dt>
+      <dd>6.01</dd>
+    
+      <dt id="C3-constant">C3</dt>
+      <dd>7.00</dd>
+    
+      <dt id="C3LIM-constant">C3LIM</dt>
+      <dd>6.12</dd>
+    
+      <dt id="C3S-constant">C3S</dt>
+      <dd>7.01</dd>
+    
+      <dt id="C4-constant">C4</dt>
+      <dd>8.00</dd>
+    
+      <dt id="C4LIM-constant">C4LIM</dt>
+      <dd>7.12</dd>
+    
+      <dt id="C4S-constant">C4S</dt>
+      <dd>8.01</dd>
+    
+      <dt id="C5-constant">C5</dt>
+      <dd>9.00</dd>
+    
+      <dt id="C5LIM-constant">C5LIM</dt>
+      <dd>8.12</dd>
+    
+      <dt id="C5S-constant">C5S</dt>
+      <dd>9.01</dd>
+    
+      <dt id="C6-constant">C6</dt>
+      <dd>10.00</dd>
+    
+      <dt id="C6LIM-constant">C6LIM</dt>
+      <dd>9.12</dd>
+    
+      <dt id="C6S-constant">C6S</dt>
+      <dd>10.01</dd>
+    
+      <dt id="C7-constant">C7</dt>
+      <dd>11.00</dd>
+    
+      <dt id="C7LIM-constant">C7LIM</dt>
+      <dd>10.12</dd>
+    
+      <dt id="C7S-constant">C7S</dt>
+      <dd>11.01</dd>
+    
+      <dt id="C8-constant">C8</dt>
+      <dd>12.00</dd>
+    
+      <dt id="C8LIM-constant">C8LIM</dt>
+      <dd>11.12</dd>
+    
+      <dt id="C8S-constant">C8S</dt>
+      <dd>12.01</dd>
+    
+      <dt id="D1-constant">D1</dt>
+      <dd>5.02</dd>
+    
+      <dt id="D1S-constant">D1S</dt>
+      <dd>5.03</dd>
+    
+      <dt id="D2-constant">D2</dt>
+      <dd>6.02</dd>
+    
+      <dt id="D2S-constant">D2S</dt>
+      <dd>6.03</dd>
+    
+      <dt id="D3-constant">D3</dt>
+      <dd>7.02</dd>
+    
+      <dt id="D3S-constant">D3S</dt>
+      <dd>7.03</dd>
+    
+      <dt id="D4-constant">D4</dt>
+      <dd>8.02</dd>
+    
+      <dt id="D4S-constant">D4S</dt>
+      <dd>8.03</dd>
+    
+      <dt id="D5-constant">D5</dt>
+      <dd>9.02</dd>
+    
+      <dt id="D5S-constant">D5S</dt>
+      <dd>9.03</dd>
+    
+      <dt id="D6-constant">D6</dt>
+      <dd>10.02</dd>
+    
+      <dt id="D6S-constant">D6S</dt>
+      <dd>10.03</dd>
+    
+      <dt id="D7-constant">D7</dt>
+      <dd>11.02</dd>
+    
+      <dt id="D7S-constant">D7S</dt>
+      <dd>11.03</dd>
+    
+      <dt id="D8-constant">D8</dt>
+      <dd>12.02</dd>
+    
+      <dt id="D8S-constant">D8S</dt>
+      <dd>12.03</dd>
+    
+      <dt id="DFLT_LT_N-constant">DFLT_LT_N</dt>
+      <dd>100</dd>
+    
+      <dt id="E1-constant">E1</dt>
+      <dd>5.04</dd>
+    
+      <dt id="E1F-constant">E1F</dt>
+      <dd>5.03</dd>
+    
+      <dt id="E2-constant">E2</dt>
+      <dd>6.04</dd>
+    
+      <dt id="E2F-constant">E2F</dt>
+      <dd>6.03</dd>
+    
+      <dt id="E3-constant">E3</dt>
+      <dd>7.04</dd>
+    
+      <dt id="E3F-constant">E3F</dt>
+      <dd>7.03</dd>
+    
+      <dt id="E4-constant">E4</dt>
+      <dd>8.04</dd>
+    
+      <dt id="E4F-constant">E4F</dt>
+      <dd>8.03</dd>
+    
+      <dt id="E5-constant">E5</dt>
+      <dd>9.04</dd>
+    
+      <dt id="E5F-constant">E5F</dt>
+      <dd>9.03</dd>
+    
+      <dt id="E6-constant">E6</dt>
+      <dd>10.04</dd>
+    
+      <dt id="E6F-constant">E6F</dt>
+      <dd>10.03</dd>
+    
+      <dt id="E7-constant">E7</dt>
+      <dd>11.04</dd>
+    
+      <dt id="E7F-constant">E7F</dt>
+      <dd>11.03</dd>
+    
+      <dt id="E8-constant">E8</dt>
+      <dd>12.04</dd>
+    
+      <dt id="E8F-constant">E8F</dt>
+      <dd>12.03</dd>
+    
+      <dt id="EITH-constant">EITH</dt>
+      <dd>0.5</dd>
+    
+      <dt id="F1-constant">F1</dt>
+      <dd>5.05</dd>
+    
+      <dt id="F1S-constant">F1S</dt>
+      <dd>5.06</dd>
+    
+      <dt id="F2-constant">F2</dt>
+      <dd>6.05</dd>
+    
+      <dt id="F2S-constant">F2S</dt>
+      <dd>6.06</dd>
+    
+      <dt id="F3-constant">F3</dt>
+      <dd>7.05</dd>
+    
+      <dt id="F3S-constant">F3S</dt>
+      <dd>7.06</dd>
+    
+      <dt id="F4-constant">F4</dt>
+      <dd>8.05</dd>
+    
+      <dt id="F4S-constant">F4S</dt>
+      <dd>8.06</dd>
+    
+      <dt id="F5-constant">F5</dt>
+      <dd>9.05</dd>
+    
+      <dt id="F5S-constant">F5S</dt>
+      <dd>9.06</dd>
+    
+      <dt id="F6-constant">F6</dt>
+      <dd>10.05</dd>
+    
+      <dt id="F6S-constant">F6S</dt>
+      <dd>10.06</dd>
+    
+      <dt id="F7-constant">F7</dt>
+      <dd>11.05</dd>
+    
+      <dt id="F7S-constant">F7S</dt>
+      <dd>11.06</dd>
+    
+      <dt id="F8-constant">F8</dt>
+      <dd>12.05</dd>
+    
+      <dt id="F8S-constant">F8S</dt>
+      <dd>12.06</dd>
+    
+      <dt id="G1-constant">G1</dt>
+      <dd>5.07</dd>
+    
+      <dt id="G1F-constant">G1F</dt>
+      <dd>5.06</dd>
+    
+      <dt id="G1S-constant">G1S</dt>
+      <dd>5.08</dd>
+    
+      <dt id="G2-constant">G2</dt>
+      <dd>6.07</dd>
+    
+      <dt id="G2F-constant">G2F</dt>
+      <dd>6.06</dd>
+    
+      <dt id="G2S-constant">G2S</dt>
+      <dd>6.08</dd>
+    
+      <dt id="G3-constant">G3</dt>
+      <dd>7.07</dd>
+    
+      <dt id="G3F-constant">G3F</dt>
+      <dd>7.06</dd>
+    
+      <dt id="G3S-constant">G3S</dt>
+      <dd>7.08</dd>
+    
+      <dt id="G4-constant">G4</dt>
+      <dd>8.07</dd>
+    
+      <dt id="G4F-constant">G4F</dt>
+      <dd>8.06</dd>
+    
+      <dt id="G4S-constant">G4S</dt>
+      <dd>8.08</dd>
+    
+      <dt id="G5-constant">G5</dt>
+      <dd>9.07</dd>
+    
+      <dt id="G5F-constant">G5F</dt>
+      <dd>9.06</dd>
+    
+      <dt id="G5S-constant">G5S</dt>
+      <dd>9.08</dd>
+    
+      <dt id="G6-constant">G6</dt>
+      <dd>10.07</dd>
+    
+      <dt id="G6F-constant">G6F</dt>
+      <dd>10.06</dd>
+    
+      <dt id="G6S-constant">G6S</dt>
+      <dd>10.08</dd>
+    
+      <dt id="G7-constant">G7</dt>
+      <dd>11.07</dd>
+    
+      <dt id="G7F-constant">G7F</dt>
+      <dd>11.06</dd>
+    
+      <dt id="G7S-constant">G7S</dt>
+      <dd>11.08</dd>
+    
+      <dt id="G8-constant">G8</dt>
+      <dd>12.07</dd>
+    
+      <dt id="G8F-constant">G8F</dt>
+      <dd>12.06</dd>
+    
+      <dt id="G8S-constant">G8S</dt>
+      <dd>12.08</dd>
+    
+      <dt id="HLF-constant">HLF</dt>
+      <dd>2.0</dd>
+    
+      <dt id="QRTR-constant">QRTR</dt>
+      <dd>1.0</dd>
+    
+      <dt id="REST-constant">REST</dt>
+      <dd>0.0</dd>
+    
+      <dt id="SXTNTH-constant">SXTNTH</dt>
+      <dd>0.25</dd>
+    
+      <dt id="SXTYFRTH-constant">SXTYFRTH</dt>
+      <dd>0.0625</dd>
+    
+      <dt id="THRTYSCND-constant">THRTYSCND</dt>
+      <dd>0.125</dd>
+    
+      <dt id="WHL-constant">WHL</dt>
+      <dd>4.0</dd>
+    
+  </dl>
+</div>
+
+</div>  <div class="section visibilitygroup public">
+    <h1>Public Visibility</h1>
+      <div class="section methodsummary instance public">
+    <h1>Public Instance Method Summary</h1>
+<table class="summary">
+  
+    <tr>
+      <th class="signature">
+        
+          <span class='overload'>
+            <span class='name'><a href="#adjust_cur_start-instance_method" title="#adjust_cur_start">#adjust_cur_start</a></span><span class='args'>(notes)</span>
+            <span class='block'></span>
+          </span>
+        
+        
+      </th>
+      <td class="docstring">
+        
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        
+          <span class='overload'>
+            <span class='name'><a href="#copy_measure-instance_method" title="#copy_measure">#copy_measure</a></span><span class='args'>(src_name, target_name)</span>
+            <span class='block'></span>
+          </span>
+        
+        
+      </th>
+      <td class="docstring">
+        <p>
+TODO Why not also have copy_section, copy_phrase and copy_note? Only reason
+is they&#8217;s stack up on the same start time .
+</p>
+
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        
+          <span class='overload'>
+            <span class='name'><a href="#csound-instance_method" title="#csound">#csound</a></span><span class='args'></span>
+            <span class='block'></span>
+          </span>
+        
+        
+      </th>
+      <td class="docstring">
+        <p>
+Handles constant arg to method_missing &quot;format&quot; function in
+&quot;write&quot; block NOTE: This didn&#8217;t work returning a symbol,
+but did work returning a string, why?.
+</p>
+
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        
+          <span class='overload'>
+            <span class='name'><a href="#debug_log-instance_method" title="#debug_log">#debug_log</a></span><span class='args'>(msg)</span>
+            <span class='block'></span>
+          </span>
+        
+        
+      </th>
+      <td class="docstring">
+        
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        
+          <span class='overload'>
+            <span class='name'><a href="#description-instance_method" title="#description">#description</a></span><span class='args'>(desc)</span>
+            <span class='block'></span>
+          </span>
+        
+        
+      </th>
+      <td class="docstring">
+        
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        
+          <span class='overload'>
+            <span class='name'><a href="#dump_last_ensemble-instance_method" title="#dump_last_ensemble">#dump_last_ensemble</a></span><span class='args'></span>
+            <span class='block'></span>
+          </span>
+        
+        
+      </th>
+      <td class="docstring">
+        
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        
+          <span class='overload'>
+            <span class='name'><a href="#dump_last_note-instance_method" title="#dump_last_note">#dump_last_note</a></span><span class='args'></span>
+            <span class='block'></span>
+          </span>
+        
+        
+      </th>
+      <td class="docstring">
+        
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        
+          <span class='overload'>
+            <span class='name'><a href="#dump_last_phrase-instance_method" title="#dump_last_phrase">#dump_last_phrase</a></span><span class='args'></span>
+            <span class='block'></span>
+          </span>
+        
+        
+      </th>
+      <td class="docstring">
+        
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        
+          <span class='overload'>
+            <span class='name'><a href="#dump_last_player-instance_method" title="#dump_last_player">#dump_last_player</a></span><span class='args'></span>
+            <span class='block'></span>
+          </span>
+        
+        
+      </th>
+      <td class="docstring">
+        
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        
+          <span class='overload'>
+            <span class='name'><a href="#dump_last_section-instance_method" title="#dump_last_section">#dump_last_section</a></span><span class='args'></span>
+            <span class='block'></span>
+          </span>
+        
+        
+      </th>
+      <td class="docstring">
+        
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        
+          <span class='overload'>
+            <span class='name'><a href="#dump_notes-instance_method" title="#dump_notes">#dump_notes</a></span><span class='args'></span>
+            <span class='block'></span>
+          </span>
+        
+        
+      </th>
+      <td class="docstring">
+        <p>
+FOR UNIT TESTING.
+</p>
+
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        
+          <span class='overload'>
+            <span class='name'><a href="#ensemble-instance_method" title="#ensemble">#ensemble</a></span><span class='args'>(name, &amp;args_blk)</span>
+            <span class='block'></span>
+          </span>
+        
+        
+      </th>
+      <td class="docstring">
+        <p>
+NOTE: CANNOT mix section and phrase in an ensemble block CAN have 1 or more
+sections or 0 sections and instead 1 or more phrases So supports either but
+still hierarchical structure with ensemble a parent
+</p>
+<pre class="code">
+ <span class='of identifier id'>of</span> <span class='sections identifier id'>sections</span> <span class='or or kw'>or</span> <span class='phrases identifier id'>phrases</span> <span class='but identifier id'>but</span> <span class='not not kw'>not</span> <span class='both identifier id'>both</span><span class='dot token'>.</span>
+</pre>
+
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        
+          <span class='overload'>
+            <span class='name'><a href="#ensembles-instance_method" title="#ensembles">#ensembles</a></span><span class='args'>(*names)</span>
+            <span class='block'></span>
+          </span>
+        
+        
+      </th>
+      <td class="docstring">
+        <p>
+Handles keyword &quot;ensembles&quot;, called inside write() block.
+</p>
+
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        
+          <span class='overload'>
+            <span class='name'><a href="#format-instance_method" title="#format">#format</a></span><span class='args'>(name)</span>
+            <span class='block'></span>
+          </span>
+        
+        
+      </th>
+      <td class="docstring">
+        <p>
+handles keyword &quot;write&quot; NOTE: MUST implement &quot;format&quot;
+keyword, because can&#8217;t method_missing() it because there is a
+</p>
+<pre class="code">
+ <span class='default identifier id'>default</span> <span class='private identifier id'>private</span> <span class='format identifier id'>format</span><span class='lparen token'>(</span><span class='rparen token'>)</span> <span class='method identifier id'>method</span> <span class='on identifier id'>on</span> <span class='class class kw'>class</span> <span class='Object constant id'>Object</span><span class='dot token'>.</span>
+</pre>
+
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        
+          <span class='overload'>
+            <span class='name'><a href="#improvisation-instance_method" title="#improvisation">#improvisation</a></span><span class='args'>(name)</span>
+            <span class='block'></span>
+          </span>
+        
+        
+      </th>
+      <td class="docstring">
+        
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        
+          <span class='overload'>
+            <span class='name'><a href="#improvise-instance_method" title="#improvise">#improvise</a></span><span class='args'>(name = nil)</span>
+            <span class='block'></span>
+          </span>
+        
+        
+      </th>
+      <td class="docstring">
+        
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        
+          <span class='overload'>
+            <span class='name'><a href="#instruction-instance_method" title="#instruction">#instruction</a></span><span class='args'>(name)</span>
+            <span class='block'></span>
+          </span>
+        
+        
+      </th>
+      <td class="docstring">
+        
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        
+          <span class='overload'>
+            <span class='name'><a href="#lt_N%3F-instance_method" title="#lt_N?">#lt_N?</a></span><span class='args'>(test_val, n = nil)</span>
+            <span class='block'></span>
+          </span>
+        
+        
+      </th>
+      <td class="docstring">
+        
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        
+          <span class='overload'>
+            <span class='name'><a href="#measure-instance_method" title="#measure">#measure</a></span><span class='args'>(name, &amp;args_blk)</span>
+            <span class='block'></span>
+          </span>
+        
+        
+      </th>
+      <td class="docstring">
+        
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        
+          <span class='overload'>
+            <span class='name'><a href="#measures-instance_method" title="#measures">#measures</a></span><span class='args'>(*names)</span>
+            <span class='block'></span>
+          </span>
+        
+        
+      </th>
+      <td class="docstring">
+        
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        
+          <span class='overload'>
+            <span class='name'><a href="#meter-instance_method" title="#meter">#meter</a></span><span class='args'>(beat_per_measure, beat_length, &amp;args_blk)</span>
+            <span class='block'></span>
+          </span>
+        
+        
+      </th>
+      <td class="docstring">
+        
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        
+          <span class='overload'>
+            <span class='name'><a href="#note-instance_method" title="#note">#note</a></span><span class='args'>(name = nil, &amp;args_blk)</span>
+            <span class='block'></span>
+          </span>
+        
+        
+      </th>
+      <td class="docstring">
+        
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        
+          <span class='overload'>
+            <span class='name'><a href="#off-instance_method" title="#off">#off</a></span><span class='args'></span>
+            <span class='block'></span>
+          </span>
+        
+        
+      </th>
+      <td class="docstring">
+        
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        
+          <span class='overload'>
+            <span class='name'><a href="#on-instance_method" title="#on">#on</a></span><span class='args'></span>
+            <span class='block'></span>
+          </span>
+        
+        
+      </th>
+      <td class="docstring">
+        
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        
+          <span class='overload'>
+            <span class='name'><a href="#phrase-instance_method" title="#phrase">#phrase</a></span><span class='args'>(name, &amp;args_blk)</span>
+            <span class='block'></span>
+          </span>
+        
+        
+      </th>
+      <td class="docstring">
+        <p>
+Handles keyword &quot;phrase&quot;.
+</p>
+
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        
+          <span class='overload'>
+            <span class='name'><a href="#phrases-instance_method" title="#phrases">#phrases</a></span><span class='args'>(*names)</span>
+            <span class='block'></span>
+          </span>
+        
+        
+      </th>
+      <td class="docstring">
+        <p>
+Handles keyword &quot;phrases&quot;, called inside write() block.
+</p>
+
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        
+          <span class='overload'>
+            <span class='name'><a href="#play-instance_method" title="#play">#play</a></span><span class='args'></span>
+            <span class='block'></span>
+          </span>
+        
+        
+      </th>
+      <td class="docstring">
+        
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        
+          <span class='overload'>
+            <span class='name'><a href="#player-instance_method" title="#player">#player</a></span><span class='args'>(name, &amp;args_blk)</span>
+            <span class='block'></span>
+          </span>
+        
+        
+      </th>
+      <td class="docstring">
+        
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        
+          <span class='overload'>
+            <span class='name'><a href="#players-instance_method" title="#players">#players</a></span><span class='args'>(*names)</span>
+            <span class='block'></span>
+          </span>
+        
+        
+      </th>
+      <td class="docstring">
+        
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        
+          <span class='overload'>
+            <span class='name'><a href="#quantize-instance_method" title="#quantize">#quantize</a></span><span class='args'>(flag_str)</span>
+            <span class='block'></span>
+          </span>
+        
+        
+      </th>
+      <td class="docstring">
+        
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        
+          <span class='overload'>
+            <span class='name'><a href="#render-instance_method" title="#render">#render</a></span><span class='args'>(out_file, &amp;args_blk)</span>
+            <span class='block'></span>
+          </span>
+        
+        
+      </th>
+      <td class="docstring">
+        <p>
+Handles &quot;render&quot; keyword, renders for csound now, eventually midi
+support score_file_name, orc_file_name=nil.
+</p>
+
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        
+          <span class='overload'>
+            <span class='name'><a href="#repeat-instance_method" title="#repeat">#repeat</a></span><span class='args'>(limit, &amp;blk)</span>
+            <span class='block'></span>
+          </span>
+        
+        
+      </th>
+      <td class="docstring">
+        
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        
+          <span class='overload'>
+            <span class='name'><a href="#reset_script_state-instance_method" title="#reset_script_state">#reset_script_state</a></span><span class='args'></span>
+            <span class='block'></span>
+          </span>
+        
+        
+      </th>
+      <td class="docstring">
+        
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        
+          <span class='overload'>
+            <span class='name'><a href="#section-instance_method" title="#section">#section</a></span><span class='args'>(name, &amp;args_blk)</span>
+            <span class='block'></span>
+          </span>
+        
+        
+      </th>
+      <td class="docstring">
+        <p>
+Handles keyword &quot;section&quot;.
+</p>
+
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        
+          <span class='overload'>
+            <span class='name'><a href="#sections-instance_method" title="#sections">#sections</a></span><span class='args'>(*names)</span>
+            <span class='block'></span>
+          </span>
+        
+        
+      </th>
+      <td class="docstring">
+        <p>
+Handles keyword &quot;sections&quot;, called inside write() block.
+</p>
+
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        
+          <span class='overload'>
+            <span class='name'><a href="#set_ensemble_postplay_instruction-instance_method" title="#set_ensemble_postplay_instruction">#set_ensemble_postplay_instruction</a></span><span class='args'>(instruction_name, &amp;instr_blk)</span>
+            <span class='block'></span>
+          </span>
+        
+        
+      </th>
+      <td class="docstring">
+        
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        
+          <span class='overload'>
+            <span class='name'><a href="#set_ensemble_preplay_instruction-instance_method" title="#set_ensemble_preplay_instruction">#set_ensemble_preplay_instruction</a></span><span class='args'>(instruction_name, &amp;instr_blk)</span>
+            <span class='block'></span>
+          </span>
+        
+        
+      </th>
+      <td class="docstring">
+        
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        
+          <span class='overload'>
+            <span class='name'><a href="#set_improvisation-instance_method" title="#set_improvisation">#set_improvisation</a></span><span class='args'>(instruction_name, &amp;instr_blk)</span>
+            <span class='block'></span>
+          </span>
+        
+        
+      </th>
+      <td class="docstring">
+        
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        
+          <span class='overload'>
+            <span class='name'><a href="#set_player_postplay_instruction-instance_method" title="#set_player_postplay_instruction">#set_player_postplay_instruction</a></span><span class='args'>(instruction_name, &amp;instr_blk)</span>
+            <span class='block'></span>
+          </span>
+        
+        
+      </th>
+      <td class="docstring">
+        
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        
+          <span class='overload'>
+            <span class='name'><a href="#set_player_preplay_instruction-instance_method" title="#set_player_preplay_instruction">#set_player_preplay_instruction</a></span><span class='args'>(instruction_name, &amp;instr_blk)</span>
+            <span class='block'></span>
+          </span>
+        
+        
+      </th>
+      <td class="docstring">
+        
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        
+          <span class='overload'>
+            <span class='name'><a href="#sign-instance_method" title="#sign">#sign</a></span><span class='args'></span>
+            <span class='block'></span>
+          </span>
+        
+        
+      </th>
+      <td class="docstring">
+        
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        
+          <span class='overload'>
+            <span class='name'><a href="#swing-instance_method" title="#swing">#swing</a></span><span class='args'>(base_val, num_steps, swing_step)</span>
+            <span class='block'></span>
+          </span>
+        
+        
+      </th>
+      <td class="docstring">
+        <p>
+swing(0.
+</p>
+
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        
+          <span class='overload'>
+            <span class='name'><a href="#write-instance_method" title="#write">#write</a></span><span class='args'>(name, &amp;args_blk)</span>
+            <span class='block'></span>
+          </span>
+        
+        
+      </th>
+      <td class="docstring">
+        
+        
+      </td>
+    </tr>
+  
+</table>
+
+  </div>
+<div class="section methoddetails instance public">
+  <h1>Public Instance Method Details</h1>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>adjust_cur_start</h3>
+</div><div id="adjust_cur_start-instance_method" class="section method">
+  <div class="details_title">
+    <div class='section methodsignature'>
+    <tt class='def'>
+      <span class='visibility'>public</span>
+      <span class='return_types'></span>
+      <span class='name'>adjust_cur_start</span><span class='args'>(notes)</span>
+      <span class='block'></span>
+    </tt>
+  </div>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+245
+246
+247
+248</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/composer.rb', line 245</span>
+
+<span class='def def kw'>def</span> <span class='adjust_cur_start identifier id'>adjust_cur_start</span><span class='lparen token'>(</span><span class='notes identifier id'>notes</span><span class='rparen token'>)</span>
+  <span class='new_start identifier id'>new_start</span> <span class='assign token'>=</span> <span class='lparen token'>(</span><span class='notes identifier id'>notes</span><span class='dot token'>.</span><span class='collect identifier id'>collect</span> <span class='lbrace token'>{</span><span class='bitor op'>|</span><span class='note identifier id'>note</span><span class='bitor op'>|</span> <span class='note identifier id'>note</span><span class='dot token'>.</span><span class='start identifier id'>start</span> <span class='plus op'>+</span> <span class='note identifier id'>note</span><span class='dot token'>.</span><span class='duration identifier id'>duration</span><span class='rbrace token'>}</span><span class='rparen token'>)</span><span class='dot token'>.</span><span class='max identifier id'>max</span>  
+  <span class='@cur_start ivar id'>@cur_start</span> <span class='assign token'>=</span> <span class='new_start identifier id'>new_start</span> <span class='if if_mod kw'>if</span> <span class='new_start identifier id'>new_start</span> <span class='gt op'>&gt;</span> <span class='@cur_start ivar id'>@cur_start</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>copy_measure</h3>
+</div><div id="copy_measure-instance_method" class="section method">
+  <div class="details_title">
+    <div class='section methodsignature'>
+    <tt class='def'>
+      <span class='visibility'>public</span>
+      <span class='return_types'></span>
+      <span class='name'>copy_measure</span><span class='args'>(src_name, target_name)</span>
+      <span class='block'></span>
+    </tt>
+  </div>
+
+</div><div class="section docstring">
+  <p>
+TODO Why not also have copy_section, copy_phrase and copy_note? Only reason
+is they&#8217;s stack up on the same start time &#8230;
+</p>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+233
+234
+235
+236
+237
+238
+239
+240
+241
+242
+243</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/composer.rb', line 233</span>
+
+<span class='def def kw'>def</span> <span class='copy_measure identifier id'>copy_measure</span><span class='lparen token'>(</span><span class='src_name identifier id'>src_name</span><span class='comma token'>,</span> <span class='target_name identifier id'>target_name</span><span class='rparen token'>)</span>
+  <span class='@cur_measure ivar id'>@cur_measure</span> <span class='assign token'>=</span> <span class='@measures_by_name ivar id'>@measures_by_name</span><span class='lbrack token'>[</span><span class='src_name identifier id'>src_name</span><span class='rbrack token'>]</span><span class='dot token'>.</span><span class='dup identifier id'>dup</span>
+  <span class='@cur_measure ivar id'>@cur_measure</span><span class='dot token'>.</span><span class='name identifier id'>name</span> <span class='assign token'>=</span> <span class='target_name identifier id'>target_name</span> 
+  <span class='@cur_measure ivar id'>@cur_measure</span><span class='dot token'>.</span><span class='reset_notes identifier id'>reset_notes</span> <span class='@cur_start ivar id'>@cur_start</span>
+  <span class='@cur_measure ivar id'>@cur_measure</span><span class='dot token'>.</span><span class='notes identifier id'>notes</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='note identifier id'>note</span><span class='bitor op'>|</span>
+    <span class='@notes ivar id'>@notes</span> <span class='lshft op'>&lt;&lt;</span> <span class='note identifier id'>note</span>
+  <span class='end end kw'>end</span>  
+  <span class='@measures ivar id'>@measures</span> <span class='lshft op'>&lt;&lt;</span> <span class='@cur_measure ivar id'>@cur_measure</span>
+  <span class='@measures_by_name ivar id'>@measures_by_name</span><span class='lbrack token'>[</span><span class='target_name identifier id'>target_name</span><span class='rbrack token'>]</span> <span class='assign token'>=</span> <span class='@cur_measure ivar id'>@cur_measure</span>
+  <span class='adjust_cur_start identifier id'>adjust_cur_start</span> <span class='@cur_measure ivar id'>@cur_measure</span><span class='dot token'>.</span><span class='notes identifier id'>notes</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>csound</h3>
+</div><div id="csound-instance_method" class="section method">
+  <div class="details_title">
+    <div class='section methodsignature'>
+    <tt class='def'>
+      <span class='visibility'>public</span>
+      <span class='return_types'></span>
+      <span class='name'>csound</span><span class='args'></span>
+      <span class='block'></span>
+    </tt>
+  </div>
+
+</div><div class="section docstring">
+  <p>
+Handles constant arg to method_missing &quot;format&quot; function in
+&quot;write&quot; block NOTE: This didn&#8217;t work returning a symbol,
+but did work returning a string, why?
+</p>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+543</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/composer.rb', line 543</span>
+
+<span class='def def kw'>def</span> <span class='csound identifier id'>csound</span><span class='semicolon token'>;</span> <span class='string val'>&quot;csound&quot;</span> <span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>debug_log</h3>
+</div><div id="debug_log-instance_method" class="section method">
+  <div class="details_title">
+    <div class='section methodsignature'>
+    <tt class='def'>
+      <span class='visibility'>public</span>
+      <span class='return_types'></span>
+      <span class='name'>debug_log</span><span class='args'>(msg)</span>
+      <span class='block'></span>
+    </tt>
+  </div>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+9
+10
+11
+12
+13</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/util.rb', line 9</span>
+
+<span class='def def kw'>def</span> <span class='debug_log identifier id'>debug_log</span><span class='lparen token'>(</span><span class='msg identifier id'>msg</span><span class='rparen token'>)</span>
+  <span class='File constant id'>File</span><span class='dot token'>.</span><span class='open identifier id'>open</span><span class='lparen token'>(</span><span class='string val'>&quot;..\\test\\test_debug_log.txt&quot;</span><span class='comma token'>,</span> <span class='File constant id'>File</span><span class='colon2 op'>::</span><span class='WRONLY constant id'>WRONLY</span><span class='bitor op'>|</span><span class='File constant id'>File</span><span class='colon2 op'>::</span><span class='APPEND constant id'>APPEND</span><span class='bitor op'>|</span><span class='File constant id'>File</span><span class='colon2 op'>::</span><span class='CREAT constant id'>CREAT</span><span class='rparen token'>)</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='f identifier id'>f</span><span class='bitor op'>|</span>
+    <span class='f identifier id'>f</span> <span class='lshft op'>&lt;&lt;</span> <span class='Time constant id'>Time</span><span class='dot token'>.</span><span class='now identifier id'>now</span><span class='dot token'>.</span><span class='to_s identifier id'>to_s</span> <span class='plus op'>+</span> <span class='string val'>&quot;\t&quot;</span> <span class='plus op'>+</span> <span class='msg identifier id'>msg</span><span class='dot token'>.</span><span class='to_s identifier id'>to_s</span> <span class='plus op'>+</span> <span class='string val'>&quot;\n&quot;</span>
+  <span class='end end kw'>end</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>description</h3>
+</div><div id="description-instance_method" class="section method">
+  <div class="details_title">
+    <div class='section methodsignature'>
+    <tt class='def'>
+      <span class='visibility'>public</span>
+      <span class='return_types'></span>
+      <span class='name'>description</span><span class='args'>(desc)</span>
+      <span class='block'></span>
+    </tt>
+  </div>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+432
+433
+434
+435</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/composer.rb', line 432</span>
+
+<span class='def def kw'>def</span> <span class='description identifier id'>description</span><span class='lparen token'>(</span><span class='desc identifier id'>desc</span><span class='rparen token'>)</span>
+  <span class='@cur_instruction ivar id'>@cur_instruction</span><span class='dot token'>.</span><span class='description identifier id'>description</span> <span class='assign token'>=</span> <span class='desc identifier id'>desc</span> <span class='if if_mod kw'>if</span> <span class='@processing_instruction ivar id'>@processing_instruction</span>
+  <span class='@cur_improvisation ivar id'>@cur_improvisation</span><span class='dot token'>.</span><span class='description identifier id'>description</span> <span class='assign token'>=</span> <span class='desc identifier id'>desc</span> <span class='if if_mod kw'>if</span> <span class='@processing_improvisation ivar id'>@processing_improvisation</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>dump_last_ensemble</h3>
+</div><div id="dump_last_ensemble-instance_method" class="section method">
+  <div class="details_title">
+    <div class='section methodsignature'>
+    <tt class='def'>
+      <span class='visibility'>public</span>
+      <span class='return_types'></span>
+      <span class='name'>dump_last_ensemble</span><span class='args'></span>
+      <span class='block'></span>
+    </tt>
+  </div>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+608
+609
+610
+611
+612
+613
+614
+615
+616
+617
+618</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/composer.rb', line 608</span>
+
+<span class='def def kw'>def</span> <span class='dump_last_ensemble identifier id'>dump_last_ensemble</span>
+  <span class='File constant id'>File</span><span class='dot token'>.</span><span class='open identifier id'>open</span><span class='lparen token'>(</span><span class='string val'>&quot;..\\test\\composer_test_results.txt&quot;</span><span class='comma token'>,</span> <span class='string val'>&quot;w&quot;</span><span class='rparen token'>)</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='f identifier id'>f</span><span class='bitor op'>|</span>    
+    <span class='ensemble identifier id'>ensemble</span> <span class='assign token'>=</span> <span class='@ensembles ivar id'>@ensembles</span><span class='dot token'>.</span><span class='last identifier id'>last</span>
+    <span class='players identifier id'>players</span> <span class='assign token'>=</span> <span class='ensemble identifier id'>ensemble</span><span class='dot token'>.</span><span class='players identifier id'>players</span>
+    <span class='f identifier id'>f</span> <span class='lshft op'>&lt;&lt;</span> <span class='ensemble identifier id'>ensemble</span><span class='dot token'>.</span><span class='name identifier id'>name</span> <span class='plus op'>+</span> <span class='string val'>&quot;\n&quot;</span>
+    <span class='f identifier id'>f</span> <span class='lshft op'>&lt;&lt;</span> <span class='players identifier id'>players</span><span class='dot token'>.</span><span class='length identifier id'>length</span><span class='dot token'>.</span><span class='to_s identifier id'>to_s</span> <span class='plus op'>+</span> <span class='string val'>&quot;\n&quot;</span>
+    <span class='players identifier id'>players</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='player identifier id'>player</span><span class='bitor op'>|</span>        
+      <span class='f identifier id'>f</span> <span class='lshft op'>&lt;&lt;</span> <span class='player identifier id'>player</span><span class='dot token'>.</span><span class='name identifier id'>name</span> <span class='plus op'>+</span> <span class='string val'>&quot;\n&quot;</span>
+    <span class='end end kw'>end</span>
+  <span class='end end kw'>end</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>dump_last_note</h3>
+</div><div id="dump_last_note-instance_method" class="section method">
+  <div class="details_title">
+    <div class='section methodsignature'>
+    <tt class='def'>
+      <span class='visibility'>public</span>
+      <span class='return_types'></span>
+      <span class='name'>dump_last_note</span><span class='args'></span>
+      <span class='block'></span>
+    </tt>
+  </div>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+584
+585
+586
+587
+588</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/composer.rb', line 584</span>
+
+<span class='def def kw'>def</span> <span class='dump_last_note identifier id'>dump_last_note</span>
+  <span class='File constant id'>File</span><span class='dot token'>.</span><span class='open identifier id'>open</span><span class='lparen token'>(</span><span class='string val'>&quot;..\\test\\composer_test_results.txt&quot;</span><span class='comma token'>,</span> <span class='string val'>&quot;w&quot;</span><span class='rparen token'>)</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='f identifier id'>f</span><span class='bitor op'>|</span>
+    <span class='f identifier id'>f</span> <span class='lshft op'>&lt;&lt;</span> <span class='@notes ivar id'>@notes</span><span class='dot token'>.</span><span class='last identifier id'>last</span><span class='dot token'>.</span><span class='to_s identifier id'>to_s</span>
+  <span class='end end kw'>end</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>dump_last_phrase</h3>
+</div><div id="dump_last_phrase-instance_method" class="section method">
+  <div class="details_title">
+    <div class='section methodsignature'>
+    <tt class='def'>
+      <span class='visibility'>public</span>
+      <span class='return_types'></span>
+      <span class='name'>dump_last_phrase</span><span class='args'></span>
+      <span class='block'></span>
+    </tt>
+  </div>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+590
+591
+592
+593
+594
+595
+596</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/composer.rb', line 590</span>
+
+<span class='def def kw'>def</span> <span class='dump_last_phrase identifier id'>dump_last_phrase</span>
+  <span class='File constant id'>File</span><span class='dot token'>.</span><span class='open identifier id'>open</span><span class='lparen token'>(</span><span class='string val'>&quot;..\\test\\composer_test_results.txt&quot;</span><span class='comma token'>,</span> <span class='string val'>&quot;w&quot;</span><span class='rparen token'>)</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='f identifier id'>f</span><span class='bitor op'>|</span>
+    <span class='@phrases ivar id'>@phrases</span><span class='dot token'>.</span><span class='last identifier id'>last</span><span class='dot token'>.</span><span class='notes identifier id'>notes</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='note identifier id'>note</span><span class='bitor op'>|</span>
+      <span class='f identifier id'>f</span> <span class='lshft op'>&lt;&lt;</span> <span class='lparen token'>(</span><span class='note identifier id'>note</span><span class='dot token'>.</span><span class='to_s identifier id'>to_s</span> <span class='plus op'>+</span> <span class='string val'>&quot;\n&quot;</span><span class='rparen token'>)</span>
+    <span class='end end kw'>end</span>
+  <span class='end end kw'>end</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>dump_last_player</h3>
+</div><div id="dump_last_player-instance_method" class="section method">
+  <div class="details_title">
+    <div class='section methodsignature'>
+    <tt class='def'>
+      <span class='visibility'>public</span>
+      <span class='return_types'></span>
+      <span class='name'>dump_last_player</span><span class='args'></span>
+      <span class='block'></span>
+    </tt>
+  </div>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+620
+621
+622
+623
+624</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/composer.rb', line 620</span>
+
+<span class='def def kw'>def</span> <span class='dump_last_player identifier id'>dump_last_player</span>
+  <span class='File constant id'>File</span><span class='dot token'>.</span><span class='open identifier id'>open</span><span class='lparen token'>(</span><span class='string val'>&quot;..\\test\\composer_test_results.txt&quot;</span><span class='comma token'>,</span> <span class='string val'>&quot;w&quot;</span><span class='rparen token'>)</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='f identifier id'>f</span><span class='bitor op'>|</span>
+    <span class='f identifier id'>f</span> <span class='lshft op'>&lt;&lt;</span> <span class='@players ivar id'>@players</span><span class='dot token'>.</span><span class='last identifier id'>last</span><span class='dot token'>.</span><span class='name identifier id'>name</span>
+  <span class='end end kw'>end</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>dump_last_section</h3>
+</div><div id="dump_last_section-instance_method" class="section method">
+  <div class="details_title">
+    <div class='section methodsignature'>
+    <tt class='def'>
+      <span class='visibility'>public</span>
+      <span class='return_types'></span>
+      <span class='name'>dump_last_section</span><span class='args'></span>
+      <span class='block'></span>
+    </tt>
+  </div>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+598
+599
+600
+601
+602
+603
+604
+605
+606</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/composer.rb', line 598</span>
+
+<span class='def def kw'>def</span> <span class='dump_last_section identifier id'>dump_last_section</span>
+  <span class='File constant id'>File</span><span class='dot token'>.</span><span class='open identifier id'>open</span><span class='lparen token'>(</span><span class='string val'>&quot;..\\test\\composer_test_results.txt&quot;</span><span class='comma token'>,</span> <span class='string val'>&quot;w&quot;</span><span class='rparen token'>)</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='f identifier id'>f</span><span class='bitor op'>|</span>
+    <span class='@sections ivar id'>@sections</span><span class='dot token'>.</span><span class='last identifier id'>last</span><span class='dot token'>.</span><span class='phrases identifier id'>phrases</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='phrase identifier id'>phrase</span><span class='bitor op'>|</span>
+      <span class='phrase identifier id'>phrase</span><span class='dot token'>.</span><span class='notes identifier id'>notes</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='note identifier id'>note</span><span class='bitor op'>|</span>
+        <span class='f identifier id'>f</span> <span class='lshft op'>&lt;&lt;</span> <span class='lparen token'>(</span><span class='note identifier id'>note</span><span class='dot token'>.</span><span class='to_s identifier id'>to_s</span> <span class='plus op'>+</span> <span class='string val'>&quot;\n&quot;</span><span class='rparen token'>)</span>
+      <span class='end end kw'>end</span>
+    <span class='end end kw'>end</span>
+  <span class='end end kw'>end</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>dump_notes</h3>
+</div><div id="dump_notes-instance_method" class="section method">
+  <div class="details_title">
+    <div class='section methodsignature'>
+    <tt class='def'>
+      <span class='visibility'>public</span>
+      <span class='return_types'></span>
+      <span class='name'>dump_notes</span><span class='args'></span>
+      <span class='block'></span>
+    </tt>
+  </div>
+
+</div><div class="section docstring">
+  <p>
+FOR UNIT TESTING
+</p>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+576
+577
+578
+579
+580
+581
+582</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/composer.rb', line 576</span>
+
+<span class='def def kw'>def</span> <span class='dump_notes identifier id'>dump_notes</span>
+  <span class='File constant id'>File</span><span class='dot token'>.</span><span class='open identifier id'>open</span><span class='lparen token'>(</span><span class='string val'>&quot;..\\test\\composer_test_results.txt&quot;</span><span class='comma token'>,</span> <span class='string val'>&quot;w&quot;</span><span class='rparen token'>)</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='f identifier id'>f</span><span class='bitor op'>|</span>
+    <span class='@notes ivar id'>@notes</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='note identifier id'>note</span><span class='bitor op'>|</span>
+      <span class='f identifier id'>f</span> <span class='lshft op'>&lt;&lt;</span> <span class='lparen token'>(</span><span class='note identifier id'>note</span><span class='dot token'>.</span><span class='to_s identifier id'>to_s</span> <span class='plus op'>+</span> <span class='string val'>&quot;\n&quot;</span><span class='rparen token'>)</span>
+    <span class='end end kw'>end</span>
+  <span class='end end kw'>end</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>ensemble</h3>
+</div><div id="ensemble-instance_method" class="section method">
+  <div class="details_title">
+    <div class='section methodsignature'>
+    <tt class='def'>
+      <span class='visibility'>public</span>
+      <span class='return_types'></span>
+      <span class='name'>ensemble</span><span class='args'>(name, &amp;args_blk)</span>
+      <span class='block'></span>
+    </tt>
+  </div>
+
+</div><div class="section docstring">
+  <p>
+NOTE: CANNOT mix section and phrase in an ensemble block CAN have 1 or more
+sections or 0 sections and instead 1 or more phrases So supports either but
+still hierarchical structure with ensemble a parent
+</p>
+<pre class="code">
+ <span class='of identifier id'>of</span> <span class='sections identifier id'>sections</span> <span class='or or kw'>or</span> <span class='phrases identifier id'>phrases</span> <span class='but identifier id'>but</span> <span class='not not kw'>not</span> <span class='both identifier id'>both</span>
+</pre>
+
+</div><div class="section tags">
+  <h2>Meta Tags</h2>
+  <div class="yield">
+  <h3>Yields:</h3>
+  <dl>
+  
+    <dt>
+      
+        <span class='type'></span>
+      
+      
+        <span class='name'></span>
+      
+      
+    </dt>
+    <dd>
+      <span class='desc'></span>
+    </dd>
+  
+  </dl>
+</div>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+299
+300
+301
+302
+303
+304
+305
+306
+307
+308
+309
+310
+311
+312
+313
+314
+315
+316
+317
+318
+319
+320
+321
+322
+323
+324
+325
+326
+327
+328
+329
+330
+331
+332
+333
+334</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/composer.rb', line 299</span>
+
+<span class='def def kw'>def</span> <span class='ensemble identifier id'>ensemble</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='comma token'>,</span> <span class='bitand op'>&amp;</span><span class='args_blk identifier id'>args_blk</span><span class='rparen token'>)</span>
+  <span class='@processing_ensemble ivar id'>@processing_ensemble</span> <span class='assign token'>=</span> <span class='true true kw'>true</span>
+  <span class='@cur_players ivar id'>@cur_players</span><span class='dot token'>.</span><span class='clear identifier id'>clear</span>
+  <span class='@cur_sections ivar id'>@cur_sections</span><span class='dot token'>.</span><span class='clear identifier id'>clear</span>
+  <span class='@cur_phrases ivar id'>@cur_phrases</span><span class='dot token'>.</span><span class='clear identifier id'>clear</span>
+  
+  <span class='@cur_ensemble ivar id'>@cur_ensemble</span> <span class='assign token'>=</span> <span class='Ensemble constant id'>Ensemble</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='rparen token'>)</span>
+  <span class='@ensembles ivar id'>@ensembles</span> <span class='lshft op'>&lt;&lt;</span> <span class='@cur_ensemble ivar id'>@cur_ensemble</span>
+  <span class='@ensembles_by_name ivar id'>@ensembles_by_name</span><span class='lbrack token'>[</span><span class='name identifier id'>name</span><span class='rbrack token'>]</span> <span class='assign token'>=</span> <span class='@cur_ensemble ivar id'>@cur_ensemble</span>
+
+  <span class='yield yield kw'>yield</span>
+
+  <span class='@cur_players ivar id'>@cur_players</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='player identifier id'>player</span><span class='bitor op'>|</span> 
+    <span class='player identifier id'>player</span><span class='dot token'>.</span><span class='ensemble identifier id'>ensemble</span> <span class='assign token'>=</span> <span class='@cur_ensemble ivar id'>@cur_ensemble</span>
+    <span class='@cur_ensemble ivar id'>@cur_ensemble</span><span class='dot token'>.</span><span class='add_player identifier id'>add_player</span><span class='lparen token'>(</span><span class='player identifier id'>player</span><span class='dot token'>.</span><span class='name identifier id'>name</span><span class='comma token'>,</span> <span class='player identifier id'>player</span><span class='rparen token'>)</span>
+    
+    <span class='if if kw'>if</span> <span class='@cur_sections ivar id'>@cur_sections</span><span class='dot token'>.</span><span class='length identifier id'>length</span> <span class='gt op'>&gt;</span> <span class='integer val'>0</span>
+      <span class='@cur_sections ivar id'>@cur_sections</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='section identifier id'>section</span><span class='bitor op'>|</span>
+        <span class='section identifier id'>section</span><span class='dot token'>.</span><span class='phrases identifier id'>phrases</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='phrase identifier id'>phrase</span><span class='bitor op'>|</span>
+          <span class='player identifier id'>player</span><span class='dot token'>.</span><span class='add_score identifier id'>add_score</span><span class='lparen token'>(</span><span class='phrase identifier id'>phrase</span><span class='dot token'>.</span><span class='name identifier id'>name</span><span class='comma token'>,</span> <span class='phrase identifier id'>phrase</span><span class='rparen token'>)</span>
+        <span class='end end kw'>end</span>
+      <span class='end end kw'>end</span>
+    <span class='end end kw'>end</span>
+    
+    <span class='if if kw'>if</span> <span class='@cur_phrases ivar id'>@cur_phrases</span><span class='dot token'>.</span><span class='length identifier id'>length</span> <span class='gt op'>&gt;</span> <span class='integer val'>0</span>
+      <span class='@cur_phrases ivar id'>@cur_phrases</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='phrase identifier id'>phrase</span><span class='bitor op'>|</span>
+        <span class='player identifier id'>player</span><span class='dot token'>.</span><span class='add_score identifier id'>add_score</span><span class='lparen token'>(</span><span class='phrase identifier id'>phrase</span><span class='dot token'>.</span><span class='name identifier id'>name</span><span class='comma token'>,</span> <span class='phrase identifier id'>phrase</span><span class='rparen token'>)</span>
+      <span class='end end kw'>end</span>
+    <span class='end end kw'>end</span>
+  <span class='end end kw'>end</span>
+      
+  <span class='@cur_players ivar id'>@cur_players</span><span class='dot token'>.</span><span class='clear identifier id'>clear</span>
+  <span class='@cur_sections ivar id'>@cur_sections</span><span class='dot token'>.</span><span class='clear identifier id'>clear</span>
+  <span class='@cur_phrases ivar id'>@cur_phrases</span><span class='dot token'>.</span><span class='clear identifier id'>clear</span>  
+  <span class='@processing_ensemble ivar id'>@processing_ensemble</span> <span class='assign token'>=</span> <span class='false false kw'>false</span>  
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>ensembles</h3>
+</div><div id="ensembles-instance_method" class="section method">
+  <div class="details_title">
+    <div class='section methodsignature'>
+    <tt class='def'>
+      <span class='visibility'>public</span>
+      <span class='return_types'></span>
+      <span class='name'>ensembles</span><span class='args'>(*names)</span>
+      <span class='block'></span>
+    </tt>
+  </div>
+
+</div><div class="section docstring">
+  <p>
+Handles keyword &quot;ensembles&quot;, called inside write() block
+</p>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+485
+486
+487
+488
+489
+490
+491
+492
+493
+494
+495
+496
+497
+498
+499
+500
+501
+502
+503
+504
+505
+506
+507
+508
+509
+510
+511
+512
+513
+514
+515
+516
+517
+518
+519
+520</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/composer.rb', line 485</span>
+
+<span class='def def kw'>def</span> <span class='ensembles identifier id'>ensembles</span><span class='lparen token'>(</span><span class='mult op'>*</span><span class='names identifier id'>names</span><span class='rparen token'>)</span>
+  <span class='if if kw'>if</span> <span class='@processing_instruction ivar id'>@processing_instruction</span>
+    <span class='names identifier id'>names</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='name identifier id'>name</span><span class='bitor op'>|</span> 
+      <span class='ensemble identifier id'>ensemble</span> <span class='assign token'>=</span> <span class='@ensembles_by_name ivar id'>@ensembles_by_name</span><span class='lbrack token'>[</span><span class='name identifier id'>name</span><span class='dot token'>.</span><span class='strip identifier id'>strip</span><span class='rbrack token'>]</span>
+      <span class='instr_name identifier id'>instr_name</span> <span class='assign token'>=</span> <span class='@cur_instruction ivar id'>@cur_instruction</span><span class='dot token'>.</span><span class='name identifier id'>name</span>      
+      <span class='comment val'># Note the pass by '&amp;' to pass as a lambda which the recieving method in Player stores as a Proc and then calls 'call()' to run it</span>
+      <span class='ensemble identifier id'>ensemble</span><span class='dot token'>.</span><span class='add_preplay_hook identifier id'>add_preplay_hook</span><span class='lparen token'>(</span><span class='instr_name identifier id'>instr_name</span><span class='comma token'>,</span> <span class='bitand op'>&amp;</span><span class='@@ensemble_preplay_instructions ivar id'>@@ensemble_preplay_instructions</span><span class='lbrack token'>[</span><span class='instr_name identifier id'>instr_name</span><span class='rbrack token'>]</span><span class='rparen token'>)</span> <span class='if if_mod kw'>if</span> <span class='@@ensemble_preplay_instructions ivar id'>@@ensemble_preplay_instructions</span><span class='dot token'>.</span><span class='include? fid id'>include?</span> <span class='instr_name identifier id'>instr_name</span>
+      <span class='ensemble identifier id'>ensemble</span><span class='dot token'>.</span><span class='add_postplay_hook identifier id'>add_postplay_hook</span><span class='lparen token'>(</span><span class='instr_name identifier id'>instr_name</span><span class='comma token'>,</span> <span class='bitand op'>&amp;</span><span class='@@ensemble_postplay_instructions ivar id'>@@ensemble_postplay_instructions</span><span class='lbrack token'>[</span><span class='instr_name identifier id'>instr_name</span><span class='rbrack token'>]</span><span class='rparen token'>)</span> <span class='if if_mod kw'>if</span> <span class='@@ensemble_postplay_instructions ivar id'>@@ensemble_postplay_instructions</span><span class='dot token'>.</span><span class='include? fid id'>include?</span> <span class='instr_name identifier id'>instr_name</span>
+    <span class='end end kw'>end</span>    
+  <span class='end end kw'>end</span>
+  
+  <span class='if if kw'>if</span> <span class='@processing_play ivar id'>@processing_play</span>
+    <span class='names identifier id'>names</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='name identifier id'>name</span><span class='bitor op'>|</span> 
+      <span class='name identifier id'>name</span> <span class='assign token'>=</span> <span class='name identifier id'>name</span><span class='dot token'>.</span><span class='strip identifier id'>strip</span>
+      <span class='ensemble identifier id'>ensemble</span> <span class='assign token'>=</span> <span class='@ensembles_by_name ivar id'>@ensembles_by_name</span><span class='lbrack token'>[</span><span class='name identifier id'>name</span><span class='rbrack token'>]</span>
+      <span class='comment val'># Will run ensemble.play_all, which plays ensemble preplay hooks,</span>
+      <span class='comment val'>#  calls play on each player in ensemble (running their preplay hooks, </span>
+      <span class='comment val'>#  then generating their output, then running their postplay hooks),</span>
+      <span class='comment val'>#  then calls ensemble postplay hooks</span>
+      <span class='ensemble identifier id'>ensemble</span><span class='dot token'>.</span><span class='play_all identifier id'>play_all</span> <span class='if if_mod kw'>if</span> <span class='ensemble identifier id'>ensemble</span> <span class='neq op'>!=</span> <span class='nil nil kw'>nil</span>
+    <span class='end end kw'>end</span> 
+  <span class='end end kw'>end</span>
+  
+  <span class='if if kw'>if</span> <span class='@processing_score ivar id'>@processing_score</span>
+    <span class='names identifier id'>names</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='name identifier id'>name</span><span class='bitor op'>|</span> 
+      <span class='name identifier id'>name</span> <span class='assign token'>=</span> <span class='name identifier id'>name</span><span class='dot token'>.</span><span class='strip identifier id'>strip</span>
+      <span class='ensemble identifier id'>ensemble</span> <span class='assign token'>=</span> <span class='@ensembles_by_name ivar id'>@ensembles_by_name</span><span class='lbrack token'>[</span><span class='name identifier id'>name</span><span class='rbrack token'>]</span>
+      <span class='ensemble identifier id'>ensemble</span><span class='dot token'>.</span><span class='players identifier id'>players</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='player identifier id'>player</span><span class='bitor op'>|</span>
+        <span class='player identifier id'>player</span><span class='dot token'>.</span><span class='output identifier id'>output</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='note identifier id'>note</span><span class='bitor op'>|</span>
+          <span class='@score_notes ivar id'>@score_notes</span> <span class='lshft op'>&lt;&lt;</span> <span class='note identifier id'>note</span>
+        <span class='end end kw'>end</span>
+        <span class='player identifier id'>player</span><span class='dot token'>.</span><span class='clear_output identifier id'>clear_output</span>
+      <span class='end end kw'>end</span>
+    <span class='end end kw'>end</span>    
+  <span class='end end kw'>end</span>  
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>format</h3>
+</div><div id="format-instance_method" class="section method">
+  <div class="details_title">
+    <div class='section methodsignature'>
+    <tt class='def'>
+      <span class='visibility'>public</span>
+      <span class='return_types'></span>
+      <span class='name'>format</span><span class='args'>(name)</span>
+      <span class='block'></span>
+    </tt>
+  </div>
+
+</div><div class="section docstring">
+  <p>
+handles keyword &quot;write&quot; NOTE: MUST implement &quot;format&quot;
+keyword, because can&#8217;t method_missing() it because there is a
+</p>
+<pre class="code">
+ <span class='default identifier id'>default</span> <span class='private identifier id'>private</span> <span class='format identifier id'>format</span><span class='lparen token'>(</span><span class='rparen token'>)</span> <span class='method identifier id'>method</span> <span class='on identifier id'>on</span> <span class='class class kw'>class</span> <span class='Object constant id'>Object</span><span class='dot token'>.</span> <span class='Nice constant id'>Nice</span><span class='dot token'>.</span>
+</pre>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+547
+548
+549</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/composer.rb', line 547</span>
+
+<span class='def def kw'>def</span> <span class='format identifier id'>format</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='rparen token'>)</span>
+  <span class='@format ivar id'>@format</span> <span class='assign token'>=</span> <span class='name identifier id'>name</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>improvisation</h3>
+</div><div id="improvisation-instance_method" class="section method">
+  <div class="details_title">
+    <div class='section methodsignature'>
+    <tt class='def'>
+      <span class='visibility'>public</span>
+      <span class='return_types'></span>
+      <span class='name'>improvisation</span><span class='args'>(name)</span>
+      <span class='block'></span>
+    </tt>
+  </div>
+
+</div><div class="section tags">
+  <h2>Meta Tags</h2>
+  <div class="yield">
+  <h3>Yields:</h3>
+  <dl>
+  
+    <dt>
+      
+        <span class='type'></span>
+      
+      
+        <span class='name'></span>
+      
+      
+    </dt>
+    <dd>
+      <span class='desc'></span>
+    </dd>
+  
+  </dl>
+</div>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+423
+424
+425
+426
+427
+428
+429
+430</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/composer.rb', line 423</span>
+
+<span class='def def kw'>def</span> <span class='improvisation identifier id'>improvisation</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='rparen token'>)</span>
+  <span class='@processing_improvisation ivar id'>@processing_improvisation</span> <span class='assign token'>=</span> <span class='true true kw'>true</span>  
+  <span class='@cur_improvisation ivar id'>@cur_improvisation</span> <span class='assign token'>=</span> <span class='Improvisation constant id'>Improvisation</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='rparen token'>)</span>   
+  <span class='@improvisations_by_name ivar id'>@improvisations_by_name</span><span class='lbrack token'>[</span><span class='name identifier id'>name</span><span class='rbrack token'>]</span> <span class='assign token'>=</span> <span class='@cur_improvisation ivar id'>@cur_improvisation</span>
+  <span class='@ordered_improvisations ivar id'>@ordered_improvisations</span> <span class='lshft op'>&lt;&lt;</span> <span class='@cur_improvisation ivar id'>@cur_improvisation</span>
+  <span class='yield yield kw'>yield</span>
+  <span class='@processing_improvisation ivar id'>@processing_improvisation</span> <span class='assign token'>=</span> <span class='false false kw'>false</span>  
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>improvise</h3>
+</div><div id="improvise-instance_method" class="section method">
+  <div class="details_title">
+    <div class='section methodsignature'>
+    <tt class='def'>
+      <span class='visibility'>public</span>
+      <span class='return_types'></span>
+      <span class='name'>improvise</span><span class='args'>(name = nil)</span>
+      <span class='block'></span>
+    </tt>
+  </div>
+
+</div><div class="section tags">
+  <h2>Meta Tags</h2>
+  <div class="yield">
+  <h3>Yields:</h3>
+  <dl>
+  
+    <dt>
+      
+        <span class='type'></span>
+      
+      
+        <span class='name'></span>
+      
+      
+    </dt>
+    <dd>
+      <span class='desc'></span>
+    </dd>
+  
+  </dl>
+</div>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+342
+343
+344
+345
+346
+347
+348
+349
+350
+351
+352
+353
+354</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/composer.rb', line 342</span>
+
+<span class='def def kw'>def</span> <span class='improvise identifier id'>improvise</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='assign token'>=</span><span class='nil nil kw'>nil</span><span class='rparen token'>)</span>
+  <span class='@processing_improvise ivar id'>@processing_improvise</span> <span class='assign token'>=</span> <span class='true true kw'>true</span>
+  <span class='comment val'># If no name passed, set current improv to the most recent one declared, else</span>
+  <span class='comment val'>#  set it to the one matching the name passed in</span>
+  <span class='if if kw'>if</span> <span class='name identifier id'>name</span> <span class='eq op'>==</span> <span class='nil nil kw'>nil</span>  
+    <span class='@cur_improvisation ivar id'>@cur_improvisation</span> <span class='assign token'>=</span> <span class='@ordered_improvisations ivar id'>@ordered_improvisations</span><span class='dot token'>.</span><span class='last identifier id'>last</span>
+  <span class='else else kw'>else</span>
+    <span class='@cur_improvisation ivar id'>@cur_improvisation</span> <span class='assign token'>=</span> <span class='@improvisations_by_name ivar id'>@improvisations_by_name</span><span class='lbrack token'>[</span><span class='name identifier id'>name</span><span class='rbrack token'>]</span>
+  <span class='end end kw'>end</span>
+  <span class='comment val'>#</span>
+  <span class='yield yield kw'>yield</span>
+  <span class='@processing_improvise ivar id'>@processing_improvise</span> <span class='assign token'>=</span> <span class='false false kw'>false</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>instruction</h3>
+</div><div id="instruction-instance_method" class="section method">
+  <div class="details_title">
+    <div class='section methodsignature'>
+    <tt class='def'>
+      <span class='visibility'>public</span>
+      <span class='return_types'></span>
+      <span class='name'>instruction</span><span class='args'>(name)</span>
+      <span class='block'></span>
+    </tt>
+  </div>
+
+</div><div class="section tags">
+  <h2>Meta Tags</h2>
+  <div class="yield">
+  <h3>Yields:</h3>
+  <dl>
+  
+    <dt>
+      
+        <span class='type'></span>
+      
+      
+        <span class='name'></span>
+      
+      
+    </dt>
+    <dd>
+      <span class='desc'></span>
+    </dd>
+  
+  </dl>
+</div>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+415
+416
+417
+418
+419
+420
+421</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/composer.rb', line 415</span>
+
+<span class='def def kw'>def</span> <span class='instruction identifier id'>instruction</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='rparen token'>)</span>
+  <span class='@processing_instruction ivar id'>@processing_instruction</span> <span class='assign token'>=</span> <span class='true true kw'>true</span>  
+  <span class='@cur_instruction ivar id'>@cur_instruction</span> <span class='assign token'>=</span> <span class='Instruction constant id'>Instruction</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='rparen token'>)</span>  
+  <span class='@instructions_by_name ivar id'>@instructions_by_name</span><span class='lbrack token'>[</span><span class='name identifier id'>name</span><span class='rbrack token'>]</span> <span class='assign token'>=</span> <span class='@cur_instruction ivar id'>@cur_instruction</span>  
+  <span class='yield yield kw'>yield</span>
+  <span class='@processing_instruction ivar id'>@processing_instruction</span> <span class='assign token'>=</span> <span class='false false kw'>false</span>  
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>lt_N?</h3>
+</div><div id="lt_N?-instance_method" class="section method">
+  <div class="details_title">
+    <div class='section methodsignature'>
+    <tt class='def'>
+      <span class='visibility'>public</span>
+      <span class='return_types'></span>
+      <span class='name'>lt_N?</span><span class='args'>(test_val, n = nil)</span>
+      <span class='block'></span>
+    </tt>
+  </div>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+4
+5
+6
+7</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/util.rb', line 4</span>
+
+<span class='def def kw'>def</span> <span class='lt_N? fid id'>lt_N?</span><span class='lparen token'>(</span><span class='test_val identifier id'>test_val</span><span class='comma token'>,</span> <span class='n identifier id'>n</span><span class='assign token'>=</span><span class='nil nil kw'>nil</span><span class='rparen token'>)</span>
+  <span class='n identifier id'>n</span> <span class='opasgn op'>||=</span> <span class='DFLT_LT_N constant id'>DFLT_LT_N</span>
+  <span class='test_val identifier id'>test_val</span> <span class='lt op'>&lt;</span> <span class='rand identifier id'>rand</span><span class='lparen token'>(</span><span class='n identifier id'>n</span><span class='rparen token'>)</span> 
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>measure</h3>
+</div><div id="measure-instance_method" class="section method">
+  <div class="details_title">
+    <div class='section methodsignature'>
+    <tt class='def'>
+      <span class='visibility'>public</span>
+      <span class='return_types'></span>
+      <span class='name'>measure</span><span class='args'>(name, &amp;args_blk)</span>
+      <span class='block'></span>
+    </tt>
+  </div>
+
+</div><div class="section tags">
+  <h2>Meta Tags</h2>
+  <div class="yield">
+  <h3>Yields:</h3>
+  <dl>
+  
+    <dt>
+      
+        <span class='type'>[<tt>args_blk</tt>]</span>
+      
+      
+        <span class='name'></span>
+      
+      
+    </dt>
+    <dd>
+      <span class='desc'></span>
+    </dd>
+  
+  </dl>
+</div>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+201
+202
+203
+204
+205
+206
+207
+208
+209
+210
+211
+212
+213
+214
+215
+216
+217
+218
+219
+220
+221
+222
+223
+224
+225
+226
+227
+228
+229</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/composer.rb', line 201</span>
+
+<span class='def def kw'>def</span> <span class='measure identifier id'>measure</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='comma token'>,</span> <span class='bitand op'>&amp;</span><span class='args_blk identifier id'>args_blk</span><span class='rparen token'>)</span>
+  <span class='@processing_measure ivar id'>@processing_measure</span> <span class='assign token'>=</span> <span class='true true kw'>true</span>
+  <span class='@notes ivar id'>@notes</span><span class='dot token'>.</span><span class='clear identifier id'>clear</span>
+  <span class='comment val'># A measure is a Phrase but it's also passed a position, which is the ordinal position of the</span>
+  <span class='comment val'>#  measure among all measures, and a start offset</span>
+  <span class='comment val'># This lets sequences of measures not need to figure out their offset from the beginning</span>
+  <span class='comment val'># So you have this:</span>
+  <span class='comment val'>#   note</span>
+  <span class='comment val'>#     start QRTR</span>
+  <span class='comment val'># instead of this:</span>
+  <span class='comment val'>#   note</span>
+  <span class='comment val'>#     start running_total_since_start + QRTR  </span>
+  <span class='@cur_measure ivar id'>@cur_measure</span> <span class='assign token'>=</span> <span class='Measure constant id'>Measure</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='comma token'>,</span> <span class='@cur_start ivar id'>@cur_start</span><span class='rparen token'>)</span>
+  <span class='comment val'># NOTE: Need to wrap yield call (which processes notes) to put Note in scope as the </span>
+  <span class='comment val'>#  method_missing() handler or else the 'start' attribute from the script is trapped</span>
+  <span class='comment val'>#  by Measure, which has a 'start' property, and doesn't reach the note, and changes</span>
+  <span class='comment val'>#  the value for Measure.start inadvertantly. i.e. - but that took 90 minutes to find</span>
+  <span class='@processing_measure ivar id'>@processing_measure</span> <span class='assign token'>=</span> <span class='false false kw'>false</span>
+  <span class='@processing_note ivar id'>@processing_note</span> <span class='assign token'>=</span> <span class='true true kw'>true</span>
+  <span class='yield yield kw'>yield</span> <span class='args_blk identifier id'>args_blk</span>
+  <span class='@processing_note ivar id'>@processing_note</span> <span class='assign token'>=</span> <span class='false false kw'>false</span>
+  <span class='@processing_measure ivar id'>@processing_measure</span> <span class='assign token'>=</span> <span class='true true kw'>true</span>
+  <span class='@notes ivar id'>@notes</span> <span class='assign token'>=</span> <span class='@meter ivar id'>@meter</span><span class='dot token'>.</span><span class='quantize identifier id'>quantize</span><span class='lparen token'>(</span><span class='@notes ivar id'>@notes</span><span class='rparen token'>)</span> <span class='if if_mod kw'>if</span> <span class='@meter ivar id'>@meter</span><span class='dot token'>.</span><span class='quantizing? fid id'>quantizing?</span>
+  <span class='@cur_measure ivar id'>@cur_measure</span> <span class='lshft op'>&lt;&lt;</span> <span class='@notes ivar id'>@notes</span>  
+  <span class='@measures ivar id'>@measures</span> <span class='lshft op'>&lt;&lt;</span> <span class='@cur_measure ivar id'>@cur_measure</span>
+  <span class='@measures_by_name ivar id'>@measures_by_name</span><span class='lbrack token'>[</span><span class='name identifier id'>name</span><span class='rbrack token'>]</span> <span class='assign token'>=</span> <span class='@cur_measure ivar id'>@cur_measure</span>
+  <span class='@notes ivar id'>@notes</span><span class='dot token'>.</span><span class='clear identifier id'>clear</span>
+  <span class='@processing_measure ivar id'>@processing_measure</span> <span class='assign token'>=</span> <span class='false false kw'>false</span>  
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>measures</h3>
+</div><div id="measures-instance_method" class="section method">
+  <div class="details_title">
+    <div class='section methodsignature'>
+    <tt class='def'>
+      <span class='visibility'>public</span>
+      <span class='return_types'></span>
+      <span class='name'>measures</span><span class='args'>(*names)</span>
+      <span class='block'></span>
+    </tt>
+  </div>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+451
+452
+453
+454
+455
+456
+457
+458
+459
+460
+461
+462
+463
+464
+465
+466
+467
+468
+469</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/composer.rb', line 451</span>
+
+<span class='def def kw'>def</span> <span class='measures identifier id'>measures</span><span class='lparen token'>(</span><span class='mult op'>*</span><span class='names identifier id'>names</span><span class='rparen token'>)</span>
+  <span class='if if kw'>if</span> <span class='names identifier id'>names</span> <span class='neq op'>!=</span> <span class='nil nil kw'>nil</span> <span class='and and kw'>and</span> <span class='names identifier id'>names</span><span class='dot token'>.</span><span class='length identifier id'>length</span> <span class='gt op'>&gt;</span> <span class='integer val'>0</span>
+    <span class='names identifier id'>names</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='name identifier id'>name</span><span class='bitor op'>|</span> 
+      <span class='name identifier id'>name</span> <span class='assign token'>=</span> <span class='name identifier id'>name</span><span class='dot token'>.</span><span class='strip identifier id'>strip</span>
+      <span class='measure identifier id'>measure</span> <span class='assign token'>=</span> <span class='@measures_by_name ivar id'>@measures_by_name</span><span class='lbrack token'>[</span><span class='name identifier id'>name</span><span class='rbrack token'>]</span>    
+      <span class='measure identifier id'>measure</span><span class='dot token'>.</span><span class='notes identifier id'>notes</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='note identifier id'>note</span><span class='bitor op'>|</span>
+        <span class='@score_notes ivar id'>@score_notes</span> <span class='lshft op'>&lt;&lt;</span> <span class='note identifier id'>note</span><span class='dot token'>.</span><span class='dup identifier id'>dup</span>
+      <span class='end end kw'>end</span>
+    <span class='end end kw'>end</span>
+  <span class='else else kw'>else</span>
+  
+    <span class='comment val'># TODO replace with @measures_by_name[name].keys.each and get rid of @measures</span>
+    <span class='@measures ivar id'>@measures</span><span class='dot token'>.</span><span class='length identifier id'>length</span><span class='dot token'>.</span><span class='times identifier id'>times</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='j identifier id'>j</span><span class='bitor op'>|</span>
+      <span class='@measures ivar id'>@measures</span><span class='lbrack token'>[</span><span class='j identifier id'>j</span><span class='rbrack token'>]</span><span class='dot token'>.</span><span class='notes identifier id'>notes</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='note identifier id'>note</span><span class='bitor op'>|</span>
+        <span class='@score_notes ivar id'>@score_notes</span> <span class='lshft op'>&lt;&lt;</span> <span class='note identifier id'>note</span><span class='dot token'>.</span><span class='dup identifier id'>dup</span>
+      <span class='end end kw'>end</span>
+    <span class='end end kw'>end</span>
+  <span class='end end kw'>end</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>meter</h3>
+</div><div id="meter-instance_method" class="section method">
+  <div class="details_title">
+    <div class='section methodsignature'>
+    <tt class='def'>
+      <span class='visibility'>public</span>
+      <span class='return_types'></span>
+      <span class='name'>meter</span><span class='args'>(beat_per_measure, beat_length, &amp;args_blk)</span>
+      <span class='block'></span>
+    </tt>
+  </div>
+
+</div><div class="section tags">
+  <h2>Meta Tags</h2>
+  <div class="yield">
+  <h3>Yields:</h3>
+  <dl>
+  
+    <dt>
+      
+        <span class='type'></span>
+      
+      
+        <span class='name'></span>
+      
+      
+    </dt>
+    <dd>
+      <span class='desc'></span>
+    </dd>
+  
+  </dl>
+</div>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+186
+187
+188
+189
+190
+191
+192</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/composer.rb', line 186</span>
+
+<span class='def def kw'>def</span> <span class='meter identifier id'>meter</span><span class='lparen token'>(</span><span class='beat_per_measure identifier id'>beat_per_measure</span><span class='comma token'>,</span> <span class='beat_length identifier id'>beat_length</span><span class='comma token'>,</span> <span class='bitand op'>&amp;</span><span class='args_blk identifier id'>args_blk</span><span class='rparen token'>)</span>  
+  <span class='@meter ivar id'>@meter</span><span class='dot token'>.</span><span class='beat_per_measure identifier id'>beat_per_measure</span> <span class='beat_per_measure identifier id'>beat_per_measure</span>
+  <span class='@meter ivar id'>@meter</span><span class='dot token'>.</span><span class='beat_length identifier id'>beat_length</span> <span class='beat_length identifier id'>beat_length</span>
+  <span class='comment val'># This will end up firing quantize() immediately below, won't go to method_missing</span>
+  <span class='comment val'>#  because there is a local match</span>
+  <span class='yield yield kw'>yield</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>note</h3>
+</div><div id="note-instance_method" class="section method">
+  <div class="details_title">
+    <div class='section methodsignature'>
+    <tt class='def'>
+      <span class='visibility'>public</span>
+      <span class='return_types'></span>
+      <span class='name'>note</span><span class='args'>(name = nil, &amp;args_blk)</span>
+      <span class='block'></span>
+    </tt>
+  </div>
+
+</div><div class="section tags">
+  <h2>Meta Tags</h2>
+  <div class="yield">
+  <h3>Yields:</h3>
+  <dl>
+  
+    <dt>
+      
+        <span class='type'></span>
+      
+      
+        <span class='name'></span>
+      
+      
+    </dt>
+    <dd>
+      <span class='desc'></span>
+    </dd>
+  
+  </dl>
+</div>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146
+147
+148
+149
+150
+151
+152
+153
+154
+155
+156
+157
+158
+159
+160
+161
+162
+163</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/composer.rb', line 136</span>
+
+<span class='def def kw'>def</span> <span class='note identifier id'>note</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='assign token'>=</span><span class='nil nil kw'>nil</span><span class='comma token'>,</span> <span class='bitand op'>&amp;</span><span class='args_blk identifier id'>args_blk</span><span class='rparen token'>)</span>
+  <span class='comment val'># Set flag for method_missing() so it traps methods and adds to this Note</span>
+  <span class='@processing_note ivar id'>@processing_note</span> <span class='assign token'>=</span> <span class='true true kw'>true</span>
+  <span class='comment val'># Declare the new Note  </span>
+  <span class='@cur_note ivar id'>@cur_note</span> <span class='assign token'>=</span> <span class='Note constant id'>Note</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='rparen token'>)</span>
+  <span class='comment val'># Now run the block. This call all the method_missing attribute functions, thus</span>
+  <span class='comment val'>#  passing their name and arg to Note.method_missing, and thus adding them as attrs of this Note</span>
+  <span class='yield yield kw'>yield</span>
+  <span class='comment val'># Notes must always be created in the context of a containing Phrase or Section</span>
+  <span class='comment val'># This is the queue of Notes being created in that containing block, which that object</span>
+  <span class='comment val'>#  will then pick up and append to its collection of Notes.  So the containing block</span>
+  <span class='comment val'>#  is responsible for clearing this at the start and end of its block, before its yield.</span>
+  <span class='@notes ivar id'>@notes</span> <span class='lshft op'>&lt;&lt;</span> <span class='@cur_note ivar id'>@cur_note</span>
+  <span class='comment val'># Notes are also stored by name, if they are named, for convenient random access by key</span>
+  <span class='comment val'>#  at any point later in the script. This is an internal data structure and these are not</span>
+  <span class='comment val'>#  put into the output Score</span>
+  <span class='@notes_by_name ivar id'>@notes_by_name</span><span class='lbrack token'>[</span><span class='name identifier id'>name</span><span class='rbrack token'>]</span> <span class='assign token'>=</span> <span class='@cur_note ivar id'>@cur_note</span> <span class='unless unless_mod kw'>unless</span> <span class='name identifier id'>name</span> <span class='eq op'>==</span> <span class='nil nil kw'>nil</span>
+  <span class='comment val'># We're done with this Note, unset method_missing() flag</span>
+  <span class='@processing_note ivar id'>@processing_note</span> <span class='assign token'>=</span> <span class='false false kw'>false</span>
+  
+  <span class='comment val'># Each note can adjust @cur_start, which supports start NEXT in 'measure' blocks</span>
+  <span class='comment val'># Sort of lame we have to list-ify it, but the same method takes a list for 'copy_measure'</span>
+  <span class='adjust_cur_start identifier id'>adjust_cur_start</span> <span class='lbrack token'>[</span><span class='@cur_note ivar id'>@cur_note</span><span class='rbrack token'>]</span>
+  
+  <span class='comment val'># Return the note, useful for testing purposes only. Allows independent testing of function</span>
+  <span class='comment val'>#  and no additional exposure of module state, e.g. @notes</span>
+  <span class='@cur_note ivar id'>@cur_note</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>off</h3>
+</div><div id="off-instance_method" class="section method">
+  <div class="details_title">
+    <div class='section methodsignature'>
+    <tt class='def'>
+      <span class='visibility'>public</span>
+      <span class='return_types'></span>
+      <span class='name'>off</span><span class='args'></span>
+      <span class='block'></span>
+    </tt>
+  </div>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+195</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/composer.rb', line 195</span>
+
+<span class='def def kw'>def</span> <span class='off identifier id'>off</span><span class='semicolon token'>;</span> <span class='string val'>'off'</span> <span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>on</h3>
+</div><div id="on-instance_method" class="section method">
+  <div class="details_title">
+    <div class='section methodsignature'>
+    <tt class='def'>
+      <span class='visibility'>public</span>
+      <span class='return_types'></span>
+      <span class='name'>on</span><span class='args'></span>
+      <span class='block'></span>
+    </tt>
+  </div>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+194</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/composer.rb', line 194</span>
+
+<span class='def def kw'>def</span> <span class='on identifier id'>on</span><span class='semicolon token'>;</span> <span class='string val'>'on'</span> <span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>phrase</h3>
+</div><div id="phrase-instance_method" class="section method">
+  <div class="details_title">
+    <div class='section methodsignature'>
+    <tt class='def'>
+      <span class='visibility'>public</span>
+      <span class='return_types'></span>
+      <span class='name'>phrase</span><span class='args'>(name, &amp;args_blk)</span>
+      <span class='block'></span>
+    </tt>
+  </div>
+
+</div><div class="section docstring">
+  <p>
+Handles keyword &quot;phrase&quot;
+</p>
+
+</div><div class="section tags">
+  <h2>Meta Tags</h2>
+  <div class="yield">
+  <h3>Yields:</h3>
+  <dl>
+  
+    <dt>
+      
+        <span class='type'>[<tt>args_blk</tt>]</span>
+      
+      
+        <span class='name'></span>
+      
+      
+    </dt>
+    <dd>
+      <span class='desc'></span>
+    </dd>
+  
+  </dl>
+</div>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+166
+167
+168
+169
+170
+171
+172
+173
+174
+175
+176
+177
+178
+179
+180
+181
+182
+183
+184</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/composer.rb', line 166</span>
+
+<span class='def def kw'>def</span> <span class='phrase identifier id'>phrase</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='comma token'>,</span> <span class='bitand op'>&amp;</span><span class='args_blk identifier id'>args_blk</span><span class='rparen token'>)</span>
+  <span class='@processing_phrase ivar id'>@processing_phrase</span> <span class='assign token'>=</span> <span class='true true kw'>true</span>
+  <span class='comment val'># Init (clear) the queue of notes created -- this holds state contained by this block scope</span>
+  <span class='@notes ivar id'>@notes</span><span class='dot token'>.</span><span class='clear identifier id'>clear</span>
+  <span class='@cur_phrase ivar id'>@cur_phrase</span> <span class='assign token'>=</span> <span class='Phrase constant id'>Phrase</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='rparen token'>)</span>
+  <span class='comment val'># State that persists for the life of the score</span>
+  <span class='@phrases ivar id'>@phrases</span> <span class='lshft op'>&lt;&lt;</span> <span class='@cur_phrase ivar id'>@cur_phrase</span>
+  <span class='comment val'># State that is built/torn down within current containing section block, if any, or just ignored</span>
+  <span class='@cur_phrases ivar id'>@cur_phrases</span> <span class='lshft op'>&lt;&lt;</span> <span class='@cur_phrase ivar id'>@cur_phrase</span>
+  <span class='comment val'># NOTE: nil name breaks because then Phrase can't be retrieved by key in write() block</span>
+  <span class='@phrases_by_name ivar id'>@phrases_by_name</span><span class='lbrack token'>[</span><span class='name identifier id'>name</span><span class='rbrack token'>]</span> <span class='assign token'>=</span> <span class='@cur_phrase ivar id'>@cur_phrase</span>
+  <span class='comment val'># Construct and put into @notes queue all Notes in the block for this Phrase block</span>
+  <span class='yield yield kw'>yield</span> <span class='args_blk identifier id'>args_blk</span>
+  <span class='comment val'># Now add them to the Notes in this Phrase object</span>
+  <span class='@cur_phrase ivar id'>@cur_phrase</span> <span class='lshft op'>&lt;&lt;</span> <span class='@notes ivar id'>@notes</span>  
+  <span class='comment val'># Phrase just copied the Notes, so clear the queue again (redundant, but a bug waiting to happen)</span>
+  <span class='@notes ivar id'>@notes</span><span class='dot token'>.</span><span class='clear identifier id'>clear</span>
+  <span class='@processing_phrase ivar id'>@processing_phrase</span> <span class='assign token'>=</span> <span class='false false kw'>false</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>phrases</h3>
+</div><div id="phrases-instance_method" class="section method">
+  <div class="details_title">
+    <div class='section methodsignature'>
+    <tt class='def'>
+      <span class='visibility'>public</span>
+      <span class='return_types'></span>
+      <span class='name'>phrases</span><span class='args'>(*names)</span>
+      <span class='block'></span>
+    </tt>
+  </div>
+
+</div><div class="section docstring">
+  <p>
+Handles keyword &quot;phrases&quot;, called inside write() block
+</p>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+438
+439
+440
+441
+442
+443
+444
+445
+446
+447
+448
+449</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/composer.rb', line 438</span>
+
+<span class='def def kw'>def</span> <span class='phrases identifier id'>phrases</span><span class='lparen token'>(</span><span class='mult op'>*</span><span class='names identifier id'>names</span><span class='rparen token'>)</span>
+  <span class='comment val'># Because Score is a singleton, this can just write its notes to Score's output notes</span>
+  <span class='comment val'># This is bad because it goes in the opposite direction of the nesting logic for Notes, Phrases, etc.</span>
+  <span class='comment val'># So, lurking bugs.  Also it breaks if we want to have more than on Score.  Fine for &quot;now.&quot;</span>
+  <span class='names identifier id'>names</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='name identifier id'>name</span><span class='bitor op'>|</span> 
+    <span class='name identifier id'>name</span> <span class='assign token'>=</span> <span class='name identifier id'>name</span><span class='dot token'>.</span><span class='strip identifier id'>strip</span>
+    <span class='phrase identifier id'>phrase</span> <span class='assign token'>=</span> <span class='@phrases_by_name ivar id'>@phrases_by_name</span><span class='lbrack token'>[</span><span class='name identifier id'>name</span><span class='rbrack token'>]</span>
+    <span class='phrase identifier id'>phrase</span><span class='dot token'>.</span><span class='notes identifier id'>notes</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='note identifier id'>note</span><span class='bitor op'>|</span>
+      <span class='@score_notes ivar id'>@score_notes</span> <span class='lshft op'>&lt;&lt;</span> <span class='note identifier id'>note</span><span class='dot token'>.</span><span class='dup identifier id'>dup</span>
+    <span class='end end kw'>end</span>
+  <span class='end end kw'>end</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>play</h3>
+</div><div id="play-instance_method" class="section method">
+  <div class="details_title">
+    <div class='section methodsignature'>
+    <tt class='def'>
+      <span class='visibility'>public</span>
+      <span class='return_types'></span>
+      <span class='name'>play</span><span class='args'></span>
+      <span class='block'></span>
+    </tt>
+  </div>
+
+</div><div class="section tags">
+  <h2>Meta Tags</h2>
+  <div class="yield">
+  <h3>Yields:</h3>
+  <dl>
+  
+    <dt>
+      
+        <span class='type'></span>
+      
+      
+        <span class='name'></span>
+      
+      
+    </dt>
+    <dd>
+      <span class='desc'></span>
+    </dd>
+  
+  </dl>
+</div>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+336
+337
+338
+339
+340</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/composer.rb', line 336</span>
+
+<span class='def def kw'>def</span> <span class='play identifier id'>play</span>
+  <span class='@processing_play ivar id'>@processing_play</span> <span class='assign token'>=</span> <span class='true true kw'>true</span>
+  <span class='yield yield kw'>yield</span>
+  <span class='@processing_play ivar id'>@processing_play</span> <span class='assign token'>=</span> <span class='false false kw'>false</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>player</h3>
+</div><div id="player-instance_method" class="section method">
+  <div class="details_title">
+    <div class='section methodsignature'>
+    <tt class='def'>
+      <span class='visibility'>public</span>
+      <span class='return_types'></span>
+      <span class='name'>player</span><span class='args'>(name, &amp;args_blk)</span>
+      <span class='block'></span>
+    </tt>
+  </div>
+
+</div><div class="section tags">
+  <h2>Meta Tags</h2>
+  <div class="yield">
+  <h3>Yields:</h3>
+  <dl>
+  
+    <dt>
+      
+        <span class='type'></span>
+      
+      
+        <span class='name'></span>
+      
+      
+    </dt>
+    <dd>
+      <span class='desc'></span>
+    </dd>
+  
+  </dl>
+</div>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+264
+265
+266
+267
+268
+269
+270
+271
+272
+273
+274
+275
+276
+277
+278
+279
+280
+281
+282
+283
+284
+285
+286
+287
+288
+289
+290
+291
+292
+293</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/composer.rb', line 264</span>
+
+<span class='def def kw'>def</span> <span class='player identifier id'>player</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='comma token'>,</span> <span class='bitand op'>&amp;</span><span class='args_blk identifier id'>args_blk</span><span class='rparen token'>)</span>
+  <span class='@processing_player ivar id'>@processing_player</span> <span class='assign token'>=</span> <span class='true true kw'>true</span>
+  <span class='if if kw'>if</span> <span class='not not kw'>not</span> <span class='@players_by_name ivar id'>@players_by_name</span><span class='dot token'>.</span><span class='include? fid id'>include?</span> <span class='name identifier id'>name</span>
+    <span class='@cur_player ivar id'>@cur_player</span> <span class='assign token'>=</span> <span class='Player constant id'>Player</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='rparen token'>)</span>
+    <span class='@players_by_name ivar id'>@players_by_name</span><span class='lbrack token'>[</span><span class='name identifier id'>name</span><span class='rbrack token'>]</span> <span class='assign token'>=</span> <span class='@cur_player ivar id'>@cur_player</span>
+    <span class='@players ivar id'>@players</span> <span class='lshft op'>&lt;&lt;</span> <span class='@cur_player ivar id'>@cur_player</span>
+  <span class='else else kw'>else</span>
+    <span class='@cur_player ivar id'>@cur_player</span> <span class='assign token'>=</span> <span class='@players_by_name ivar id'>@players_by_name</span><span class='lbrack token'>[</span><span class='name identifier id'>name</span><span class='rbrack token'>]</span>
+  <span class='end end kw'>end</span>
+  <span class='@cur_player ivar id'>@cur_player</span><span class='dot token'>.</span><span class='ensemble identifier id'>ensemble</span> <span class='assign token'>=</span> <span class='@cur_ensemble ivar id'>@cur_ensemble</span>
+  
+  <span class='@cur_sections ivar id'>@cur_sections</span><span class='dot token'>.</span><span class='clear identifier id'>clear</span>
+  <span class='@cur_phrases ivar id'>@cur_phrases</span><span class='dot token'>.</span><span class='clear identifier id'>clear</span>
+  
+  <span class='yield yield kw'>yield</span>
+  
+  <span class='@cur_sections ivar id'>@cur_sections</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='section identifier id'>section</span><span class='bitor op'>|</span>
+    <span class='section identifier id'>section</span><span class='dot token'>.</span><span class='phrases identifier id'>phrases</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='phrase identifier id'>phrase</span><span class='bitor op'>|</span>
+      <span class='@cur_player ivar id'>@cur_player</span><span class='dot token'>.</span><span class='add_score identifier id'>add_score</span><span class='lparen token'>(</span><span class='phrase identifier id'>phrase</span><span class='dot token'>.</span><span class='name identifier id'>name</span><span class='comma token'>,</span> <span class='phrase identifier id'>phrase</span><span class='rparen token'>)</span>
+    <span class='end end kw'>end</span>
+  <span class='end end kw'>end</span>
+    
+  <span class='@cur_phrases ivar id'>@cur_phrases</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='phrase identifier id'>phrase</span><span class='bitor op'>|</span>
+    <span class='@cur_player ivar id'>@cur_player</span><span class='dot token'>.</span><span class='add_score identifier id'>add_score</span><span class='lparen token'>(</span><span class='phrase identifier id'>phrase</span><span class='dot token'>.</span><span class='name identifier id'>name</span><span class='comma token'>,</span> <span class='phrase identifier id'>phrase</span><span class='rparen token'>)</span>
+  <span class='end end kw'>end</span>
+
+  <span class='@cur_sections ivar id'>@cur_sections</span><span class='dot token'>.</span><span class='clear identifier id'>clear</span>
+  <span class='@cur_phrases ivar id'>@cur_phrases</span><span class='dot token'>.</span><span class='clear identifier id'>clear</span> 
+  <span class='@processing_player ivar id'>@processing_player</span> <span class='assign token'>=</span> <span class='false false kw'>false</span>  
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>players</h3>
+</div><div id="players-instance_method" class="section method">
+  <div class="details_title">
+    <div class='section methodsignature'>
+    <tt class='def'>
+      <span class='visibility'>public</span>
+      <span class='return_types'></span>
+      <span class='name'>players</span><span class='args'>(*names)</span>
+      <span class='block'></span>
+    </tt>
+  </div>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+356
+357
+358
+359
+360
+361
+362
+363
+364
+365
+366
+367
+368
+369
+370
+371
+372
+373
+374
+375
+376
+377
+378
+379
+380
+381
+382
+383
+384
+385
+386
+387
+388
+389
+390
+391
+392
+393
+394
+395
+396
+397
+398
+399
+400
+401
+402
+403
+404
+405
+406
+407
+408
+409
+410
+411
+412
+413</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/composer.rb', line 356</span>
+
+<span class='def def kw'>def</span> <span class='players identifier id'>players</span><span class='lparen token'>(</span><span class='mult op'>*</span><span class='names identifier id'>names</span><span class='rparen token'>)</span>
+  <span class='if if kw'>if</span> <span class='@processing_ensemble ivar id'>@processing_ensemble</span>
+    <span class='names identifier id'>names</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='name identifier id'>name</span><span class='bitor op'>|</span> 
+      <span class='name identifier id'>name</span> <span class='assign token'>=</span> <span class='name identifier id'>name</span><span class='dot token'>.</span><span class='strip identifier id'>strip</span>
+      <span class='if if kw'>if</span> <span class='not not kw'>not</span> <span class='@players_by_name ivar id'>@players_by_name</span><span class='dot token'>.</span><span class='include? fid id'>include?</span> <span class='name identifier id'>name</span>
+        <span class='@players_by_name ivar id'>@players_by_name</span><span class='lbrack token'>[</span><span class='name identifier id'>name</span><span class='rbrack token'>]</span> <span class='assign token'>=</span> <span class='Player constant id'>Player</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='rparen token'>)</span>
+        <span class='@players ivar id'>@players</span> <span class='lshft op'>&lt;&lt;</span> <span class='@players_by_name ivar id'>@players_by_name</span><span class='lbrack token'>[</span><span class='name identifier id'>name</span><span class='rbrack token'>]</span>
+      <span class='end end kw'>end</span>
+      <span class='@cur_players ivar id'>@cur_players</span> <span class='lshft op'>&lt;&lt;</span> <span class='@players_by_name ivar id'>@players_by_name</span><span class='lbrack token'>[</span><span class='name identifier id'>name</span><span class='rbrack token'>]</span>      
+    <span class='end end kw'>end</span>
+  <span class='end end kw'>end</span>
+  
+  <span class='if if kw'>if</span> <span class='@processing_instruction ivar id'>@processing_instruction</span>
+    <span class='names identifier id'>names</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='name identifier id'>name</span><span class='bitor op'>|</span>
+      <span class='name identifier id'>name</span> <span class='assign token'>=</span> <span class='name identifier id'>name</span><span class='dot token'>.</span><span class='strip identifier id'>strip</span>
+      <span class='player identifier id'>player</span> <span class='assign token'>=</span> <span class='@players_by_name ivar id'>@players_by_name</span><span class='lbrack token'>[</span><span class='name identifier id'>name</span><span class='rbrack token'>]</span>
+      <span class='instr_name identifier id'>instr_name</span> <span class='assign token'>=</span> <span class='@cur_instruction ivar id'>@cur_instruction</span><span class='dot token'>.</span><span class='name identifier id'>name</span>
+      <span class='comment val'># Note the pass by '&amp;' to pass as a lambda which the recieving method in Player stores as a Proc and then calls 'call()' to run it</span>
+      <span class='player identifier id'>player</span><span class='dot token'>.</span><span class='add_preplay_hook identifier id'>add_preplay_hook</span><span class='lparen token'>(</span><span class='instr_name identifier id'>instr_name</span><span class='comma token'>,</span> <span class='bitand op'>&amp;</span><span class='@@player_preplay_instructions ivar id'>@@player_preplay_instructions</span><span class='lbrack token'>[</span><span class='instr_name identifier id'>instr_name</span><span class='rbrack token'>]</span><span class='rparen token'>)</span> <span class='if if_mod kw'>if</span> <span class='@@player_preplay_instructions ivar id'>@@player_preplay_instructions</span><span class='dot token'>.</span><span class='include? fid id'>include?</span> <span class='instr_name identifier id'>instr_name</span>
+      <span class='player identifier id'>player</span><span class='dot token'>.</span><span class='add_postplay_hook identifier id'>add_postplay_hook</span><span class='lparen token'>(</span><span class='instr_name identifier id'>instr_name</span><span class='comma token'>,</span> <span class='bitand op'>&amp;</span><span class='@@player_postplay_instructions ivar id'>@@player_postplay_instructions</span><span class='lbrack token'>[</span><span class='instr_name identifier id'>instr_name</span><span class='rbrack token'>]</span><span class='rparen token'>)</span> <span class='if if_mod kw'>if</span> <span class='@@player_postplay_instructions ivar id'>@@player_postplay_instructions</span><span class='dot token'>.</span><span class='include? fid id'>include?</span> <span class='instr_name identifier id'>instr_name</span>
+    <span class='end end kw'>end</span>    
+  <span class='end end kw'>end</span>
+
+  <span class='if if kw'>if</span> <span class='@processing_improvisation ivar id'>@processing_improvisation</span>
+    <span class='names identifier id'>names</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='name identifier id'>name</span><span class='bitor op'>|</span> 
+      <span class='player identifier id'>player</span> <span class='assign token'>=</span> <span class='@players_by_name ivar id'>@players_by_name</span><span class='lbrack token'>[</span><span class='name identifier id'>name</span><span class='rbrack token'>]</span>
+      <span class='improv_name identifier id'>improv_name</span> <span class='assign token'>=</span> <span class='@cur_improvisation ivar id'>@cur_improvisation</span><span class='dot token'>.</span><span class='name identifier id'>name</span>      
+      <span class='player identifier id'>player</span><span class='dot token'>.</span><span class='add_improvisation_hook identifier id'>add_improvisation_hook</span><span class='lparen token'>(</span><span class='improv_name identifier id'>improv_name</span><span class='comma token'>,</span> <span class='bitand op'>&amp;</span><span class='@@improvisations ivar id'>@@improvisations</span><span class='lbrack token'>[</span><span class='improv_name identifier id'>improv_name</span><span class='rbrack token'>]</span><span class='rparen token'>)</span> <span class='if if_mod kw'>if</span> <span class='@@improvisations ivar id'>@@improvisations</span><span class='dot token'>.</span><span class='include? fid id'>include?</span> <span class='improv_name identifier id'>improv_name</span>
+    <span class='end end kw'>end</span>    
+  <span class='end end kw'>end</span>
+  
+  <span class='if if kw'>if</span> <span class='@processing_play ivar id'>@processing_play</span>
+    <span class='names identifier id'>names</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='name identifier id'>name</span><span class='bitor op'>|</span>
+      <span class='name identifier id'>name</span> <span class='assign token'>=</span> <span class='name identifier id'>name</span><span class='dot token'>.</span><span class='strip identifier id'>strip</span>    
+      <span class='@players_by_name ivar id'>@players_by_name</span><span class='lbrack token'>[</span><span class='name identifier id'>name</span><span class='rbrack token'>]</span><span class='dot token'>.</span><span class='play identifier id'>play</span> <span class='if if_mod kw'>if</span> <span class='@players_by_name ivar id'>@players_by_name</span><span class='dot token'>.</span><span class='include? fid id'>include?</span> <span class='name identifier id'>name</span>
+    <span class='end end kw'>end</span> 
+  <span class='end end kw'>end</span>
+  
+  <span class='if if kw'>if</span> <span class='@processing_improvise ivar id'>@processing_improvise</span>
+    <span class='names identifier id'>names</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='name identifier id'>name</span><span class='bitor op'>|</span>
+      <span class='name identifier id'>name</span> <span class='assign token'>=</span> <span class='name identifier id'>name</span><span class='dot token'>.</span><span class='strip identifier id'>strip</span>
+      <span class='@players_by_name ivar id'>@players_by_name</span><span class='lbrack token'>[</span><span class='name identifier id'>name</span><span class='rbrack token'>]</span><span class='dot token'>.</span><span class='improvise identifier id'>improvise</span><span class='lparen token'>(</span><span class='@cur_improvisation ivar id'>@cur_improvisation</span><span class='dot token'>.</span><span class='name identifier id'>name</span><span class='rparen token'>)</span> <span class='if if_mod kw'>if</span> <span class='@players_by_name ivar id'>@players_by_name</span><span class='dot token'>.</span><span class='include? fid id'>include?</span> <span class='name identifier id'>name</span>
+    <span class='end end kw'>end</span> 
+  <span class='end end kw'>end</span>  
+  
+  <span class='if if kw'>if</span> <span class='@processing_score ivar id'>@processing_score</span>
+    <span class='names identifier id'>names</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='name identifier id'>name</span><span class='bitor op'>|</span> 
+      <span class='name identifier id'>name</span> <span class='assign token'>=</span> <span class='name identifier id'>name</span><span class='dot token'>.</span><span class='strip identifier id'>strip</span>
+      <span class='player identifier id'>player</span> <span class='assign token'>=</span> <span class='@players_by_name ivar id'>@players_by_name</span><span class='lbrack token'>[</span><span class='name identifier id'>name</span><span class='rbrack token'>]</span>
+      <span class='if if kw'>if</span> <span class='player identifier id'>player</span> <span class='neq op'>!=</span> <span class='nil nil kw'>nil</span>
+        <span class='player identifier id'>player</span><span class='dot token'>.</span><span class='output identifier id'>output</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='note identifier id'>note</span><span class='bitor op'>|</span>        
+          <span class='@score_notes ivar id'>@score_notes</span> <span class='lshft op'>&lt;&lt;</span> <span class='note identifier id'>note</span>
+        <span class='end end kw'>end</span>
+        <span class='player identifier id'>player</span><span class='dot token'>.</span><span class='clear_output identifier id'>clear_output</span>
+      <span class='end end kw'>end</span>
+    <span class='end end kw'>end</span>
+  <span class='end end kw'>end</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>quantize</h3>
+</div><div id="quantize-instance_method" class="section method">
+  <div class="details_title">
+    <div class='section methodsignature'>
+    <tt class='def'>
+      <span class='visibility'>public</span>
+      <span class='return_types'></span>
+      <span class='name'>quantize</span><span class='args'>(flag_str)</span>
+      <span class='block'></span>
+    </tt>
+  </div>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+196
+197
+198
+199</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/composer.rb', line 196</span>
+
+<span class='def def kw'>def</span> <span class='quantize identifier id'>quantize</span><span class='lparen token'>(</span><span class='flag_str identifier id'>flag_str</span><span class='rparen token'>)</span>
+  <span class='@meter ivar id'>@meter</span><span class='dot token'>.</span><span class='quantizing? fid id'>quantizing?</span><span class='lparen token'>(</span><span class='true true kw'>true</span><span class='rparen token'>)</span> <span class='if if_mod kw'>if</span> <span class='flag_str identifier id'>flag_str</span> <span class='eq op'>==</span> <span class='on identifier id'>on</span>
+  <span class='@meter ivar id'>@meter</span><span class='dot token'>.</span><span class='quantizing? fid id'>quantizing?</span><span class='lparen token'>(</span><span class='false false kw'>false</span><span class='rparen token'>)</span> <span class='if if_mod kw'>if</span> <span class='flag_str identifier id'>flag_str</span> <span class='eq op'>==</span> <span class='off identifier id'>off</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>render</h3>
+</div><div id="render-instance_method" class="section method">
+  <div class="details_title">
+    <div class='section methodsignature'>
+    <tt class='def'>
+      <span class='visibility'>public</span>
+      <span class='return_types'></span>
+      <span class='name'>render</span><span class='args'>(out_file, &amp;args_blk)</span>
+      <span class='block'></span>
+    </tt>
+  </div>
+
+</div><div class="section docstring">
+  <p>
+Handles &quot;render&quot; keyword, renders for csound now, eventually midi
+support score_file_name, orc_file_name=nil
+</p>
+
+</div><div class="section tags">
+  <h2>Meta Tags</h2>
+  <div class="yield">
+  <h3>Yields:</h3>
+  <dl>
+  
+    <dt>
+      
+        <span class='type'></span>
+      
+      
+        <span class='name'></span>
+      
+      
+    </dt>
+    <dd>
+      <span class='desc'></span>
+    </dd>
+  
+  </dl>
+</div>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+567
+568
+569
+570
+571
+572
+573</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/composer.rb', line 567</span>
+
+<span class='def def kw'>def</span> <span class='render identifier id'>render</span><span class='lparen token'>(</span><span class='out_file identifier id'>out_file</span><span class='comma token'>,</span> <span class='bitand op'>&amp;</span><span class='args_blk identifier id'>args_blk</span><span class='rparen token'>)</span>
+  <span class='@processing_renderer ivar id'>@processing_renderer</span> <span class='assign token'>=</span> <span class='true true kw'>true</span>
+  <span class='comment val'># Set rendering params as child keyword calls in the &quot;render&quot; block</span>
+  <span class='yield yield kw'>yield</span>  
+  <span class='@renderer ivar id'>@renderer</span><span class='dot token'>.</span><span class='render identifier id'>render</span><span class='lparen token'>(</span><span class='renderer identifier id'>renderer</span><span class='assign token'>=</span><span class='@score_out ivar id'>@score_out</span><span class='dot token'>.</span><span class='format identifier id'>format</span><span class='comma token'>,</span> <span class='out_file identifier id'>out_file</span><span class='assign token'>=</span><span class='out_file identifier id'>out_file</span><span class='comma token'>,</span> <span class='score_file identifier id'>score_file</span><span class='assign token'>=</span><span class='@score_out ivar id'>@score_out</span><span class='dot token'>.</span><span class='name identifier id'>name</span><span class='rparen token'>)</span>
+  <span class='@processing_renderer ivar id'>@processing_renderer</span> <span class='assign token'>=</span> <span class='false false kw'>false</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>repeat</h3>
+</div><div id="repeat-instance_method" class="section method">
+  <div class="details_title">
+    <div class='section methodsignature'>
+    <tt class='def'>
+      <span class='visibility'>public</span>
+      <span class='return_types'></span>
+      <span class='name'>repeat</span><span class='args'>(limit, &amp;blk)</span>
+      <span class='block'></span>
+    </tt>
+  </div>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+522
+523
+524
+525
+526
+527
+528
+529
+530
+531
+532
+533
+534
+535
+536
+537
+538
+539</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/composer.rb', line 522</span>
+
+<span class='def def kw'>def</span> <span class='repeat identifier id'>repeat</span><span class='lparen token'>(</span><span class='limit identifier id'>limit</span><span class='comma token'>,</span> <span class='bitand op'>&amp;</span><span class='blk identifier id'>blk</span><span class='rparen token'>)</span>
+  <span class='comment val'># NOTE: 1-based loops.  Shoot me now!  But 1-based loops make more sense in this domain,</span>
+  <span class='comment val'>#  particularly since the typical use case is to use the index as a factor of multiplication in</span>
+  <span class='comment val'>#  a loop.  In that case, identity is 1 (the base case, that has no effect) and 0 is a special</span>
+  <span class='comment val'>#  case returning no value.  The user should have to choose the 0 case,</span>
+  <span class='comment val'>#  not have it thrust on them silently.</span>
+  <span class='@notes ivar id'>@notes</span><span class='dot token'>.</span><span class='clear identifier id'>clear</span>
+  <span class='index identifier id'>index</span> <span class='assign token'>=</span> <span class='integer val'>1</span>
+  <span class='limit identifier id'>limit</span><span class='dot token'>.</span><span class='times identifier id'>times</span> <span class='do do kw'>do</span>
+    <span class='comment val'># Pass the index to the block</span>
+    <span class='yield yield kw'>yield</span> <span class='index identifier id'>index</span>
+    <span class='index identifier id'>index</span> <span class='opasgn op'>+=</span> <span class='integer val'>1</span>
+  <span class='end end kw'>end</span>
+  
+  <span class='comment val'># Now add them to the Notes in the currently nearest Phrase, which should be the parent of this node</span>
+  <span class='@cur_phrase ivar id'>@cur_phrase</span> <span class='lshft op'>&lt;&lt;</span> <span class='@notes ivar id'>@notes</span>  
+  <span class='@notes ivar id'>@notes</span><span class='dot token'>.</span><span class='clear identifier id'>clear</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>reset_script_state</h3>
+</div><div id="reset_script_state-instance_method" class="section method">
+  <div class="details_title">
+    <div class='section methodsignature'>
+    <tt class='def'>
+      <span class='visibility'>public</span>
+      <span class='return_types'></span>
+      <span class='name'>reset_script_state</span><span class='args'></span>
+      <span class='block'></span>
+    </tt>
+  </div>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+626
+627
+628
+629
+630
+631
+632
+633
+634
+635
+636
+637
+638
+639
+640
+641
+642
+643
+644
+645
+646
+647
+648
+649
+650
+651
+652
+653
+654
+655
+656
+657
+658
+659
+660
+661
+662
+663
+664
+665
+666
+667
+668
+669
+670
+671
+672
+673
+674
+675
+676
+677
+678
+679
+680
+681
+682
+683
+684
+685
+686
+687
+688
+689
+690</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/composer.rb', line 626</span>
+
+<span class='def def kw'>def</span> <span class='reset_script_state identifier id'>reset_script_state</span>
+  <span class='comment val'># *** KEEP THIS HERE ALWAYS ***</span>
+  <span class='@score_out ivar id'>@score_out</span><span class='dot token'>.</span><span class='clear identifier id'>clear</span>
+  <span class='comment val'># *** KEEP THIS HERE ALWAYS ***</span>
+
+  <span class='@cur_note ivar id'>@cur_note</span> <span class='assign token'>=</span> <span class='nil nil kw'>nil</span>
+  <span class='@notes ivar id'>@notes</span> <span class='assign token'>=</span> <span class='lbrack token'>[</span><span class='rbrack token'>]</span>
+  <span class='@notes_by_name ivar id'>@notes_by_name</span> <span class='assign token'>=</span> <span class='lbrace token'>{</span><span class='rbrace token'>}</span>
+  <span class='@processing_note ivar id'>@processing_note</span> <span class='assign token'>=</span> <span class='false false kw'>false</span>
+
+  <span class='@cur_phrase ivar id'>@cur_phrase</span> <span class='assign token'>=</span> <span class='nil nil kw'>nil</span>
+  <span class='@cur_phrases ivar id'>@cur_phrases</span> <span class='assign token'>=</span> <span class='lbrack token'>[</span><span class='rbrack token'>]</span>
+  <span class='@phrases ivar id'>@phrases</span> <span class='assign token'>=</span> <span class='lbrack token'>[</span><span class='rbrack token'>]</span>
+  <span class='@phrases_by_name ivar id'>@phrases_by_name</span> <span class='assign token'>=</span> <span class='lbrace token'>{</span><span class='rbrace token'>}</span>
+  <span class='@processing_phrase ivar id'>@processing_phrase</span> <span class='assign token'>=</span> <span class='false false kw'>false</span>
+
+  <span class='@cur_sections ivar id'>@cur_sections</span> <span class='assign token'>=</span> <span class='lbrack token'>[</span><span class='rbrack token'>]</span>
+  <span class='@cur_section ivar id'>@cur_section</span> <span class='assign token'>=</span> <span class='nil nil kw'>nil</span>
+  <span class='@sections ivar id'>@sections</span> <span class='assign token'>=</span> <span class='lbrack token'>[</span><span class='rbrack token'>]</span>
+  <span class='@sections_by_name ivar id'>@sections_by_name</span> <span class='assign token'>=</span> <span class='lbrace token'>{</span><span class='rbrace token'>}</span>
+  <span class='@processing_section ivar id'>@processing_section</span> <span class='assign token'>=</span> <span class='false false kw'>false</span>
+  
+  <span class='@meter ivar id'>@meter</span> <span class='assign token'>=</span> <span class='Meter constant id'>Meter</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='quantizing identifier id'>quantizing</span><span class='assign token'>=</span><span class='false false kw'>false</span><span class='rparen token'>)</span>
+  
+  <span class='@cur_measure ivar id'>@cur_measure</span> <span class='assign token'>=</span> <span class='nil nil kw'>nil</span>
+  <span class='@measures ivar id'>@measures</span> <span class='assign token'>=</span> <span class='lbrack token'>[</span><span class='rbrack token'>]</span>
+  <span class='@processing_measure ivar id'>@processing_measure</span> <span class='assign token'>=</span> <span class='false false kw'>false</span>
+  <span class='@measures_by_name ivar id'>@measures_by_name</span> <span class='assign token'>=</span> <span class='lbrace token'>{</span><span class='rbrace token'>}</span>
+  <span class='@cur_start ivar id'>@cur_start</span> <span class='assign token'>=</span> <span class='integer val'>0</span><span class='integer val'>.0</span>
+  
+  <span class='@processing_instruction ivar id'>@processing_instruction</span> <span class='assign token'>=</span> <span class='false false kw'>false</span>
+  <span class='@cur_instruction ivar id'>@cur_instruction</span> <span class='assign token'>=</span> <span class='nil nil kw'>nil</span>
+  <span class='@instructions_by_name ivar id'>@instructions_by_name</span> <span class='assign token'>=</span> <span class='lbrace token'>{</span><span class='rbrace token'>}</span>
+  <span class='@processing_improvisation ivar id'>@processing_improvisation</span> <span class='assign token'>=</span> <span class='false false kw'>false</span>  
+  <span class='@cur_improvisation ivar id'>@cur_improvisation</span> <span class='assign token'>=</span> <span class='nil nil kw'>nil</span>  
+  <span class='@improvisations_by_name ivar id'>@improvisations_by_name</span> <span class='assign token'>=</span> <span class='lbrace token'>{</span><span class='rbrace token'>}</span>
+  <span class='@@ordered_improv_instructions ivar id'>@@ordered_improv_instructions</span> <span class='assign token'>=</span> <span class='lbrack token'>[</span><span class='rbrack token'>]</span>
+  <span class='comment val'># *** KEEP THIS HERE ALWAYS ***</span>
+  <span class='comment val'># Don't reset, because these are set at beginning of run</span>
+  <span class='comment val'>#  and live for lifetime of run of a process</span>
+  <span class='comment val'>#  because they are set by a require at top of overall</span>
+  <span class='comment val'>#  test.altc file, which includes all of the separate test scripts</span>
+  <span class='comment val'># @@player_preplay_instructions = {}</span>
+  <span class='comment val'># @@player_postplay_instructions = {}</span>
+  <span class='comment val'># @@improvisations = {}</span>
+  <span class='comment val'># *** KEEP THIS HERE ALWAYS ***</span>
+  
+  <span class='@processing_play ivar id'>@processing_play</span> <span class='assign token'>=</span> <span class='false false kw'>false</span>
+  <span class='@processing_improvise ivar id'>@processing_improvise</span> <span class='assign token'>=</span> <span class='false false kw'>false</span>
+  <span class='@processing_player ivar id'>@processing_player</span> <span class='assign token'>=</span> <span class='false false kw'>false</span>
+  <span class='@processing_ensemble ivar id'>@processing_ensemble</span> <span class='assign token'>=</span> <span class='false false kw'>false</span>
+  <span class='@cur_ensemble ivar id'>@cur_ensemble</span> <span class='assign token'>=</span> <span class='nil nil kw'>nil</span>
+  <span class='@ensembles ivar id'>@ensembles</span> <span class='assign token'>=</span> <span class='lbrack token'>[</span><span class='rbrack token'>]</span>
+  <span class='@ensembles_by_name ivar id'>@ensembles_by_name</span> <span class='assign token'>=</span> <span class='lbrace token'>{</span><span class='rbrace token'>}</span>
+  <span class='@cur_player ivar id'>@cur_player</span> <span class='assign token'>=</span> <span class='nil nil kw'>nil</span>
+  <span class='@cur_players ivar id'>@cur_players</span> <span class='assign token'>=</span> <span class='lbrack token'>[</span><span class='rbrack token'>]</span>
+  <span class='@players ivar id'>@players</span> <span class='assign token'>=</span> <span class='lbrack token'>[</span><span class='rbrack token'>]</span>
+  <span class='@players_by_name ivar id'>@players_by_name</span> <span class='assign token'>=</span> <span class='lbrace token'>{</span><span class='rbrace token'>}</span>
+
+  <span class='@processing_score ivar id'>@processing_score</span> <span class='assign token'>=</span> <span class='false false kw'>false</span>
+  <span class='@score_notes ivar id'>@score_notes</span> <span class='assign token'>=</span> <span class='lbrack token'>[</span><span class='rbrack token'>]</span>
+  
+  <span class='@processing_renderer ivar id'>@processing_renderer</span> <span class='assign token'>=</span> <span class='false false kw'>false</span>
+
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>section</h3>
+</div><div id="section-instance_method" class="section method">
+  <div class="details_title">
+    <div class='section methodsignature'>
+    <tt class='def'>
+      <span class='visibility'>public</span>
+      <span class='return_types'></span>
+      <span class='name'>section</span><span class='args'>(name, &amp;args_blk)</span>
+      <span class='block'></span>
+    </tt>
+  </div>
+
+</div><div class="section docstring">
+  <p>
+Handles keyword &quot;section&quot;
+</p>
+
+</div><div class="section tags">
+  <h2>Meta Tags</h2>
+  <div class="yield">
+  <h3>Yields:</h3>
+  <dl>
+  
+    <dt>
+      
+        <span class='type'>[<tt>args_blk</tt>]</span>
+      
+      
+        <span class='name'></span>
+      
+      
+    </dt>
+    <dd>
+      <span class='desc'></span>
+    </dd>
+  
+  </dl>
+</div>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+251
+252
+253
+254
+255
+256
+257
+258
+259
+260
+261
+262</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/composer.rb', line 251</span>
+
+<span class='def def kw'>def</span> <span class='section identifier id'>section</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='comma token'>,</span> <span class='bitand op'>&amp;</span><span class='args_blk identifier id'>args_blk</span><span class='rparen token'>)</span>
+  <span class='@processing_section ivar id'>@processing_section</span> <span class='assign token'>=</span> <span class='true true kw'>true</span>
+  <span class='@cur_phrases ivar id'>@cur_phrases</span><span class='dot token'>.</span><span class='clear identifier id'>clear</span>
+  <span class='@cur_section ivar id'>@cur_section</span> <span class='assign token'>=</span> <span class='Section constant id'>Section</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='rparen token'>)</span>
+  <span class='@sections ivar id'>@sections</span> <span class='lshft op'>&lt;&lt;</span> <span class='@cur_section ivar id'>@cur_section</span>
+  <span class='@cur_sections ivar id'>@cur_sections</span> <span class='lshft op'>&lt;&lt;</span> <span class='@cur_section ivar id'>@cur_section</span>
+  <span class='@sections_by_name ivar id'>@sections_by_name</span><span class='lbrack token'>[</span><span class='name identifier id'>name</span><span class='rbrack token'>]</span> <span class='assign token'>=</span> <span class='@cur_section ivar id'>@cur_section</span>
+  <span class='yield yield kw'>yield</span> <span class='args_blk identifier id'>args_blk</span>
+  <span class='@cur_section ivar id'>@cur_section</span> <span class='lshft op'>&lt;&lt;</span> <span class='@cur_phrases ivar id'>@cur_phrases</span>  
+  <span class='@cur_phrases ivar id'>@cur_phrases</span><span class='dot token'>.</span><span class='clear identifier id'>clear</span>
+  <span class='@processing_section ivar id'>@processing_section</span> <span class='assign token'>=</span> <span class='false false kw'>false</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>sections</h3>
+</div><div id="sections-instance_method" class="section method">
+  <div class="details_title">
+    <div class='section methodsignature'>
+    <tt class='def'>
+      <span class='visibility'>public</span>
+      <span class='return_types'></span>
+      <span class='name'>sections</span><span class='args'>(*names)</span>
+      <span class='block'></span>
+    </tt>
+  </div>
+
+</div><div class="section docstring">
+  <p>
+Handles keyword &quot;sections&quot;, called inside write() block
+</p>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+472
+473
+474
+475
+476
+477
+478
+479
+480
+481
+482</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/composer.rb', line 472</span>
+
+<span class='def def kw'>def</span> <span class='sections identifier id'>sections</span><span class='lparen token'>(</span><span class='mult op'>*</span><span class='names identifier id'>names</span><span class='rparen token'>)</span>
+  <span class='names identifier id'>names</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='name identifier id'>name</span><span class='bitor op'>|</span>
+    <span class='name identifier id'>name</span> <span class='assign token'>=</span> <span class='name identifier id'>name</span><span class='dot token'>.</span><span class='strip identifier id'>strip</span>
+    <span class='section identifier id'>section</span> <span class='assign token'>=</span> <span class='@sections_by_name ivar id'>@sections_by_name</span><span class='lbrack token'>[</span><span class='name identifier id'>name</span><span class='rbrack token'>]</span>
+    <span class='section identifier id'>section</span><span class='dot token'>.</span><span class='phrases identifier id'>phrases</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='phrase identifier id'>phrase</span><span class='bitor op'>|</span>
+      <span class='phrase identifier id'>phrase</span><span class='dot token'>.</span><span class='notes identifier id'>notes</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='note identifier id'>note</span><span class='bitor op'>|</span>
+        <span class='@score_notes ivar id'>@score_notes</span> <span class='lshft op'>&lt;&lt;</span> <span class='note identifier id'>note</span><span class='dot token'>.</span><span class='dup identifier id'>dup</span>
+      <span class='end end kw'>end</span>
+    <span class='end end kw'>end</span>
+  <span class='end end kw'>end</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>set_ensemble_postplay_instruction</h3>
+</div><div id="set_ensemble_postplay_instruction-instance_method" class="section method">
+  <div class="details_title">
+    <div class='section methodsignature'>
+    <tt class='def'>
+      <span class='visibility'>public</span>
+      <span class='return_types'></span>
+      <span class='name'>set_ensemble_postplay_instruction</span><span class='args'>(instruction_name, &amp;instr_blk)</span>
+      <span class='block'></span>
+    </tt>
+  </div>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+111
+112
+113</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/composer.rb', line 111</span>
+
+<span class='def def kw'>def</span> <span class='set_ensemble_postplay_instruction identifier id'>set_ensemble_postplay_instruction</span><span class='lparen token'>(</span><span class='instruction_name identifier id'>instruction_name</span><span class='comma token'>,</span> <span class='bitand op'>&amp;</span><span class='instr_blk identifier id'>instr_blk</span><span class='rparen token'>)</span>
+  <span class='@@ensemble_postplay_instructions ivar id'>@@ensemble_postplay_instructions</span><span class='lbrack token'>[</span><span class='instruction_name identifier id'>instruction_name</span><span class='rbrack token'>]</span> <span class='assign token'>=</span> <span class='instr_blk identifier id'>instr_blk</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>set_ensemble_preplay_instruction</h3>
+</div><div id="set_ensemble_preplay_instruction-instance_method" class="section method">
+  <div class="details_title">
+    <div class='section methodsignature'>
+    <tt class='def'>
+      <span class='visibility'>public</span>
+      <span class='return_types'></span>
+      <span class='name'>set_ensemble_preplay_instruction</span><span class='args'>(instruction_name, &amp;instr_blk)</span>
+      <span class='block'></span>
+    </tt>
+  </div>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+108
+109
+110</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/composer.rb', line 108</span>
+
+<span class='def def kw'>def</span> <span class='set_ensemble_preplay_instruction identifier id'>set_ensemble_preplay_instruction</span><span class='lparen token'>(</span><span class='instruction_name identifier id'>instruction_name</span><span class='comma token'>,</span> <span class='bitand op'>&amp;</span><span class='instr_blk identifier id'>instr_blk</span><span class='rparen token'>)</span>
+  <span class='@@ensemble_preplay_instructions ivar id'>@@ensemble_preplay_instructions</span><span class='lbrack token'>[</span><span class='instruction_name identifier id'>instruction_name</span><span class='rbrack token'>]</span> <span class='assign token'>=</span> <span class='instr_blk identifier id'>instr_blk</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>set_improvisation</h3>
+</div><div id="set_improvisation-instance_method" class="section method">
+  <div class="details_title">
+    <div class='section methodsignature'>
+    <tt class='def'>
+      <span class='visibility'>public</span>
+      <span class='return_types'></span>
+      <span class='name'>set_improvisation</span><span class='args'>(instruction_name, &amp;instr_blk)</span>
+      <span class='block'></span>
+    </tt>
+  </div>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+102
+103
+104</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/composer.rb', line 102</span>
+
+<span class='def def kw'>def</span> <span class='set_improvisation identifier id'>set_improvisation</span><span class='lparen token'>(</span><span class='instruction_name identifier id'>instruction_name</span><span class='comma token'>,</span> <span class='bitand op'>&amp;</span><span class='instr_blk identifier id'>instr_blk</span><span class='rparen token'>)</span>
+  <span class='@@improvisations ivar id'>@@improvisations</span><span class='lbrack token'>[</span><span class='instruction_name identifier id'>instruction_name</span><span class='rbrack token'>]</span> <span class='assign token'>=</span> <span class='instr_blk identifier id'>instr_blk</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>set_player_postplay_instruction</h3>
+</div><div id="set_player_postplay_instruction-instance_method" class="section method">
+  <div class="details_title">
+    <div class='section methodsignature'>
+    <tt class='def'>
+      <span class='visibility'>public</span>
+      <span class='return_types'></span>
+      <span class='name'>set_player_postplay_instruction</span><span class='args'>(instruction_name, &amp;instr_blk)</span>
+      <span class='block'></span>
+    </tt>
+  </div>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+99
+100
+101</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/composer.rb', line 99</span>
+
+<span class='def def kw'>def</span> <span class='set_player_postplay_instruction identifier id'>set_player_postplay_instruction</span><span class='lparen token'>(</span><span class='instruction_name identifier id'>instruction_name</span><span class='comma token'>,</span> <span class='bitand op'>&amp;</span><span class='instr_blk identifier id'>instr_blk</span><span class='rparen token'>)</span>
+  <span class='@@player_postplay_instructions ivar id'>@@player_postplay_instructions</span><span class='lbrack token'>[</span><span class='instruction_name identifier id'>instruction_name</span><span class='rbrack token'>]</span> <span class='assign token'>=</span> <span class='instr_blk identifier id'>instr_blk</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>set_player_preplay_instruction</h3>
+</div><div id="set_player_preplay_instruction-instance_method" class="section method">
+  <div class="details_title">
+    <div class='section methodsignature'>
+    <tt class='def'>
+      <span class='visibility'>public</span>
+      <span class='return_types'></span>
+      <span class='name'>set_player_preplay_instruction</span><span class='args'>(instruction_name, &amp;instr_blk)</span>
+      <span class='block'></span>
+    </tt>
+  </div>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+96
+97
+98</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/composer.rb', line 96</span>
+
+<span class='def def kw'>def</span> <span class='set_player_preplay_instruction identifier id'>set_player_preplay_instruction</span><span class='lparen token'>(</span><span class='instruction_name identifier id'>instruction_name</span><span class='comma token'>,</span> <span class='bitand op'>&amp;</span><span class='instr_blk identifier id'>instr_blk</span><span class='rparen token'>)</span>
+  <span class='@@player_preplay_instructions ivar id'>@@player_preplay_instructions</span><span class='lbrack token'>[</span><span class='instruction_name identifier id'>instruction_name</span><span class='rbrack token'>]</span> <span class='assign token'>=</span> <span class='instr_blk identifier id'>instr_blk</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>sign</h3>
+</div><div id="sign-instance_method" class="section method">
+  <div class="details_title">
+    <div class='section methodsignature'>
+    <tt class='def'>
+      <span class='visibility'>public</span>
+      <span class='return_types'></span>
+      <span class='name'>sign</span><span class='args'></span>
+      <span class='block'></span>
+    </tt>
+  </div>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+20
+21
+22</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/util.rb', line 20</span>
+
+<span class='def def kw'>def</span> <span class='sign identifier id'>sign</span>
+  <span class='rand identifier id'>rand</span><span class='lparen token'>(</span><span class='integer val'>2</span><span class='rparen token'>)</span> <span class='mod op'>%</span> <span class='integer val'>2</span> <span class='eq op'>==</span> <span class='integer val'>0</span> <span class='question op'>?</span> <span class='integer val'>1</span> <span class='colon op'>:</span> <span class='integer val'>-1</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>swing</h3>
+</div><div id="swing-instance_method" class="section method">
+  <div class="details_title">
+    <div class='section methodsignature'>
+    <tt class='def'>
+      <span class='visibility'>public</span>
+      <span class='return_types'></span>
+      <span class='name'>swing</span><span class='args'>(base_val, num_steps, swing_step)</span>
+      <span class='block'></span>
+    </tt>
+  </div>
+
+</div><div class="section docstring">
+  <p>
+swing(0.98, 5, 0.01) ==&gt; 0.98 - 1.02
+</p>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+16
+17
+18</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/util.rb', line 16</span>
+
+<span class='def def kw'>def</span> <span class='swing identifier id'>swing</span><span class='lparen token'>(</span><span class='base_val identifier id'>base_val</span><span class='comma token'>,</span> <span class='num_steps identifier id'>num_steps</span><span class='comma token'>,</span> <span class='swing_step identifier id'>swing_step</span><span class='rparen token'>)</span>
+  <span class='base_val identifier id'>base_val</span> <span class='plus op'>+</span> <span class='lparen token'>(</span><span class='rand identifier id'>rand</span><span class='lparen token'>(</span><span class='num_steps identifier id'>num_steps</span><span class='rparen token'>)</span> <span class='mult op'>*</span> <span class='swing_step identifier id'>swing_step</span><span class='rparen token'>)</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>write</h3>
+</div><div id="write-instance_method" class="section method">
+  <div class="details_title">
+    <div class='section methodsignature'>
+    <tt class='def'>
+      <span class='visibility'>public</span>
+      <span class='return_types'></span>
+      <span class='name'>write</span><span class='args'>(name, &amp;args_blk)</span>
+      <span class='block'></span>
+    </tt>
+  </div>
+
+</div><div class="section tags">
+  <h2>Meta Tags</h2>
+  <div class="yield">
+  <h3>Yields:</h3>
+  <dl>
+  
+    <dt>
+      
+        <span class='type'></span>
+      
+      
+        <span class='name'></span>
+      
+      
+    </dt>
+    <dd>
+      <span class='desc'></span>
+    </dd>
+  
+  </dl>
+</div>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+551
+552
+553
+554
+555
+556
+557
+558
+559
+560
+561
+562
+563</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/composer.rb', line 551</span>
+
+<span class='def def kw'>def</span> <span class='write identifier id'>write</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='comma token'>,</span> <span class='bitand op'>&amp;</span><span class='args_blk identifier id'>args_blk</span><span class='rparen token'>)</span>
+  <span class='@processing_score ivar id'>@processing_score</span> <span class='assign token'>=</span> <span class='true true kw'>true</span>
+  <span class='@score_out ivar id'>@score_out</span><span class='dot token'>.</span><span class='name identifier id'>name</span> <span class='assign token'>=</span> <span class='name identifier id'>name</span>
+  <span class='comment val'># Sets write properties, and writes all notes of all Phrases and Sections into a queue</span>
+  <span class='yield yield kw'>yield</span>
+  <span class='@score_out ivar id'>@score_out</span> <span class='lshft op'>&lt;&lt;</span> <span class='@score_notes ivar id'>@score_notes</span>
+  <span class='@score_out ivar id'>@score_out</span><span class='dot token'>.</span><span class='to_s_format identifier id'>to_s_format</span> <span class='@format ivar id'>@format</span>  
+  
+  <span class='File constant id'>File</span><span class='dot token'>.</span><span class='open identifier id'>open</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='comma token'>,</span> <span class='string val'>&quot;w&quot;</span><span class='rparen token'>)</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='f identifier id'>f</span><span class='bitor op'>|</span>
+    <span class='f identifier id'>f</span> <span class='lshft op'>&lt;&lt;</span> <span class='@score_out ivar id'>@score_out</span><span class='dot token'>.</span><span class='to_s identifier id'>to_s</span>
+  <span class='end end kw'>end</span>
+  <span class='@processing_score ivar id'>@processing_score</span> <span class='assign token'>=</span> <span class='false false kw'>false</span>  
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+</div>
+  </div>
+
+</div>
+    </div>
+    <div id="yard_info">
+  Generated on Wednesday, August 12 2009 at  by 
+  <abbr class="yard" title="Yay! A Ruby Documentation Tool"><a href="http://yard.soen.ca">YARD</a></abbr> 
+  0.2.3.3 (ruby-1.8.6).
+</div>
+
+  </body>
+</html>

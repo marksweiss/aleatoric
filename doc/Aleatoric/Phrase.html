@@ -1,0 +1,113 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+  <head>
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" href="../style.css" type="text/css" charset="utf-8" />
+<link rel="stylesheet" href="../custom.css" type="text/css" charset="utf-8" />
+<link rel="stylesheet" href="../syntax_highlight.css" type="text/css" charset="utf-8" />
+
+    <script src="../jquery.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../app.js" type="text/javascript" charset="utf-8"></script>
+    <title>Class: Aleatoric::Phrase</title>
+  </head>
+  <body>
+    <div id="content">
+      <div class="section class Aleatoric_Phrase">
+  <h1 class="title">Class: Aleatoric::Phrase</h1>
+  <div class="section inheritance">
+  <ul>
+  <li><a href="Score.html" title="Aleatoric::Score">Aleatoric::Score</a></li><ul><li>Aleatoric::Phrase</li>
+  </ul></ul>
+</div><div class="section constants">
+  
+</div><div class="section constructor">
+<h1>Constructor Summary</h1>
+  <p class="inherited_msg">
+    This class inherits a constructor from <a href="Score.html#initialize-instance_method" title="Aleatoric::Score">Aleatoric::Score</a>.
+  </p>
+</div><div class="section methodmissing">
+  <h1>Dynamic Method Handling</h1>
+
+  <p class="note">
+    This class handles dynamic methods through the <tt>method_missing</tt> method
+    
+      in the class <a href="Score.html" title="Aleatoric::Score">Aleatoric::Score</a>
+    
+  </p>
+
+  <div id="method_missing-instance_method" class="section method">
+  <div class="details_title">
+    <div class='section methodsignature'>
+    <tt class='def'>
+      <span class='visibility'>public</span>
+      <span class='return_types'></span>
+      <span class='name'>method_missing</span><span class='args'>(name, val)</span>
+      <span class='block'></span>
+    </tt>
+  </div>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+28
+29
+30
+31
+32</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/score.rb', line 28</span>
+
+<span class='def def kw'>def</span> <span class='method_missing identifier id'>method_missing</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='comma token'>,</span> <span class='val identifier id'>val</span><span class='rparen token'>)</span>  
+  <span class='def_accessor identifier id'>def_accessor</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='comma token'>,</span> <span class='val identifier id'>val</span><span class='rparen token'>)</span>
+  <span class='@score_attrs ivar id'>@score_attrs</span><span class='dot token'>.</span><span class='push identifier id'>push</span> <span class='name identifier id'>name</span><span class='dot token'>.</span><span class='to_sym identifier id'>to_sym</span>
+  <span class='self self kw'>self</span><span class='dot token'>.</span><span class='send identifier id'>send</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='dot token'>.</span><span class='to_sym identifier id'>to_sym</span><span class='comma token'>,</span> <span class='val identifier id'>val</span><span class='rparen token'>)</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+</div>  <div class="section visibilitygroup public">
+    <h1>Public Visibility</h1>
+      <div class="section methodsummary instance public">
+    <div class="inherited">
+  
+  <div>
+    <h1>Public Instance Methods Inherited from <a href="Score.html" title="Aleatoric::Score">Aleatoric::Score</a></h1>
+    <p><span class='name'><a href="Score.html#%3C%3C-instance_method" title="&lt;&lt;">&lt;&lt;</a></span>, <span class='name'><a href="Score.html#clear-instance_method" title="clear">clear</a></span>, <span class='name'><a href="Score.html#dup-instance_method" title="dup">dup</a></span>, <span class='name'><a href="Score.html#to_s-instance_method" title="to_s">to_s</a></span></p>
+  </div>
+  
+</div>
+<div class="clear"></div><div class="included">
+  
+  <div>
+    <h1>Public Instance Methods Included from <a href="Score.html" title="Aleatoric::Score">Aleatoric::Score</a></h1>
+    <p><span class='name'><a href="Score.html#%3C%3C-instance_method" title="&lt;&lt;">&lt;&lt;</a></span>, <span class='name'><a href="Score.html#clear-instance_method" title="clear">clear</a></span>, <span class='name'><a href="Score.html#dup-instance_method" title="dup">dup</a></span>, <span class='name'><a href="Score.html#to_s-instance_method" title="to_s">to_s</a></span></p>
+  </div>
+  
+</div>
+<div class="clear"></div>
+  </div>
+
+  </div>
+
+</div>
+    </div>
+    <div id="yard_info">
+  Generated on Wednesday, August 12 2009 at  by 
+  <abbr class="yard" title="Yay! A Ruby Documentation Tool"><a href="http://yard.soen.ca">YARD</a></abbr> 
+  0.2.3.3 (ruby-1.8.6).
+</div>
+
+  </body>
+</html>

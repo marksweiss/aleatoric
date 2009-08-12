@@ -1,0 +1,195 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+  <head>
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" href="../style.css" type="text/css" charset="utf-8" />
+<link rel="stylesheet" href="../custom.css" type="text/css" charset="utf-8" />
+<link rel="stylesheet" href="../syntax_highlight.css" type="text/css" charset="utf-8" />
+
+    <script src="../jquery.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../app.js" type="text/javascript" charset="utf-8"></script>
+    <title>Class: Aleatoric::LoopInstrument</title>
+  </head>
+  <body>
+    <div id="content">
+      <div class="section class Aleatoric_LoopInstrument">
+  <h1 class="title">Class: Aleatoric::LoopInstrument</h1>
+  <div class="section inheritance">
+  <ul>
+  <li><a href="Instrument.html" title="Aleatoric::Instrument">Aleatoric::Instrument</a></li><ul><li>Aleatoric::LoopInstrument</li>
+  </ul></ul>
+</div><div class="section constants">
+  
+</div><div class="section constructor">
+<h1>Constructor Summary</h1>
+  <p class="inherited_msg">
+    This class inherits a constructor from <a href="Instrument.html#initialize-instance_method" title="Aleatoric::Instrument">Aleatoric::Instrument</a>.
+  </p>
+</div>  <div class="section visibilitygroup public">
+    <h1>Public Visibility</h1>
+      <div class="section methodsummary instance public">
+    <h1>Public Instance Method Summary</h1>
+<table class="summary">
+  
+    <tr>
+      <th class="signature">
+        
+          <span class='overload'>
+            <span class='name'><a href="#loop_play-instance_method" title="#loop_play">#loop_play</a></span><span class='args'>(num_loops, args = {})</span>
+            <span class='block'></span>
+          </span>
+        
+        
+      </th>
+      <td class="docstring">
+        
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        
+          <span class='overload'>
+            <span class='name'><a href="#loop_play_to_s-instance_method" title="#loop_play_to_s">#loop_play_to_s</a></span><span class='args'>(num_loops, args = {})</span>
+            <span class='block'></span>
+          </span>
+        
+        
+      </th>
+      <td class="docstring">
+        
+        
+      </td>
+    </tr>
+  
+</table>
+<div class="inherited">
+  
+  <div>
+    <h1>Public Instance Methods Inherited from <a href="Instrument.html" title="Aleatoric::Instrument">Aleatoric::Instrument</a></h1>
+    <p><span class='name'><a href="Instrument.html#play-instance_method" title="play">play</a></span>, <span class='name'><a href="Instrument.html#play_to_s-instance_method" title="play_to_s">play_to_s</a></span></p>
+  </div>
+  
+</div>
+<div class="clear"></div>
+  </div>
+<div class="section methoddetails instance public">
+  <h1>Public Instance Method Details</h1>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>loop_play</h3>
+</div><div id="loop_play-instance_method" class="section method">
+  <div class="details_title">
+    <div class='section methodsignature'>
+    <tt class='def'>
+      <span class='visibility'>public</span>
+      <span class='return_types'></span>
+      <span class='name'>loop_play</span><span class='args'>(num_loops, args = {})</span>
+      <span class='block'></span>
+    </tt>
+  </div>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+25
+26
+27
+28
+29
+30
+31</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/instrument.rb', line 25</span>
+
+<span class='def def kw'>def</span> <span class='loop_play identifier id'>loop_play</span><span class='lparen token'>(</span><span class='num_loops identifier id'>num_loops</span><span class='comma token'>,</span> <span class='args identifier id'>args</span><span class='assign token'>=</span><span class='lbrace token'>{</span><span class='rbrace token'>}</span><span class='rparen token'>)</span>
+  <span class='ret_notes identifier id'>ret_notes</span> <span class='assign token'>=</span> <span class='lbrack token'>[</span><span class='rbrack token'>]</span>
+  <span class='num_loops identifier id'>num_loops</span><span class='dot token'>.</span><span class='times identifier id'>times</span> <span class='do do kw'>do</span>
+    <span class='ret_notes identifier id'>ret_notes</span> <span class='lshft op'>&lt;&lt;</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='play identifier id'>play</span><span class='lparen token'>(</span><span class='args identifier id'>args</span><span class='rparen token'>)</span>
+  <span class='end end kw'>end</span>
+  <span class='ret_notes identifier id'>ret_notes</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>loop_play_to_s</h3>
+</div><div id="loop_play_to_s-instance_method" class="section method">
+  <div class="details_title">
+    <div class='section methodsignature'>
+    <tt class='def'>
+      <span class='visibility'>public</span>
+      <span class='return_types'></span>
+      <span class='name'>loop_play_to_s</span><span class='args'>(num_loops, args = {})</span>
+      <span class='block'></span>
+    </tt>
+  </div>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+33
+34
+35
+36
+37
+38
+39
+40</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/instrument.rb', line 33</span>
+
+<span class='def def kw'>def</span> <span class='loop_play_to_s identifier id'>loop_play_to_s</span><span class='lparen token'>(</span><span class='num_loops identifier id'>num_loops</span><span class='comma token'>,</span> <span class='args identifier id'>args</span><span class='assign token'>=</span><span class='lbrace token'>{</span><span class='rbrace token'>}</span><span class='rparen token'>)</span>
+  <span class='ret identifier id'>ret</span> <span class='assign token'>=</span> <span class='string val'>&quot;&quot;</span>
+  <span class='ret_notes identifier id'>ret_notes</span> <span class='assign token'>=</span> <span class='loop_play identifier id'>loop_play</span><span class='lparen token'>(</span><span class='num_loops identifier id'>num_loops</span><span class='comma token'>,</span> <span class='args identifier id'>args</span><span class='rparen token'>)</span>
+  <span class='ret_notes identifier id'>ret_notes</span><span class='dot token'>.</span><span class='length identifier id'>length</span><span class='dot token'>.</span><span class='times identifier id'>times</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='j identifier id'>j</span><span class='bitor op'>|</span>
+    <span class='ret identifier id'>ret</span> <span class='lshft op'>&lt;&lt;</span> <span class='ret_notes identifier id'>ret_notes</span><span class='lbrack token'>[</span><span class='j identifier id'>j</span><span class='rbrack token'>]</span><span class='dot token'>.</span><span class='to_s identifier id'>to_s</span>
+  <span class='end end kw'>end</span>
+  <span class='ret identifier id'>ret</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+</div>
+  </div>
+
+</div>
+    </div>
+    <div id="yard_info">
+  Generated on Wednesday, August 12 2009 at  by 
+  <abbr class="yard" title="Yay! A Ruby Documentation Tool"><a href="http://yard.soen.ca">YARD</a></abbr> 
+  0.2.3.3 (ruby-1.8.6).
+</div>
+
+  </body>
+</html>

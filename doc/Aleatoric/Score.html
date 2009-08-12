@@ -1,0 +1,475 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+  <head>
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" href="../style.css" type="text/css" charset="utf-8" />
+<link rel="stylesheet" href="../custom.css" type="text/css" charset="utf-8" />
+<link rel="stylesheet" href="../syntax_highlight.css" type="text/css" charset="utf-8" />
+
+    <script src="../jquery.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../app.js" type="text/javascript" charset="utf-8"></script>
+    <title>Class: Aleatoric::Score</title>
+  </head>
+  <body>
+    <div id="content">
+      <div class="section class Aleatoric_Score">
+  <h1 class="title">Class: Aleatoric::Score</h1>
+  <div class="section attributes">
+  <h1>Attributes</h1>
+
+  
+    <div class="instance">
+      <h2>Instance Attributes</h2>
+      <table>
+      
+        
+        <tr class="">
+          <th class='signature'>
+            <span class='name'>name</span>
+          </td>
+          <td class="readwrite">
+            [<span id='name-instance_method'>R</span><span id='name=-instance_method'>W</span>] 
+          </td>
+          <td class="visibility">
+            public
+          </td>
+          <td class="docstring">
+            <p>
+Sets the attribute <tt>name</tt>.
+</p>
+
+            
+          </td>
+        </tr>
+        
+      
+        
+        <tr class="">
+          <th class='signature'>
+            <span class='name'>notes</span>
+          </td>
+          <td class="readwrite">
+            [<span id='notes-instance_method'>R</span>] 
+          </td>
+          <td class="visibility">
+            public
+          </td>
+          <td class="docstring">
+            <p>
+Returns the value of attribute <tt>notes</tt>.
+</p>
+
+            
+          </td>
+        </tr>
+        
+      
+        
+        <tr class="">
+          <th class='signature'>
+            <span class='name'>score_attrs</span>
+          </td>
+          <td class="readwrite">
+            [<span id='score_attrs-instance_method'>R</span><span id='score_attrs=-instance_method'>W</span>] 
+          </td>
+          <td class="visibility">
+            public
+          </td>
+          <td class="docstring">
+            <p>
+Sets the attribute <tt>score_attrs</tt>.
+</p>
+
+            
+          </td>
+        </tr>
+        
+      
+      </table>
+    </div>
+  
+</div>
+<div class="section constants">
+  
+</div><div class="section constructor">
+<h1>Constructor Summary</h1>
+  <div id="initialize-instance_method" class="section method">
+  <div class="details_title">
+    <div class='section methodsignature'>
+    <tt class='def'>
+      <span class='visibility'>public</span>
+      <span class='return_types'></span>
+      <span class='name'>initialize</span><span class='args'>(name = nil)</span>
+      <span class='block'></span>
+    </tt>
+  </div>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+14
+15
+16
+17
+18
+19
+20</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/score.rb', line 14</span>
+
+<span class='def def kw'>def</span> <span class='initialize identifier id'>initialize</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='assign token'>=</span><span class='nil nil kw'>nil</span><span class='rparen token'>)</span>
+  <span class='comment val'># reasonable default value transparent to user (who didn't provide a name after all)</span>
+  <span class='comment val'>#  and that is guaranteed to be unique</span>
+  <span class='@name ivar id'>@name</span> <span class='assign token'>=</span> <span class='name identifier id'>name</span> <span class='opasgn op'>||=</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='object_id identifier id'>object_id</span><span class='dot token'>.</span><span class='to_s identifier id'>to_s</span> 
+  <span class='@notes ivar id'>@notes</span> <span class='assign token'>=</span> <span class='lbrack token'>[</span><span class='rbrack token'>]</span>
+  <span class='@score_attrs ivar id'>@score_attrs</span> <span class='assign token'>=</span> <span class='lbrack token'>[</span><span class='rbrack token'>]</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+</div><div class="section methodmissing">
+  <h1>Dynamic Method Handling</h1>
+
+  <p class="note">
+    This class handles dynamic methods through the <tt>method_missing</tt> method
+    
+  </p>
+
+  <div id="method_missing-instance_method" class="section method">
+  <div class="details_title">
+    <div class='section methodsignature'>
+    <tt class='def'>
+      <span class='visibility'>public</span>
+      <span class='return_types'></span>
+      <span class='name'>method_missing</span><span class='args'>(name, val)</span>
+      <span class='block'></span>
+    </tt>
+  </div>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+28
+29
+30
+31
+32</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/score.rb', line 28</span>
+
+<span class='def def kw'>def</span> <span class='method_missing identifier id'>method_missing</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='comma token'>,</span> <span class='val identifier id'>val</span><span class='rparen token'>)</span>  
+  <span class='def_accessor identifier id'>def_accessor</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='comma token'>,</span> <span class='val identifier id'>val</span><span class='rparen token'>)</span>
+  <span class='@score_attrs ivar id'>@score_attrs</span><span class='dot token'>.</span><span class='push identifier id'>push</span> <span class='name identifier id'>name</span><span class='dot token'>.</span><span class='to_sym identifier id'>to_sym</span>
+  <span class='self self kw'>self</span><span class='dot token'>.</span><span class='send identifier id'>send</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='dot token'>.</span><span class='to_sym identifier id'>to_sym</span><span class='comma token'>,</span> <span class='val identifier id'>val</span><span class='rparen token'>)</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+</div>  <div class="section visibilitygroup public">
+    <h1>Public Visibility</h1>
+      <div class="section methodsummary instance public">
+    <h1>Public Instance Method Summary</h1>
+<table class="summary">
+  
+    <tr>
+      <th class="signature">
+        
+          <span class='overload'>
+            <span class='name'><a href="#%3C%3C-instance_method" title="#&lt;&lt;">#&lt;&lt;</a></span><span class='args'>(notes)</span>
+            <span class='block'></span>
+          </span>
+        
+        
+      </th>
+      <td class="docstring">
+        
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        
+          <span class='overload'>
+            <span class='name'><a href="#clear-instance_method" title="#clear">#clear</a></span><span class='args'></span>
+            <span class='block'></span>
+          </span>
+        
+        
+      </th>
+      <td class="docstring">
+        
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        
+          <span class='overload'>
+            <span class='name'><a href="#dup-instance_method" title="#dup">#dup</a></span><span class='args'></span>
+            <span class='block'></span>
+          </span>
+        
+        
+      </th>
+      <td class="docstring">
+        
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        
+          <span class='overload'>
+            <span class='name'><a href="#to_s-instance_method" title="#to_s">#to_s</a></span><span class='args'></span>
+            <span class='block'></span>
+          </span>
+        
+        
+      </th>
+      <td class="docstring">
+        
+        
+      </td>
+    </tr>
+  
+</table>
+
+  </div>
+<div class="section methoddetails instance public">
+  <h1>Public Instance Method Details</h1>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>&lt;&lt;</h3>
+</div><div id="<<-instance_method" class="section method">
+  <div class="details_title">
+    <div class='section methodsignature'>
+    <tt class='def'>
+      <span class='visibility'>public</span>
+      <span class='return_types'></span>
+      <span class='name'><<</span><span class='args'>(notes)</span>
+      <span class='block'></span>
+    </tt>
+  </div>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+22
+23
+24
+25
+26</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/score.rb', line 22</span>
+
+<span class='def def kw'>def</span> <span class='lshft op'>&lt;&lt;</span><span class='lparen token'>(</span><span class='notes identifier id'>notes</span><span class='rparen token'>)</span>
+  <span class='notes identifier id'>notes</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='note identifier id'>note</span><span class='bitor op'>|</span> 
+    <span class='@notes ivar id'>@notes</span> <span class='lshft op'>&lt;&lt;</span> <span class='note identifier id'>note</span><span class='dot token'>.</span><span class='dup identifier id'>dup</span>
+  <span class='end end kw'>end</span>    
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>clear</h3>
+</div><div id="clear-instance_method" class="section method">
+  <div class="details_title">
+    <div class='section methodsignature'>
+    <tt class='def'>
+      <span class='visibility'>public</span>
+      <span class='return_types'></span>
+      <span class='name'>clear</span><span class='args'></span>
+      <span class='block'></span>
+    </tt>
+  </div>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+49
+50
+51
+52</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/score.rb', line 49</span>
+
+<span class='def def kw'>def</span> <span class='clear identifier id'>clear</span>
+  <span class='@notes ivar id'>@notes</span> <span class='assign token'>=</span> <span class='lbrack token'>[</span><span class='rbrack token'>]</span>
+  <span class='@score_attrs ivar id'>@score_attrs</span> <span class='assign token'>=</span> <span class='lbrack token'>[</span><span class='rbrack token'>]</span>  
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>dup</h3>
+</div><div id="dup-instance_method" class="section method">
+  <div class="details_title">
+    <div class='section methodsignature'>
+    <tt class='def'>
+      <span class='visibility'>public</span>
+      <span class='return_types'></span>
+      <span class='name'>dup</span><span class='args'></span>
+      <span class='block'></span>
+    </tt>
+  </div>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/score.rb', line 54</span>
+
+<span class='def def kw'>def</span> <span class='dup identifier id'>dup</span>
+  <span class='ret identifier id'>ret</span> <span class='assign token'>=</span> <span class='Score constant id'>Score</span><span class='dot token'>.</span><span class='new identifier id'>new</span>
+  <span class='ret identifier id'>ret</span><span class='dot token'>.</span><span class='name identifier id'>name</span> <span class='assign token'>=</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='name identifier id'>name</span>
+  <span class='self self kw'>self</span><span class='dot token'>.</span><span class='notes identifier id'>notes</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='lbrace token'>{</span><span class='bitor op'>|</span><span class='note identifier id'>note</span><span class='bitor op'>|</span> <span class='ret identifier id'>ret</span><span class='dot token'>.</span><span class='notes identifier id'>notes</span><span class='dot token'>.</span><span class='push identifier id'>push</span><span class='lparen token'>(</span><span class='note identifier id'>note</span><span class='dot token'>.</span><span class='dup identifier id'>dup</span><span class='rparen token'>)</span><span class='rbrace token'>}</span>    
+  <span class='@score_attrs ivar id'>@score_attrs</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='attr identifier id'>attr</span><span class='bitor op'>|</span>
+    <span class='val identifier id'>val</span> <span class='assign token'>=</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='send identifier id'>send</span><span class='lparen token'>(</span><span class='attr identifier id'>attr</span><span class='dot token'>.</span><span class='to_sym identifier id'>to_sym</span><span class='rparen token'>)</span>
+    <span class='ret identifier id'>ret</span><span class='dot token'>.</span><span class='method_missing identifier id'>method_missing</span><span class='lparen token'>(</span><span class='attr identifier id'>attr</span><span class='comma token'>,</span> <span class='val identifier id'>val</span><span class='rparen token'>)</span>
+  <span class='end end kw'>end</span>
+  <span class='ret identifier id'>ret</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>to_s</h3>
+</div><div id="to_s-instance_method" class="section method">
+  <div class="details_title">
+    <div class='section methodsignature'>
+    <tt class='def'>
+      <span class='visibility'>public</span>
+      <span class='return_types'></span>
+      <span class='name'>to_s</span><span class='args'></span>
+      <span class='block'></span>
+    </tt>
+  </div>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+65
+66
+67
+68
+69
+70
+71</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/score.rb', line 65</span>
+
+<span class='def def kw'>def</span> <span class='to_s identifier id'>to_s</span>
+  <span class='s identifier id'>s</span> <span class='assign token'>=</span> <span class='string val'>''</span>
+  <span class='@notes ivar id'>@notes</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='note identifier id'>note</span><span class='bitor op'>|</span>    
+    <span class='s identifier id'>s</span> <span class='lshft op'>&lt;&lt;</span> <span class='lparen token'>(</span><span class='note identifier id'>note</span><span class='dot token'>.</span><span class='to_s identifier id'>to_s</span> <span class='plus op'>+</span> <span class='string val'>&quot;\n&quot;</span><span class='rparen token'>)</span>
+  <span class='end end kw'>end</span>
+  <span class='s identifier id'>s</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+</div>
+  </div>
+
+</div>
+    </div>
+    <div id="yard_info">
+  Generated on Wednesday, August 12 2009 at  by 
+  <abbr class="yard" title="Yay! A Ruby Documentation Tool"><a href="http://yard.soen.ca">YARD</a></abbr> 
+  0.2.3.3 (ruby-1.8.6).
+</div>
+
+  </body>
+</html>

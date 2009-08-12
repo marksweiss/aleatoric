@@ -1,0 +1,4236 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+  <head>
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" href="../style.css" type="text/css" charset="utf-8" />
+<link rel="stylesheet" href="../custom.css" type="text/css" charset="utf-8" />
+<link rel="stylesheet" href="../syntax_highlight.css" type="text/css" charset="utf-8" />
+
+    <script src="../jquery.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../app.js" type="text/javascript" charset="utf-8"></script>
+    <title>Class: Aleatoric::Player</title>
+  </head>
+  <body>
+    <div id="content">
+      <div class="section class Aleatoric_Player">
+  <h1 class="title">Class: Aleatoric::Player</h1>
+  <div class="section inheritance">
+  <ul>
+  <li><a href="Score.html" title="Aleatoric::Score">Aleatoric::Score</a></li><ul><li>Aleatoric::Player</li>
+  </ul></ul>
+</div><div class="section docstring">
+  <p>
+Player has a score of notes that it is currently choosing to play from.
+Player tests pre-play hooks for each note for each note property and
+applies result to each note before playing it. Player tests post-play hooks
+for each note for each note property and applies result to each note after
+playing it. Hooks may manipulate Player internal state based on the
+available methods: #playing?, #improvising? Hooks may use the #set_state
+and #get_state methods as a key/value &quot;property bag&quot; to store and
+retrieve data as needed. This lets, for example, preplay hooks leave state
+to be tested and set by postplay hooks, and vice versa.
+</p>
+
+</div><div class="section attributes">
+  <h1>Attributes</h1>
+
+  
+    <div class="instance">
+      <h2>Instance Attributes</h2>
+      <table>
+      
+        
+        <tr class="">
+          <th class='signature'>
+            <span class='name'>ensemble</span>
+          </td>
+          <td class="readwrite">
+            [<span id='ensemble-instance_method'>R</span><span id='ensemble=-instance_method'>W</span>] 
+          </td>
+          <td class="visibility">
+            public
+          </td>
+          <td class="docstring">
+            <p>
+Sets the attribute <tt>ensemble</tt>.
+</p>
+
+            
+          </td>
+        </tr>
+        
+      
+        
+        <tr class="">
+          <th class='signature'>
+            <span class='name'>improvising_hooks_ordered_names</span>
+          </td>
+          <td class="readwrite">
+            [<span id='improvising_hooks_ordered_names-instance_method'>R</span><span id='improvising_hooks_ordered_names=-instance_method'>W</span>] 
+          </td>
+          <td class="visibility">
+            public
+          </td>
+          <td class="docstring">
+            <p>
+Sets the attribute <tt>improvising_hooks_ordered_names</tt>.
+</p>
+
+            
+          </td>
+        </tr>
+        
+      
+        
+        <tr class="">
+          <th class='signature'>
+            <span class='name'>improvising_hooks</span>
+          </td>
+          <td class="readwrite">
+            [<span id='improvising_hooks-instance_method'>R</span><span id='improvising_hooks=-instance_method'>W</span>] 
+          </td>
+          <td class="visibility">
+            public
+          </td>
+          <td class="docstring">
+            <p>
+Sets the attribute <tt>improvising_hooks</tt>.
+</p>
+
+            
+          </td>
+        </tr>
+        
+      
+        
+        <tr class="">
+          <th class='signature'>
+            <span class='name'>is_improvising</span>
+          </td>
+          <td class="readwrite">
+            [<span id='is_improvising-instance_method'>R</span><span id='is_improvising=-instance_method'>W</span>] 
+          </td>
+          <td class="visibility">
+            public
+          </td>
+          <td class="docstring">
+            <p>
+Sets the attribute <tt>is_improvising</tt>.
+</p>
+
+            
+          </td>
+        </tr>
+        
+      
+        
+        <tr class="">
+          <th class='signature'>
+            <span class='name'>is_playing</span>
+          </td>
+          <td class="readwrite">
+            [<span id='is_playing-instance_method'>R</span><span id='is_playing=-instance_method'>W</span>] 
+          </td>
+          <td class="visibility">
+            public
+          </td>
+          <td class="docstring">
+            <p>
+Sets the attribute <tt>is_playing</tt>.
+</p>
+
+            
+          </td>
+        </tr>
+        
+      
+        
+        <tr class="">
+          <th class='signature'>
+            <span class='name'>name</span>
+          </td>
+          <td class="readwrite">
+            [<span id='name-instance_method'>R</span><span id='name=-instance_method'>W</span>] 
+          </td>
+          <td class="visibility">
+            public
+          </td>
+          <td class="docstring">
+            <p>
+Sets the attribute <tt>name</tt>.
+</p>
+
+            
+          </td>
+        </tr>
+        
+      
+        
+        <tr class="">
+          <th class='signature'>
+            <span class='name'>out_notes</span>
+          </td>
+          <td class="readwrite">
+            [<span id='out_notes-instance_method'>R</span><span id='out_notes=-instance_method'>W</span>] 
+          </td>
+          <td class="visibility">
+            public
+          </td>
+          <td class="docstring">
+            <p>
+Sets the attribute <tt>out_notes</tt>.
+</p>
+
+            
+          </td>
+        </tr>
+        
+      
+        
+        <tr class="">
+          <th class='signature'>
+            <span class='name'>postplay_hooks_ordered_names</span>
+          </td>
+          <td class="readwrite">
+            [<span id='postplay_hooks_ordered_names-instance_method'>R</span><span id='postplay_hooks_ordered_names=-instance_method'>W</span>] 
+          </td>
+          <td class="visibility">
+            public
+          </td>
+          <td class="docstring">
+            <p>
+Sets the attribute <tt>postplay_hooks_ordered_names</tt>.
+</p>
+
+            
+          </td>
+        </tr>
+        
+      
+        
+        <tr class="">
+          <th class='signature'>
+            <span class='name'>postplay_hooks</span>
+          </td>
+          <td class="readwrite">
+            [<span id='postplay_hooks-instance_method'>R</span><span id='postplay_hooks=-instance_method'>W</span>] 
+          </td>
+          <td class="visibility">
+            public
+          </td>
+          <td class="docstring">
+            <p>
+Sets the attribute <tt>postplay_hooks</tt>.
+</p>
+
+            
+          </td>
+        </tr>
+        
+      
+        
+        <tr class="">
+          <th class='signature'>
+            <span class='name'>preplay_hooks_ordered_names</span>
+          </td>
+          <td class="readwrite">
+            [<span id='preplay_hooks_ordered_names-instance_method'>R</span><span id='preplay_hooks_ordered_names=-instance_method'>W</span>] 
+          </td>
+          <td class="visibility">
+            public
+          </td>
+          <td class="docstring">
+            <p>
+Sets the attribute <tt>preplay_hooks_ordered_names</tt>.
+</p>
+
+            
+          </td>
+        </tr>
+        
+      
+        
+        <tr class="">
+          <th class='signature'>
+            <span class='name'>preplay_hooks</span>
+          </td>
+          <td class="readwrite">
+            [<span id='preplay_hooks-instance_method'>R</span><span id='preplay_hooks=-instance_method'>W</span>] 
+          </td>
+          <td class="visibility">
+            public
+          </td>
+          <td class="docstring">
+            <p>
+Sets the attribute <tt>preplay_hooks</tt>.
+</p>
+
+            
+          </td>
+        </tr>
+        
+      
+        
+        <tr class="">
+          <th class='signature'>
+            <span class='name'>scores_idx</span>
+          </td>
+          <td class="readwrite">
+            [<span id='scores_idx-instance_method'>R</span><span id='scores_idx=-instance_method'>W</span>] 
+          </td>
+          <td class="visibility">
+            public
+          </td>
+          <td class="docstring">
+            <p>
+Sets the attribute <tt>scores_idx</tt>.
+</p>
+
+            
+          </td>
+        </tr>
+        
+      
+        
+        <tr class="">
+          <th class='signature'>
+            <span class='name'>scores_ordered_names</span>
+          </td>
+          <td class="readwrite">
+            [<span id='scores_ordered_names-instance_method'>R</span><span id='scores_ordered_names=-instance_method'>W</span>] 
+          </td>
+          <td class="visibility">
+            public
+          </td>
+          <td class="docstring">
+            <p>
+Sets the attribute <tt>scores_ordered_names</tt>.
+</p>
+
+            
+          </td>
+        </tr>
+        
+      
+        
+        <tr class="">
+          <th class='signature'>
+            <span class='name'>scores</span>
+          </td>
+          <td class="readwrite">
+            [<span id='scores-instance_method'>R</span><span id='scores=-instance_method'>W</span>] 
+          </td>
+          <td class="visibility">
+            public
+          </td>
+          <td class="docstring">
+            <p>
+Sets the attribute <tt>scores</tt>.
+</p>
+
+            
+          </td>
+        </tr>
+        
+      
+        
+        <tr class="">
+          <th class='signature'>
+            <span class='name'>state</span>
+          </td>
+          <td class="readwrite">
+            [<span id='state-instance_method'>R</span><span id='state=-instance_method'>W</span>] 
+          </td>
+          <td class="visibility">
+            public
+          </td>
+          <td class="docstring">
+            <p>
+Sets the attribute <tt>state</tt>.
+</p>
+
+            
+          </td>
+        </tr>
+        
+      
+      </table>
+    </div>
+  
+</div>
+<div class="section constants">
+  
+</div><div class="section constructor">
+<h1>Constructor Summary</h1>
+  <div id="initialize-instance_method" class="section method">
+  <div class="details_title">
+    <div class='section methodsignature'>
+    <tt class='def'>
+      <span class='visibility'>public</span>
+      <span class='return_types'></span>
+      <span class='name'>initialize</span><span class='args'>(name)</span>
+      <span class='block'></span>
+    </tt>
+  </div>
+
+</div><div class="section docstring">
+  <p>
+Ctor
+</p>
+
+</div><div class="section tags">
+  <h2>Meta Tags</h2>
+  <div class="param">
+  <h3>Parameters:</h3>
+  <dl>
+  
+    
+      <dt>
+        <span class='type'>[<tt>String</tt>]</span>
+        <span class='name'>name</span>
+        
+      </dt>
+      <dd>
+        <span class='desc'><p>
+of the Player
+</p>
+</span>
+      </dd>
+    
+  
+  </dl>
+</div>
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/player.rb', line 33</span>
+
+<span class='def def kw'>def</span> <span class='initialize identifier id'>initialize</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='rparen token'>)</span>
+  <span class='@name ivar id'>@name</span> <span class='assign token'>=</span> <span class='name identifier id'>name</span>
+  <span class='@scores ivar id'>@scores</span> <span class='assign token'>=</span> <span class='lbrace token'>{</span><span class='rbrace token'>}</span>
+  <span class='@scores_idx ivar id'>@scores_idx</span> <span class='assign token'>=</span> <span class='integer val'>0</span>
+  <span class='@scores_ordered_names ivar id'>@scores_ordered_names</span> <span class='assign token'>=</span> <span class='lbrack token'>[</span><span class='rbrack token'>]</span>
+  <span class='@preplay_hooks_ordered_names ivar id'>@preplay_hooks_ordered_names</span> <span class='assign token'>=</span> <span class='lbrack token'>[</span><span class='rbrack token'>]</span>
+  <span class='@preplay_hooks ivar id'>@preplay_hooks</span> <span class='assign token'>=</span> <span class='lbrace token'>{</span><span class='rbrace token'>}</span>
+  <span class='@postplay_hooks_ordered_names ivar id'>@postplay_hooks_ordered_names</span> <span class='assign token'>=</span> <span class='lbrack token'>[</span><span class='rbrack token'>]</span>
+  <span class='@postplay_hooks ivar id'>@postplay_hooks</span> <span class='assign token'>=</span> <span class='lbrace token'>{</span><span class='rbrace token'>}</span>
+  <span class='@improvising_hooks_ordered_names ivar id'>@improvising_hooks_ordered_names</span> <span class='assign token'>=</span> <span class='lbrack token'>[</span><span class='rbrack token'>]</span>
+  <span class='@improvising_hooks ivar id'>@improvising_hooks</span> <span class='assign token'>=</span> <span class='lbrace token'>{</span><span class='rbrace token'>}</span>
+  <span class='@state ivar id'>@state</span> <span class='assign token'>=</span> <span class='lbrace token'>{</span><span class='rbrace token'>}</span>
+  <span class='@is_playing ivar id'>@is_playing</span> <span class='assign token'>=</span> <span class='true true kw'>true</span>
+  <span class='@is_improvising ivar id'>@is_improvising</span> <span class='assign token'>=</span> <span class='true true kw'>true</span>    
+  <span class='@out_notes ivar id'>@out_notes</span> <span class='assign token'>=</span> <span class='lbrack token'>[</span><span class='rbrack token'>]</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+</div><div class="section methodmissing">
+  <h1>Dynamic Method Handling</h1>
+
+  <p class="note">
+    This class handles dynamic methods through the <tt>method_missing</tt> method
+    
+      in the class <a href="Score.html" title="Aleatoric::Score">Aleatoric::Score</a>
+    
+  </p>
+
+  <div id="method_missing-instance_method" class="section method">
+  <div class="details_title">
+    <div class='section methodsignature'>
+    <tt class='def'>
+      <span class='visibility'>public</span>
+      <span class='return_types'></span>
+      <span class='name'>method_missing</span><span class='args'>(name, val)</span>
+      <span class='block'></span>
+    </tt>
+  </div>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+28
+29
+30
+31
+32</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/score.rb', line 28</span>
+
+<span class='def def kw'>def</span> <span class='method_missing identifier id'>method_missing</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='comma token'>,</span> <span class='val identifier id'>val</span><span class='rparen token'>)</span>  
+  <span class='def_accessor identifier id'>def_accessor</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='comma token'>,</span> <span class='val identifier id'>val</span><span class='rparen token'>)</span>
+  <span class='@score_attrs ivar id'>@score_attrs</span><span class='dot token'>.</span><span class='push identifier id'>push</span> <span class='name identifier id'>name</span><span class='dot token'>.</span><span class='to_sym identifier id'>to_sym</span>
+  <span class='self self kw'>self</span><span class='dot token'>.</span><span class='send identifier id'>send</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='dot token'>.</span><span class='to_sym identifier id'>to_sym</span><span class='comma token'>,</span> <span class='val identifier id'>val</span><span class='rparen token'>)</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+</div>  <div class="section visibilitygroup public">
+    <h1>Public Visibility</h1>
+      <div class="section methodsummary class public">
+    <h1>Public Class Method Summary</h1>
+<table class="summary">
+  
+    <tr>
+      <th class="signature">
+        
+          <span class='overload'>
+            <span class='name'><a href="#no_index-class_method" title="no_index">no_index</a></span><span class='args'></span>
+            <span class='block'></span>
+          </span>
+        
+        
+      </th>
+      <td class="docstring">
+        
+        
+      </td>
+    </tr>
+  
+</table>
+
+  </div>
+  <div class="section methodsummary instance public">
+    <h1>Public Instance Method Summary</h1>
+<table class="summary">
+  
+    <tr>
+      <th class="signature">
+        
+          <span class='overload'>
+            <span class='name'><a href="#add_improvising_hook-instance_method" title="#add_improvising_hook">#add_improvising_hook</a></span><span class='args'>(name, &amp;f)</span>
+            <span class='block'></span>
+          </span>
+        
+        
+          <span class='alias'>#add_improvisation_hook</span>
+        
+      </th>
+      <td class="docstring">
+        <p>
+Improvising hooks are named blocks that run, when called by name in the
+#improvise method.
+</p>
+
+        
+          <p class='returns'>
+            Returns: 
+              <span class='return_types'>
+                 <tt>self</tt>
+              </span>
+          </p>
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        
+          <span class='overload'>
+            <span class='name'><a href="#add_postplay_hook-instance_method" title="#add_postplay_hook">#add_postplay_hook</a></span><span class='args'>(name, &amp;f)</span>
+            <span class='block'></span>
+          </span>
+        
+        
+      </th>
+      <td class="docstring">
+        <p>
+Postplay hooks are named blocks that run, in the order they are registered,
+after each call to #play.
+</p>
+
+        
+          <p class='returns'>
+            Returns: 
+              <span class='return_types'>
+                 <tt>self</tt>
+              </span>
+          </p>
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        
+          <span class='overload'>
+            <span class='name'><a href="#add_preplay_hook-instance_method" title="#add_preplay_hook">#add_preplay_hook</a></span><span class='args'>(name, &amp;f)</span>
+            <span class='block'></span>
+          </span>
+        
+        
+      </th>
+      <td class="docstring">
+        <p>
+TODO add a @see below to link to documentation about preplay hooks Preplay
+hooks are named blocks that run, in the order they are registered, before
+each call to #play.
+</p>
+
+        
+          <p class='returns'>
+            Returns: 
+              <span class='return_types'>
+                 <tt>self</tt>
+              </span>
+          </p>
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        
+          <span class='overload'>
+            <span class='name'><a href="#add_score-instance_method" title="#add_score">#add_score</a></span><span class='args'>(score_name, score)</span>
+            <span class='block'></span>
+          </span>
+        
+        
+          <span class='alias'>#append_score</span>
+        
+      </th>
+      <td class="docstring">
+        <p>
+Add a score to the Player&#8217;s list of scores.
+</p>
+
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        
+          <span class='overload'>
+            <span class='name'><a href="#append_note_to_output-instance_method" title="#append_note_to_output">#append_note_to_output</a></span><span class='args'>(note)</span>
+            <span class='block'></span>
+          </span>
+        
+        
+      </th>
+      <td class="docstring">
+        <p>
+Appends a note to the current output.
+</p>
+
+        
+          <p class='returns'>
+            Returns: 
+              <span class='return_types'>
+                 <tt>self</tt>
+              </span>
+          </p>
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        
+          <span class='overload'>
+            <span class='name'><a href="#append_score_to_output-instance_method" title="#append_score_to_output">#append_score_to_output</a></span><span class='args'>(score)</span>
+            <span class='block'></span>
+          </span>
+        
+        
+      </th>
+      <td class="docstring">
+        <p>
+Appends a score to the current output.
+</p>
+
+        
+          <p class='returns'>
+            Returns: 
+              <span class='return_types'>
+                 <tt>self</tt>
+              </span>
+          </p>
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        
+          <span class='overload'>
+            <span class='name'><a href="#clear_output-instance_method" title="#clear_output">#clear_output</a></span><span class='args'></span>
+            <span class='block'></span>
+          </span>
+        
+        
+      </th>
+      <td class="docstring">
+        <p>
+Clears all notes from the output of this Player.
+</p>
+
+        
+          <p class='returns'>
+            Returns: 
+              <span class='return_types'>
+                 <tt>self</tt>
+              </span>
+          </p>
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        
+          <span class='overload'>
+            <span class='name'><a href="#clear_scores-instance_method" title="#clear_scores">#clear_scores</a></span><span class='args'></span>
+            <span class='block'></span>
+          </span>
+        
+        
+      </th>
+      <td class="docstring">
+        <p>
+Clear all scores stored by this Player.
+</p>
+
+        
+          <p class='returns'>
+            Returns: 
+              <span class='return_types'>
+                 <tt>self</tt>
+              </span>
+          </p>
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        
+          <span class='overload'>
+            <span class='name'><a href="#clear_state-instance_method" title="#clear_state">#clear_state</a></span><span class='args'></span>
+            <span class='block'></span>
+          </span>
+        
+        
+      </th>
+      <td class="docstring">
+        <p>
+Clears all key/values in the Player&#8217;s state store.
+</p>
+
+        
+          <p class='returns'>
+            Returns: 
+              <span class='return_types'>
+                 <tt>self</tt>
+              </span>
+          </p>
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        
+          <span class='overload'>
+            <span class='name'><a href="#current_score-instance_method" title="#current_score">#current_score</a></span><span class='args'></span>
+            <span class='block'></span>
+          </span>
+        
+        
+          <span class='alias'>#current_phrase</span>
+        
+      </th>
+      <td class="docstring">
+        
+        
+          <p class='returns'>
+            Returns: 
+              <span class='return_types'>
+                 <tt><a href="Score.html" title="Aleatoric::Score">Aleatoric::Score</a></tt>
+              </span>
+          </p>
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        
+          <span class='overload'>
+            <span class='name'><a href="#decrement_scores_index-instance_method" title="#decrement_scores_index">#decrement_scores_index</a></span><span class='args'></span>
+            <span class='block'></span>
+          </span>
+        
+        
+          <span class='alias'>#decrement</span>
+        
+          <span class='alias'>#dec</span>
+        
+      </th>
+      <td class="docstring">
+        <p>
+Decrements the index of the currently active scorein the ordered list of
+scores stored by this Player.
+</p>
+
+        
+          <p class='returns'>
+            Returns: 
+              <span class='return_types'>
+                 <tt>self</tt>
+              </span>
+          </p>
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        
+          <span class='overload'>
+            <span class='name'><a href="#dup-instance_method" title="#dup">#dup</a></span><span class='args'></span>
+            <span class='block'></span>
+          </span>
+        
+        
+      </th>
+      <td class="docstring">
+        <p>
+Creates and returns a deep copy of this Player, including copies of all
+Scores stored by the player (with in turn copies of the Notes it the
+Scores), and copies of all registered hooks, the same current score, and
+the values for #playing? and #improvising?.
+</p>
+
+        
+          <p class='returns'>
+            Returns: 
+              <span class='return_types'>
+                 <tt><a href="" title="Aleatoric::Player">Aleatoric::Player</a></tt>
+              </span>
+          </p>
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        
+          <span class='overload'>
+            <span class='name'><a href="#get_improvising_hook-instance_method" title="#get_improvising_hook">#get_improvising_hook</a></span><span class='args'>(name)</span>
+            <span class='block'></span>
+          </span>
+        
+        
+          <span class='alias'>#get_improvisation_hook</span>
+        
+      </th>
+      <td class="docstring">
+        
+        
+          <p class='returns'>
+            Returns: 
+              <span class='return_types'>
+                 <tt>block</tt>
+              </span>
+          </p>
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        
+          <span class='overload'>
+            <span class='name'><a href="#get_output-instance_method" title="#get_output">#get_output</a></span><span class='args'></span>
+            <span class='block'></span>
+          </span>
+        
+        
+          <span class='alias'>#output</span>
+        
+      </th>
+      <td class="docstring">
+        
+        
+          <p class='returns'>
+            Returns: 
+              <span class='return_types'>
+                 <tt><a href="Array.html" title="Array">Array</a>&lt;<a href="Note.html" title="Aleatoric::Note">Aleatoric::Note</a>></tt>
+              </span>
+          </p>
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        
+          <span class='overload'>
+            <span class='name'><a href="#get_postplay_hook-instance_method" title="#get_postplay_hook">#get_postplay_hook</a></span><span class='args'>(name)</span>
+            <span class='block'></span>
+          </span>
+        
+        
+      </th>
+      <td class="docstring">
+        
+        
+          <p class='returns'>
+            Returns: 
+              <span class='return_types'>
+                 <tt>block</tt>
+              </span>
+          </p>
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        
+          <span class='overload'>
+            <span class='name'><a href="#get_preplay_hook-instance_method" title="#get_preplay_hook">#get_preplay_hook</a></span><span class='args'>(name)</span>
+            <span class='block'></span>
+          </span>
+        
+        
+      </th>
+      <td class="docstring">
+        
+        
+          <p class='returns'>
+            Returns: 
+              <span class='return_types'>
+                 <tt>block</tt>
+              </span>
+          </p>
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        
+          <span class='overload'>
+            <span class='name'><a href="#get_state-instance_method" title="#get_state">#get_state</a></span><span class='args'>(key)</span>
+            <span class='block'></span>
+          </span>
+        
+        
+      </th>
+      <td class="docstring">
+        <p>
+Retrieves a value by keyname, serving as a generic interface for hooks to
+store state for later use.
+</p>
+
+        
+          <p class='returns'>
+            Returns: 
+              <span class='return_types'>
+                 <tt>Object</tt>
+              </span>
+          </p>
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        
+          <span class='overload'>
+            <span class='name'><a href="#improvise-instance_method" title="#improvise">#improvise</a></span><span class='args'>(name)</span>
+            <span class='block'></span>
+          </span>
+        
+        
+      </th>
+      <td class="docstring">
+        <p>
+Runs the improvisation hook registered with the name arg to generate output
+notes.
+</p>
+
+        
+          <p class='returns'>
+            Returns: 
+              <span class='return_types'>
+                 <tt><a href="Array.html" title="Array">Array</a>&lt;<a href="Note.html" title="Aleatoric::Note">Aleatoric::Note</a>></tt>
+              </span>
+          </p>
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        
+          <span class='overload'>
+            <span class='name'><a href="#improvising%3F-instance_method" title="#improvising?">#improvising?</a></span><span class='args'>(is_improvising = nil)</span>
+            <span class='block'></span>
+          </span>
+        
+        
+      </th>
+      <td class="docstring">
+        <p>
+Test set whether the player is enabled to improvise.
+</p>
+
+        
+          <p class='returns'>
+            Returns: 
+              <span class='return_types'>
+                 <tt>true</tt>
+              </span>
+          </p>
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        
+          <span class='overload'>
+            <span class='name'><a href="#increment_scores_index-instance_method" title="#increment_scores_index">#increment_scores_index</a></span><span class='args'></span>
+            <span class='block'></span>
+          </span>
+        
+        
+          <span class='alias'>#inc</span>
+        
+          <span class='alias'>#increment</span>
+        
+      </th>
+      <td class="docstring">
+        <p>
+Increments the index of the currently active scorein the ordered list of
+scores stored by this Player.
+</p>
+
+        
+          <p class='returns'>
+            Returns: 
+              <span class='return_types'>
+                 <tt>self</tt>
+              </span>
+          </p>
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        
+          <span class='overload'>
+            <span class='name'><a href="#output_empty%3F-instance_method" title="#output_empty?">#output_empty?</a></span><span class='args'></span>
+            <span class='block'></span>
+          </span>
+        
+        
+      </th>
+      <td class="docstring">
+        <p>
+Tests whether there is any output, that is, any notes in the current
+output.
+</p>
+
+        
+          <p class='returns'>
+            Returns: 
+              <span class='return_types'>
+                 <tt>true</tt>
+              </span>
+          </p>
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        
+          <span class='overload'>
+            <span class='name'><a href="#play-instance_method" title="#play">#play</a></span><span class='args'>(name = nil, &amp;blk)</span>
+            <span class='block'></span>
+          </span>
+        
+        
+      </th>
+      <td class="docstring">
+        <p>
+Plays the currently active score, which means, precisely:
+</p>
+<ul>
+<li>set current score to the name argument passed, if name is not nil
+
+</li>
+<li>set current score to self&#8217;s current_score if name arg is nil
+
+</li>
+<li>make a copy of the current score so as to not modify the object held by
+self
+
+</li>
+<li>pass the current score copy as input to each preplay hook, recieve the
+modified
+
+</li>
+</ul>
+<p>
+score from the hook in return, and pass this to the next hook
+</p>
+<ul>
+<li>run any block on the resulting score if one #block_given? is true
+
+</li>
+<li>add all notes in the resulting score to the output notes for self
+
+</li>
+<li>run any postplay hooks.
+
+</li>
+</ul>
+
+        
+          <p class='returns'>
+            Returns: 
+              <span class='return_types'>
+                 <tt><a href="Array.html" title="Array">Array</a>&lt;<a href="Note.html" title="Aleatoric::Note">Aleatoric::Note</a>></tt>
+              </span>
+          </p>
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        
+          <span class='overload'>
+            <span class='name'><a href="#playing%3F-instance_method" title="#playing?">#playing?</a></span><span class='args'>(is_playing = nil)</span>
+            <span class='block'></span>
+          </span>
+        
+        
+      </th>
+      <td class="docstring">
+        <p>
+Test set whether the player is enabled to play.
+</p>
+
+        
+          <p class='returns'>
+            Returns: 
+              <span class='return_types'>
+                 <tt>true</tt>
+              </span>
+          </p>
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        
+          <span class='overload'>
+            <span class='name'><a href="#remove_improvising_hook-instance_method" title="#remove_improvising_hook">#remove_improvising_hook</a></span><span class='args'>(name)</span>
+            <span class='block'></span>
+          </span>
+        
+        
+          <span class='alias'>#remove_improvisation_hook</span>
+        
+      </th>
+      <td class="docstring">
+        
+        
+          <p class='returns'>
+            Returns: 
+              <span class='return_types'>
+                 <tt>self</tt>
+              </span>
+          </p>
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        
+          <span class='overload'>
+            <span class='name'><a href="#remove_postplay_hook-instance_method" title="#remove_postplay_hook">#remove_postplay_hook</a></span><span class='args'>(name)</span>
+            <span class='block'></span>
+          </span>
+        
+        
+      </th>
+      <td class="docstring">
+        
+        
+          <p class='returns'>
+            Returns: 
+              <span class='return_types'>
+                 <tt>self</tt>
+              </span>
+          </p>
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        
+          <span class='overload'>
+            <span class='name'><a href="#remove_preplay_hook-instance_method" title="#remove_preplay_hook">#remove_preplay_hook</a></span><span class='args'>(name)</span>
+            <span class='block'></span>
+          </span>
+        
+        
+      </th>
+      <td class="docstring">
+        
+        
+          <p class='returns'>
+            Returns: 
+              <span class='return_types'>
+                 <tt>self</tt>
+              </span>
+          </p>
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        
+          <span class='overload'>
+            <span class='name'><a href="#remove_score-instance_method" title="#remove_score">#remove_score</a></span><span class='args'>(score_name)</span>
+            <span class='block'></span>
+          </span>
+        
+        
+          <span class='alias'>#delete_score</span>
+        
+      </th>
+      <td class="docstring">
+        <p>
+Remove a score from the Player&#8217;s list of scores.
+</p>
+
+        
+          <p class='returns'>
+            Returns: 
+              <span class='return_types'>
+                 <tt>self</tt>
+              </span>
+          </p>
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        
+          <span class='overload'>
+            <span class='name'><a href="#scores_empty%3F-instance_method" title="#scores_empty?">#scores_empty?</a></span><span class='args'></span>
+            <span class='block'></span>
+          </span>
+        
+        
+      </th>
+      <td class="docstring">
+        
+        
+          <p class='returns'>
+            Returns: 
+              <span class='return_types'>
+                 <tt>true</tt>
+              </span>
+          </p>
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        
+          <span class='overload'>
+            <span class='name'><a href="#scores_index-instance_method" title="#scores_index">#scores_index</a></span><span class='args'></span>
+            <span class='block'></span>
+          </span>
+        
+        
+          <span class='alias'>#phrases_index</span>
+        
+      </th>
+      <td class="docstring">
+        <p>
+Clients can call #play by passing a score name, but they can also use the
+#increment_scores_index and decrement .
+</p>
+
+        
+          <p class='returns'>
+            Returns: 
+              <span class='return_types'>
+                 <tt>Integer</tt>
+              </span>
+          </p>
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        
+          <span class='overload'>
+            <span class='name'><a href="#scores_length-instance_method" title="#scores_length">#scores_length</a></span><span class='args'></span>
+            <span class='block'></span>
+          </span>
+        
+        
+          <span class='alias'>#scores_size</span>
+        
+      </th>
+      <td class="docstring">
+        <p>
+Clients can call #play by passing a score name, but they can also use the
+#increment_scores_index and decrement .
+</p>
+
+        
+          <p class='returns'>
+            Returns: 
+              <span class='return_types'>
+                 <tt>Integer</tt>
+              </span>
+          </p>
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        
+          <span class='overload'>
+            <span class='name'><a href="#set_output_notes-instance_method" title="#set_output_notes">#set_output_notes</a></span><span class='args'>(notes)</span>
+            <span class='block'></span>
+          </span>
+        
+        
+          <span class='alias'>#set_output</span>
+        
+      </th>
+      <td class="docstring">
+        <p>
+Replaces all current output notes for this Player with the array of notes
+passed in.
+</p>
+
+        
+          <p class='returns'>
+            Returns: 
+              <span class='return_types'>
+                 <tt>self</tt>
+              </span>
+          </p>
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        
+          <span class='overload'>
+            <span class='name'><a href="#set_score-instance_method" title="#set_score">#set_score</a></span><span class='args'>(score_name, score)</span>
+            <span class='block'></span>
+          </span>
+        
+        
+      </th>
+      <td class="docstring">
+        <p>
+Replace (update) a score in the Player&#8217;s list of scores.
+</p>
+
+        
+          <p class='returns'>
+            Returns: 
+              <span class='return_types'>
+                 <tt>self</tt>
+              </span>
+          </p>
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        
+          <span class='overload'>
+            <span class='name'><a href="#set_state-instance_method" title="#set_state">#set_state</a></span><span class='args'>(key, val)</span>
+            <span class='block'></span>
+          </span>
+        
+        
+      </th>
+      <td class="docstring">
+        <p>
+Store a value by keyname, serving as a generic interface for hooks to store
+state for later use.
+</p>
+
+        
+          <p class='returns'>
+            Returns: 
+              <span class='return_types'>
+                 <tt>self</tt>
+              </span>
+          </p>
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        
+          <span class='overload'>
+            <span class='name'><a href="#state_keys-instance_method" title="#state_keys">#state_keys</a></span><span class='args'></span>
+            <span class='block'></span>
+          </span>
+        
+        
+      </th>
+      <td class="docstring">
+        <p>
+Returns the keys in the Player&#8217;s state store.
+</p>
+
+        
+      </td>
+    </tr>
+  
+</table>
+<div class="inherited">
+  
+  <div>
+    <h1>Public Instance Methods Inherited from <a href="Score.html" title="Aleatoric::Score">Aleatoric::Score</a></h1>
+    <p><span class='name'><a href="Score.html#%3C%3C-instance_method" title="&lt;&lt;">&lt;&lt;</a></span>, <span class='name'><a href="Score.html#clear-instance_method" title="clear">clear</a></span>, <span class='name'><a href="Score.html#to_s-instance_method" title="to_s">to_s</a></span></p>
+  </div>
+  
+</div>
+<div class="clear"></div><div class="included">
+  
+  <div>
+    <h1>Public Instance Methods Included from <a href="Score.html" title="Aleatoric::Score">Aleatoric::Score</a></h1>
+    <p><span class='name'><a href="Score.html#%3C%3C-instance_method" title="&lt;&lt;">&lt;&lt;</a></span>, <span class='name'><a href="Score.html#clear-instance_method" title="clear">clear</a></span>, <span class='name'><a href="Score.html#to_s-instance_method" title="to_s">to_s</a></span></p>
+  </div>
+  
+</div>
+<div class="clear"></div>
+  </div>
+<div class="section methoddetails class public">
+  <h1>Public Class Method Details</h1>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>no_index</h3>
+</div><div id="no_index-class_method" class="section method">
+  <div class="details_title">
+    <div class='section methodsignature'>
+    <tt class='def'>
+      <span class='visibility'>public</span>
+      <span class='return_types'></span>
+      <span class='name'>no_index</span><span class='args'></span>
+      <span class='block'></span>
+    </tt>
+  </div>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+27
+28
+29</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/player.rb', line 27</span>
+
+<span class='def def kw'>def</span> <span class='Player constant id'>Player</span><span class='dot token'>.</span><span class='no_index identifier id'>no_index</span>
+  <span class='@@NO_INDEX ivar id'>@@NO_INDEX</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+</div><div class="section methoddetails instance public">
+  <h1>Public Instance Method Details</h1>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>add_improvising_hook</h3>
+</div><div id="add_improvising_hook-instance_method" class="section method">
+  <div class="details_title">
+    <div class='section methodsignature'>
+    <tt class='def'>
+      <span class='visibility'>public</span>
+      <span class='return_types'><tt>self</tt></span>
+      <span class='name'>add_improvising_hook</span><span class='args'>(name, &amp;f)</span>
+      <span class='block'></span>
+    </tt>
+  </div>
+<p class="aliases">
+  <span class="aka">Also known as:</span>
+  
+    <tt id="add_improvisation_hook-instance_method">add_improvisation_hook</tt>
+  
+</p>
+</div><div class="section docstring">
+  <p>
+Improvising hooks are named blocks that run, when called by name in the
+#improvise method. They are responsible for taking no arguments and for
+returning an Array of Aleatoric::Note&#8217;s
+</p>
+
+</div><div class="section tags">
+  <h2>Meta Tags</h2>
+  <div class="return">
+  <h3>Returns:</h3>
+  <dl>
+  
+    <dt>
+      
+        <span class='type'>[<tt>self</tt>]</span>
+      
+      
+        <span class='name'></span>
+      
+      
+    </dt>
+    <dd>
+      <span class='desc'></span>
+    </dd>
+  
+  </dl>
+</div>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+296
+297
+298
+299
+300</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/player.rb', line 296</span>
+
+<span class='def def kw'>def</span> <span class='add_improvising_hook identifier id'>add_improvising_hook</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='comma token'>,</span> <span class='bitand op'>&amp;</span><span class='f identifier id'>f</span><span class='rparen token'>)</span>  
+  <span class='@improvising_hooks_ordered_names ivar id'>@improvising_hooks_ordered_names</span> <span class='lshft op'>&lt;&lt;</span> <span class='name identifier id'>name</span>
+  <span class='@improvising_hooks ivar id'>@improvising_hooks</span><span class='lbrack token'>[</span><span class='name identifier id'>name</span><span class='rbrack token'>]</span> <span class='assign token'>=</span> <span class='f identifier id'>f</span>
+  <span class='self self kw'>self</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>add_postplay_hook</h3>
+</div><div id="add_postplay_hook-instance_method" class="section method">
+  <div class="details_title">
+    <div class='section methodsignature'>
+    <tt class='def'>
+      <span class='visibility'>public</span>
+      <span class='return_types'><tt>self</tt></span>
+      <span class='name'>add_postplay_hook</span><span class='args'>(name, &amp;f)</span>
+      <span class='block'></span>
+    </tt>
+  </div>
+
+</div><div class="section docstring">
+  <p>
+Postplay hooks are named blocks that run, in the order they are registered,
+after each call to #play. They are responsible for taking a reference to
+the Player in which the hook is registered and returning nil.
+</p>
+
+</div><div class="section tags">
+  <h2>Meta Tags</h2>
+  <div class="return">
+  <h3>Returns:</h3>
+  <dl>
+  
+    <dt>
+      
+        <span class='type'>[<tt>self</tt>]</span>
+      
+      
+        <span class='name'></span>
+      
+      
+    </dt>
+    <dd>
+      <span class='desc'></span>
+    </dd>
+  
+  </dl>
+</div>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+271
+272
+273
+274
+275</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/player.rb', line 271</span>
+
+<span class='def def kw'>def</span> <span class='add_postplay_hook identifier id'>add_postplay_hook</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='comma token'>,</span> <span class='bitand op'>&amp;</span><span class='f identifier id'>f</span><span class='rparen token'>)</span>
+  <span class='@postplay_hooks_ordered_names ivar id'>@postplay_hooks_ordered_names</span> <span class='lshft op'>&lt;&lt;</span> <span class='name identifier id'>name</span>
+  <span class='@postplay_hooks ivar id'>@postplay_hooks</span><span class='lbrack token'>[</span><span class='name identifier id'>name</span><span class='rbrack token'>]</span> <span class='assign token'>=</span> <span class='f identifier id'>f</span>    
+  <span class='self self kw'>self</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>add_preplay_hook</h3>
+</div><div id="add_preplay_hook-instance_method" class="section method">
+  <div class="details_title">
+    <div class='section methodsignature'>
+    <tt class='def'>
+      <span class='visibility'>public</span>
+      <span class='return_types'><tt>self</tt></span>
+      <span class='name'>add_preplay_hook</span><span class='args'>(name, &amp;f)</span>
+      <span class='block'></span>
+    </tt>
+  </div>
+
+</div><div class="section docstring">
+  <p>
+TODO add a @see below to link to documentation about preplay hooks Preplay
+hooks are named blocks that run, in the order they are registered, before
+each call to #play. They are responsible for taking a reference to the
+Player in which the hook is registered and an Aleatoric::Score object as
+input and returning an Aleatoric::Score.
+</p>
+
+</div><div class="section tags">
+  <h2>Meta Tags</h2>
+  <div class="return">
+  <h3>Returns:</h3>
+  <dl>
+  
+    <dt>
+      
+        <span class='type'>[<tt>self</tt>]</span>
+      
+      
+        <span class='name'></span>
+      
+      
+    </dt>
+    <dd>
+      <span class='desc'></span>
+    </dd>
+  
+  </dl>
+</div>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+245
+246
+247
+248
+249</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/player.rb', line 245</span>
+
+<span class='def def kw'>def</span> <span class='add_preplay_hook identifier id'>add_preplay_hook</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='comma token'>,</span> <span class='bitand op'>&amp;</span><span class='f identifier id'>f</span><span class='rparen token'>)</span>
+  <span class='@preplay_hooks_ordered_names ivar id'>@preplay_hooks_ordered_names</span> <span class='lshft op'>&lt;&lt;</span> <span class='name identifier id'>name</span>
+  <span class='@preplay_hooks ivar id'>@preplay_hooks</span><span class='lbrack token'>[</span><span class='name identifier id'>name</span><span class='rbrack token'>]</span> <span class='assign token'>=</span> <span class='f identifier id'>f</span>    
+  <span class='self self kw'>self</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>add_score</h3>
+</div><div id="add_score-instance_method" class="section method">
+  <div class="details_title">
+    <div class='section methodsignature'>
+    <tt class='def'>
+      <span class='visibility'>public</span>
+      <span class='return_types'></span>
+      <span class='name'>add_score</span><span class='args'>(score_name, score)</span>
+      <span class='block'></span>
+    </tt>
+  </div>
+<p class="aliases">
+  <span class="aka">Also known as:</span>
+  
+    <tt id="append_score-instance_method">append_score</tt>
+  
+</p>
+</div><div class="section docstring">
+  <p>
+Add a score to the Player&#8217;s list of scores. Note the scores are added
+by key but also stored in order they are added. Clients can call #play by
+passing a score name, but they can also use the #increment_scores_index and
+decrement &#8230; methods along with #scores_length to iterate the scores
+in order and play them.
+</p>
+
+</div><div class="section tags">
+  <h2>Meta Tags</h2>
+  
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+56
+57
+58
+59
+60
+61
+62</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/player.rb', line 56</span>
+
+<span class='def def kw'>def</span> <span class='add_score identifier id'>add_score</span><span class='lparen token'>(</span><span class='score_name identifier id'>score_name</span><span class='comma token'>,</span> <span class='score identifier id'>score</span><span class='rparen token'>)</span>
+  <span class='@scores ivar id'>@scores</span><span class='lbrack token'>[</span><span class='score_name identifier id'>score_name</span><span class='rbrack token'>]</span> <span class='assign token'>=</span> <span class='score identifier id'>score</span>
+  <span class='@scores_ordered_names ivar id'>@scores_ordered_names</span> <span class='lshft op'>&lt;&lt;</span> <span class='score_name identifier id'>score_name</span>
+  <span class='comment val'># If there were no scores, set index to new first score</span>
+  <span class='@scores_idx ivar id'>@scores_idx</span> <span class='assign token'>=</span> <span class='integer val'>0</span> <span class='if if_mod kw'>if</span> <span class='@scores_idx ivar id'>@scores_idx</span> <span class='eq op'>==</span> <span class='integer val'>-1</span>
+  <span class='self self kw'>self</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>append_note_to_output</h3>
+</div><div id="append_note_to_output-instance_method" class="section method">
+  <div class="details_title">
+    <div class='section methodsignature'>
+    <tt class='def'>
+      <span class='visibility'>public</span>
+      <span class='return_types'><tt>self</tt></span>
+      <span class='name'>append_note_to_output</span><span class='args'>(note)</span>
+      <span class='block'></span>
+    </tt>
+  </div>
+
+</div><div class="section docstring">
+  <p>
+Appends a note to the current output
+</p>
+
+</div><div class="section tags">
+  <h2>Meta Tags</h2>
+  <div class="return">
+  <h3>Returns:</h3>
+  <dl>
+  
+    <dt>
+      
+        <span class='type'>[<tt>self</tt>]</span>
+      
+      
+        <span class='name'></span>
+      
+      
+    </dt>
+    <dd>
+      <span class='desc'></span>
+    </dd>
+  
+  </dl>
+</div>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+392
+393
+394
+395</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/player.rb', line 392</span>
+
+<span class='def def kw'>def</span> <span class='append_note_to_output identifier id'>append_note_to_output</span><span class='lparen token'>(</span><span class='note identifier id'>note</span><span class='rparen token'>)</span>
+  <span class='@out_notes ivar id'>@out_notes</span> <span class='lshft op'>&lt;&lt;</span> <span class='note identifier id'>note</span><span class='dot token'>.</span><span class='dup identifier id'>dup</span>
+  <span class='self self kw'>self</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>append_score_to_output</h3>
+</div><div id="append_score_to_output-instance_method" class="section method">
+  <div class="details_title">
+    <div class='section methodsignature'>
+    <tt class='def'>
+      <span class='visibility'>public</span>
+      <span class='return_types'><tt>self</tt></span>
+      <span class='name'>append_score_to_output</span><span class='args'>(score)</span>
+      <span class='block'></span>
+    </tt>
+  </div>
+
+</div><div class="section docstring">
+  <p>
+Appends a score to the current output
+</p>
+
+</div><div class="section tags">
+  <h2>Meta Tags</h2>
+  <div class="return">
+  <h3>Returns:</h3>
+  <dl>
+  
+    <dt>
+      
+        <span class='type'>[<tt>self</tt>]</span>
+      
+      
+        <span class='name'></span>
+      
+      
+    </dt>
+    <dd>
+      <span class='desc'></span>
+    </dd>
+  
+  </dl>
+</div>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+400
+401
+402
+403</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/player.rb', line 400</span>
+
+<span class='def def kw'>def</span> <span class='append_score_to_output identifier id'>append_score_to_output</span><span class='lparen token'>(</span><span class='score identifier id'>score</span><span class='rparen token'>)</span>
+  <span class='score identifier id'>score</span><span class='dot token'>.</span><span class='notes identifier id'>notes</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='lbrace token'>{</span><span class='bitor op'>|</span><span class='note identifier id'>note</span><span class='bitor op'>|</span> <span class='@out_notes ivar id'>@out_notes</span> <span class='lshft op'>&lt;&lt;</span> <span class='note identifier id'>note</span><span class='dot token'>.</span><span class='dup identifier id'>dup</span><span class='rbrace token'>}</span>
+  <span class='self self kw'>self</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>clear_output</h3>
+</div><div id="clear_output-instance_method" class="section method">
+  <div class="details_title">
+    <div class='section methodsignature'>
+    <tt class='def'>
+      <span class='visibility'>public</span>
+      <span class='return_types'><tt>self</tt></span>
+      <span class='name'>clear_output</span><span class='args'></span>
+      <span class='block'></span>
+    </tt>
+  </div>
+
+</div><div class="section docstring">
+  <p>
+Clears all notes from the output of this Player
+</p>
+
+</div><div class="section tags">
+  <h2>Meta Tags</h2>
+  <div class="return">
+  <h3>Returns:</h3>
+  <dl>
+  
+    <dt>
+      
+        <span class='type'>[<tt>self</tt>]</span>
+      
+      
+        <span class='name'></span>
+      
+      
+    </dt>
+    <dd>
+      <span class='desc'></span>
+    </dd>
+  
+  </dl>
+</div>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+413
+414
+415
+416</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/player.rb', line 413</span>
+
+<span class='def def kw'>def</span> <span class='clear_output identifier id'>clear_output</span>
+  <span class='@out_notes ivar id'>@out_notes</span><span class='dot token'>.</span><span class='clear identifier id'>clear</span>
+  <span class='self self kw'>self</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>clear_scores</h3>
+</div><div id="clear_scores-instance_method" class="section method">
+  <div class="details_title">
+    <div class='section methodsignature'>
+    <tt class='def'>
+      <span class='visibility'>public</span>
+      <span class='return_types'><tt>self</tt></span>
+      <span class='name'>clear_scores</span><span class='args'></span>
+      <span class='block'></span>
+    </tt>
+  </div>
+
+</div><div class="section docstring">
+  <p>
+Clear all scores stored by this Player
+</p>
+
+</div><div class="section tags">
+  <h2>Meta Tags</h2>
+  <div class="return">
+  <h3>Returns:</h3>
+  <dl>
+  
+    <dt>
+      
+        <span class='type'>[<tt>self</tt>]</span>
+      
+      
+        <span class='name'></span>
+      
+      
+    </dt>
+    <dd>
+      <span class='desc'></span>
+    </dd>
+  
+  </dl>
+</div>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+102
+103
+104
+105
+106
+107</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/player.rb', line 102</span>
+
+<span class='def def kw'>def</span> <span class='clear_scores identifier id'>clear_scores</span>
+  <span class='@scores ivar id'>@scores</span><span class='dot token'>.</span><span class='clear identifier id'>clear</span>
+  <span class='@scores_ordered_names ivar id'>@scores_ordered_names</span><span class='dot token'>.</span><span class='clear identifier id'>clear</span>
+  <span class='@scores_idx ivar id'>@scores_idx</span> <span class='assign token'>=</span> <span class='integer val'>-1</span>
+  <span class='self self kw'>self</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>clear_state</h3>
+</div><div id="clear_state-instance_method" class="section method">
+  <div class="details_title">
+    <div class='section methodsignature'>
+    <tt class='def'>
+      <span class='visibility'>public</span>
+      <span class='return_types'><tt>self</tt></span>
+      <span class='name'>clear_state</span><span class='args'></span>
+      <span class='block'></span>
+    </tt>
+  </div>
+
+</div><div class="section docstring">
+  <p>
+Clears all key/values in the Player&#8217;s state store.
+</p>
+
+</div><div class="section tags">
+  <h2>Meta Tags</h2>
+  <div class="return">
+  <h3>Returns:</h3>
+  <dl>
+  
+    <dt>
+      
+        <span class='type'>[<tt>self</tt>]</span>
+      
+      
+        <span class='name'></span>
+      
+      
+    </dt>
+    <dd>
+      <span class='desc'></span>
+    </dd>
+  
+  </dl>
+</div>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+343
+344
+345
+346</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/player.rb', line 343</span>
+
+<span class='def def kw'>def</span> <span class='clear_state identifier id'>clear_state</span>
+  <span class='@state ivar id'>@state</span><span class='dot token'>.</span><span class='clear identifier id'>clear</span>
+  <span class='self self kw'>self</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>current_score</h3>
+</div><div id="current_score-instance_method" class="section method">
+  <div class="details_title">
+    <div class='section methodsignature'>
+    <tt class='def'>
+      <span class='visibility'>public</span>
+      <span class='return_types'><tt><a href="Score.html" title="Aleatoric::Score">Aleatoric::Score</a></tt></span>
+      <span class='name'>current_score</span><span class='args'></span>
+      <span class='block'></span>
+    </tt>
+  </div>
+<p class="aliases">
+  <span class="aka">Also known as:</span>
+  
+    <tt id="current_phrase-instance_method">current_phrase</tt>
+  
+</p>
+</div><div class="section tags">
+  <h2>Meta Tags</h2>
+  <div class="return">
+  <h3>Returns:</h3>
+  <dl>
+  
+    <dt>
+      
+        <span class='type'>[<tt><a href="Score.html" title="Aleatoric::Score">Aleatoric::Score</a></tt>]</span>
+      
+      
+        <span class='name'></span>
+      
+      
+    </dt>
+    <dd>
+      <span class='desc'><p>
+a reference to the currently active score
+</p>
+</span>
+    </dd>
+  
+  </dl>
+</div>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+133
+134
+135</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/player.rb', line 133</span>
+
+<span class='def def kw'>def</span> <span class='current_score identifier id'>current_score</span>
+  <span class='@scores ivar id'>@scores</span><span class='lbrack token'>[</span><span class='@scores_ordered_names ivar id'>@scores_ordered_names</span><span class='lbrack token'>[</span><span class='@scores_idx ivar id'>@scores_idx</span><span class='rbrack token'>]</span><span class='rbrack token'>]</span> <span class='if if_mod kw'>if</span> <span class='valid_scores_idx? fid id'>valid_scores_idx?</span> <span class='@scores_idx ivar id'>@scores_idx</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>decrement_scores_index</h3>
+</div><div id="decrement_scores_index-instance_method" class="section method">
+  <div class="details_title">
+    <div class='section methodsignature'>
+    <tt class='def'>
+      <span class='visibility'>public</span>
+      <span class='return_types'><tt>self</tt></span>
+      <span class='name'>decrement_scores_index</span><span class='args'></span>
+      <span class='block'></span>
+    </tt>
+  </div>
+<p class="aliases">
+  <span class="aka">Also known as:</span>
+  
+    <tt id="decrement-instance_method">decrement</tt>
+  
+    <tt id="dec-instance_method">dec</tt>
+  
+</p>
+</div><div class="section docstring">
+  <p>
+Decrements the index of the currently active scorein the ordered list of
+scores stored by this Player. Clients can call #play by passing a score
+name, but they can also use the #increment_scores_index and decrement
+&#8230; methods along with #scores_length to iterate the scores in order
+and play them.
+</p>
+
+</div><div class="section tags">
+  <h2>Meta Tags</h2>
+  <div class="return">
+  <h3>Returns:</h3>
+  <dl>
+  
+    <dt>
+      
+        <span class='type'>[<tt>self</tt>]</span>
+      
+      
+        <span class='name'></span>
+      
+      
+    </dt>
+    <dd>
+      <span class='desc'></span>
+    </dd>
+  
+  </dl>
+</div>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+155
+156
+157
+158</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/player.rb', line 155</span>
+
+<span class='def def kw'>def</span> <span class='decrement_scores_index identifier id'>decrement_scores_index</span>
+  <span class='@scores_idx ivar id'>@scores_idx</span> <span class='opasgn op'>-=</span><span class='integer val'>1</span> <span class='if if_mod kw'>if</span> <span class='valid_scores_idx? fid id'>valid_scores_idx?</span><span class='lparen token'>(</span><span class='@scores_idx ivar id'>@scores_idx</span> <span class='minus op'>-</span> <span class='integer val'>1</span><span class='rparen token'>)</span>
+  <span class='self self kw'>self</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>dup</h3>
+</div><div id="dup-instance_method" class="section method">
+  <div class="details_title">
+    <div class='section methodsignature'>
+    <tt class='def'>
+      <span class='visibility'>public</span>
+      <span class='return_types'><tt><a href="" title="Aleatoric::Player">Aleatoric::Player</a></tt></span>
+      <span class='name'>dup</span><span class='args'></span>
+      <span class='block'></span>
+    </tt>
+  </div>
+
+</div><div class="section docstring">
+  <p>
+Creates and returns a deep copy of this Player, including copies of all
+Scores stored by the player (with in turn copies of the Notes it the
+Scores), and copies of all registered hooks, the same current score, and
+the values for #playing? and #improvising?
+</p>
+
+</div><div class="section tags">
+  <h2>Meta Tags</h2>
+  <div class="return">
+  <h3>Returns:</h3>
+  <dl>
+  
+    <dt>
+      
+        <span class='type'>[<tt><a href="" title="Aleatoric::Player">Aleatoric::Player</a></tt>]</span>
+      
+      
+        <span class='name'></span>
+      
+      
+    </dt>
+    <dd>
+      <span class='desc'></span>
+    </dd>
+  
+  </dl>
+</div>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+422
+423
+424
+425
+426
+427
+428
+429
+430
+431
+432
+433
+434
+435
+436
+437
+438
+439
+440
+441
+442
+443
+444</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/player.rb', line 422</span>
+
+<span class='def def kw'>def</span> <span class='dup identifier id'>dup</span>  
+  <span class='ret identifier id'>ret</span> <span class='assign token'>=</span> <span class='Player constant id'>Player</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='self self kw'>self</span><span class='dot token'>.</span><span class='name identifier id'>name</span><span class='rparen token'>)</span>
+  
+  <span class='@scores ivar id'>@scores</span><span class='dot token'>.</span><span class='keys identifier id'>keys</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='score_name identifier id'>score_name</span><span class='bitor op'>|</span> 
+    <span class='add_score identifier id'>add_score</span> <span class='assign token'>=</span> <span class='@scores ivar id'>@scores</span><span class='lbrack token'>[</span><span class='score_name identifier id'>score_name</span><span class='rbrack token'>]</span><span class='dot token'>.</span><span class='dup identifier id'>dup</span>      
+    <span class='ret identifier id'>ret</span><span class='dot token'>.</span><span class='add_score identifier id'>add_score</span><span class='lparen token'>(</span><span class='add_score identifier id'>add_score</span><span class='dot token'>.</span><span class='name identifier id'>name</span><span class='comma token'>,</span> <span class='add_score identifier id'>add_score</span><span class='rparen token'>)</span>
+  <span class='end end kw'>end</span>
+  
+  <span class='ret identifier id'>ret</span><span class='dot token'>.</span><span class='scores_ordered_names identifier id'>scores_ordered_names</span> <span class='assign token'>=</span> <span class='@scores_ordered_names ivar id'>@scores_ordered_names</span>
+  <span class='ret identifier id'>ret</span><span class='dot token'>.</span><span class='scores_idx identifier id'>scores_idx</span> <span class='assign token'>=</span> <span class='@scores_idx ivar id'>@scores_idx</span>
+  <span class='ret identifier id'>ret</span><span class='dot token'>.</span><span class='preplay_hooks_ordered_names identifier id'>preplay_hooks_ordered_names</span> <span class='assign token'>=</span> <span class='@preplay_hooks_ordered_names ivar id'>@preplay_hooks_ordered_names</span>
+  <span class='ret identifier id'>ret</span><span class='dot token'>.</span><span class='postplay_hooks_ordered_names identifier id'>postplay_hooks_ordered_names</span> <span class='assign token'>=</span> <span class='@postplay_hooks_ordered_names ivar id'>@postplay_hooks_ordered_names</span>
+  <span class='ret identifier id'>ret</span><span class='dot token'>.</span><span class='improvising_hooks_ordered_names identifier id'>improvising_hooks_ordered_names</span> <span class='assign token'>=</span> <span class='@improvising_hooks_ordered_names ivar id'>@improvising_hooks_ordered_names</span>
+  <span class='ret identifier id'>ret</span><span class='dot token'>.</span><span class='state identifier id'>state</span> <span class='assign token'>=</span> <span class='@state ivar id'>@state</span>
+  <span class='ret identifier id'>ret</span><span class='dot token'>.</span><span class='is_playing identifier id'>is_playing</span> <span class='assign token'>=</span> <span class='@is_playing ivar id'>@is_playing</span>
+  <span class='ret identifier id'>ret</span><span class='dot token'>.</span><span class='is_improvising identifier id'>is_improvising</span> <span class='assign token'>=</span> <span class='@is_improvising ivar id'>@is_improvising</span>    
+  <span class='@out_notes ivar id'>@out_notes</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='lbrace token'>{</span><span class='bitor op'>|</span><span class='note identifier id'>note</span><span class='bitor op'>|</span> <span class='ret identifier id'>ret</span><span class='dot token'>.</span><span class='out_notes identifier id'>out_notes</span> <span class='lshft op'>&lt;&lt;</span> <span class='note identifier id'>note</span><span class='dot token'>.</span><span class='dup identifier id'>dup</span><span class='rbrace token'>}</span>
+  <span class='ret identifier id'>ret</span><span class='dot token'>.</span><span class='preplay_hooks identifier id'>preplay_hooks</span> <span class='assign token'>=</span> <span class='@preplay_hooks ivar id'>@preplay_hooks</span>
+  <span class='ret identifier id'>ret</span><span class='dot token'>.</span><span class='postplay_hooks identifier id'>postplay_hooks</span> <span class='assign token'>=</span> <span class='@postplay_hooks ivar id'>@postplay_hooks</span>
+  <span class='ret identifier id'>ret</span><span class='dot token'>.</span><span class='improvising_hooks identifier id'>improvising_hooks</span> <span class='assign token'>=</span> <span class='@improvising_hooks ivar id'>@improvising_hooks</span>
+  
+  <span class='ret identifier id'>ret</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>get_improvising_hook</h3>
+</div><div id="get_improvising_hook-instance_method" class="section method">
+  <div class="details_title">
+    <div class='section methodsignature'>
+    <tt class='def'>
+      <span class='visibility'>public</span>
+      <span class='return_types'><tt>block</tt></span>
+      <span class='name'>get_improvising_hook</span><span class='args'>(name)</span>
+      <span class='block'></span>
+    </tt>
+  </div>
+<p class="aliases">
+  <span class="aka">Also known as:</span>
+  
+    <tt id="get_improvisation_hook-instance_method">get_improvisation_hook</tt>
+  
+</p>
+</div><div class="section tags">
+  <h2>Meta Tags</h2>
+  <div class="return">
+  <h3>Returns:</h3>
+  <dl>
+  
+    <dt>
+      
+        <span class='type'>[<tt>block</tt>]</span>
+      
+      
+        <span class='name'></span>
+      
+      
+    </dt>
+    <dd>
+      <span class='desc'><p>
+returns a lambda of the body of the hook matching the name argument
+</p>
+</span>
+    </dd>
+  
+  </dl>
+</div>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+314
+315
+316</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/player.rb', line 314</span>
+
+<span class='def def kw'>def</span> <span class='get_improvising_hook identifier id'>get_improvising_hook</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='rparen token'>)</span>
+  <span class='@improvising_hooks ivar id'>@improvising_hooks</span><span class='lbrack token'>[</span><span class='name identifier id'>name</span><span class='rbrack token'>]</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>get_output</h3>
+</div><div id="get_output-instance_method" class="section method">
+  <div class="details_title">
+    <div class='section methodsignature'>
+    <tt class='def'>
+      <span class='visibility'>public</span>
+      <span class='return_types'><tt><a href="Array.html" title="Array">Array</a>&lt;<a href="Note.html" title="Aleatoric::Note">Aleatoric::Note</a>></tt></span>
+      <span class='name'>get_output</span><span class='args'></span>
+      <span class='block'></span>
+    </tt>
+  </div>
+<p class="aliases">
+  <span class="aka">Also known as:</span>
+  
+    <tt id="output-instance_method">output</tt>
+  
+</p>
+</div><div class="section tags">
+  <h2>Meta Tags</h2>
+  <div class="return">
+  <h3>Returns:</h3>
+  <dl>
+  
+    <dt>
+      
+        <span class='type'>[<tt><a href="Array.html" title="Array">Array</a>&lt;<a href="Note.html" title="Aleatoric::Note">Aleatoric::Note</a>></tt>]</span>
+      
+      
+        <span class='name'></span>
+      
+      
+    </dt>
+    <dd>
+      <span class='desc'><p>
+a copy of the notes currently in this Player&#8217;s output
+</p>
+</span>
+    </dd>
+  
+  </dl>
+</div>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+372
+373
+374
+375
+376</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/player.rb', line 372</span>
+
+<span class='def def kw'>def</span> <span class='get_output identifier id'>get_output</span>
+  <span class='ret identifier id'>ret</span> <span class='assign token'>=</span> <span class='lbrack token'>[</span><span class='rbrack token'>]</span>
+  <span class='@out_notes ivar id'>@out_notes</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='lbrace token'>{</span><span class='bitor op'>|</span><span class='note identifier id'>note</span><span class='bitor op'>|</span> <span class='ret identifier id'>ret</span> <span class='lshft op'>&lt;&lt;</span> <span class='note identifier id'>note</span><span class='dot token'>.</span><span class='dup identifier id'>dup</span><span class='rbrace token'>}</span>
+  <span class='ret identifier id'>ret</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>get_postplay_hook</h3>
+</div><div id="get_postplay_hook-instance_method" class="section method">
+  <div class="details_title">
+    <div class='section methodsignature'>
+    <tt class='def'>
+      <span class='visibility'>public</span>
+      <span class='return_types'><tt>block</tt></span>
+      <span class='name'>get_postplay_hook</span><span class='args'>(name)</span>
+      <span class='block'></span>
+    </tt>
+  </div>
+
+</div><div class="section tags">
+  <h2>Meta Tags</h2>
+  <div class="return">
+  <h3>Returns:</h3>
+  <dl>
+  
+    <dt>
+      
+        <span class='type'>[<tt>block</tt>]</span>
+      
+      
+        <span class='name'></span>
+      
+      
+    </dt>
+    <dd>
+      <span class='desc'><p>
+returns a lambda of the body of the hook matching the name argument
+</p>
+</span>
+    </dd>
+  
+  </dl>
+</div>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+287
+288
+289</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/player.rb', line 287</span>
+
+<span class='def def kw'>def</span> <span class='get_postplay_hook identifier id'>get_postplay_hook</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='rparen token'>)</span>
+  <span class='@postplay_hooks ivar id'>@postplay_hooks</span><span class='lbrack token'>[</span><span class='name identifier id'>name</span><span class='rbrack token'>]</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>get_preplay_hook</h3>
+</div><div id="get_preplay_hook-instance_method" class="section method">
+  <div class="details_title">
+    <div class='section methodsignature'>
+    <tt class='def'>
+      <span class='visibility'>public</span>
+      <span class='return_types'><tt>block</tt></span>
+      <span class='name'>get_preplay_hook</span><span class='args'>(name)</span>
+      <span class='block'></span>
+    </tt>
+  </div>
+
+</div><div class="section tags">
+  <h2>Meta Tags</h2>
+  <div class="return">
+  <h3>Returns:</h3>
+  <dl>
+  
+    <dt>
+      
+        <span class='type'>[<tt>block</tt>]</span>
+      
+      
+        <span class='name'></span>
+      
+      
+    </dt>
+    <dd>
+      <span class='desc'><p>
+returns a lambda of the body of the hook matching the name argument
+</p>
+</span>
+    </dd>
+  
+  </dl>
+</div>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+261
+262
+263</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/player.rb', line 261</span>
+
+<span class='def def kw'>def</span> <span class='get_preplay_hook identifier id'>get_preplay_hook</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='rparen token'>)</span>
+  <span class='@preplay_hooks ivar id'>@preplay_hooks</span><span class='lbrack token'>[</span><span class='name identifier id'>name</span><span class='rbrack token'>]</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>get_state</h3>
+</div><div id="get_state-instance_method" class="section method">
+  <div class="details_title">
+    <div class='section methodsignature'>
+    <tt class='def'>
+      <span class='visibility'>public</span>
+      <span class='return_types'><tt>Object</tt></span>
+      <span class='name'>get_state</span><span class='args'>(key)</span>
+      <span class='block'></span>
+    </tt>
+  </div>
+
+</div><div class="section docstring">
+  <p>
+Retrieves a value by keyname, serving as a generic interface for hooks to
+store state for later use. Supports the design pattern of testing/setting
+state in preplay hooks and testing/setting in postplay hooks in a
+complementary fashion. So, state can be tested/set before and after each
+time the Player plays, so state can affect what is played and be affected
+by it.
+</p>
+
+</div><div class="section tags">
+  <h2>Meta Tags</h2>
+  <div class="return">
+  <h3>Returns:</h3>
+  <dl>
+  
+    <dt>
+      
+        <span class='type'>[<tt>Object</tt>]</span>
+      
+      
+        <span class='name'></span>
+      
+      
+    </dt>
+    <dd>
+      <span class='desc'><p>
+a reference to the Object stored under this key, or nil if #include?(key)
+== false
+</p>
+</span>
+    </dd>
+  
+  </dl>
+</div>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+337
+338
+339</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/player.rb', line 337</span>
+
+<span class='def def kw'>def</span> <span class='get_state identifier id'>get_state</span><span class='lparen token'>(</span><span class='key identifier id'>key</span><span class='rparen token'>)</span>
+  <span class='@state ivar id'>@state</span><span class='lbrack token'>[</span><span class='key identifier id'>key</span><span class='rbrack token'>]</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>improvise</h3>
+</div><div id="improvise-instance_method" class="section method">
+  <div class="details_title">
+    <div class='section methodsignature'>
+    <tt class='def'>
+      <span class='visibility'>public</span>
+      <span class='return_types'><tt><a href="Array.html" title="Array">Array</a>&lt;<a href="Note.html" title="Aleatoric::Note">Aleatoric::Note</a>></tt></span>
+      <span class='name'>improvise</span><span class='args'>(name)</span>
+      <span class='block'></span>
+    </tt>
+  </div>
+
+</div><div class="section docstring">
+  <p>
+Runs the improvisation hook registered with the name arg to generate output
+notes.
+</p>
+
+</div><div class="section tags">
+  <h2>Meta Tags</h2>
+  <div class="param">
+  <h3>Parameters:</h3>
+  <dl>
+  
+    
+      <dt>
+        <span class='type'>[<tt>String</tt>]</span>
+        <span class='name'>name</span>
+        
+      </dt>
+      <dd>
+        <span class='desc'><p>
+of the improvisation hook to run
+</p>
+</span>
+      </dd>
+    
+  
+  </dl>
+</div><div class="return">
+  <h3>Returns:</h3>
+  <dl>
+  
+    <dt>
+      
+        <span class='type'>[<tt><a href="Array.html" title="Array">Array</a>&lt;<a href="Note.html" title="Aleatoric::Note">Aleatoric::Note</a>></tt>]</span>
+      
+      
+        <span class='name'></span>
+      
+      
+    </dt>
+    <dd>
+      <span class='desc'><p>
+a copy of the notes generated by the improvisation hook call
+</p>
+</span>
+    </dd>
+  
+  </dl>
+</div>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+221
+222
+223
+224
+225
+226
+227
+228
+229
+230
+231
+232
+233
+234
+235</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/player.rb', line 221</span>
+
+<span class='def def kw'>def</span> <span class='improvise identifier id'>improvise</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='rparen token'>)</span>
+  <span class='ret identifier id'>ret</span> <span class='assign token'>=</span> <span class='lbrack token'>[</span><span class='rbrack token'>]</span> 
+  
+  <span class='comment val'># TEMP DEBUG</span>
+  <span class='debug_log identifier id'>debug_log</span> <span class='dstring node'>&quot;not improvising? #{not improvising?}&quot;</span>
+  <span class='debug_log identifier id'>debug_log</span> <span class='dstring node'>&quot;@improvising_hooks.empty? #{@improvising_hooks.empty?}&quot;</span>
+  <span class='debug_log identifier id'>debug_log</span> <span class='dstring node'>&quot;not @improvising_hooks.include? name #{not @improvising_hooks.include? name}&quot;</span>
+  
+  <span class='return return kw'>return</span> <span class='ret identifier id'>ret</span> <span class='if if_mod kw'>if</span> <span class='not not kw'>not</span> <span class='improvising? fid id'>improvising?</span> <span class='or or kw'>or</span> <span class='@improvising_hooks ivar id'>@improvising_hooks</span><span class='dot token'>.</span><span class='empty? fid id'>empty?</span> <span class='or or kw'>or</span> <span class='not not kw'>not</span> <span class='@improvising_hooks ivar id'>@improvising_hooks</span><span class='dot token'>.</span><span class='include? fid id'>include?</span> <span class='name identifier id'>name</span>   
+  <span class='@improvising_hooks ivar id'>@improvising_hooks</span><span class='lbrack token'>[</span><span class='name identifier id'>name</span><span class='rbrack token'>]</span><span class='dot token'>.</span><span class='call identifier id'>call</span><span class='dot token'>.</span><span class='notes identifier id'>notes</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='note identifier id'>note</span><span class='bitor op'>|</span> 
+    <span class='@out_notes ivar id'>@out_notes</span> <span class='lshft op'>&lt;&lt;</span> <span class='note identifier id'>note</span>
+    <span class='ret identifier id'>ret</span> <span class='lshft op'>&lt;&lt;</span> <span class='note identifier id'>note</span><span class='dot token'>.</span><span class='dup identifier id'>dup</span>
+  <span class='end end kw'>end</span>
+  <span class='ret identifier id'>ret</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>improvising?</h3>
+</div><div id="improvising?-instance_method" class="section method">
+  <div class="details_title">
+    <div class='section methodsignature'>
+    <tt class='def'>
+      <span class='visibility'>public</span>
+      <span class='return_types'><tt>true</tt></span>
+      <span class='name'>improvising?</span><span class='args'>(is_improvising = nil)</span>
+      <span class='block'></span>
+    </tt>
+  </div>
+
+</div><div class="section docstring">
+  <p>
+Test set whether the player is enabled to improvise. Setting this to false
+means a call to #improvise will generate no output notes.
+</p>
+
+</div><div class="section tags">
+  <h2>Meta Tags</h2>
+  <div class="return">
+  <h3>Returns:</h3>
+  <dl>
+  
+    <dt>
+      
+        <span class='type'>[<tt>true</tt>, <tt>false</tt>]</span>
+      
+      
+        <span class='name'></span>
+      
+      
+    </dt>
+    <dd>
+      <span class='desc'><p>
+the current value of of improvisng?. If is_playing arg wasn&#8217;t nil
+then it is returned.
+</p>
+</span>
+    </dd>
+  
+  </dl>
+</div>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+366
+367
+368
+369</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/player.rb', line 366</span>
+
+<span class='def def kw'>def</span> <span class='improvising? fid id'>improvising?</span><span class='lparen token'>(</span><span class='is_improvising identifier id'>is_improvising</span><span class='assign token'>=</span><span class='nil nil kw'>nil</span><span class='rparen token'>)</span>
+  <span class='@is_improvising ivar id'>@is_improvising</span> <span class='assign token'>=</span> <span class='is_improvising identifier id'>is_improvising</span> <span class='if if_mod kw'>if</span> <span class='is_improvising identifier id'>is_improvising</span> <span class='neq op'>!=</span> <span class='nil nil kw'>nil</span>
+  <span class='@is_improvising ivar id'>@is_improvising</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>increment_scores_index</h3>
+</div><div id="increment_scores_index-instance_method" class="section method">
+  <div class="details_title">
+    <div class='section methodsignature'>
+    <tt class='def'>
+      <span class='visibility'>public</span>
+      <span class='return_types'><tt>self</tt></span>
+      <span class='name'>increment_scores_index</span><span class='args'></span>
+      <span class='block'></span>
+    </tt>
+  </div>
+<p class="aliases">
+  <span class="aka">Also known as:</span>
+  
+    <tt id="inc-instance_method">inc</tt>
+  
+    <tt id="increment-instance_method">increment</tt>
+  
+</p>
+</div><div class="section docstring">
+  <p>
+Increments the index of the currently active scorein the ordered list of
+scores stored by this Player. Clients can call #play by passing a score
+name, but they can also use the #increment_scores_index and decrement
+&#8230; methods along with #scores_length to iterate the scores in order
+and play them.
+</p>
+
+</div><div class="section tags">
+  <h2>Meta Tags</h2>
+  <div class="return">
+  <h3>Returns:</h3>
+  <dl>
+  
+    <dt>
+      
+        <span class='type'>[<tt>self</tt>]</span>
+      
+      
+        <span class='name'></span>
+      
+      
+    </dt>
+    <dd>
+      <span class='desc'></span>
+    </dd>
+  
+  </dl>
+</div>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+143
+144
+145
+146</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/player.rb', line 143</span>
+
+<span class='def def kw'>def</span> <span class='increment_scores_index identifier id'>increment_scores_index</span>
+  <span class='@scores_idx ivar id'>@scores_idx</span> <span class='opasgn op'>+=</span><span class='integer val'>1</span> <span class='if if_mod kw'>if</span> <span class='valid_scores_idx? fid id'>valid_scores_idx?</span><span class='lparen token'>(</span><span class='@scores_idx ivar id'>@scores_idx</span> <span class='plus op'>+</span> <span class='integer val'>1</span><span class='rparen token'>)</span>
+  <span class='self self kw'>self</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>output_empty?</h3>
+</div><div id="output_empty?-instance_method" class="section method">
+  <div class="details_title">
+    <div class='section methodsignature'>
+    <tt class='def'>
+      <span class='visibility'>public</span>
+      <span class='return_types'><tt>true</tt></span>
+      <span class='name'>output_empty?</span><span class='args'></span>
+      <span class='block'></span>
+    </tt>
+  </div>
+
+</div><div class="section docstring">
+  <p>
+Tests whether there is any output, that is, any notes in the current output
+</p>
+
+</div><div class="section tags">
+  <h2>Meta Tags</h2>
+  <div class="return">
+  <h3>Returns:</h3>
+  <dl>
+  
+    <dt>
+      
+        <span class='type'>[<tt>true</tt>, <tt>false</tt>]</span>
+      
+      
+        <span class='name'></span>
+      
+      
+    </dt>
+    <dd>
+      <span class='desc'><p>
+indicates whethere ther are currently any notes in the output of this
+Player
+</p>
+</span>
+    </dd>
+  
+  </dl>
+</div>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+407
+408
+409</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/player.rb', line 407</span>
+
+<span class='def def kw'>def</span> <span class='output_empty? fid id'>output_empty?</span>
+  <span class='@out_notes ivar id'>@out_notes</span><span class='dot token'>.</span><span class='length identifier id'>length</span> <span class='eq op'>==</span> <span class='integer val'>0</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>play</h3>
+</div><div id="play-instance_method" class="section method">
+  <div class="details_title">
+    <div class='section methodsignature'>
+    <tt class='def'>
+      <span class='visibility'>public</span>
+      <span class='return_types'><tt><a href="Array.html" title="Array">Array</a>&lt;<a href="Note.html" title="Aleatoric::Note">Aleatoric::Note</a>></tt></span>
+      <span class='name'>play</span><span class='args'>(name = nil, &amp;blk)</span>
+      <span class='block'></span>
+    </tt>
+  </div>
+
+</div><div class="section docstring">
+  <p>
+Plays the currently active score, which means, precisely:
+</p>
+<ul>
+<li>set current score to the name argument passed, if name is not nil
+
+</li>
+<li>set current score to self&#8217;s current_score if name arg is nil
+
+</li>
+<li>make a copy of the current score so as to not modify the object held by
+self
+
+</li>
+<li>pass the current score copy as input to each preplay hook, recieve the
+modified
+
+</li>
+</ul>
+<p>
+score from the hook in return, and pass this to the next hook
+</p>
+<ul>
+<li>run any block on the resulting score if one #block_given? is true
+
+</li>
+<li>add all notes in the resulting score to the output notes for self
+
+</li>
+<li>run any postplay hooks
+
+</li>
+</ul>
+
+</div><div class="section tags">
+  <h2>Meta Tags</h2>
+  <div class="return">
+  <h3>Returns:</h3>
+  <dl>
+  
+    <dt>
+      
+        <span class='type'>[<tt><a href="Array.html" title="Array">Array</a>&lt;<a href="Note.html" title="Aleatoric::Note">Aleatoric::Note</a>></tt>]</span>
+      
+      
+        <span class='name'></span>
+      
+      
+    </dt>
+    <dd>
+      <span class='desc'><p>
+the notes generated from this call to play()
+</p>
+</span>
+    </dd>
+  
+  </dl>
+</div>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+174
+175
+176
+177
+178
+179
+180
+181
+182
+183
+184
+185
+186
+187
+188
+189
+190
+191
+192
+193
+194
+195
+196
+197
+198
+199
+200
+201
+202
+203
+204
+205
+206
+207
+208
+209
+210
+211
+212
+213
+214
+215
+216</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/player.rb', line 174</span>
+
+<span class='def def kw'>def</span> <span class='play identifier id'>play</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='assign token'>=</span><span class='nil nil kw'>nil</span><span class='comma token'>,</span> <span class='bitand op'>&amp;</span><span class='blk identifier id'>blk</span><span class='rparen token'>)</span>
+  <span class='ret identifier id'>ret</span> <span class='assign token'>=</span> <span class='lbrack token'>[</span><span class='rbrack token'>]</span>
+  <span class='return return kw'>return</span> <span class='ret identifier id'>ret</span> <span class='if if_mod kw'>if</span> <span class='not not kw'>not</span> <span class='playing? fid id'>playing?</span>
+  <span class='comment val'># NOTE: Default is to NOT change the state of score but to make a copy for each play call.</span>
+  <span class='comment val'>#  Client can call</span>
+  <span class='cur_score identifier id'>cur_score</span> <span class='assign token'>=</span> <span class='@scores ivar id'>@scores</span><span class='lbrack token'>[</span><span class='name identifier id'>name</span><span class='rbrack token'>]</span> <span class='if if_mod kw'>if</span> <span class='name identifier id'>name</span> <span class='neq op'>!=</span> <span class='nil nil kw'>nil</span>
+  <span class='cur_score identifier id'>cur_score</span> <span class='assign token'>=</span> <span class='current_score identifier id'>current_score</span> <span class='if if_mod kw'>if</span> <span class='name identifier id'>name</span> <span class='eq op'>==</span> <span class='nil nil kw'>nil</span>
+  <span class='cur_score identifier id'>cur_score</span> <span class='assign token'>=</span> <span class='cur_score identifier id'>cur_score</span><span class='dot token'>.</span><span class='dup identifier id'>dup</span>
+      
+  <span class='comment val'># NOTE: hooks can have whatever side effects they want, based on the access they have through</span>
+  <span class='comment val'>#  the Player public API.  But barring that the promise the class makes in #play is like a </span>
+  <span class='comment val'>#  a functional map idea -- each hook is called, in order, and transforms the current state</span>
+  <span class='comment val'>#  of the current score and passes that to the next hook    </span>
+  <span class='@preplay_hooks_ordered_names ivar id'>@preplay_hooks_ordered_names</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='hook_name identifier id'>hook_name</span><span class='bitor op'>|</span>
+    <span class='cur_score identifier id'>cur_score</span> <span class='assign token'>=</span> <span class='@preplay_hooks ivar id'>@preplay_hooks</span><span class='lbrack token'>[</span><span class='hook_name identifier id'>hook_name</span><span class='rbrack token'>]</span><span class='dot token'>.</span><span class='call identifier id'>call</span><span class='lparen token'>(</span><span class='self self kw'>self</span><span class='comma token'>,</span> <span class='cur_score identifier id'>cur_score</span><span class='rparen token'>)</span>    
+  <span class='end end kw'>end</span>
+  
+  <span class='comment val'># If user passed in additional one-time-only block for this #play call, run it on current score</span>
+  <span class='cur_score identifier id'>cur_score</span> <span class='assign token'>=</span> <span class='blk identifier id'>blk</span><span class='dot token'>.</span><span class='call identifier id'>call</span> <span class='cur_score identifier id'>cur_score</span> <span class='if if_mod kw'>if</span> <span class='block_given? fid id'>block_given?</span>
+  
+  <span class='comment val'># Now push the notes cur_score to output. Store added notes just from</span>
+  <span class='comment val'>#  this #play call in separate step to return them for client convenience, testing</span>
+  <span class='cur_score identifier id'>cur_score</span><span class='dot token'>.</span><span class='notes identifier id'>notes</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='note identifier id'>note</span><span class='bitor op'>|</span> 
+    <span class='note identifier id'>note</span> <span class='assign token'>=</span> <span class='note identifier id'>note</span><span class='dot token'>.</span><span class='dup identifier id'>dup</span>
+    <span class='ret identifier id'>ret</span> <span class='lshft op'>&lt;&lt;</span> <span class='note identifier id'>note</span>
+    <span class='@out_notes ivar id'>@out_notes</span> <span class='lshft op'>&lt;&lt;</span> <span class='note identifier id'>note</span>
+  <span class='end end kw'>end</span>
+  
+  <span class='comment val'># Now run postplay hooks. </span>
+  <span class='comment val'># NOTE: These make no promise as far as manipulating the current_score.  These rely on the</span>
+  <span class='comment val'>#  Player API and the client simply must implement whatever logic they want.  Only promise</span>
+  <span class='comment val'>#  here is they'll get called by each #play call AFTER notes are written to output.</span>
+  <span class='comment val'># Typical use would be #get_state/#set_state and perhaps also manipulate the score or</span>
+  <span class='comment val'>#  the score_index. The #*state calls are the generic API for holding state between #play calls</span>
+  <span class='comment val'># Must pass in reference to containing object since method was passed in from outside this object as lambda</span>
+  <span class='@postplay_hooks_ordered_names ivar id'>@postplay_hooks_ordered_names</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='hook_name identifier id'>hook_name</span><span class='bitor op'>|</span>
+    <span class='@postplay_hooks ivar id'>@postplay_hooks</span><span class='lbrack token'>[</span><span class='hook_name identifier id'>hook_name</span><span class='rbrack token'>]</span><span class='dot token'>.</span><span class='call identifier id'>call</span> <span class='self self kw'>self</span>
+  <span class='end end kw'>end</span>    
+  
+  <span class='comment val'># Also return the notes written, for client convenience in case they want a local copy, </span>
+  <span class='comment val'>#  and, more so, for convenience of unit testing</span>
+  <span class='ret identifier id'>ret</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>playing?</h3>
+</div><div id="playing?-instance_method" class="section method">
+  <div class="details_title">
+    <div class='section methodsignature'>
+    <tt class='def'>
+      <span class='visibility'>public</span>
+      <span class='return_types'><tt>true</tt></span>
+      <span class='name'>playing?</span><span class='args'>(is_playing = nil)</span>
+      <span class='block'></span>
+    </tt>
+  </div>
+
+</div><div class="section docstring">
+  <p>
+Test set whether the player is enabled to play. Setting this to false means
+a call to #play will generate no output notes.
+</p>
+
+</div><div class="section tags">
+  <h2>Meta Tags</h2>
+  <div class="return">
+  <h3>Returns:</h3>
+  <dl>
+  
+    <dt>
+      
+        <span class='type'>[<tt>true</tt>, <tt>false</tt>]</span>
+      
+      
+        <span class='name'></span>
+      
+      
+    </dt>
+    <dd>
+      <span class='desc'><p>
+the current value of of playing?. If is_playing arg wasn&#8217;t nil then
+it is returned.
+</p>
+</span>
+    </dd>
+  
+  </dl>
+</div>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+357
+358
+359
+360</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/player.rb', line 357</span>
+
+<span class='def def kw'>def</span> <span class='playing? fid id'>playing?</span><span class='lparen token'>(</span><span class='is_playing identifier id'>is_playing</span><span class='assign token'>=</span><span class='nil nil kw'>nil</span><span class='rparen token'>)</span>
+  <span class='@is_playing ivar id'>@is_playing</span> <span class='assign token'>=</span> <span class='is_playing identifier id'>is_playing</span> <span class='if if_mod kw'>if</span> <span class='is_playing identifier id'>is_playing</span> <span class='neq op'>!=</span> <span class='nil nil kw'>nil</span>
+  <span class='@is_playing ivar id'>@is_playing</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>remove_improvising_hook</h3>
+</div><div id="remove_improvising_hook-instance_method" class="section method">
+  <div class="details_title">
+    <div class='section methodsignature'>
+    <tt class='def'>
+      <span class='visibility'>public</span>
+      <span class='return_types'><tt>self</tt></span>
+      <span class='name'>remove_improvising_hook</span><span class='args'>(name)</span>
+      <span class='block'></span>
+    </tt>
+  </div>
+<p class="aliases">
+  <span class="aka">Also known as:</span>
+  
+    <tt id="remove_improvisation_hook-instance_method">remove_improvisation_hook</tt>
+  
+</p>
+</div><div class="section tags">
+  <h2>Meta Tags</h2>
+  <div class="return">
+  <h3>Returns:</h3>
+  <dl>
+  
+    <dt>
+      
+        <span class='type'>[<tt>self</tt>]</span>
+      
+      
+        <span class='name'></span>
+      
+      
+    </dt>
+    <dd>
+      <span class='desc'></span>
+    </dd>
+  
+  </dl>
+</div>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+305
+306
+307
+308
+309</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/player.rb', line 305</span>
+
+<span class='def def kw'>def</span> <span class='remove_improvising_hook identifier id'>remove_improvising_hook</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='rparen token'>)</span>
+  <span class='@improvising_hooks_ordered_names ivar id'>@improvising_hooks_ordered_names</span><span class='dot token'>.</span><span class='delete identifier id'>delete</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='rparen token'>)</span>
+  <span class='@improvising_hooks ivar id'>@improvising_hooks</span><span class='dot token'>.</span><span class='delete identifier id'>delete</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='rparen token'>)</span>
+  <span class='self self kw'>self</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>remove_postplay_hook</h3>
+</div><div id="remove_postplay_hook-instance_method" class="section method">
+  <div class="details_title">
+    <div class='section methodsignature'>
+    <tt class='def'>
+      <span class='visibility'>public</span>
+      <span class='return_types'><tt>self</tt></span>
+      <span class='name'>remove_postplay_hook</span><span class='args'>(name)</span>
+      <span class='block'></span>
+    </tt>
+  </div>
+
+</div><div class="section tags">
+  <h2>Meta Tags</h2>
+  <div class="return">
+  <h3>Returns:</h3>
+  <dl>
+  
+    <dt>
+      
+        <span class='type'>[<tt>self</tt>]</span>
+      
+      
+        <span class='name'></span>
+      
+      
+    </dt>
+    <dd>
+      <span class='desc'></span>
+    </dd>
+  
+  </dl>
+</div>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+279
+280
+281
+282
+283</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/player.rb', line 279</span>
+
+<span class='def def kw'>def</span> <span class='remove_postplay_hook identifier id'>remove_postplay_hook</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='rparen token'>)</span>
+  <span class='@postplay_hooks_ordered_names ivar id'>@postplay_hooks_ordered_names</span><span class='dot token'>.</span><span class='delete identifier id'>delete</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='rparen token'>)</span>
+  <span class='@postplay_hooks ivar id'>@postplay_hooks</span><span class='dot token'>.</span><span class='delete identifier id'>delete</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='rparen token'>)</span>
+  <span class='self self kw'>self</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>remove_preplay_hook</h3>
+</div><div id="remove_preplay_hook-instance_method" class="section method">
+  <div class="details_title">
+    <div class='section methodsignature'>
+    <tt class='def'>
+      <span class='visibility'>public</span>
+      <span class='return_types'><tt>self</tt></span>
+      <span class='name'>remove_preplay_hook</span><span class='args'>(name)</span>
+      <span class='block'></span>
+    </tt>
+  </div>
+
+</div><div class="section tags">
+  <h2>Meta Tags</h2>
+  <div class="return">
+  <h3>Returns:</h3>
+  <dl>
+  
+    <dt>
+      
+        <span class='type'>[<tt>self</tt>]</span>
+      
+      
+        <span class='name'></span>
+      
+      
+    </dt>
+    <dd>
+      <span class='desc'></span>
+    </dd>
+  
+  </dl>
+</div>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+253
+254
+255
+256
+257</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/player.rb', line 253</span>
+
+<span class='def def kw'>def</span> <span class='remove_preplay_hook identifier id'>remove_preplay_hook</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='rparen token'>)</span>
+  <span class='@preplay_hooks_ordered_names ivar id'>@preplay_hooks_ordered_names</span><span class='dot token'>.</span><span class='delete identifier id'>delete</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='rparen token'>)</span>
+  <span class='@preplay_hooks ivar id'>@preplay_hooks</span><span class='dot token'>.</span><span class='delete identifier id'>delete</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='rparen token'>)</span>
+  <span class='self self kw'>self</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>remove_score</h3>
+</div><div id="remove_score-instance_method" class="section method">
+  <div class="details_title">
+    <div class='section methodsignature'>
+    <tt class='def'>
+      <span class='visibility'>public</span>
+      <span class='return_types'><tt>self</tt></span>
+      <span class='name'>remove_score</span><span class='args'>(score_name)</span>
+      <span class='block'></span>
+    </tt>
+  </div>
+<p class="aliases">
+  <span class="aka">Also known as:</span>
+  
+    <tt id="delete_score-instance_method">delete_score</tt>
+  
+</p>
+</div><div class="section docstring">
+  <p>
+Remove a score from the Player&#8217;s list of scores.
+</p>
+
+</div><div class="section tags">
+  <h2>Meta Tags</h2>
+  <div class="return">
+  <h3>Returns:</h3>
+  <dl>
+  
+    <dt>
+      
+        <span class='type'>[<tt>self</tt>]</span>
+      
+      
+        <span class='name'></span>
+      
+      
+    </dt>
+    <dd>
+      <span class='desc'></span>
+    </dd>
+  
+  </dl>
+</div>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/player.rb', line 68</span>
+
+<span class='def def kw'>def</span> <span class='remove_score identifier id'>remove_score</span><span class='lparen token'>(</span><span class='score_name identifier id'>score_name</span><span class='rparen token'>)</span>
+  <span class='dead_score identifier id'>dead_score</span> <span class='assign token'>=</span> <span class='nil nil kw'>nil</span>
+  <span class='@scores_ordered_names ivar id'>@scores_ordered_names</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='name identifier id'>name</span><span class='bitor op'>|</span>
+    <span class='if if kw'>if</span> <span class='name identifier id'>name</span> <span class='eq op'>==</span> <span class='score_name identifier id'>score_name</span>
+      <span class='dead_score identifier id'>dead_score</span> <span class='assign token'>=</span> <span class='@scores ivar id'>@scores</span><span class='lbrack token'>[</span><span class='score_name identifier id'>score_name</span><span class='rbrack token'>]</span>
+      <span class='break break kw'>break</span>
+    <span class='end end kw'>end</span>
+  <span class='end end kw'>end</span>
+  <span class='comment val'># If score_idx is on last position and we're deleting that position, move it into a valid position</span>
+  <span class='@scores_idx ivar id'>@scores_idx</span> <span class='opasgn op'>-=</span> <span class='integer val'>1</span> <span class='if if_mod kw'>if</span> <span class='@scores_idx ivar id'>@scores_idx</span> <span class='eq op'>==</span> <span class='@scores ivar id'>@scores</span><span class='dot token'>.</span><span class='length identifier id'>length</span> <span class='minus op'>-</span> <span class='integer val'>1</span>
+  <span class='@scores ivar id'>@scores</span><span class='dot token'>.</span><span class='delete identifier id'>delete</span> <span class='dead_score identifier id'>dead_score</span>
+  <span class='@scores_ordered_names ivar id'>@scores_ordered_names</span><span class='dot token'>.</span><span class='delete identifier id'>delete</span> <span class='score_name identifier id'>score_name</span>
+  <span class='self self kw'>self</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>scores_empty?</h3>
+</div><div id="scores_empty?-instance_method" class="section method">
+  <div class="details_title">
+    <div class='section methodsignature'>
+    <tt class='def'>
+      <span class='visibility'>public</span>
+      <span class='return_types'><tt>true</tt></span>
+      <span class='name'>scores_empty?</span><span class='args'></span>
+      <span class='block'></span>
+    </tt>
+  </div>
+
+</div><div class="section tags">
+  <h2>Meta Tags</h2>
+  <div class="return">
+  <h3>Returns:</h3>
+  <dl>
+  
+    <dt>
+      
+        <span class='type'>[<tt>true</tt>, <tt>false</tt>]</span>
+      
+      
+        <span class='name'></span>
+      
+      
+    </dt>
+    <dd>
+      <span class='desc'><p>
+indicates whether the Player currently stores any scores
+</p>
+</span>
+    </dd>
+  
+  </dl>
+</div>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+119
+120
+121</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/player.rb', line 119</span>
+
+<span class='def def kw'>def</span> <span class='scores_empty? fid id'>scores_empty?</span>
+  <span class='@scores_ordered_names ivar id'>@scores_ordered_names</span><span class='dot token'>.</span><span class='length identifier id'>length</span> <span class='eq op'>==</span> <span class='integer val'>0</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>scores_index</h3>
+</div><div id="scores_index-instance_method" class="section method">
+  <div class="details_title">
+    <div class='section methodsignature'>
+    <tt class='def'>
+      <span class='visibility'>public</span>
+      <span class='return_types'><tt>Integer</tt></span>
+      <span class='name'>scores_index</span><span class='args'></span>
+      <span class='block'></span>
+    </tt>
+  </div>
+<p class="aliases">
+  <span class="aka">Also known as:</span>
+  
+    <tt id="phrases_index-instance_method">phrases_index</tt>
+  
+</p>
+</div><div class="section docstring">
+  <p>
+Clients can call #play by passing a score name, but they can also use the
+#increment_scores_index and decrement &#8230; methods along with
+#scores_length to iterate the scores in order and play them.
+</p>
+
+</div><div class="section tags">
+  <h2>Meta Tags</h2>
+  <div class="return">
+  <h3>Returns:</h3>
+  <dl>
+  
+    <dt>
+      
+        <span class='type'>[<tt>Integer</tt>]</span>
+      
+      
+        <span class='name'></span>
+      
+      
+    </dt>
+    <dd>
+      <span class='desc'><p>
+the number of the currently active scores in the ordered list of scores
+stored by this Player
+</p>
+</span>
+    </dd>
+  
+  </dl>
+</div>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+127
+128
+129</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/player.rb', line 127</span>
+
+<span class='def def kw'>def</span> <span class='scores_index identifier id'>scores_index</span>
+  <span class='@scores_idx ivar id'>@scores_idx</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>scores_length</h3>
+</div><div id="scores_length-instance_method" class="section method">
+  <div class="details_title">
+    <div class='section methodsignature'>
+    <tt class='def'>
+      <span class='visibility'>public</span>
+      <span class='return_types'><tt>Integer</tt></span>
+      <span class='name'>scores_length</span><span class='args'></span>
+      <span class='block'></span>
+    </tt>
+  </div>
+<p class="aliases">
+  <span class="aka">Also known as:</span>
+  
+    <tt id="scores_size-instance_method">scores_size</tt>
+  
+</p>
+</div><div class="section docstring">
+  <p>
+Clients can call #play by passing a score name, but they can also use the
+#increment_scores_index and decrement &#8230; methods along with
+#scores_length to iterate the scores in order and play them.
+</p>
+
+</div><div class="section tags">
+  <h2>Meta Tags</h2>
+  <div class="return">
+  <h3>Returns:</h3>
+  <dl>
+  
+    <dt>
+      
+        <span class='type'>[<tt>Integer</tt>]</span>
+      
+      
+        <span class='name'></span>
+      
+      
+    </dt>
+    <dd>
+      <span class='desc'><p>
+the number of scores currently stored by this Player
+</p>
+</span>
+    </dd>
+  
+  </dl>
+</div>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+113
+114
+115</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/player.rb', line 113</span>
+
+<span class='def def kw'>def</span> <span class='scores_length identifier id'>scores_length</span>
+  <span class='@scores_ordered_names ivar id'>@scores_ordered_names</span><span class='dot token'>.</span><span class='length identifier id'>length</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>set_output_notes</h3>
+</div><div id="set_output_notes-instance_method" class="section method">
+  <div class="details_title">
+    <div class='section methodsignature'>
+    <tt class='def'>
+      <span class='visibility'>public</span>
+      <span class='return_types'><tt>self</tt></span>
+      <span class='name'>set_output_notes</span><span class='args'>(notes)</span>
+      <span class='block'></span>
+    </tt>
+  </div>
+<p class="aliases">
+  <span class="aka">Also known as:</span>
+  
+    <tt id="set_output-instance_method">set_output</tt>
+  
+</p>
+</div><div class="section docstring">
+  <p>
+Replaces all current output notes for this Player with the array of notes
+passed in
+</p>
+
+</div><div class="section tags">
+  <h2>Meta Tags</h2>
+  <div class="return">
+  <h3>Returns:</h3>
+  <dl>
+  
+    <dt>
+      
+        <span class='type'>[<tt>self</tt>]</span>
+      
+      
+        <span class='name'></span>
+      
+      
+    </dt>
+    <dd>
+      <span class='desc'></span>
+    </dd>
+  
+  </dl>
+</div>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+382
+383
+384
+385
+386</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/player.rb', line 382</span>
+
+<span class='def def kw'>def</span> <span class='set_output_notes identifier id'>set_output_notes</span><span class='lparen token'>(</span><span class='notes identifier id'>notes</span><span class='rparen token'>)</span>
+  <span class='@out_notes ivar id'>@out_notes</span><span class='dot token'>.</span><span class='clear identifier id'>clear</span>
+  <span class='notes identifier id'>notes</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='lbrace token'>{</span><span class='bitor op'>|</span><span class='note identifier id'>note</span> <span class='bitor op'>|</span> <span class='@out_notes ivar id'>@out_notes</span> <span class='lshft op'>&lt;&lt;</span> <span class='note identifier id'>note</span><span class='rbrace token'>}</span>
+  <span class='self self kw'>self</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>set_score</h3>
+</div><div id="set_score-instance_method" class="section method">
+  <div class="details_title">
+    <div class='section methodsignature'>
+    <tt class='def'>
+      <span class='visibility'>public</span>
+      <span class='return_types'><tt>self</tt></span>
+      <span class='name'>set_score</span><span class='args'>(score_name, score)</span>
+      <span class='block'></span>
+    </tt>
+  </div>
+
+</div><div class="section docstring">
+  <p>
+Replace (update) a score in the Player&#8217;s list of scores.
+</p>
+
+</div><div class="section tags">
+  <h2>Meta Tags</h2>
+  <div class="return">
+  <h3>Returns:</h3>
+  <dl>
+  
+    <dt>
+      
+        <span class='type'>[<tt>self</tt>]</span>
+      
+      
+        <span class='name'></span>
+      
+      
+    </dt>
+    <dd>
+      <span class='desc'></span>
+    </dd>
+  
+  </dl>
+</div>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/player.rb', line 89</span>
+
+<span class='def def kw'>def</span> <span class='set_score identifier id'>set_score</span><span class='lparen token'>(</span><span class='score_name identifier id'>score_name</span><span class='comma token'>,</span> <span class='score identifier id'>score</span><span class='rparen token'>)</span>
+  <span class='comment val'># Start out in invalid position and index for each score until we match</span>
+  <span class='idx identifier id'>idx</span> <span class='assign token'>=</span> <span class='integer val'>-1</span>
+  <span class='@scores_ordered_names ivar id'>@scores_ordered_names</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='name identifier id'>name</span><span class='bitor op'>|</span>
+    <span class='idx identifier id'>idx</span> <span class='opasgn op'>+=</span> <span class='integer val'>1</span>
+    <span class='break break kw'>break</span> <span class='if if_mod kw'>if</span> <span class='name identifier id'>name</span> <span class='eq op'>==</span> <span class='score_name identifier id'>score_name</span>
+  <span class='end end kw'>end</span>
+  <span class='@scores ivar id'>@scores</span><span class='lbrack token'>[</span><span class='score_name identifier id'>score_name</span><span class='rbrack token'>]</span> <span class='assign token'>=</span> <span class='score identifier id'>score</span> <span class='if if_mod kw'>if</span> <span class='valid_scores_idx? fid id'>valid_scores_idx?</span> <span class='idx identifier id'>idx</span>
+  <span class='self self kw'>self</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>set_state</h3>
+</div><div id="set_state-instance_method" class="section method">
+  <div class="details_title">
+    <div class='section methodsignature'>
+    <tt class='def'>
+      <span class='visibility'>public</span>
+      <span class='return_types'><tt>self</tt></span>
+      <span class='name'>set_state</span><span class='args'>(key, val)</span>
+      <span class='block'></span>
+    </tt>
+  </div>
+
+</div><div class="section docstring">
+  <p>
+Store a value by keyname, serving as a generic interface for hooks to store
+state for later use. Supports the design pattern of testing/setting state
+in preplay hooks and testing/setting in postplay hooks in a complementary
+fashion. So, state can be tested/set before and after each time the Player
+plays, so state can affect what is played and be affected by it.
+</p>
+
+</div><div class="section tags">
+  <h2>Meta Tags</h2>
+  <div class="return">
+  <h3>Returns:</h3>
+  <dl>
+  
+    <dt>
+      
+        <span class='type'>[<tt>self</tt>]</span>
+      
+      
+        <span class='name'></span>
+      
+      
+    </dt>
+    <dd>
+      <span class='desc'></span>
+    </dd>
+  
+  </dl>
+</div>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+326
+327
+328
+329</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/player.rb', line 326</span>
+
+<span class='def def kw'>def</span> <span class='set_state identifier id'>set_state</span><span class='lparen token'>(</span><span class='key identifier id'>key</span><span class='comma token'>,</span> <span class='val identifier id'>val</span><span class='rparen token'>)</span>
+  <span class='@state ivar id'>@state</span><span class='lbrack token'>[</span><span class='key identifier id'>key</span><span class='rbrack token'>]</span> <span class='assign token'>=</span> <span class='val identifier id'>val</span>
+  <span class='self self kw'>self</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>state_keys</h3>
+</div><div id="state_keys-instance_method" class="section method">
+  <div class="details_title">
+    <div class='section methodsignature'>
+    <tt class='def'>
+      <span class='visibility'>public</span>
+      <span class='return_types'></span>
+      <span class='name'>state_keys</span><span class='args'></span>
+      <span class='block'></span>
+    </tt>
+  </div>
+
+</div><div class="section docstring">
+  <p>
+Returns the keys in the Player&#8217;s state store.
+</p>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+349
+350
+351</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/player.rb', line 349</span>
+
+<span class='def def kw'>def</span> <span class='state_keys identifier id'>state_keys</span>
+  <span class='@state ivar id'>@state</span><span class='dot token'>.</span><span class='keys identifier id'>keys</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+</div>
+  </div>
+
+</div>
+    </div>
+    <div id="yard_info">
+  Generated on Wednesday, August 12 2009 at  by 
+  <abbr class="yard" title="Yay! A Ruby Documentation Tool"><a href="http://yard.soen.ca">YARD</a></abbr> 
+  0.2.3.3 (ruby-1.8.6).
+</div>
+
+  </body>
+</html>

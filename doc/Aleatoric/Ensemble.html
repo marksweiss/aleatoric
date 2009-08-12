@@ -1,0 +1,2231 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+  <head>
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" href="../style.css" type="text/css" charset="utf-8" />
+<link rel="stylesheet" href="../custom.css" type="text/css" charset="utf-8" />
+<link rel="stylesheet" href="../syntax_highlight.css" type="text/css" charset="utf-8" />
+
+    <script src="../jquery.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../app.js" type="text/javascript" charset="utf-8"></script>
+    <title>Class: Aleatoric::Ensemble</title>
+  </head>
+  <body>
+    <div id="content">
+      <div class="section class Aleatoric_Ensemble">
+  <h1 class="title">Class: Aleatoric::Ensemble</h1>
+  <div class="section docstring">
+  <p>
+Clients can do typical add/remove operations on players, by name Ensemble
+has a collection of Players, who play in the order they are added to the
+Ensemble when #play_all is called Ensemlbe has play interface with several
+options, #play takes a player name and plays that player, #play_all plays
+all players in order they were added, the #*repeat options take a number of
+times to iterate these two options Ensemble calls it&#8217;s own pre-play
+hooks in the order they are are added to the Ensemble, before calling
+Player.#play on each player. Such hooks generally test/set Ensemble state
+that can be used to do things like decide to play or not play a player, or
+to set state that Player hooks might call. For example, player may be
+instructed to play louder if other players are playing louder &#8212; this
+is an ensemble level attribute that should be set using Ensemble hooks and
+then tested by Player hooks. Ensemble calls it&#8217;s own post-play hooks
+in the order they are added to the Ensemble, after calling Player.#play on
+each player. Clients can do typical add/remove operations on hooks, by name
+Hooks may use the set_state() and get_state() methods as a key/value
+&quot;property bag&quot; to store and retrieve data as needed.
+</p>
+
+</div><div class="section attributes">
+  <h1>Attributes</h1>
+
+  
+    <div class="instance">
+      <h2>Instance Attributes</h2>
+      <table>
+      
+        
+        <tr class="">
+          <th class='signature'>
+            <span class='name'>name</span>
+          </td>
+          <td class="readwrite">
+            [<span id='name-instance_method'>R</span><span id='name=-instance_method'>W</span>] 
+          </td>
+          <td class="visibility">
+            public
+          </td>
+          <td class="docstring">
+            <p>
+Sets the attribute <tt>name</tt>.
+</p>
+
+            
+          </td>
+        </tr>
+        
+      
+        
+        <tr class="">
+          <th class='signature'>
+            <span class='name'>players</span>
+          </td>
+          <td class="readwrite">
+            [<span id='players-instance_method'>R</span><span id='players=-instance_method'>W</span>] 
+          </td>
+          <td class="visibility">
+            public
+          </td>
+          <td class="docstring">
+            <p>
+Sets the attribute <tt>players</tt>.
+</p>
+
+            
+          </td>
+        </tr>
+        
+      
+      </table>
+    </div>
+  
+</div>
+<div class="section constants">
+  
+</div><div class="section constructor">
+<h1>Constructor Summary</h1>
+  <div id="initialize-instance_method" class="section method">
+  <div class="details_title">
+    <div class='section methodsignature'>
+    <tt class='def'>
+      <span class='visibility'>public</span>
+      <span class='return_types'></span>
+      <span class='name'>initialize</span><span class='args'>(name)</span>
+      <span class='block'></span>
+    </tt>
+  </div>
+
+</div><div class="section docstring">
+  <p>
+Ctor
+</p>
+
+</div><div class="section tags">
+  <h2>Meta Tags</h2>
+  <div class="param">
+  <h3>Parameters:</h3>
+  <dl>
+  
+    
+      <dt>
+        <span class='type'>[<tt>String</tt>]</span>
+        <span class='name'>name</span>
+        
+      </dt>
+      <dd>
+        <span class='desc'><p>
+of the Ensemble
+</p>
+</span>
+      </dd>
+    
+  
+  </dl>
+</div>
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+26
+27
+28
+29
+30
+31
+32
+33
+34</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/ensemble.rb', line 26</span>
+
+<span class='def def kw'>def</span> <span class='initialize identifier id'>initialize</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='rparen token'>)</span>
+  <span class='@name ivar id'>@name</span> <span class='assign token'>=</span> <span class='name identifier id'>name</span>
+  <span class='@players ivar id'>@players</span> <span class='assign token'>=</span> <span class='lbrace token'>{</span><span class='rbrace token'>}</span>
+  <span class='@preplay_hooks_ordered_names ivar id'>@preplay_hooks_ordered_names</span> <span class='assign token'>=</span> <span class='lbrack token'>[</span><span class='rbrack token'>]</span>
+  <span class='@preplay_hooks ivar id'>@preplay_hooks</span> <span class='assign token'>=</span> <span class='lbrace token'>{</span><span class='rbrace token'>}</span>
+  <span class='@postplay_hooks_ordered_names ivar id'>@postplay_hooks_ordered_names</span> <span class='assign token'>=</span> <span class='lbrack token'>[</span><span class='rbrack token'>]</span>
+  <span class='@postplay_hooks ivar id'>@postplay_hooks</span> <span class='assign token'>=</span> <span class='lbrace token'>{</span><span class='rbrace token'>}</span>    
+  <span class='@state ivar id'>@state</span> <span class='assign token'>=</span> <span class='lbrace token'>{</span><span class='rbrace token'>}</span>    
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+</div>  <div class="section visibilitygroup public">
+    <h1>Public Visibility</h1>
+      <div class="section methodsummary instance public">
+    <h1>Public Instance Method Summary</h1>
+<table class="summary">
+  
+    <tr>
+      <th class="signature">
+        
+          <span class='overload'>
+            <span class='name'><a href="#add_player-instance_method" title="#add_player">#add_player</a></span><span class='args'>(name, player)</span>
+            <span class='block'></span>
+          </span>
+        
+        
+      </th>
+      <td class="docstring">
+        <p>
+Add a Player to the Ensembles&#8217;s list of players.
+</p>
+
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        
+          <span class='overload'>
+            <span class='name'><a href="#add_postplay_hook-instance_method" title="#add_postplay_hook">#add_postplay_hook</a></span><span class='args'>(name, &amp;f)</span>
+            <span class='block'></span>
+          </span>
+        
+        
+      </th>
+      <td class="docstring">
+        <p>
+Postplay hooks are named blocks that run, in the order they are registered,
+after each call to #play*.
+</p>
+
+        
+          <p class='returns'>
+            Returns: 
+              <span class='return_types'>
+                 <tt>self</tt>
+              </span>
+          </p>
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        
+          <span class='overload'>
+            <span class='name'><a href="#add_preplay_hook-instance_method" title="#add_preplay_hook">#add_preplay_hook</a></span><span class='args'>(name, &amp;f)</span>
+            <span class='block'></span>
+          </span>
+        
+        
+      </th>
+      <td class="docstring">
+        <p>
+Preplay hooks are named blocks that run, in the order they are registered,
+before each call to any #play* method.
+</p>
+
+        
+          <p class='returns'>
+            Returns: 
+              <span class='return_types'>
+                 <tt>self</tt>
+              </span>
+          </p>
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        
+          <span class='overload'>
+            <span class='name'><a href="#clear_players-instance_method" title="#clear_players">#clear_players</a></span><span class='args'></span>
+            <span class='block'></span>
+          </span>
+        
+        
+      </th>
+      <td class="docstring">
+        <p>
+Clear all players stored by this Ensemble.
+</p>
+
+        
+          <p class='returns'>
+            Returns: 
+              <span class='return_types'>
+                 <tt>self</tt>
+              </span>
+          </p>
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        
+          <span class='overload'>
+            <span class='name'><a href="#clear_state-instance_method" title="#clear_state">#clear_state</a></span><span class='args'></span>
+            <span class='block'></span>
+          </span>
+        
+        
+      </th>
+      <td class="docstring">
+        <p>
+Clears all key/values in the Player&#8217;s state store.
+</p>
+
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        
+          <span class='overload'>
+            <span class='name'><a href="#get_player-instance_method" title="#get_player">#get_player</a></span><span class='args'>(name)</span>
+            <span class='block'></span>
+          </span>
+        
+        
+      </th>
+      <td class="docstring">
+        <p>
+Get a reference to a player from the Ensembles&#8217;s list of players.
+</p>
+
+        
+          <p class='returns'>
+            Returns: 
+              <span class='return_types'>
+                 <tt><a href="Player.html" title="Aleatoric::Player">Aleatoric::Player</a></tt>
+              </span>
+          </p>
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        
+          <span class='overload'>
+            <span class='name'><a href="#get_players-instance_method" title="#get_players">#get_players</a></span><span class='args'></span>
+            <span class='block'></span>
+          </span>
+        
+        
+          <span class='alias'>#players</span>
+        
+      </th>
+      <td class="docstring">
+        <p>
+Get an Array of refs to all players held by this Ensemble.
+</p>
+
+        
+          <p class='returns'>
+            Returns: 
+              <span class='return_types'>
+                 <tt><a href="Array.html" title="Array">Array</a>&lt;<a href="Player.html" title="Aleatoric::Player">Aleatoric::Player</a>></tt>
+              </span>
+          </p>
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        
+          <span class='overload'>
+            <span class='name'><a href="#get_postplay_hook-instance_method" title="#get_postplay_hook">#get_postplay_hook</a></span><span class='args'>(name)</span>
+            <span class='block'></span>
+          </span>
+        
+        
+      </th>
+      <td class="docstring">
+        <p>
+Retrieves a hook by name.
+</p>
+
+        
+          <p class='returns'>
+            Returns: 
+              <span class='return_types'>
+                 <tt>block</tt>
+              </span>
+          </p>
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        
+          <span class='overload'>
+            <span class='name'><a href="#get_preplay_hook-instance_method" title="#get_preplay_hook">#get_preplay_hook</a></span><span class='args'>(name)</span>
+            <span class='block'></span>
+          </span>
+        
+        
+      </th>
+      <td class="docstring">
+        <p>
+Retrieves a hook by name.
+</p>
+
+        
+          <p class='returns'>
+            Returns: 
+              <span class='return_types'>
+                 <tt>block</tt>
+              </span>
+          </p>
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        
+          <span class='overload'>
+            <span class='name'><a href="#get_state-instance_method" title="#get_state">#get_state</a></span><span class='args'>(key)</span>
+            <span class='block'></span>
+          </span>
+        
+        
+      </th>
+      <td class="docstring">
+        <p>
+Retrieves a value by keyname, serving as a generic interface for hooks to
+store state for later use.
+</p>
+
+        
+          <p class='returns'>
+            Returns: 
+              <span class='return_types'>
+                 <tt>Object</tt>
+              </span>
+          </p>
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        
+          <span class='overload'>
+            <span class='name'><a href="#play-instance_method" title="#play">#play</a></span><span class='args'>(name, &amp;blk)</span>
+            <span class='block'></span>
+          </span>
+        
+        
+      </th>
+      <td class="docstring">
+        <p>
+Calls player.
+</p>
+
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        
+          <span class='overload'>
+            <span class='name'><a href="#play_all-instance_method" title="#play_all">#play_all</a></span><span class='args'>(&amp;blk)</span>
+            <span class='block'></span>
+          </span>
+        
+        
+      </th>
+      <td class="docstring">
+        <p>
+Calls player.
+</p>
+
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        
+          <span class='overload'>
+            <span class='name'><a href="#play_all_repeat-instance_method" title="#play_all_repeat">#play_all_repeat</a></span><span class='args'>(num_times, &amp;blk)</span>
+            <span class='block'></span>
+          </span>
+        
+        
+      </th>
+      <td class="docstring">
+        <p>
+Calls #play_all num_times.
+</p>
+
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        
+          <span class='overload'>
+            <span class='name'><a href="#play_repeat-instance_method" title="#play_repeat">#play_repeat</a></span><span class='args'>(name, num_times, &amp;blk)</span>
+            <span class='block'></span>
+          </span>
+        
+        
+      </th>
+      <td class="docstring">
+        <p>
+Calls #play num_times.
+</p>
+
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        
+          <span class='overload'>
+            <span class='name'><a href="#players_empty%3F-instance_method" title="#players_empty?">#players_empty?</a></span><span class='args'></span>
+            <span class='block'></span>
+          </span>
+        
+        
+      </th>
+      <td class="docstring">
+        <p>
+Tests whether the Ensemble has any players.
+</p>
+
+        
+          <p class='returns'>
+            Returns: 
+              <span class='return_types'>
+                 <tt>true</tt>
+              </span>
+          </p>
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        
+          <span class='overload'>
+            <span class='name'><a href="#players_length-instance_method" title="#players_length">#players_length</a></span><span class='args'></span>
+            <span class='block'></span>
+          </span>
+        
+        
+      </th>
+      <td class="docstring">
+        <p>
+Returns number of players stored by this Ensemble.
+</p>
+
+        
+          <p class='returns'>
+            Returns: 
+              <span class='return_types'>
+                 <tt>Integer</tt>
+              </span>
+          </p>
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        
+          <span class='overload'>
+            <span class='name'><a href="#remove_player-instance_method" title="#remove_player">#remove_player</a></span><span class='args'>(name)</span>
+            <span class='block'></span>
+          </span>
+        
+        
+      </th>
+      <td class="docstring">
+        <p>
+Remove a player from the Ensembles&#8217;s list of players.
+</p>
+
+        
+          <p class='returns'>
+            Returns: 
+              <span class='return_types'>
+                 <tt>self</tt>
+              </span>
+          </p>
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        
+          <span class='overload'>
+            <span class='name'><a href="#remove_postplay_hook-instance_method" title="#remove_postplay_hook">#remove_postplay_hook</a></span><span class='args'>(name)</span>
+            <span class='block'></span>
+          </span>
+        
+        
+      </th>
+      <td class="docstring">
+        <p>
+Removes a hook by name.
+</p>
+
+        
+          <p class='returns'>
+            Returns: 
+              <span class='return_types'>
+                 <tt>self</tt>
+              </span>
+          </p>
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        
+          <span class='overload'>
+            <span class='name'><a href="#remove_preplay_hook-instance_method" title="#remove_preplay_hook">#remove_preplay_hook</a></span><span class='args'>(name)</span>
+            <span class='block'></span>
+          </span>
+        
+        
+      </th>
+      <td class="docstring">
+        <p>
+Removes a hook by name.
+</p>
+
+        
+          <p class='returns'>
+            Returns: 
+              <span class='return_types'>
+                 <tt>self</tt>
+              </span>
+          </p>
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        
+          <span class='overload'>
+            <span class='name'><a href="#set_state-instance_method" title="#set_state">#set_state</a></span><span class='args'>(key, val)</span>
+            <span class='block'></span>
+          </span>
+        
+        
+      </th>
+      <td class="docstring">
+        <p>
+Store a value by keyname, serving as a generic interface for hooks to store
+state for later use.
+</p>
+
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        
+          <span class='overload'>
+            <span class='name'><a href="#state_keys-instance_method" title="#state_keys">#state_keys</a></span><span class='args'></span>
+            <span class='block'></span>
+          </span>
+        
+        
+      </th>
+      <td class="docstring">
+        <p>
+Returns the keys in the Player&#8217;s state store.
+</p>
+
+        
+      </td>
+    </tr>
+  
+</table>
+
+  </div>
+<div class="section methoddetails instance public">
+  <h1>Public Instance Method Details</h1>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>add_player</h3>
+</div><div id="add_player-instance_method" class="section method">
+  <div class="details_title">
+    <div class='section methodsignature'>
+    <tt class='def'>
+      <span class='visibility'>public</span>
+      <span class='return_types'></span>
+      <span class='name'>add_player</span><span class='args'>(name, player)</span>
+      <span class='block'></span>
+    </tt>
+  </div>
+
+</div><div class="section docstring">
+  <p>
+Add a Player to the Ensembles&#8217;s list of players. Note the players are
+added by key but also stored in order they are added. Clients can call
+#play and #play_repeat and pass a player name to play that player.
+</p>
+
+</div><div class="section tags">
+  <h2>Meta Tags</h2>
+  <div class="param">
+  <h3>Parameters:</h3>
+  <dl>
+  
+    
+      <dt>
+        <span class='type'>[<tt>String</tt>]</span>
+        <span class='name'>name</span>
+        
+      </dt>
+      <dd>
+        <span class='desc'><p>
+of the Aleatoric::Player object being added
+</p>
+</span>
+      </dd>
+    
+  
+  </dl>
+</div>
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+48
+49
+50
+51</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/ensemble.rb', line 48</span>
+
+<span class='def def kw'>def</span> <span class='add_player identifier id'>add_player</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='comma token'>,</span> <span class='player identifier id'>player</span><span class='rparen token'>)</span>
+  <span class='@players ivar id'>@players</span><span class='lbrack token'>[</span><span class='name identifier id'>name</span><span class='rbrack token'>]</span> <span class='assign token'>=</span> <span class='player identifier id'>player</span>
+  <span class='self self kw'>self</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>add_postplay_hook</h3>
+</div><div id="add_postplay_hook-instance_method" class="section method">
+  <div class="details_title">
+    <div class='section methodsignature'>
+    <tt class='def'>
+      <span class='visibility'>public</span>
+      <span class='return_types'><tt>self</tt></span>
+      <span class='name'>add_postplay_hook</span><span class='args'>(name, &amp;f)</span>
+      <span class='block'></span>
+    </tt>
+  </div>
+
+</div><div class="section docstring">
+  <p>
+Postplay hooks are named blocks that run, in the order they are registered,
+after each call to #play*. They are responsible for taking a reference to
+the Ensemble in which the hook is registered and returning nil.
+</p>
+
+</div><div class="section tags">
+  <h2>Meta Tags</h2>
+  <div class="return">
+  <h3>Returns:</h3>
+  <dl>
+  
+    <dt>
+      
+        <span class='type'>[<tt>self</tt>]</span>
+      
+      
+        <span class='name'></span>
+      
+      
+    </dt>
+    <dd>
+      <span class='desc'></span>
+    </dd>
+  
+  </dl>
+</div>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+155
+156
+157
+158
+159</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/ensemble.rb', line 155</span>
+
+<span class='def def kw'>def</span> <span class='add_postplay_hook identifier id'>add_postplay_hook</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='comma token'>,</span> <span class='bitand op'>&amp;</span><span class='f identifier id'>f</span><span class='rparen token'>)</span>  
+  <span class='@postplay_hooks_ordered_names ivar id'>@postplay_hooks_ordered_names</span> <span class='lshft op'>&lt;&lt;</span> <span class='name identifier id'>name</span>
+  <span class='@postplay_hooks ivar id'>@postplay_hooks</span><span class='lbrack token'>[</span><span class='name identifier id'>name</span><span class='rbrack token'>]</span> <span class='assign token'>=</span> <span class='f identifier id'>f</span>
+  <span class='self self kw'>self</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>add_preplay_hook</h3>
+</div><div id="add_preplay_hook-instance_method" class="section method">
+  <div class="details_title">
+    <div class='section methodsignature'>
+    <tt class='def'>
+      <span class='visibility'>public</span>
+      <span class='return_types'><tt>self</tt></span>
+      <span class='name'>add_preplay_hook</span><span class='args'>(name, &amp;f)</span>
+      <span class='block'></span>
+    </tt>
+  </div>
+
+</div><div class="section docstring">
+  <p>
+Preplay hooks are named blocks that run, in the order they are registered,
+before each call to any #play* method. They are responsible for taking a
+reference to the Ensemble in which the hook is registered and returning
+nil.
+</p>
+
+</div><div class="section tags">
+  <h2>Meta Tags</h2>
+  <div class="return">
+  <h3>Returns:</h3>
+  <dl>
+  
+    <dt>
+      
+        <span class='type'>[<tt>self</tt>]</span>
+      
+      
+        <span class='name'></span>
+      
+      
+    </dt>
+    <dd>
+      <span class='desc'></span>
+    </dd>
+  
+  </dl>
+</div>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+127
+128
+129
+130
+131</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/ensemble.rb', line 127</span>
+
+<span class='def def kw'>def</span> <span class='add_preplay_hook identifier id'>add_preplay_hook</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='comma token'>,</span> <span class='bitand op'>&amp;</span><span class='f identifier id'>f</span><span class='rparen token'>)</span>  
+  <span class='@preplay_hooks_ordered_names ivar id'>@preplay_hooks_ordered_names</span> <span class='lshft op'>&lt;&lt;</span> <span class='name identifier id'>name</span>
+  <span class='@preplay_hooks ivar id'>@preplay_hooks</span><span class='lbrack token'>[</span><span class='name identifier id'>name</span><span class='rbrack token'>]</span> <span class='assign token'>=</span> <span class='f identifier id'>f</span>    
+  <span class='self self kw'>self</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>clear_players</h3>
+</div><div id="clear_players-instance_method" class="section method">
+  <div class="details_title">
+    <div class='section methodsignature'>
+    <tt class='def'>
+      <span class='visibility'>public</span>
+      <span class='return_types'><tt>self</tt></span>
+      <span class='name'>clear_players</span><span class='args'></span>
+      <span class='block'></span>
+    </tt>
+  </div>
+
+</div><div class="section docstring">
+  <p>
+Clear all players stored by this Ensemble
+</p>
+
+</div><div class="section tags">
+  <h2>Meta Tags</h2>
+  <div class="return">
+  <h3>Returns:</h3>
+  <dl>
+  
+    <dt>
+      
+        <span class='type'>[<tt>self</tt>]</span>
+      
+      
+        <span class='name'></span>
+      
+      
+    </dt>
+    <dd>
+      <span class='desc'></span>
+    </dd>
+  
+  </dl>
+</div>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+70
+71
+72
+73</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/ensemble.rb', line 70</span>
+
+<span class='def def kw'>def</span> <span class='clear_players identifier id'>clear_players</span>
+  <span class='@players ivar id'>@players</span><span class='dot token'>.</span><span class='clear identifier id'>clear</span>
+  <span class='self self kw'>self</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>clear_state</h3>
+</div><div id="clear_state-instance_method" class="section method">
+  <div class="details_title">
+    <div class='section methodsignature'>
+    <tt class='def'>
+      <span class='visibility'>public</span>
+      <span class='return_types'></span>
+      <span class='name'>clear_state</span><span class='args'></span>
+      <span class='block'></span>
+    </tt>
+  </div>
+
+</div><div class="section docstring">
+  <p>
+Clears all key/values in the Player&#8217;s state store.
+</p>
+
+</div><div class="section tags">
+  <h2>Meta Tags</h2>
+  <div class="return">
+  <h3>Returns:</h3>
+  <dl>
+  
+    <dt>
+      
+        <span class='type'>[<tt>Object</tt>]</span>
+      
+      
+        <span class='name'></span>
+      
+      
+    </dt>
+    <dd>
+      <span class='desc'><p>
+self
+</p>
+</span>
+    </dd>
+  
+  </dl>
+</div>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+111
+112
+113
+114</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/ensemble.rb', line 111</span>
+
+<span class='def def kw'>def</span> <span class='clear_state identifier id'>clear_state</span>
+  <span class='@state ivar id'>@state</span><span class='dot token'>.</span><span class='clear identifier id'>clear</span>
+  <span class='self self kw'>self</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>get_player</h3>
+</div><div id="get_player-instance_method" class="section method">
+  <div class="details_title">
+    <div class='section methodsignature'>
+    <tt class='def'>
+      <span class='visibility'>public</span>
+      <span class='return_types'><tt><a href="Player.html" title="Aleatoric::Player">Aleatoric::Player</a></tt></span>
+      <span class='name'>get_player</span><span class='args'>(name)</span>
+      <span class='block'></span>
+    </tt>
+  </div>
+
+</div><div class="section docstring">
+  <p>
+Get a reference to a player from the Ensembles&#8217;s list of players.
+</p>
+
+</div><div class="section tags">
+  <h2>Meta Tags</h2>
+  <div class="param">
+  <h3>Parameters:</h3>
+  <dl>
+  
+    
+      <dt>
+        <span class='type'>[<tt>String</tt>]</span>
+        <span class='name'>name</span>
+        
+      </dt>
+      <dd>
+        <span class='desc'><p>
+of the Aleatoric::Player object being retrieved
+</p>
+</span>
+      </dd>
+    
+  
+  </dl>
+</div><div class="return">
+  <h3>Returns:</h3>
+  <dl>
+  
+    <dt>
+      
+        <span class='type'>[<tt><a href="Player.html" title="Aleatoric::Player">Aleatoric::Player</a></tt>]</span>
+      
+      
+        <span class='name'></span>
+      
+      
+    </dt>
+    <dd>
+      <span class='desc'></span>
+    </dd>
+  
+  </dl>
+</div>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+64
+65
+66</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/ensemble.rb', line 64</span>
+
+<span class='def def kw'>def</span> <span class='get_player identifier id'>get_player</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='rparen token'>)</span>
+  <span class='@players ivar id'>@players</span><span class='lbrack token'>[</span><span class='name identifier id'>name</span><span class='rbrack token'>]</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>get_players</h3>
+</div><div id="get_players-instance_method" class="section method">
+  <div class="details_title">
+    <div class='section methodsignature'>
+    <tt class='def'>
+      <span class='visibility'>public</span>
+      <span class='return_types'><tt><a href="Array.html" title="Array">Array</a>&lt;<a href="Player.html" title="Aleatoric::Player">Aleatoric::Player</a>></tt></span>
+      <span class='name'>get_players</span><span class='args'></span>
+      <span class='block'></span>
+    </tt>
+  </div>
+<p class="aliases">
+  <span class="aka">Also known as:</span>
+  
+    <tt id="players-instance_method">players</tt>
+  
+</p>
+</div><div class="section docstring">
+  <p>
+Get an Array of refs to all players held by this Ensemble
+</p>
+
+</div><div class="section tags">
+  <h2>Meta Tags</h2>
+  <div class="return">
+  <h3>Returns:</h3>
+  <dl>
+  
+    <dt>
+      
+        <span class='type'>[<tt><a href="Array.html" title="Array">Array</a>&lt;<a href="Player.html" title="Aleatoric::Player">Aleatoric::Player</a>></tt>]</span>
+      
+      
+        <span class='name'></span>
+      
+      
+    </dt>
+    <dd>
+      <span class='desc'></span>
+    </dd>
+  
+  </dl>
+</div>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+38
+39
+40</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/ensemble.rb', line 38</span>
+
+<span class='def def kw'>def</span> <span class='get_players identifier id'>get_players</span>
+  <span class='@players ivar id'>@players</span><span class='dot token'>.</span><span class='values identifier id'>values</span>    
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>get_postplay_hook</h3>
+</div><div id="get_postplay_hook-instance_method" class="section method">
+  <div class="details_title">
+    <div class='section methodsignature'>
+    <tt class='def'>
+      <span class='visibility'>public</span>
+      <span class='return_types'><tt>block</tt></span>
+      <span class='name'>get_postplay_hook</span><span class='args'>(name)</span>
+      <span class='block'></span>
+    </tt>
+  </div>
+
+</div><div class="section docstring">
+  <p>
+Retrieves a hook by name
+</p>
+
+</div><div class="section tags">
+  <h2>Meta Tags</h2>
+  <div class="return">
+  <h3>Returns:</h3>
+  <dl>
+  
+    <dt>
+      
+        <span class='type'>[<tt>block</tt>]</span>
+      
+      
+        <span class='name'></span>
+      
+      
+    </dt>
+    <dd>
+      <span class='desc'><p>
+returns a lambda of the body of the hook matching the name argument
+</p>
+</span>
+    </dd>
+  
+  </dl>
+</div>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+173
+174
+175</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/ensemble.rb', line 173</span>
+
+<span class='def def kw'>def</span> <span class='get_postplay_hook identifier id'>get_postplay_hook</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='rparen token'>)</span>
+  <span class='@postplay_hooks ivar id'>@postplay_hooks</span><span class='lbrack token'>[</span><span class='name identifier id'>name</span><span class='rbrack token'>]</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>get_preplay_hook</h3>
+</div><div id="get_preplay_hook-instance_method" class="section method">
+  <div class="details_title">
+    <div class='section methodsignature'>
+    <tt class='def'>
+      <span class='visibility'>public</span>
+      <span class='return_types'><tt>block</tt></span>
+      <span class='name'>get_preplay_hook</span><span class='args'>(name)</span>
+      <span class='block'></span>
+    </tt>
+  </div>
+
+</div><div class="section docstring">
+  <p>
+Retrieves a hook by name
+</p>
+
+</div><div class="section tags">
+  <h2>Meta Tags</h2>
+  <div class="return">
+  <h3>Returns:</h3>
+  <dl>
+  
+    <dt>
+      
+        <span class='type'>[<tt>block</tt>]</span>
+      
+      
+        <span class='name'></span>
+      
+      
+    </dt>
+    <dd>
+      <span class='desc'><p>
+returns a lambda of the body of the hook matching the name argument
+</p>
+</span>
+    </dd>
+  
+  </dl>
+</div>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+145
+146
+147</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/ensemble.rb', line 145</span>
+
+<span class='def def kw'>def</span> <span class='get_preplay_hook identifier id'>get_preplay_hook</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='rparen token'>)</span>
+  <span class='@preplay_hooks ivar id'>@preplay_hooks</span><span class='lbrack token'>[</span><span class='name identifier id'>name</span><span class='rbrack token'>]</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>get_state</h3>
+</div><div id="get_state-instance_method" class="section method">
+  <div class="details_title">
+    <div class='section methodsignature'>
+    <tt class='def'>
+      <span class='visibility'>public</span>
+      <span class='return_types'><tt>Object</tt></span>
+      <span class='name'>get_state</span><span class='args'>(key)</span>
+      <span class='block'></span>
+    </tt>
+  </div>
+
+</div><div class="section docstring">
+  <p>
+Retrieves a value by keyname, serving as a generic interface for hooks to
+store state for later use. Supports the design pattern of testing/setting
+state in preplay hooks and testing/setting in postplay hooks in a
+complementary fashion. So, state can be tested/set before and after each
+time the Player plays, so state can affect what is played and be affected
+by it.
+</p>
+
+</div><div class="section tags">
+  <h2>Meta Tags</h2>
+  <div class="return">
+  <h3>Returns:</h3>
+  <dl>
+  
+    <dt>
+      
+        <span class='type'>[<tt>Object</tt>]</span>
+      
+      
+        <span class='name'></span>
+      
+      
+    </dt>
+    <dd>
+      <span class='desc'><p>
+a reference to the Object stored under this key, or nil if #include?(key)
+== false
+</p>
+</span>
+    </dd>
+  
+  </dl>
+</div>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+105
+106
+107</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/ensemble.rb', line 105</span>
+
+<span class='def def kw'>def</span> <span class='get_state identifier id'>get_state</span><span class='lparen token'>(</span><span class='key identifier id'>key</span><span class='rparen token'>)</span>
+  <span class='@state ivar id'>@state</span><span class='lbrack token'>[</span><span class='key identifier id'>key</span><span class='rbrack token'>]</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>play</h3>
+</div><div id="play-instance_method" class="section method">
+  <div class="details_title">
+    <div class='section methodsignature'>
+    <tt class='def'>
+      <span class='visibility'>public</span>
+      <span class='return_types'></span>
+      <span class='name'>play</span><span class='args'>(name, &amp;blk)</span>
+      <span class='block'></span>
+    </tt>
+  </div>
+
+</div><div class="section docstring">
+  <p>
+Calls player.#play on the player named in the name argument. Runs all
+Ensemble preplay hooks in the order they were added first. Then runs the
+optional blokc in the &amp;blk argument, if one is provided. Runs all
+Ensemble postplay hooks in the order they were added after calling
+player.#play.
+</p>
+
+</div><div class="section tags">
+  <h2>Meta Tags</h2>
+  
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+182
+183
+184
+185
+186
+187
+188
+189
+190
+191
+192
+193
+194
+195
+196
+197
+198
+199
+200
+201
+202
+203
+204</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/ensemble.rb', line 182</span>
+
+<span class='def def kw'>def</span> <span class='play identifier id'>play</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='comma token'>,</span> <span class='bitand op'>&amp;</span><span class='blk identifier id'>blk</span><span class='rparen token'>)</span>
+  <span class='if if kw'>if</span> <span class='not not kw'>not</span> <span class='@players ivar id'>@players</span><span class='dot token'>.</span><span class='include? fid id'>include?</span> <span class='name identifier id'>name</span>
+    <span class='return return kw'>return</span>
+  <span class='end end kw'>end</span>
+  
+  <span class='comment val'># Ensemble outputs score for each player    </span>
+  <span class='@preplay_hooks_ordered_names ivar id'>@preplay_hooks_ordered_names</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='hook_name identifier id'>hook_name</span><span class='bitor op'>|</span>
+    <span class='@preplay_hooks ivar id'>@preplay_hooks</span><span class='lbrack token'>[</span><span class='hook_name identifier id'>hook_name</span><span class='rbrack token'>]</span><span class='dot token'>.</span><span class='call identifier id'>call</span> <span class='self self kw'>self</span>      
+  <span class='end end kw'>end</span>
+  
+  <span class='comment val'># If user passed in additional one-time-only block for this play() call, run it on current score</span>
+  <span class='blk identifier id'>blk</span><span class='dot token'>.</span><span class='call identifier id'>call</span> <span class='if if_mod kw'>if</span> <span class='block_given? fid id'>block_given?</span>
+  
+  <span class='comment val'># Now call name's play</span>
+  <span class='comment val'># Player.play can have it's own preplay hooks, preplay optional block, postplay hooks</span>
+  <span class='@players ivar id'>@players</span><span class='lbrack token'>[</span><span class='name identifier id'>name</span><span class='rbrack token'>]</span><span class='dot token'>.</span><span class='play identifier id'>play</span> 
+  
+  <span class='comment val'># Ensemble doesn't output score, so this is only called for side effects</span>
+  <span class='comment val'>#  presumably on ensemble state and/or state of some/all players</span>
+  <span class='@postplay_hooks_ordered_names ivar id'>@postplay_hooks_ordered_names</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='hook_name identifier id'>hook_name</span><span class='bitor op'>|</span>
+    <span class='@postplay_hooks ivar id'>@postplay_hooks</span><span class='lbrack token'>[</span><span class='hook_name identifier id'>hook_name</span><span class='rbrack token'>]</span><span class='dot token'>.</span><span class='call identifier id'>call</span> <span class='self self kw'>self</span>
+  <span class='end end kw'>end</span>    
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>play_all</h3>
+</div><div id="play_all-instance_method" class="section method">
+  <div class="details_title">
+    <div class='section methodsignature'>
+    <tt class='def'>
+      <span class='visibility'>public</span>
+      <span class='return_types'></span>
+      <span class='name'>play_all</span><span class='args'>(&amp;blk)</span>
+      <span class='block'></span>
+    </tt>
+  </div>
+
+</div><div class="section docstring">
+  <p>
+Calls player.#play on each player added to the Ensemble, in the order they
+were added. Runs all Ensemble preplay hooks in the order they were added
+first. Then runs the optional blokc in the &amp;blk argument, if one is
+provided. Runs all Ensemble postplay hooks in the order they were added
+after calling player.#play.
+</p>
+
+</div><div class="section tags">
+  <h2>Meta Tags</h2>
+  
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+219
+220
+221
+222
+223
+224
+225
+226
+227
+228
+229
+230
+231
+232
+233
+234
+235
+236
+237
+238
+239
+240</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/ensemble.rb', line 219</span>
+
+<span class='def def kw'>def</span> <span class='play_all identifier id'>play_all</span><span class='lparen token'>(</span><span class='bitand op'>&amp;</span><span class='blk identifier id'>blk</span><span class='rparen token'>)</span>
+  <span class='comment val'># Ensemble doesn't output score, so this is only called for side effects</span>
+  <span class='comment val'>#  presumably on ensemble state and/or state of some/all players</span>
+  <span class='comment val'># NOTE: Ensemble hooks take a reference to their containing ensemble</span>
+  <span class='@preplay_hooks_ordered_names ivar id'>@preplay_hooks_ordered_names</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='hook_name identifier id'>hook_name</span><span class='bitor op'>|</span>
+    <span class='@preplay_hooks ivar id'>@preplay_hooks</span><span class='lbrack token'>[</span><span class='hook_name identifier id'>hook_name</span><span class='rbrack token'>]</span><span class='dot token'>.</span><span class='call identifier id'>call</span> <span class='self self kw'>self</span>
+  <span class='end end kw'>end</span>
+  
+  <span class='comment val'># If user passed in additional one-time-only block for this play() call, run it on current score</span>
+  <span class='blk identifier id'>blk</span><span class='dot token'>.</span><span class='call identifier id'>call</span> <span class='if if_mod kw'>if</span> <span class='block_given? fid id'>block_given?</span>
+  
+  <span class='comment val'># Now call each player's play</span>
+  <span class='comment val'># Player.play can have it's own preplay hooks, preplay optional block, postplay hooks</span>
+  <span class='@players ivar id'>@players</span><span class='dot token'>.</span><span class='values identifier id'>values</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='lbrace token'>{</span><span class='bitor op'>|</span><span class='player identifier id'>player</span><span class='bitor op'>|</span> <span class='player identifier id'>player</span><span class='dot token'>.</span><span class='play identifier id'>play</span><span class='rbrace token'>}</span>
+  
+  <span class='comment val'># Ensemble doesn't output score, so this is only called for side effects</span>
+  <span class='comment val'>#  presumably on ensemble state and/or state of some/all players</span>
+  <span class='comment val'># NOTE: Ensemble hooks take a reference to their containing ensemble</span>
+  <span class='@postplay_hooks_ordered_names ivar id'>@postplay_hooks_ordered_names</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='hook_name identifier id'>hook_name</span><span class='bitor op'>|</span>
+    <span class='@postplay_hooks ivar id'>@postplay_hooks</span><span class='lbrack token'>[</span><span class='hook_name identifier id'>hook_name</span><span class='rbrack token'>]</span><span class='dot token'>.</span><span class='call identifier id'>call</span> <span class='self self kw'>self</span>
+  <span class='end end kw'>end</span>    
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>play_all_repeat</h3>
+</div><div id="play_all_repeat-instance_method" class="section method">
+  <div class="details_title">
+    <div class='section methodsignature'>
+    <tt class='def'>
+      <span class='visibility'>public</span>
+      <span class='return_types'></span>
+      <span class='name'>play_all_repeat</span><span class='args'>(num_times, &amp;blk)</span>
+      <span class='block'></span>
+    </tt>
+  </div>
+
+</div><div class="section docstring">
+  <p>
+Calls #play_all num_times.
+</p>
+
+</div><div class="section tags">
+  <h2>Meta Tags</h2>
+  
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+245
+246
+247</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/ensemble.rb', line 245</span>
+
+<span class='def def kw'>def</span> <span class='play_all_repeat identifier id'>play_all_repeat</span><span class='lparen token'>(</span><span class='num_times identifier id'>num_times</span><span class='comma token'>,</span> <span class='bitand op'>&amp;</span><span class='blk identifier id'>blk</span><span class='rparen token'>)</span>
+  <span class='num_times identifier id'>num_times</span><span class='dot token'>.</span><span class='times identifier id'>times</span> <span class='lbrace token'>{</span><span class='play_all identifier id'>play_all</span><span class='lparen token'>(</span><span class='bitand op'>&amp;</span><span class='blk identifier id'>blk</span><span class='rparen token'>)</span><span class='rbrace token'>}</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>play_repeat</h3>
+</div><div id="play_repeat-instance_method" class="section method">
+  <div class="details_title">
+    <div class='section methodsignature'>
+    <tt class='def'>
+      <span class='visibility'>public</span>
+      <span class='return_types'></span>
+      <span class='name'>play_repeat</span><span class='args'>(name, num_times, &amp;blk)</span>
+      <span class='block'></span>
+    </tt>
+  </div>
+
+</div><div class="section docstring">
+  <p>
+Calls #play num_times.
+</p>
+
+</div><div class="section tags">
+  <h2>Meta Tags</h2>
+  
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+210
+211
+212</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/ensemble.rb', line 210</span>
+
+<span class='def def kw'>def</span> <span class='play_repeat identifier id'>play_repeat</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='comma token'>,</span> <span class='num_times identifier id'>num_times</span><span class='comma token'>,</span> <span class='bitand op'>&amp;</span><span class='blk identifier id'>blk</span><span class='rparen token'>)</span>
+  <span class='num_times identifier id'>num_times</span><span class='dot token'>.</span><span class='times identifier id'>times</span> <span class='lbrace token'>{</span><span class='play identifier id'>play</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='comma token'>,</span> <span class='bitand op'>&amp;</span><span class='blk identifier id'>blk</span><span class='rparen token'>)</span><span class='rbrace token'>}</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>players_empty?</h3>
+</div><div id="players_empty?-instance_method" class="section method">
+  <div class="details_title">
+    <div class='section methodsignature'>
+    <tt class='def'>
+      <span class='visibility'>public</span>
+      <span class='return_types'><tt>true</tt></span>
+      <span class='name'>players_empty?</span><span class='args'></span>
+      <span class='block'></span>
+    </tt>
+  </div>
+
+</div><div class="section docstring">
+  <p>
+Tests whether the Ensemble has any players
+</p>
+
+</div><div class="section tags">
+  <h2>Meta Tags</h2>
+  <div class="return">
+  <h3>Returns:</h3>
+  <dl>
+  
+    <dt>
+      
+        <span class='type'>[<tt>true</tt>, <tt>false</tt>]</span>
+      
+      
+        <span class='name'></span>
+      
+      
+    </dt>
+    <dd>
+      <span class='desc'></span>
+    </dd>
+  
+  </dl>
+</div>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+83
+84
+85</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/ensemble.rb', line 83</span>
+
+<span class='def def kw'>def</span> <span class='players_empty? fid id'>players_empty?</span>
+  <span class='@players ivar id'>@players</span><span class='dot token'>.</span><span class='length identifier id'>length</span> <span class='eq op'>==</span> <span class='integer val'>0</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>players_length</h3>
+</div><div id="players_length-instance_method" class="section method">
+  <div class="details_title">
+    <div class='section methodsignature'>
+    <tt class='def'>
+      <span class='visibility'>public</span>
+      <span class='return_types'><tt>Integer</tt></span>
+      <span class='name'>players_length</span><span class='args'></span>
+      <span class='block'></span>
+    </tt>
+  </div>
+
+</div><div class="section docstring">
+  <p>
+Returns number of players stored by this Ensemble
+</p>
+
+</div><div class="section tags">
+  <h2>Meta Tags</h2>
+  <div class="return">
+  <h3>Returns:</h3>
+  <dl>
+  
+    <dt>
+      
+        <span class='type'>[<tt>Integer</tt>]</span>
+      
+      
+        <span class='name'></span>
+      
+      
+    </dt>
+    <dd>
+      <span class='desc'></span>
+    </dd>
+  
+  </dl>
+</div>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+77
+78
+79</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/ensemble.rb', line 77</span>
+
+<span class='def def kw'>def</span> <span class='players_length identifier id'>players_length</span>
+  <span class='@players ivar id'>@players</span><span class='dot token'>.</span><span class='length identifier id'>length</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>remove_player</h3>
+</div><div id="remove_player-instance_method" class="section method">
+  <div class="details_title">
+    <div class='section methodsignature'>
+    <tt class='def'>
+      <span class='visibility'>public</span>
+      <span class='return_types'><tt>self</tt></span>
+      <span class='name'>remove_player</span><span class='args'>(name)</span>
+      <span class='block'></span>
+    </tt>
+  </div>
+
+</div><div class="section docstring">
+  <p>
+Remove a player from the Ensembles&#8217;s list of players.
+</p>
+
+</div><div class="section tags">
+  <h2>Meta Tags</h2>
+  <div class="param">
+  <h3>Parameters:</h3>
+  <dl>
+  
+    
+      <dt>
+        <span class='type'>[<tt>String</tt>]</span>
+        <span class='name'>name</span>
+        
+      </dt>
+      <dd>
+        <span class='desc'><p>
+of the Aleatoric::Player object being removed
+</p>
+</span>
+      </dd>
+    
+  
+  </dl>
+</div><div class="return">
+  <h3>Returns:</h3>
+  <dl>
+  
+    <dt>
+      
+        <span class='type'>[<tt>self</tt>]</span>
+      
+      
+        <span class='name'></span>
+      
+      
+    </dt>
+    <dd>
+      <span class='desc'></span>
+    </dd>
+  
+  </dl>
+</div>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+56
+57
+58
+59</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/ensemble.rb', line 56</span>
+
+<span class='def def kw'>def</span> <span class='remove_player identifier id'>remove_player</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='rparen token'>)</span>
+  <span class='@players ivar id'>@players</span><span class='dot token'>.</span><span class='delete identifier id'>delete</span> <span class='name identifier id'>name</span>
+  <span class='self self kw'>self</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>remove_postplay_hook</h3>
+</div><div id="remove_postplay_hook-instance_method" class="section method">
+  <div class="details_title">
+    <div class='section methodsignature'>
+    <tt class='def'>
+      <span class='visibility'>public</span>
+      <span class='return_types'><tt>self</tt></span>
+      <span class='name'>remove_postplay_hook</span><span class='args'>(name)</span>
+      <span class='block'></span>
+    </tt>
+  </div>
+
+</div><div class="section docstring">
+  <p>
+Removes a hook by name
+</p>
+
+</div><div class="section tags">
+  <h2>Meta Tags</h2>
+  <div class="return">
+  <h3>Returns:</h3>
+  <dl>
+  
+    <dt>
+      
+        <span class='type'>[<tt>self</tt>]</span>
+      
+      
+        <span class='name'></span>
+      
+      
+    </dt>
+    <dd>
+      <span class='desc'></span>
+    </dd>
+  
+  </dl>
+</div>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+164
+165
+166
+167
+168</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/ensemble.rb', line 164</span>
+
+<span class='def def kw'>def</span> <span class='remove_postplay_hook identifier id'>remove_postplay_hook</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='rparen token'>)</span>
+  <span class='@postplay_hooks_ordered_names ivar id'>@postplay_hooks_ordered_names</span><span class='dot token'>.</span><span class='delete identifier id'>delete</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='rparen token'>)</span>
+  <span class='@postplay_hooks ivar id'>@postplay_hooks</span><span class='dot token'>.</span><span class='delete identifier id'>delete</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='rparen token'>)</span>
+  <span class='self self kw'>self</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>remove_preplay_hook</h3>
+</div><div id="remove_preplay_hook-instance_method" class="section method">
+  <div class="details_title">
+    <div class='section methodsignature'>
+    <tt class='def'>
+      <span class='visibility'>public</span>
+      <span class='return_types'><tt>self</tt></span>
+      <span class='name'>remove_preplay_hook</span><span class='args'>(name)</span>
+      <span class='block'></span>
+    </tt>
+  </div>
+
+</div><div class="section docstring">
+  <p>
+Removes a hook by name
+</p>
+
+</div><div class="section tags">
+  <h2>Meta Tags</h2>
+  <div class="return">
+  <h3>Returns:</h3>
+  <dl>
+  
+    <dt>
+      
+        <span class='type'>[<tt>self</tt>]</span>
+      
+      
+        <span class='name'></span>
+      
+      
+    </dt>
+    <dd>
+      <span class='desc'></span>
+    </dd>
+  
+  </dl>
+</div>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+136
+137
+138
+139
+140</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/ensemble.rb', line 136</span>
+
+<span class='def def kw'>def</span> <span class='remove_preplay_hook identifier id'>remove_preplay_hook</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='rparen token'>)</span>
+  <span class='@preplay_hooks_ordered_names ivar id'>@preplay_hooks_ordered_names</span><span class='dot token'>.</span><span class='delete identifier id'>delete</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='rparen token'>)</span>
+  <span class='@preplay_hooks ivar id'>@preplay_hooks</span><span class='dot token'>.</span><span class='delete identifier id'>delete</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='rparen token'>)</span>
+  <span class='self self kw'>self</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>set_state</h3>
+</div><div id="set_state-instance_method" class="section method">
+  <div class="details_title">
+    <div class='section methodsignature'>
+    <tt class='def'>
+      <span class='visibility'>public</span>
+      <span class='return_types'></span>
+      <span class='name'>set_state</span><span class='args'>(key, val)</span>
+      <span class='block'></span>
+    </tt>
+  </div>
+
+</div><div class="section docstring">
+  <p>
+Store a value by keyname, serving as a generic interface for hooks to store
+state for later use. Supports the design pattern of testing/setting state
+in preplay hooks and testing/setting in postplay hooks in a complementary
+fashion. So, state can be tested/set before and after each time the Player
+plays, so state can affect what is played and be affected by it.
+</p>
+
+</div><div class="section tags">
+  <h2>Meta Tags</h2>
+  <div class="return">
+  <h3>Returns:</h3>
+  <dl>
+  
+    <dt>
+      
+        <span class='type'>[<tt>Object</tt>]</span>
+      
+      
+        <span class='name'></span>
+      
+      
+    </dt>
+    <dd>
+      <span class='desc'><p>
+self
+</p>
+</span>
+    </dd>
+  
+  </dl>
+</div>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+94
+95
+96
+97</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/ensemble.rb', line 94</span>
+
+<span class='def def kw'>def</span> <span class='set_state identifier id'>set_state</span><span class='lparen token'>(</span><span class='key identifier id'>key</span><span class='comma token'>,</span> <span class='val identifier id'>val</span><span class='rparen token'>)</span>
+  <span class='@state ivar id'>@state</span><span class='lbrack token'>[</span><span class='key identifier id'>key</span><span class='rbrack token'>]</span> <span class='assign token'>=</span> <span class='val identifier id'>val</span>
+  <span class='self self kw'>self</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>state_keys</h3>
+</div><div id="state_keys-instance_method" class="section method">
+  <div class="details_title">
+    <div class='section methodsignature'>
+    <tt class='def'>
+      <span class='visibility'>public</span>
+      <span class='return_types'></span>
+      <span class='name'>state_keys</span><span class='args'></span>
+      <span class='block'></span>
+    </tt>
+  </div>
+
+</div><div class="section docstring">
+  <p>
+Returns the keys in the Player&#8217;s state store.
+</p>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+117
+118
+119</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/ensemble.rb', line 117</span>
+
+<span class='def def kw'>def</span> <span class='state_keys identifier id'>state_keys</span>
+  <span class='@state ivar id'>@state</span><span class='dot token'>.</span><span class='keys identifier id'>keys</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+</div>
+  </div>
+
+</div>
+    </div>
+    <div id="yard_info">
+  Generated on Wednesday, August 12 2009 at  by 
+  <abbr class="yard" title="Yay! A Ruby Documentation Tool"><a href="http://yard.soen.ca">YARD</a></abbr> 
+  0.2.3.3 (ruby-1.8.6).
+</div>
+
+  </body>
+</html>
