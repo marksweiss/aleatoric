@@ -17,8 +17,10 @@
   <h1 class="title">Class: Aleatoric::Section</h1>
   <div class="section docstring">
   <p>
-TODO THIS IS BEGGING FOR A MIX-IN - identical code, different
-&#8216;types&#8217;
+Models a section of a composition in a Composer score file. The section can
+have Measures within it. The notion is that this has the same syntax and
+semantics as Score, but that it is itself the next level up in the
+hierarchy, an ordered sequence of Scores.
 </p>
 
 </div><div class="section attributes">
@@ -99,13 +101,13 @@ Returns the value of attribute <tt>phrases</tt>.
           <pre class="lines">
 
 
-142
-143
-144
-145</pre>
+170
+171
+172
+173</pre>
         </td>
         <td>
-          <pre class="code"><span class="info file"># File 'lib/score.rb', line 142</span>
+          <pre class="code"><span class="info file"># File 'lib/score.rb', line 170</span>
 
 <span class='def def kw'>def</span> <span class='initialize identifier id'>initialize</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='assign token'>=</span><span class='nil nil kw'>nil</span><span class='rparen token'>)</span>
   <span class='@name ivar id'>@name</span> <span class='assign token'>=</span> <span class='name identifier id'>name</span>
@@ -137,6 +139,11 @@ Returns the value of attribute <tt>phrases</tt>.
     </tt>
   </div>
 
+</div><div class="section docstring">
+  <p>
+Creates accessors for newly created attributes of the object
+</p>
+
 </div><div class="section source">
   <span>[<a class="source_link" href="#">View source</a>]</span>
   <div class="source_code">
@@ -146,13 +153,13 @@ Returns the value of attribute <tt>phrases</tt>.
           <pre class="lines">
 
 
-153
-154
-155
-156</pre>
+183
+184
+185
+186</pre>
         </td>
         <td>
-          <pre class="code"><span class="info file"># File 'lib/score.rb', line 153</span>
+          <pre class="code"><span class="info file"># File 'lib/score.rb', line 183</span>
 
 <span class='def def kw'>def</span> <span class='method_missing identifier id'>method_missing</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='comma token'>,</span> <span class='val identifier id'>val</span><span class='rparen token'>)</span>
   <span class='def_accessor identifier id'>def_accessor</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='comma token'>,</span> <span class='val identifier id'>val</span><span class='rparen token'>)</span>
@@ -182,7 +189,10 @@ Returns the value of attribute <tt>phrases</tt>.
         
       </th>
       <td class="docstring">
-        
+        <p>
+Append an Enumerable of Phrases.
+</p>
+
         
       </td>
     </tr>
@@ -223,6 +233,11 @@ Returns the value of attribute <tt>phrases</tt>.
     </tt>
   </div>
 
+</div><div class="section docstring">
+  <p>
+Append an Enumerable of Phrases
+</p>
+
 </div><div class="section source">
   <span>[<a class="source_link" href="#">View source</a>]</span>
   <div class="source_code">
@@ -232,14 +247,14 @@ Returns the value of attribute <tt>phrases</tt>.
           <pre class="lines">
 
 
-147
-148
-149
-150
-151</pre>
+176
+177
+178
+179
+180</pre>
         </td>
         <td>
-          <pre class="code"><span class="info file"># File 'lib/score.rb', line 147</span>
+          <pre class="code"><span class="info file"># File 'lib/score.rb', line 176</span>
 
 <span class='def def kw'>def</span> <span class='lshft op'>&lt;&lt;</span><span class='lparen token'>(</span><span class='phrases identifier id'>phrases</span><span class='rparen token'>)</span>
    <span class='phrases identifier id'>phrases</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='phrase identifier id'>phrase</span><span class='bitor op'>|</span> 
@@ -278,17 +293,17 @@ Returns the value of attribute <tt>phrases</tt>.
           <pre class="lines">
 
 
-173
-174
-175
-176
-177
-178
-179
-180</pre>
+203
+204
+205
+206
+207
+208
+209
+210</pre>
         </td>
         <td>
-          <pre class="code"><span class="info file"># File 'lib/score.rb', line 173</span>
+          <pre class="code"><span class="info file"># File 'lib/score.rb', line 203</span>
 
 <span class='def def kw'>def</span> <span class='to_s identifier id'>to_s</span> 
   <span class='s identifier id'>s</span> <span class='assign token'>=</span> <span class='string val'>''</span>
@@ -313,7 +328,7 @@ Returns the value of attribute <tt>phrases</tt>.
 </div>
     </div>
     <div id="yard_info">
-  Generated on Wednesday, August 12 2009 at  by 
+  Generated on Friday, August 14 2009 at  by 
   <abbr class="yard" title="Yay! A Ruby Documentation Tool"><a href="http://yard.soen.ca">YARD</a></abbr> 
   0.2.3.3 (ruby-1.8.6).
 </div>

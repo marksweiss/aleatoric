@@ -19,6 +19,13 @@
   <ul>
   <li><a href="Score.html" title="Aleatoric::Score">Aleatoric::Score</a></li><ul><li>Aleatoric::Measure</li>
   </ul></ul>
+</div><div class="section docstring">
+  <p>
+Extends Score to also support manipulating the start property of the note
+so that as Notes are added they automatically start after the last note
+added
+</p>
+
 </div><div class="section attributes">
   <h1>Attributes</h1>
 
@@ -76,13 +83,13 @@ Returns the value of attribute <tt>start</tt>.
           <pre class="lines">
 
 
-106
-107
-108
-109</pre>
+126
+127
+128
+129</pre>
         </td>
         <td>
-          <pre class="code"><span class="info file"># File 'lib/score.rb', line 106</span>
+          <pre class="code"><span class="info file"># File 'lib/score.rb', line 126</span>
 
 <span class='def def kw'>def</span> <span class='initialize identifier id'>initialize</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='comma token'>,</span> <span class='start identifier id'>start</span><span class='assign token'>=</span><span class='integer val'>0</span><span class='integer val'>.0</span><span class='rparen token'>)</span>
   <span class='super super kw'>super</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='rparen token'>)</span>
@@ -116,6 +123,11 @@ Returns the value of attribute <tt>start</tt>.
     </tt>
   </div>
 
+</div><div class="section docstring">
+  <p>
+Creates accessors for newly created attributes of the object
+</p>
+
 </div><div class="section source">
   <span>[<a class="source_link" href="#">View source</a>]</span>
   <div class="source_code">
@@ -125,14 +137,14 @@ Returns the value of attribute <tt>start</tt>.
           <pre class="lines">
 
 
-28
-29
-30
-31
-32</pre>
+36
+37
+38
+39
+40</pre>
         </td>
         <td>
-          <pre class="code"><span class="info file"># File 'lib/score.rb', line 28</span>
+          <pre class="code"><span class="info file"># File 'lib/score.rb', line 36</span>
 
 <span class='def def kw'>def</span> <span class='method_missing identifier id'>method_missing</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='comma token'>,</span> <span class='val identifier id'>val</span><span class='rparen token'>)</span>  
   <span class='def_accessor identifier id'>def_accessor</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='comma token'>,</span> <span class='val identifier id'>val</span><span class='rparen token'>)</span>
@@ -163,7 +175,10 @@ Returns the value of attribute <tt>start</tt>.
         
       </th>
       <td class="docstring">
-        
+        <p>
+Adds an Enumerable of Notes to the collection held by this object.
+</p>
+
         
       </td>
     </tr>
@@ -179,7 +194,10 @@ Returns the value of attribute <tt>start</tt>.
         
       </th>
       <td class="docstring">
-        
+        <p>
+Returns a deep copy of the object.
+</p>
+
         
       </td>
     </tr>
@@ -195,7 +213,12 @@ Returns the value of attribute <tt>start</tt>.
         
       </th>
       <td class="docstring">
-        
+        <p>
+Resets the start time of all notes in this Score to value passed in param
+start param [Float] the value to set for the start attribute for all Notes
+in the Score.
+</p>
+
         
       </td>
     </tr>
@@ -236,6 +259,12 @@ Returns the value of attribute <tt>start</tt>.
     </tt>
   </div>
 
+</div><div class="section docstring">
+  <p>
+Adds an Enumerable of Notes to the collection held by this object. Also
+adjusts the start time of each note in the Score.
+</p>
+
 </div><div class="section source">
   <span>[<a class="source_link" href="#">View source</a>]</span>
   <div class="source_code">
@@ -245,16 +274,16 @@ Returns the value of attribute <tt>start</tt>.
           <pre class="lines">
 
 
-120
-121
-122
-123
-124
-125
-126</pre>
+144
+145
+146
+147
+148
+149
+150</pre>
         </td>
         <td>
-          <pre class="code"><span class="info file"># File 'lib/score.rb', line 120</span>
+          <pre class="code"><span class="info file"># File 'lib/score.rb', line 144</span>
 
 <span class='def def kw'>def</span> <span class='lshft op'>&lt;&lt;</span><span class='lparen token'>(</span><span class='notes identifier id'>notes</span><span class='rparen token'>)</span>  
   <span class='notes identifier id'>notes</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='note identifier id'>note</span><span class='bitor op'>|</span>
@@ -286,6 +315,11 @@ Returns the value of attribute <tt>start</tt>.
     </tt>
   </div>
 
+</div><div class="section docstring">
+  <p>
+Returns a deep copy of the object
+</p>
+
 </div><div class="section source">
   <span>[<a class="source_link" href="#">View source</a>]</span>
   <div class="source_code">
@@ -295,16 +329,16 @@ Returns the value of attribute <tt>start</tt>.
           <pre class="lines">
 
 
-128
-129
-130
-131
-132
-133
-134</pre>
+153
+154
+155
+156
+157
+158
+159</pre>
         </td>
         <td>
-          <pre class="code"><span class="info file"># File 'lib/score.rb', line 128</span>
+          <pre class="code"><span class="info file"># File 'lib/score.rb', line 153</span>
 
 <span class='def def kw'>def</span> <span class='dup identifier id'>dup</span>
   <span class='comment val'># TODO better than this ugly hack</span>
@@ -336,6 +370,13 @@ Returns the value of attribute <tt>start</tt>.
     </tt>
   </div>
 
+</div><div class="section docstring">
+  <p>
+Resets the start time of all notes in this Score to value passed in param
+start param [Float] the value to set for the start attribute for all Notes
+in the Score
+</p>
+
 </div><div class="section source">
   <span>[<a class="source_link" href="#">View source</a>]</span>
   <div class="source_code">
@@ -345,17 +386,17 @@ Returns the value of attribute <tt>start</tt>.
           <pre class="lines">
 
 
-111
-112
-113
-114
-115
-116
-117
-118</pre>
+133
+134
+135
+136
+137
+138
+139
+140</pre>
         </td>
         <td>
-          <pre class="code"><span class="info file"># File 'lib/score.rb', line 111</span>
+          <pre class="code"><span class="info file"># File 'lib/score.rb', line 133</span>
 
 <span class='def def kw'>def</span> <span class='reset_notes identifier id'>reset_notes</span><span class='lparen token'>(</span><span class='start identifier id'>start</span><span class='rparen token'>)</span>
   <span class='@start ivar id'>@start</span> <span class='assign token'>=</span> <span class='start identifier id'>start</span>
@@ -380,7 +421,7 @@ Returns the value of attribute <tt>start</tt>.
 </div>
     </div>
     <div id="yard_info">
-  Generated on Wednesday, August 12 2009 at  by 
+  Generated on Friday, August 14 2009 at  by 
   <abbr class="yard" title="Yay! A Ruby Documentation Tool"><a href="http://yard.soen.ca">YARD</a></abbr> 
   0.2.3.3 (ruby-1.8.6).
 </div>

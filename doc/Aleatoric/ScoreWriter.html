@@ -23,7 +23,13 @@
   <h1>Included Modules</h1>
   <p>Singleton</p>
 </div>
-<div class="section attributes">
+<div class="section docstring">
+  <p>
+Inherits from Score and adds ability to prepend header information to the
+string output of the object. Supports format just as Score does.
+</p>
+
+</div><div class="section attributes">
   <h1>Attributes</h1>
 
   
@@ -84,6 +90,11 @@ Returns the value of attribute <tt>format</tt>.
     </tt>
   </div>
 
+</div><div class="section docstring">
+  <p>
+Creates accessors for newly created attributes of the object
+</p>
+
 </div><div class="section source">
   <span>[<a class="source_link" href="#">View source</a>]</span>
   <div class="source_code">
@@ -93,14 +104,14 @@ Returns the value of attribute <tt>format</tt>.
           <pre class="lines">
 
 
-28
-29
-30
-31
-32</pre>
+36
+37
+38
+39
+40</pre>
         </td>
         <td>
-          <pre class="code"><span class="info file"># File 'lib/score.rb', line 28</span>
+          <pre class="code"><span class="info file"># File 'lib/score.rb', line 36</span>
 
 <span class='def def kw'>def</span> <span class='method_missing identifier id'>method_missing</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='comma token'>,</span> <span class='val identifier id'>val</span><span class='rparen token'>)</span>  
   <span class='def_accessor identifier id'>def_accessor</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='comma token'>,</span> <span class='val identifier id'>val</span><span class='rparen token'>)</span>
@@ -131,7 +142,10 @@ Returns the value of attribute <tt>format</tt>.
         
       </th>
       <td class="docstring">
-        
+        <p>
+Prepends header to #to_s output and then calls parent Score.
+</p>
+
         
       </td>
     </tr>
@@ -147,7 +161,11 @@ Returns the value of attribute <tt>format</tt>.
         
       </th>
       <td class="docstring">
-        
+        <p>
+Modifies the Note #to_s format being used by all Scores in the current
+process.
+</p>
+
         
       </td>
     </tr>
@@ -188,6 +206,11 @@ Returns the value of attribute <tt>format</tt>.
     </tt>
   </div>
 
+</div><div class="section docstring">
+  <p>
+Prepends header to #to_s output and then calls parent Score.#to_s
+</p>
+
 </div><div class="section source">
   <span>[<a class="source_link" href="#">View source</a>]</span>
   <div class="source_code">
@@ -197,23 +220,23 @@ Returns the value of attribute <tt>format</tt>.
           <pre class="lines">
 
 
-83
-84
-85
-86
-87
-88
-89
-90
-91
-92
-93
-94
-95
-96</pre>
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114</pre>
         </td>
         <td>
-          <pre class="code"><span class="info file"># File 'lib/score.rb', line 83</span>
+          <pre class="code"><span class="info file"># File 'lib/score.rb', line 101</span>
 
 <span class='def def kw'>def</span> <span class='to_s identifier id'>to_s</span> 
   <span class='s identifier id'>s</span> <span class='assign token'>=</span> <span class='string val'>''</span>
@@ -252,6 +275,15 @@ Returns the value of attribute <tt>format</tt>.
     </tt>
   </div>
 
+</div><div class="section docstring">
+  <p>
+Modifies the Note #to_s format being used by all Scores in the current
+process.
+</p>
+
+</div><div class="section tags">
+  <h2>Meta Tags</h2>
+  
 </div><div class="section source">
   <span>[<a class="source_link" href="#">View source</a>]</span>
   <div class="source_code">
@@ -261,13 +293,13 @@ Returns the value of attribute <tt>format</tt>.
           <pre class="lines">
 
 
-78
-79
-80
-81</pre>
+95
+96
+97
+98</pre>
         </td>
         <td>
-          <pre class="code"><span class="info file"># File 'lib/score.rb', line 78</span>
+          <pre class="code"><span class="info file"># File 'lib/score.rb', line 95</span>
 
 <span class='def def kw'>def</span> <span class='to_s_format identifier id'>to_s_format</span><span class='lparen token'>(</span><span class='format identifier id'>format</span><span class='rparen token'>)</span>  
   <span class='@format ivar id'>@format</span> <span class='assign token'>=</span> <span class='format identifier id'>format</span><span class='dot token'>.</span><span class='to_sym identifier id'>to_sym</span>
@@ -288,7 +320,7 @@ Returns the value of attribute <tt>format</tt>.
 </div>
     </div>
     <div id="yard_info">
-  Generated on Wednesday, August 12 2009 at  by 
+  Generated on Friday, August 14 2009 at  by 
   <abbr class="yard" title="Yay! A Ruby Documentation Tool"><a href="http://yard.soen.ca">YARD</a></abbr> 
   0.2.3.3 (ruby-1.8.6).
 </div>

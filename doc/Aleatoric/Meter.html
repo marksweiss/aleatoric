@@ -15,7 +15,15 @@
     <div id="content">
       <div class="section class Aleatoric_Meter">
   <h1 class="title">Class: Aleatoric::Meter</h1>
-  <div class="section constants">
+  <div class="section docstring">
+  <p>
+Models musical meter by setting beats per measure, beat length and measure
+duration. Also supports quantizing notes in a Score to align with closest
+beats in the measure &#8212; that is to force the notes to land on the
+closest beats.
+</p>
+
+</div><div class="section constants">
   
 </div><div class="section constructor">
 <h1>Constructor Summary</h1>
@@ -39,15 +47,15 @@
           <pre class="lines">
 
 
-7
-8
-9
 10
 11
-12</pre>
+12
+13
+14
+15</pre>
         </td>
         <td>
-          <pre class="code"><span class="info file"># File 'lib/meter.rb', line 7</span>
+          <pre class="code"><span class="info file"># File 'lib/meter.rb', line 10</span>
 
 <span class='def def kw'>def</span> <span class='initialize identifier id'>initialize</span><span class='lparen token'>(</span><span class='quantizing identifier id'>quantizing</span><span class='assign token'>=</span><span class='true true kw'>true</span><span class='comma token'>,</span> <span class='beats_per_measure identifier id'>beats_per_measure</span><span class='assign token'>=</span><span class='integer val'>4</span><span class='comma token'>,</span> <span class='beat_length identifier id'>beat_length</span><span class='assign token'>=</span><span class='QRTR constant id'>QRTR</span><span class='rparen token'>)</span>
   <span class='@quantizing ivar id'>@quantizing</span> <span class='assign token'>=</span> <span class='quantizing identifier id'>quantizing</span>
@@ -79,7 +87,10 @@
         
       </th>
       <td class="docstring">
-        
+        <p>
+Accessor to test or set the value for beat length.
+</p>
+
         
       </td>
     </tr>
@@ -95,7 +106,10 @@
         
       </th>
       <td class="docstring">
-        
+        <p>
+Accessor to test or set the value for beats per measure.
+</p>
+
         
       </td>
     </tr>
@@ -112,21 +126,19 @@
       </th>
       <td class="docstring">
         <p>
-Algorithm Count up duration of notes If adds up to @measure_dur Then exit
-Else
+Algorithm
 </p>
 <pre class="code">
+ <span class='Count constant id'>Count</span> <span class='up identifier id'>up</span> <span class='duration identifier id'>duration</span> <span class='of identifier id'>of</span> <span class='notes identifier id'>notes</span>
+ <span class='If constant id'>If</span> <span class='adds identifier id'>adds</span> <span class='up identifier id'>up</span> <span class='to identifier id'>to</span> <span class='@measure_dur ivar id'>@measure_dur</span> <span class='Then constant id'>Then</span> <span class='exit identifier id'>exit</span>
+ <span class='Else constant id'>Else</span>
   <span class='ActualDur constant id'>ActualDur</span> <span class='assign token'>=</span> <span class='Sum constant id'>Sum</span><span class='lparen token'>(</span><span class='ActualNotes_Duration constant id'>ActualNotes_Duration</span><span class='rparen token'>)</span>
   <span class='NoteDurFactor constant id'>NoteDurFactor</span> <span class='assign token'>=</span> <span class='@measure_dur ivar id'>@measure_dur</span><span class='div op'>/</span><span class='ActualDur constant id'>ActualDur</span>
   <span class='For constant id'>For</span> <span class='Each constant id'>Each</span> <span class='ActualNote constant id'>ActualNote</span>
     <span class='ActualNote_NewDuration constant id'>ActualNote_NewDuration</span> <span class='opasgn op'>*=</span> <span class='NoteDurFactor constant id'>NoteDurFactor</span>
     <span class='ActualNote_NewStart constant id'>ActualNote_NewStart</span> <span class='assign token'>=</span> <span class='ActualNote_Start constant id'>ActualNote_Start</span> <span class='plus op'>+</span> <span class='lparen token'>(</span><span class='ActualNote_NewDuration constant id'>ActualNote_NewDuration</span> <span class='minus op'>-</span> <span class='ActualNote_Duration constant id'>ActualNote_Duration</span><span class='rparen token'>)</span>
-  <span class='AdjustNotes constant id'>AdjustNotes</span>
+  <span class='AdjustNotes constant id'>AdjustNotes</span><span class='dot token'>.</span>
 </pre>
-<p>
-Assumes notes are a measure of notes to be quantized to @beat_length,
-@beats_per_measure.
-</p>
 
         
       </td>
@@ -143,7 +155,10 @@ Assumes notes are a measure of notes to be quantized to @beat_length,
         
       </th>
       <td class="docstring">
-        
+        <p>
+Accessor to test or set whether this Meter is quantizing.
+</p>
+
         
       </td>
     </tr>
@@ -168,6 +183,11 @@ Assumes notes are a measure of notes to be quantized to @beat_length,
     </tt>
   </div>
 
+</div><div class="section docstring">
+  <p>
+Accessor to test or set the value for beat length
+</p>
+
 </div><div class="section source">
   <span>[<a class="source_link" href="#">View source</a>]</span>
   <div class="source_code">
@@ -177,13 +197,13 @@ Assumes notes are a measure of notes to be quantized to @beat_length,
           <pre class="lines">
 
 
-24
-25
-26
-27</pre>
+30
+31
+32
+33</pre>
         </td>
         <td>
-          <pre class="code"><span class="info file"># File 'lib/meter.rb', line 24</span>
+          <pre class="code"><span class="info file"># File 'lib/meter.rb', line 30</span>
 
 <span class='def def kw'>def</span> <span class='beat_length identifier id'>beat_length</span><span class='lparen token'>(</span><span class='val identifier id'>val</span><span class='assign token'>=</span><span class='nil nil kw'>nil</span><span class='rparen token'>)</span>
   <span class='@beat_length ivar id'>@beat_length</span> <span class='assign token'>=</span> <span class='val identifier id'>val</span> <span class='if if_mod kw'>if</span> <span class='val identifier id'>val</span> <span class='neq op'>!=</span> <span class='nil nil kw'>nil</span>
@@ -212,6 +232,11 @@ Assumes notes are a measure of notes to be quantized to @beat_length,
     </tt>
   </div>
 
+</div><div class="section docstring">
+  <p>
+Accessor to test or set the value for beats per measure
+</p>
+
 </div><div class="section source">
   <span>[<a class="source_link" href="#">View source</a>]</span>
   <div class="source_code">
@@ -221,13 +246,13 @@ Assumes notes are a measure of notes to be quantized to @beat_length,
           <pre class="lines">
 
 
-19
-20
-21
-22</pre>
+24
+25
+26
+27</pre>
         </td>
         <td>
-          <pre class="code"><span class="info file"># File 'lib/meter.rb', line 19</span>
+          <pre class="code"><span class="info file"># File 'lib/meter.rb', line 24</span>
 
 <span class='def def kw'>def</span> <span class='beats_per_measure identifier id'>beats_per_measure</span><span class='lparen token'>(</span><span class='val identifier id'>val</span><span class='assign token'>=</span><span class='nil nil kw'>nil</span><span class='rparen token'>)</span>
   <span class='@beats_per_measure ivar id'>@beats_per_measure</span> <span class='assign token'>=</span> <span class='val identifier id'>val</span> <span class='if if_mod kw'>if</span> <span class='val identifier id'>val</span> <span class='neq op'>!=</span> <span class='nil nil kw'>nil</span>
@@ -258,10 +283,12 @@ Assumes notes are a measure of notes to be quantized to @beat_length,
 
 </div><div class="section docstring">
   <p>
-Algorithm Count up duration of notes If adds up to @measure_dur Then exit
-Else
+Algorithm
 </p>
 <pre class="code">
+ <span class='Count constant id'>Count</span> <span class='up identifier id'>up</span> <span class='duration identifier id'>duration</span> <span class='of identifier id'>of</span> <span class='notes identifier id'>notes</span>
+ <span class='If constant id'>If</span> <span class='adds identifier id'>adds</span> <span class='up identifier id'>up</span> <span class='to identifier id'>to</span> <span class='@measure_dur ivar id'>@measure_dur</span> <span class='Then constant id'>Then</span> <span class='exit identifier id'>exit</span>
+ <span class='Else constant id'>Else</span>
   <span class='ActualDur constant id'>ActualDur</span> <span class='assign token'>=</span> <span class='Sum constant id'>Sum</span><span class='lparen token'>(</span><span class='ActualNotes_Duration constant id'>ActualNotes_Duration</span><span class='rparen token'>)</span>
   <span class='NoteDurFactor constant id'>NoteDurFactor</span> <span class='assign token'>=</span> <span class='@measure_dur ivar id'>@measure_dur</span><span class='div op'>/</span><span class='ActualDur constant id'>ActualDur</span>
   <span class='For constant id'>For</span> <span class='Each constant id'>Each</span> <span class='ActualNote constant id'>ActualNote</span>
@@ -274,6 +301,9 @@ Assumes notes are a measure of notes to be quantized to @beat_length,
 @beats_per_measure
 </p>
 
+</div><div class="section tags">
+  <h2>Meta Tags</h2>
+  
 </div><div class="section source">
   <span>[<a class="source_link" href="#">View source</a>]</span>
   <div class="source_code">
@@ -283,13 +313,6 @@ Assumes notes are a measure of notes to be quantized to @beat_length,
           <pre class="lines">
 
 
-41
-42
-43
-44
-45
-46
-47
 48
 49
 50
@@ -304,10 +327,17 @@ Assumes notes are a measure of notes to be quantized to @beat_length,
 59
 60
 61
-62</pre>
+62
+63
+64
+65
+66
+67
+68
+69</pre>
         </td>
         <td>
-          <pre class="code"><span class="info file"># File 'lib/meter.rb', line 41</span>
+          <pre class="code"><span class="info file"># File 'lib/meter.rb', line 48</span>
 
 <span class='def def kw'>def</span> <span class='quantize identifier id'>quantize</span><span class='lparen token'>(</span><span class='notes identifier id'>notes</span><span class='rparen token'>)</span>
   <span class='new_notes identifier id'>new_notes</span> <span class='assign token'>=</span> <span class='notes identifier id'>notes</span>
@@ -354,6 +384,11 @@ Assumes notes are a measure of notes to be quantized to @beat_length,
     </tt>
   </div>
 
+</div><div class="section docstring">
+  <p>
+Accessor to test or set whether this Meter is quantizing
+</p>
+
 </div><div class="section source">
   <span>[<a class="source_link" href="#">View source</a>]</span>
   <div class="source_code">
@@ -363,13 +398,13 @@ Assumes notes are a measure of notes to be quantized to @beat_length,
           <pre class="lines">
 
 
-14
-15
-16
-17</pre>
+18
+19
+20
+21</pre>
         </td>
         <td>
-          <pre class="code"><span class="info file"># File 'lib/meter.rb', line 14</span>
+          <pre class="code"><span class="info file"># File 'lib/meter.rb', line 18</span>
 
 <span class='def def kw'>def</span> <span class='quantizing? fid id'>quantizing?</span><span class='lparen token'>(</span><span class='val identifier id'>val</span><span class='assign token'>=</span><span class='nil nil kw'>nil</span><span class='rparen token'>)</span>
   <span class='@quantizing ivar id'>@quantizing</span> <span class='assign token'>=</span> <span class='val identifier id'>val</span> <span class='if if_mod kw'>if</span> <span class='val identifier id'>val</span> <span class='neq op'>!=</span> <span class='nil nil kw'>nil</span>
@@ -390,7 +425,7 @@ Assumes notes are a measure of notes to be quantized to @beat_length,
 </div>
     </div>
     <div id="yard_info">
-  Generated on Wednesday, August 12 2009 at  by 
+  Generated on Friday, August 14 2009 at  by 
   <abbr class="yard" title="Yay! A Ruby Documentation Tool"><a href="http://yard.soen.ca">YARD</a></abbr> 
   0.2.3.3 (ruby-1.8.6).
 </div>

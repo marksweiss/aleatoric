@@ -534,7 +534,11 @@ but did work returning a string, why?.
         
       </th>
       <td class="docstring">
-        
+        <p>
+The only way to debug any statements running in the context of the #load
+call in aleatoric.
+</p>
+
         
       </td>
     </tr>
@@ -779,7 +783,11 @@ keyword, because can&#8217;t method_missing() it because there is a
         
       </th>
       <td class="docstring">
-        
+        <p>
+Generates an integer and tests whether it is less than the test_val
+argument passed in.
+</p>
+
         
       </td>
     </tr>
@@ -1163,7 +1171,10 @@ Handles keyword &quot;sections&quot;, called inside write() block.
         
       </th>
       <td class="docstring">
-        
+        <p>
+Generates and tests an integer for odd/even.
+</p>
+
         
       </td>
     </tr>
@@ -1180,7 +1191,7 @@ Handles keyword &quot;sections&quot;, called inside write() block.
       </th>
       <td class="docstring">
         <p>
-swing(0.
+Offsets a value within a range swing(0.
 </p>
 
         
@@ -1376,6 +1387,14 @@ but did work returning a string, why?
     </tt>
   </div>
 
+</div><div class="section docstring">
+  <p>
+The only way to debug any statements running in the context of the #load
+call in aleatoric.rb Call this to write log statements to file, which will
+include all the current context of the script execution in composer_lang.rb
+and composer.rb.
+</p>
+
 </div><div class="section source">
   <span>[<a class="source_link" href="#">View source</a>]</span>
   <div class="source_code">
@@ -1385,14 +1404,14 @@ but did work returning a string, why?
           <pre class="lines">
 
 
-9
-10
-11
-12
-13</pre>
+15
+16
+17
+18
+19</pre>
         </td>
         <td>
-          <pre class="code"><span class="info file"># File 'lib/util.rb', line 9</span>
+          <pre class="code"><span class="info file"># File 'lib/util.rb', line 15</span>
 
 <span class='def def kw'>def</span> <span class='debug_log identifier id'>debug_log</span><span class='lparen token'>(</span><span class='msg identifier id'>msg</span><span class='rparen token'>)</span>
   <span class='File constant id'>File</span><span class='dot token'>.</span><span class='open identifier id'>open</span><span class='lparen token'>(</span><span class='string val'>&quot;..\\test\\test_debug_log.txt&quot;</span><span class='comma token'>,</span> <span class='File constant id'>File</span><span class='colon2 op'>::</span><span class='WRONLY constant id'>WRONLY</span><span class='bitor op'>|</span><span class='File constant id'>File</span><span class='colon2 op'>::</span><span class='APPEND constant id'>APPEND</span><span class='bitor op'>|</span><span class='File constant id'>File</span><span class='colon2 op'>::</span><span class='CREAT constant id'>CREAT</span><span class='rparen token'>)</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='f identifier id'>f</span><span class='bitor op'>|</span>
@@ -2309,6 +2328,15 @@ keyword, because can&#8217;t method_missing() it because there is a
     </tt>
   </div>
 
+</div><div class="section docstring">
+  <p>
+Generates an integer and tests whether it is less than the test_val
+argument passed in
+</p>
+
+</div><div class="section tags">
+  <h2>Meta Tags</h2>
+  
 </div><div class="section source">
   <span>[<a class="source_link" href="#">View source</a>]</span>
   <div class="source_code">
@@ -2318,13 +2346,13 @@ keyword, because can&#8217;t method_missing() it because there is a
           <pre class="lines">
 
 
-4
-5
-6
-7</pre>
+7
+8
+9
+10</pre>
         </td>
         <td>
-          <pre class="code"><span class="info file"># File 'lib/util.rb', line 4</span>
+          <pre class="code"><span class="info file"># File 'lib/util.rb', line 7</span>
 
 <span class='def def kw'>def</span> <span class='lt_N? fid id'>lt_N?</span><span class='lparen token'>(</span><span class='test_val identifier id'>test_val</span><span class='comma token'>,</span> <span class='n identifier id'>n</span><span class='assign token'>=</span><span class='nil nil kw'>nil</span><span class='rparen token'>)</span>
   <span class='n identifier id'>n</span> <span class='opasgn op'>||=</span> <span class='DFLT_LT_N constant id'>DFLT_LT_N</span>
@@ -4029,6 +4057,11 @@ Handles keyword &quot;sections&quot;, called inside write() block
     </tt>
   </div>
 
+</div><div class="section docstring">
+  <p>
+Generates and tests an integer for odd/even
+</p>
+
 </div><div class="section source">
   <span>[<a class="source_link" href="#">View source</a>]</span>
   <div class="source_code">
@@ -4038,12 +4071,12 @@ Handles keyword &quot;sections&quot;, called inside write() block
           <pre class="lines">
 
 
-20
-21
-22</pre>
+28
+29
+30</pre>
         </td>
         <td>
-          <pre class="code"><span class="info file"># File 'lib/util.rb', line 20</span>
+          <pre class="code"><span class="info file"># File 'lib/util.rb', line 28</span>
 
 <span class='def def kw'>def</span> <span class='sign identifier id'>sign</span>
   <span class='rand identifier id'>rand</span><span class='lparen token'>(</span><span class='integer val'>2</span><span class='rparen token'>)</span> <span class='mod op'>%</span> <span class='integer val'>2</span> <span class='eq op'>==</span> <span class='integer val'>0</span> <span class='question op'>?</span> <span class='integer val'>1</span> <span class='colon op'>:</span> <span class='integer val'>-1</span>
@@ -4073,7 +4106,7 @@ Handles keyword &quot;sections&quot;, called inside write() block
 
 </div><div class="section docstring">
   <p>
-swing(0.98, 5, 0.01) ==&gt; 0.98 - 1.02
+Offsets a value within a range swing(0.98, 5, 0.01) ==&gt; 0.98 - 1.02
 </p>
 
 </div><div class="section source">
@@ -4085,12 +4118,12 @@ swing(0.98, 5, 0.01) ==&gt; 0.98 - 1.02
           <pre class="lines">
 
 
-16
-17
-18</pre>
+23
+24
+25</pre>
         </td>
         <td>
-          <pre class="code"><span class="info file"># File 'lib/util.rb', line 16</span>
+          <pre class="code"><span class="info file"># File 'lib/util.rb', line 23</span>
 
 <span class='def def kw'>def</span> <span class='swing identifier id'>swing</span><span class='lparen token'>(</span><span class='base_val identifier id'>base_val</span><span class='comma token'>,</span> <span class='num_steps identifier id'>num_steps</span><span class='comma token'>,</span> <span class='swing_step identifier id'>swing_step</span><span class='rparen token'>)</span>
   <span class='base_val identifier id'>base_val</span> <span class='plus op'>+</span> <span class='lparen token'>(</span><span class='rand identifier id'>rand</span><span class='lparen token'>(</span><span class='num_steps identifier id'>num_steps</span><span class='rparen token'>)</span> <span class='mult op'>*</span> <span class='swing_step identifier id'>swing_step</span><span class='rparen token'>)</span>
@@ -4194,7 +4227,7 @@ swing(0.98, 5, 0.01) ==&gt; 0.98 - 1.02
 </div>
     </div>
     <div id="yard_info">
-  Generated on Wednesday, August 12 2009 at  by 
+  Generated on Friday, August 14 2009 at  by 
   <abbr class="yard" title="Yay! A Ruby Documentation Tool"><a href="http://yard.soen.ca">YARD</a></abbr> 
   0.2.3.3 (ruby-1.8.6).
 </div>

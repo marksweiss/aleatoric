@@ -15,7 +15,16 @@
     <div id="content">
       <div class="section class Aleatoric_Score">
   <h1 class="title">Class: Aleatoric::Score</h1>
-  <div class="section attributes">
+  <div class="section docstring">
+  <p>
+Models an ordered sequence of Notes. #&lt;&lt; is used to add Notes using
+stream/string append syntax. Only trivial accessors are defined for name
+and the collection of notes. Users dynamically add attributes which are
+processed by #method_missing. Attribute names can be retrieved in the order
+they were added.
+</p>
+
+</div><div class="section attributes">
   <h1>Attributes</h1>
 
   
@@ -114,16 +123,16 @@ Sets the attribute <tt>score_attrs</tt>.
           <pre class="lines">
 
 
-14
-15
-16
-17
 18
 19
-20</pre>
+20
+21
+22
+23
+24</pre>
         </td>
         <td>
-          <pre class="code"><span class="info file"># File 'lib/score.rb', line 14</span>
+          <pre class="code"><span class="info file"># File 'lib/score.rb', line 18</span>
 
 <span class='def def kw'>def</span> <span class='initialize identifier id'>initialize</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='assign token'>=</span><span class='nil nil kw'>nil</span><span class='rparen token'>)</span>
   <span class='comment val'># reasonable default value transparent to user (who didn't provide a name after all)</span>
@@ -158,6 +167,11 @@ Sets the attribute <tt>score_attrs</tt>.
     </tt>
   </div>
 
+</div><div class="section docstring">
+  <p>
+Creates accessors for newly created attributes of the object
+</p>
+
 </div><div class="section source">
   <span>[<a class="source_link" href="#">View source</a>]</span>
   <div class="source_code">
@@ -167,14 +181,14 @@ Sets the attribute <tt>score_attrs</tt>.
           <pre class="lines">
 
 
-28
-29
-30
-31
-32</pre>
+36
+37
+38
+39
+40</pre>
         </td>
         <td>
-          <pre class="code"><span class="info file"># File 'lib/score.rb', line 28</span>
+          <pre class="code"><span class="info file"># File 'lib/score.rb', line 36</span>
 
 <span class='def def kw'>def</span> <span class='method_missing identifier id'>method_missing</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='comma token'>,</span> <span class='val identifier id'>val</span><span class='rparen token'>)</span>  
   <span class='def_accessor identifier id'>def_accessor</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='comma token'>,</span> <span class='val identifier id'>val</span><span class='rparen token'>)</span>
@@ -205,7 +219,10 @@ Sets the attribute <tt>score_attrs</tt>.
         
       </th>
       <td class="docstring">
-        
+        <p>
+Append an Enumerable of Notes to the Score.
+</p>
+
         
       </td>
     </tr>
@@ -221,7 +238,10 @@ Sets the attribute <tt>score_attrs</tt>.
         
       </th>
       <td class="docstring">
-        
+        <p>
+Clears the collection of Notes held by this Score.
+</p>
+
         
       </td>
     </tr>
@@ -237,7 +257,10 @@ Sets the attribute <tt>score_attrs</tt>.
         
       </th>
       <td class="docstring">
-        
+        <p>
+Returns a deep copy of the object.
+</p>
+
         
       </td>
     </tr>
@@ -253,7 +276,17 @@ Sets the attribute <tt>score_attrs</tt>.
         
       </th>
       <td class="docstring">
+        <p>
+Iterates over the Notes in this Score, calls note.
+</p>
+
         
+          <p class='returns'>
+            Returns: 
+              <span class='return_types'>
+                 <tt>String</tt>
+              </span>
+          </p>
         
       </td>
     </tr>
@@ -278,6 +311,13 @@ Sets the attribute <tt>score_attrs</tt>.
     </tt>
   </div>
 
+</div><div class="section docstring">
+  <p>
+Append an Enumerable of Notes to the Score. Does a deep copy on each Note
+added so that any subsequent manipulation by this Score won&#8217;t affect
+the source Note. @param[Enumerable&lt;Aleatoric::Note&gt;]
+</p>
+
 </div><div class="section source">
   <span>[<a class="source_link" href="#">View source</a>]</span>
   <div class="source_code">
@@ -287,14 +327,14 @@ Sets the attribute <tt>score_attrs</tt>.
           <pre class="lines">
 
 
-22
-23
-24
-25
-26</pre>
+29
+30
+31
+32
+33</pre>
         </td>
         <td>
-          <pre class="code"><span class="info file"># File 'lib/score.rb', line 22</span>
+          <pre class="code"><span class="info file"># File 'lib/score.rb', line 29</span>
 
 <span class='def def kw'>def</span> <span class='lshft op'>&lt;&lt;</span><span class='lparen token'>(</span><span class='notes identifier id'>notes</span><span class='rparen token'>)</span>
   <span class='notes identifier id'>notes</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='note identifier id'>note</span><span class='bitor op'>|</span> 
@@ -324,6 +364,11 @@ Sets the attribute <tt>score_attrs</tt>.
     </tt>
   </div>
 
+</div><div class="section docstring">
+  <p>
+Clears the collection of Notes held by this Score
+</p>
+
 </div><div class="section source">
   <span>[<a class="source_link" href="#">View source</a>]</span>
   <div class="source_code">
@@ -333,13 +378,13 @@ Sets the attribute <tt>score_attrs</tt>.
           <pre class="lines">
 
 
-49
-50
-51
-52</pre>
+58
+59
+60
+61</pre>
         </td>
         <td>
-          <pre class="code"><span class="info file"># File 'lib/score.rb', line 49</span>
+          <pre class="code"><span class="info file"># File 'lib/score.rb', line 58</span>
 
 <span class='def def kw'>def</span> <span class='clear identifier id'>clear</span>
   <span class='@notes ivar id'>@notes</span> <span class='assign token'>=</span> <span class='lbrack token'>[</span><span class='rbrack token'>]</span>
@@ -368,6 +413,11 @@ Sets the attribute <tt>score_attrs</tt>.
     </tt>
   </div>
 
+</div><div class="section docstring">
+  <p>
+Returns a deep copy of the object
+</p>
+
 </div><div class="section source">
   <span>[<a class="source_link" href="#">View source</a>]</span>
   <div class="source_code">
@@ -377,19 +427,19 @@ Sets the attribute <tt>score_attrs</tt>.
           <pre class="lines">
 
 
-54
-55
-56
-57
-58
-59
-60
-61
-62
-63</pre>
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73</pre>
         </td>
         <td>
-          <pre class="code"><span class="info file"># File 'lib/score.rb', line 54</span>
+          <pre class="code"><span class="info file"># File 'lib/score.rb', line 64</span>
 
 <span class='def def kw'>def</span> <span class='dup identifier id'>dup</span>
   <span class='ret identifier id'>ret</span> <span class='assign token'>=</span> <span class='Score constant id'>Score</span><span class='dot token'>.</span><span class='new identifier id'>new</span>
@@ -418,11 +468,42 @@ Sets the attribute <tt>score_attrs</tt>.
     <div class='section methodsignature'>
     <tt class='def'>
       <span class='visibility'>public</span>
-      <span class='return_types'></span>
+      <span class='return_types'><tt>String</tt></span>
       <span class='name'>to_s</span><span class='args'></span>
       <span class='block'></span>
     </tt>
   </div>
+
+</div><div class="section docstring">
+  <p>
+Iterates over the Notes in this Score, calls note.#to_s, appends the result
+to an output string and then returns that output string
+</p>
+
+</div><div class="section tags">
+  <h2>Meta Tags</h2>
+  <div class="return">
+  <h3>Returns:</h3>
+  <dl>
+  
+    <dt>
+      
+        <span class='type'>[<tt>String</tt>]</span>
+      
+      
+        <span class='name'></span>
+      
+      
+    </dt>
+    <dd>
+      <span class='desc'><p>
+the concatenation of the #to_s of each Note in the Score
+</p>
+</span>
+    </dd>
+  
+  </dl>
+</div>
 
 </div><div class="section source">
   <span>[<a class="source_link" href="#">View source</a>]</span>
@@ -433,16 +514,16 @@ Sets the attribute <tt>score_attrs</tt>.
           <pre class="lines">
 
 
-65
-66
-67
-68
-69
-70
-71</pre>
+78
+79
+80
+81
+82
+83
+84</pre>
         </td>
         <td>
-          <pre class="code"><span class="info file"># File 'lib/score.rb', line 65</span>
+          <pre class="code"><span class="info file"># File 'lib/score.rb', line 78</span>
 
 <span class='def def kw'>def</span> <span class='to_s identifier id'>to_s</span>
   <span class='s identifier id'>s</span> <span class='assign token'>=</span> <span class='string val'>''</span>
@@ -466,7 +547,7 @@ Sets the attribute <tt>score_attrs</tt>.
 </div>
     </div>
     <div id="yard_info">
-  Generated on Wednesday, August 12 2009 at  by 
+  Generated on Friday, August 14 2009 at  by 
   <abbr class="yard" title="Yay! A Ruby Documentation Tool"><a href="http://yard.soen.ca">YARD</a></abbr> 
   0.2.3.3 (ruby-1.8.6).
 </div>
