@@ -104,7 +104,7 @@ Performance Score Concepts
 -----------------------------
  
 As the previous section shows, you can use Composer simply to describe musical events in a score and turn that description into an actual musical file that plays on your computer.  But the language also supports aleatoric features.
- 
+
 First, beyond the statements for defining musical events directly, there are statements supporting the notions of players who play a score, and players in an ensemble playing a score together.
  
 A 'player' is assigned a name when defined (again, so that later 'players' commands can refer to that player) and also assigned notes in either 'section' or 'phrase' or 'note' blocks below the player.  Players are then instructed in the score to 'play' and the results of this performance are rendered into the final result:
@@ -189,8 +189,8 @@ Finally, Composer supports the notion of 'improvisation' directions in the score
     players "Player 1"
  
 Again, the implementation of the code that the software players run to generate their improvised notes is created by a programmer following the intent of the improvisation's 'description' and remains hidden from the composer of the score.
- 
- 
+
+
 ------------------------------------
 Technical and Theoretical Background
 ------------------------------------
