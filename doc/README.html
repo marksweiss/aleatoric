@@ -13,237 +13,382 @@
     <div id="content">
       <div class="section docstring readme">
         <hr size="10"></hr><p>
-aleatoric README Mark Weiss v .1.02 last updated: 3/15/2008
+Aleatoric README Mark Weiss v 0.6.0 last updated: 8/16/2008
 </p>
 <hr size="10"></hr><hr size="10"></hr><p>
-Background and Code Overview
+Introduction
 </p>
 <hr size="10"></hr><p>
-Right now this library is just starting, with a nice DSL for defining
-musical notes that is as minimal and flexible as possible.
+Aleatoric is a library for composing aleatoric and electronic music.
+Composers use Aleatoric&#8217;s Composer language, a very simple and
+focused language for specifying musical notes, organizing notes into
+groups, and creating additional written directives for
+&quot;performers&quot; of the score to follow. Composer is a
+domain-specific-language, or DSL, which really just means that writing the
+language requires only what is needed for the task of creating traditional
+or aleatoric compositions (which typically define both musical events and
+additional written performance instructions).
 </p>
 <p>
-The rest of the working code is in the /compositions/Terry_Riley-In_C tree.
-It is one-off initial code that served as a proof-of-concept to form the
-basic ideas of the library, and can be used to render Terry Riley&#8217;s
-&quot;In C&quot; as a Score file in a format that the electronic music
-composition program CSound can consume in order to render a sound file. To
-hear a sample performance rendered as an MP3, go to
-/compositions/Terry_Riley-In_C/render_out.
+Composer provides a complete separation between the commands that define
+musical events and additional performance instructions, and the code that
+ends up generating the resulting sound file that represents a
+&quot;performance&quot; of the composition. In particular, the language
+borrows an idea from the world of software testing (a prime inspiration is
+here, http://github.com/aslakhellesoy/cucumber/tree/master) to allow the
+&quot;domain expert,&quot; who in this case is the musically inclined
+composer, to simply describe performance directions in sentences.
+Meanwhile, the program that actually implements the actions described is
+hidden from the composer, visible only to the programmer responsible for
+writing it. Of course, in some cases, one person fills the role of both
+composer and programmer, but that emphatically need not be the case.
 </p>
 <p>
-Two classes model general concepts that are likely to remain in a similar
-form as the library evolves.
+To summarize, these are the two most important goals of Composer: to
+present a minimally simple, easy and intuitive language for creating
+musical scores, and to allow complete separation between a composer&#8217;s
+aleatoric directives and the code required to make them real.
 </p>
 <p>
-First, a Note (lib/note.rb) models a musical event. In the current test
-code in test/note.in properties map to the core required properties for a
-Note in a CSound Score, which are instrument, amplitude, start time,
-duration and pitch. Instrument refers to a definition of an electronic
-instrument in a CSound Orchestra file; the others are typical properties of
-any musical event. Given the common model for a musical event in various
-synthesis systems, a goal of aleatoric is a generic Note API that binds to
-different back ends for actual sound rendering. In particular I plan to
-implement MIDI bindings, and along the way investigate Archaeopteryx
-(http://github.com/gilesbowkett/archaeopteryx/tree/master) and perhaps
-other Ruby MIDI libraries.
-</p>
-<p>
-The second general concept already present in the code &#8212; in a nascent
-form (lib/note.rb) and in a full form here
-(/compositions/Terry_Riley-In_C/code/score.rb) &#8212; is a Score. A Score
-models a sequence of Notes. This is essentially a simple collection class
-with some behavior and naming semantics particular to this domain.
-</p>
-<p>
-Two other classes are currently particular implementations for implementing
-a system that can render &quot;In C,&quot; but were written with future
-generalization in mind. In fact, the idea of generalizing the Player and
-Ensemble classes is the motivation for aleatoric, and one can infer future
-directions for the library from them.
-</p>
-<p>
-A Player (/compositions/Terry_Riley-In_C/code/ensemble.rb) models a player
-in an ensemble performing a piece of music. In the current version,
-however, the player directly implements the prescriptive rules defined by
-the score for &quot;In C.&quot; But the concept itself is general and the
-library will generalize it, with the goal of not specifying the degree of
-freedom given the Player relative to any real-world score or musical
-direction; aleatoric seeks to support the composer in defining the
-composition and instructions to the Player as he sees fit.
-</p>
-<p>
-Similarly, the Ensemble class
-(/compositions/Terry_Riley-In_C/code/ensemble.rb) models an ensemble of
-players, who together perform a piece of music. Again, this first version
-of Ensemble implements the particular rules required to play &quot;In
-C.&quot;
+Beyond these specific goals, Aleatoric suggests something more powerful:
+that we can have computer languages for specifying artistic events (notes
+in a score) and arbitrary aesthetic guidelines (performance directions like
+&quot;play louder if the moon is full&quot;) in a software system that
+produces art.
 </p>
 <hr size="10"></hr><p>
-Composition as Computation
+A Simple Example
 </p>
 <hr size="10"></hr><p>
-In working on this piece, it struck me how aleatoric compositions align
-very well with a computational model. For &quot;In C,&quot; for example,
-Riley composed 53 short musical phrases which the members of the ensemble
-work through sequentially. In addition the score includes a series of
-instructions from the composer to the players. The instructions are
-guidelines and leave room for the players to make their own choices,
-reacting to characteristics of a phrase, where they are in the sequence,
-and most of all to what they are hearing the rest of the ensemble play.
-Aleatoric compositions often follow this approach, providing some musical
-material (input) and some instructions (an algorithm). So one can think of
-the ensemble&#8217;s performance as a computation (actions on input
-following an algorithm) that produces the final performance (output). The
-result of this approach is that no two performances of &quot;In C&quot; or
-other aleatoric compositions are the same, and that the performances of the
-same composition by different artists can vary widely.
+Here is a simple example of a Composer score:
+</p>
+<pre class="code">
+  <span class='phrase identifier id'>phrase</span> <span class='string val'>&quot;Intro Phrase&quot;</span>
+    <span class='note identifier id'>note</span> <span class='string val'>&quot;1&quot;</span>
+      <span class='instrument identifier id'>instrument</span>  <span class='integer val'>1</span>
+      <span class='start identifier id'>start</span>       <span class='integer val'>0</span><span class='integer val'>.0</span>
+      <span class='duration identifier id'>duration</span>    <span class='integer val'>0</span><span class='integer val'>.5</span>
+      <span class='amplitude identifier id'>amplitude</span>   <span class='integer val'>1000</span>
+      <span class='pitch identifier id'>pitch</span>       <span class='float val'>7.01</span>
+    <span class='note identifier id'>note</span> <span class='string val'>&quot;2&quot;</span>
+      <span class='instrument identifier id'>instrument</span>  <span class='integer val'>1</span>
+      <span class='start identifier id'>start</span>       <span class='float val'>1.0</span>
+      <span class='duration identifier id'>duration</span>    <span class='float val'>1.0</span>
+      <span class='amplitude identifier id'>amplitude</span>   <span class='integer val'>1100</span>
+      <span class='pitch identifier id'>pitch</span>       <span class='float val'>7.02</span>
+
+  <span class='render identifier id'>render</span> <span class='string val'>&quot;my_composition.wav&quot;</span>
+    <span class='phrases identifier id'>phrases</span>   <span class='string val'>&quot;Intro Phrase&quot;</span>
+    <span class='format identifier id'>format</span>    <span class='csound identifier id'>csound</span>
+    <span class='orchestra identifier id'>orchestra</span>  <span class='string val'>&quot;my_csound_orchestra.orc&quot;</span>
+</pre>
+<p>
+This score defines two notes as part of a phrase &quot;Intro Phrase,&quot;
+then renders them to an audio file. The note properties and rendering are
+done using the cross-platform electronic music composition software CSound.
+(MIDI support in Aleatoric is on the road map for the next release of the
+library.)
 </p>
 <p>
-The code in aleatoric models the Ensemble &quot;interpreting&quot; the
-rules of the score by defining a series of tunable parameters, all of which
-are contained in and documented in
-/compositions/Terry_Riley-In_C/code_param/player.yml and
-/compositions/Terry_Riley-In_C/code_param/ensemble.yml. In each iteration
-of the performance random numbers are tested against the parameters in
-various predicate functions in Ensemble and Player, mimicking players
-making decisions in the real performance.
+Note the consistent and simple syntax of the language. Indentation is
+optional, but should be used to show structure. Here we see that each
+&#8216;note&#8217; is part of the &#8216;phrase,&#8217; and each line
+indented under each note defines an attribute of the note.
 </p>
 <p>
-Because of the nature of the performance, which can comprise hundreds or
-thousands of iterations, the tunable parameters actually vary the
-performance in subtle and aesthetically discernible and satisfying ways.
-So, this approach seems promising, and I consider this first output of
-&quot;In C&quot; a promising proof of concept, if not totally rocking.
-We&#8217;ll get there &#8230;
+All statements occupy their own single line. They start with either a noun
+like &#8216;phrase&#8217; or a verb like &#8216;render&#8217; at the start
+of the line, and then one or more values that further describe that noun or
+verb. So &#8216;phrase&#8217; is followed by its name &quot;Intro
+Phrase,&quot; and &#8216;amplitude&#8217; (how loud the note is) is
+followed by a number that sets the value for that attribute of the note.
+</p>
+<p>
+You only need to be aware of two elements of punctuation: double quotes
+around the names you give things, such as &quot;Intro Phrase,&quot; and
+commas separating each value in a list if there is more than one value. For
+example:
+</p>
+<pre class="code">
+  <span class='render identifier id'>render</span> <span class='string val'>&quot;my_composition.wav&quot;</span>
+    <span class='phrases identifier id'>phrases</span>   <span class='string val'>&quot;Intro Phrase&quot;</span><span class='comma token'>,</span> <span class='string val'>&quot;Movement One&quot;</span>
+</pre>
+<p>
+For a complete overview of the Composer language, for both composers and
+programmers, see the language documentation and examples here:
+http://wiki.github.com/marksweiss/aleatoric
 </p>
 <hr size="10"></hr><p>
-Motivation and Goals of the Project
+Musical Score Concepts
 </p>
 <hr size="10"></hr><p>
-Working on the first code revealed shortfalls, thus providing the
-motivation for the project.
+The fundamental unit you define in a Composer score is the
+&#8216;note.&#8217; Notes have various attributes defined in the block
+below the note depending on whether the format being used for the output is
+CSound or MIDI. In the current examples here and in the full documentation,
+note properties are those required to define a note in a CSound score
+&#8212; instrument, amplitude, start time, duration and pitch. A MIDI score
+would have slightly different note attributes and specify
+&#8216;midi&#8217; as the value for &#8216;format,&#8217; but would
+otherwise be identical.
 </p>
 <p>
-First, there is no formal connection between the aleatoric rules of the
-original score and the code. I attempt to make the connection by having
-comments in the code quote the rule from Riley&#8217;s score, next to the
-code implementing the rule. But this is convention only, and creates no
-formal, testable or self-documenting connection between prescriptive score
-rules and the code which implements them. This suggested to me the idea of
-using an approach similar to RSpec to try and unify the rule description
-and the code. RSpec derivative cucumber
-(http://github.com/aslakhellesoy/cucumber/tree/master), with it&#8217;s
-highy natural and readable syntax, is a particular inspiration. The
-approach aims to create structured but nearly natural language descriptions
-which are in fact executable functions, and also suggests it is possible to
-create and build on general primitives implementing common compositional
-goals.
+Composer provides several elements for grouping notes together. A
+&#8216;phrase&#8217; is simply a named group of notes. So, if you want to
+define 50 notes, and then render those 50 notes, you put them in a phrase
+and then use the phrase name in the &#8216;phrases&#8217; list provided to
+the &#8216;render&#8217; command:
+</p>
+<pre class="code">
+  <span class='render identifier id'>render</span> <span class='string val'>&quot;my_composition.wav&quot;</span>
+    <span class='phrases identifier id'>phrases</span>   <span class='string val'>&quot;Intro Phrase&quot;</span><span class='comma token'>,</span> <span class='string val'>&quot;Movement One&quot;</span>
+</pre>
+<p>
+Here &quot;Intro Phrase&quot; and &quot;Movement One&quot; could each have
+had any number of notes that you wouldn&#8217;t want to list by name to
+include in the resulting sound file.
 </p>
 <p>
-Besides greater coherence, this approach promises something much more
-powerful: aleatoric will become a system for specifying aesthetic output
-&#8212; a system for defining and implementing arbitrary, nearly natural
-language rules to define a software system that produces art. This seems
-like a very fertile and open-ended approach, if it can be realized.
+A &#8216;section&#8217; in turn includes one or more &#8216;phrase&#8217;
+blocks, again with the goal of providing grouping for convenience. You can
+similarly refer to sections by name in a &#8216;sections&#8217; statement
+and that section will include all phrases within its original
+&#8216;section&#8217; and all the notes in all of those phrases.
 </p>
 <p>
-An added benefit of such coherence between description and implementation
-is that testing will become easier. At this point I&#8217;ve essentially
-failed to figure out how to write reasonable tests for judging aesthetic
-output. Testing for correctness was a manual process of running code,
-listening to rendered musical output for unexpected behavior, (i.e. -
-bugs), and then trying fixes and running again. This is slow and painful,
-and some human verification (i.e. - listening to the musical output) is
-unavoidable, because here &quot;bug&quot; is defined as &quot;not what I
-expected to hear&quot; and &quot;expected&quot; is a human conceptual move
-from what you are hearing back to what score the code is producing and how
-that is supposed to sound. But with cucumber-style declarations the
-expected output could at least be described, documenting composer intent
-and giving guidance to any implementor of the score in a form that was
-itself part of the program realizing the output.
+Another way to group notes is in a &#8216;measure,&#8217; which is
+analogous to a measure in a musical score. Composer supports a concept of
+&#8216;meter&#8217; in measures, with meters specifying beats per measure
+and the duration of each beat. Notes can be quantized, or forced align with
+the meter.
 </p>
 <p>
-In short, a general aleatoric library promises a better way.
+The only other concept you need to understand to use Composer as a tool for
+defining musical scores is the &#8216;render&#8217; command, which names
+the file that is the result of transforming the score into either a CSound-
+or MIDI-produced sound file. You must include the name of the file you want
+to produce and a &#8216;format&#8217; attribute specifying CSound or MIDI
+output.
+</p>
+<p>
+In order to have any notes actually appear, you also need to give render
+one or more &#8216;notes&#8217; or &#8216;phrases&#8217; or
+&#8216;sections&#8217; attributes, each of which has one or more values in
+a list of names of previously defined &#8216;note&#8217; or
+&#8216;phrase&#8217; or &#8216;section&#8217; blocks. For example:
+</p>
+<pre class="code">
+  <span class='phrase identifier id'>phrase</span> <span class='string val'>&quot;Intro Phrase&quot;</span>
+    <span class='note identifier id'>note</span> <span class='string val'>&quot;1&quot;</span>
+      <span class='instrument identifier id'>instrument</span>  <span class='integer val'>1</span>
+      <span class='start identifier id'>start</span>       <span class='integer val'>0</span><span class='integer val'>.0</span>
+      <span class='duration identifier id'>duration</span>    <span class='integer val'>0</span><span class='integer val'>.5</span>
+      <span class='amplitude identifier id'>amplitude</span>   <span class='integer val'>1000</span>
+      <span class='pitch identifier id'>pitch</span>       <span class='float val'>7.01</span>
+    <span class='note identifier id'>note</span> <span class='string val'>&quot;2&quot;</span>
+      <span class='instrument identifier id'>instrument</span>  <span class='integer val'>1</span>
+      <span class='start identifier id'>start</span>       <span class='float val'>1.0</span>
+      <span class='duration identifier id'>duration</span>    <span class='float val'>1.0</span>
+      <span class='amplitude identifier id'>amplitude</span>   <span class='integer val'>1100</span>
+      <span class='pitch identifier id'>pitch</span>       <span class='float val'>7.02</span>
+
+  <span class='render identifier id'>render</span> <span class='string val'>&quot;my_composition.wav&quot;</span>
+    <span class='phrases identifier id'>phrases</span>   <span class='string val'>&quot;Intro Phrase&quot;</span>
+    <span class='format identifier id'>format</span>    <span class='csound identifier id'>csound</span>
+</pre>
+<p>
+(Note this pattern, which is used consistently for all major score elements
+&#8212; the singular form (such as &#8216;phrase&#8217;) defines the score
+element, and the plural form (such as &#8216;phrases&#8217;) refers to a
+list of one or more of the elements previously defined.)
 </p>
 <hr size="10"></hr><p>
-A Little About Me and the Help I&#8217;d Love to Have on This Project
+Performance Score Concepts
 </p>
 <hr size="10"></hr><p>
-Aside from being an experienced programmer with a decade of professional
-experience and an advanced degree, I&#8217;m non-expert in much that this
-project needs to reach it&#8217;s potential. I have very scant knowledge of
-music theory and composition. I know just enough of CSound to scratch the
-surface. I&#8217;ve never written MIDI software. This is my first
-significant public project in Ruby. I have little formal experience with
-DSLs. I&#8217;ve never worked with RSpec or BDD, and I&#8217;m even quite
-late to TDD.
+As the previous section shows, you can use Composer simply to describe
+musical events in a score and turn that description into an actual musical
+file that plays on your computer. But the language also supports aleatoric
+features.
 </p>
 <p>
-Finally, I&#8217;m pretty new to open source and have never before promoted
-a project.
+First, beyond the statements for defining musical events directly, there
+are statements supporting the notions of players who play a score, and
+players in an ensemble playing a score together.
 </p>
 <p>
-But I can code, and I have an idea which seems like it might be a good one.
-If you think you can help and are interested, please drop me a line:
-marksweiss at yahoo dot com.
+A &#8216;player&#8217; is assigned a name when defined (again, so that
+later &#8216;players&#8217; commands can refer to that player) and also
+assigned notes in either &#8216;section&#8217; or &#8216;phrase&#8217; or
+&#8216;note&#8217; blocks below the player. Players are then instructed in
+the score to &#8216;play&#8217; and the results of this performance are
+rendered into the final result:
 </p>
-<hr size="3"></hr><p>
-Usage
+<pre class="code">
+  <span class='player identifier id'>player</span> <span class='string val'>&quot;Player 1&quot;</span>
+    <span class='phrase identifier id'>phrase</span> <span class='string val'>&quot;Phrase 1&quot;</span>
+      <span class='note identifier id'>note</span> <span class='string val'>&quot;1&quot;</span>
+        <span class='instrument identifier id'>instrument</span>  <span class='integer val'>1</span>
+        <span class='start identifier id'>start</span>       <span class='float val'>1.0</span>
+        <span class='duration identifier id'>duration</span>    <span class='integer val'>0</span><span class='integer val'>.5</span>
+        <span class='amplitude identifier id'>amplitude</span>   <span class='integer val'>1000</span>
+        <span class='pitch identifier id'>pitch</span>       <span class='float val'>7.01</span>
+      <span class='note identifier id'>note</span> <span class='string val'>&quot;2&quot;</span>
+        <span class='instrument identifier id'>instrument</span>  <span class='integer val'>2</span>
+        <span class='start identifier id'>start</span>       <span class='float val'>2.0</span>
+        <span class='duration identifier id'>duration</span>    <span class='float val'>1.0</span>
+        <span class='amplitude identifier id'>amplitude</span>   <span class='integer val'>1100</span>
+        <span class='pitch identifier id'>pitch</span>       <span class='float val'>7.02</span>
+
+  <span class='play identifier id'>play</span>
+    <span class='players identifier id'>players</span> <span class='string val'>&quot;Player 1&quot;</span><span class='comma token'>,</span> <span class='string val'>&quot;Player 2&quot;</span>
+
+  <span class='render identifier id'>render</span> <span class='string val'>&quot;my_composition.wav&quot;</span>
+    <span class='players identifier id'>players</span> <span class='string val'>&quot;Player 1&quot;</span><span class='comma token'>,</span> <span class='string val'>&quot;Player 2&quot;</span>
+    <span class='format identifier id'>format</span>    <span class='csound identifier id'>csound</span>
+</pre>
+<p>
+In this simplest form, the result is no different then if the notes had
+simply been defined directly. But, crucially, Composer also supports
+arbitrary directions that the composer intends players to follow. These are
+defined using the &#8216;instruction&#8217; statement:
 </p>
-<hr size="3"></hr><p>
-All parameters are defined in three YAML configs, player.yml, ensemble.yml
-and csound.yml. Comments in these files describe the affect of the
-parameters on the output. In order to really understand their effect, you
-need to tweak them, run the script and listen to the results.
+<pre class="code">
+  <span class='instruction identifier id'>instruction</span> <span class='string val'>&quot;Fortissimo&quot;</span>
+    <span class='description identifier id'>description</span> <span class='string val'>&quot;Player should play each note twice as loud as the notated volume of the note.&quot;</span>
+    <span class='players identifier id'>players</span>     <span class='string val'>&quot;Player 1&quot;</span>
+</pre>
+<p>
+An instruction is named, and has a &#8216;description&#8217; which is just
+one or more sentences that describe the composer&#8217;s intentions. So, in
+this way an instruction can fulfill any aleatoric compositional goal.
+Fulfilling the second goal of the language stated above, a Composer score
+simply includes the description while the code that enacts the instruction
+is written by a programmer and placed in a different file. The composer
+never has to see or think about that code &#8212; they just write their
+instruction in their score. It is up to the composer to listen to the
+resulting performance by the program and decide whether, for example, the
+code for &quot;Fortissimo&quot; is modifying the performance as intended.
+If not, the score need not change, but the code for the instruction must be
+modified and the performance is rendered again for further review.
+Aleatoric provides a standard way for programmers to implement instructions
+and include them in the final performance.
 </p>
 <p>
-The application is written in Ruby, and tested on 1.8.6. You&#8217;ll need
-Ruby installed to run it.
+If players have been assigned an instruction, then the instruction affects
+their performance when they play. For example, here &quot;Player 1&quot;
+will play &quot;Fortissimo&quot; but &quot;Player 2&quot; will not.
+</p>
+<pre class="code">
+  <span class='instruction identifier id'>instruction</span> <span class='string val'>&quot;Fortissimo&quot;</span>
+    <span class='description identifier id'>description</span> <span class='string val'>&quot;Player should play each note twice as loud as the notated volume of the note.&quot;</span>
+    <span class='players identifier id'>players</span>     <span class='string val'>&quot;Player 1&quot;</span>
+
+  <span class='play identifier id'>play</span>
+    <span class='players identifier id'>players</span> <span class='string val'>&quot;Player 1&quot;</span><span class='comma token'>,</span> <span class='string val'>&quot;Player 2&quot;</span>
+</pre>
+<p>
+Players can also be organized into ensembles using the
+&#8216;ensemble&#8217; statement. Like &#8216;phrases&#8217; and
+&#8216;sections&#8217; that group notes, &#8216;ensemble&#8217; groups one
+or more players that can be referenced by the name of the ensemble. As you
+might expect, if an ensemble is named in an &#8216;ensembles&#8217; list in
+a &#8216;play&#8217; block, then all players in that ensemble will play:
+</p>
+<pre class="code">
+  <span class='ensemble identifier id'>ensemble</span> <span class='string val'>&quot;Ensemble 100&quot;</span>
+    <span class='players identifier id'>players</span> <span class='string val'>&quot;Player 1&quot;</span><span class='comma token'>,</span> <span class='string val'>&quot;Player 2&quot;</span>
+
+    <span class='phrase identifier id'>phrase</span> <span class='string val'>&quot;Phrase 1&quot;</span>
+      <span class='note identifier id'>note</span> <span class='string val'>&quot;1&quot;</span>
+        <span class='instrument identifier id'>instrument</span>  <span class='integer val'>1</span>
+        <span class='start identifier id'>start</span>       <span class='float val'>1.0</span>
+        <span class='duration identifier id'>duration</span>    <span class='integer val'>0</span><span class='integer val'>.5</span>
+        <span class='amplitude identifier id'>amplitude</span>   <span class='integer val'>1000</span>
+        <span class='pitch identifier id'>pitch</span>       <span class='float val'>7.01</span>
+        <span class='func_table identifier id'>func_table</span>  <span class='integer val'>1</span>
+
+      <span class='note identifier id'>note</span> <span class='string val'>&quot;2&quot;</span>
+        <span class='instrument identifier id'>instrument</span>  <span class='integer val'>2</span>
+        <span class='start identifier id'>start</span>       <span class='float val'>2.0</span>
+        <span class='duration identifier id'>duration</span>    <span class='float val'>1.0</span>
+        <span class='amplitude identifier id'>amplitude</span>   <span class='integer val'>1100</span>
+        <span class='pitch identifier id'>pitch</span>       <span class='float val'>7.02</span>
+        <span class='func_table identifier id'>func_table</span>  <span class='integer val'>1</span>
+
+  <span class='play identifier id'>play</span>
+    <span class='ensembles identifier id'>ensembles</span> <span class='string val'>&quot;Ensemble 100&quot;</span>
+</pre>
+<p>
+More interestingly, instructions can also be assigned to ensembles as well
+as individual players. This supports performance directions that are
+intended for an entire ensemble to follow. For example, Terry Riley&#8217;s
+composition &quot;In C&quot; includes this instruction in the score,
+&quot;As an ensemble, it is very desirable to play very softly as well as
+very loudly and to try to diminuendo and crescendo together.&quot; Clearly
+this requires an instruction that is aware of what all the players in the
+ensemble are playing.
+</p>
+<pre class="code">
+  <span class='instruction identifier id'>instruction</span> <span class='string val'>&quot;Ensemble Diminuendo and Crescendo&quot;</span>
+    <span class='description identifier id'>description</span> <span class='string val'>&quot;As an ensemble, it is very desirable to play very softly as well as very loudly and to try to diminuendo and crescendo together.&quot;</span>
+    <span class='ensembles identifier id'>ensembles</span> <span class='string val'>&quot;In C Orchestra&quot;</span>
+</pre>
+<p>
+Finally, Composer supports the notion of &#8216;improvisation&#8217;
+directions in the score and an &#8216;improvise&#8217; statement
+instructing players to improvise notes based on that direction.
+</p>
+<pre class="code">
+  <span class='improvisation identifier id'>improvisation</span> <span class='string val'>&quot;Rock out extremely hard&quot;</span>
+    <span class='description identifier id'>description</span> <span class='string val'>&quot;Never stop rockin', ever, seriously.  No, really, I mean never, ever.&quot;</span>
+    <span class='players identifier id'>players</span> <span class='string val'>&quot;Player 1&quot;</span>
+
+  <span class='improvise identifier id'>improvise</span>
+    <span class='players identifier id'>players</span> <span class='string val'>&quot;Player 1&quot;</span>
+</pre>
+<p>
+Again, the implementation of the code that the software players run to
+generate their improvised notes is created by a programmer following the
+intent of the improvisation&#8217;s &#8216;description&#8217; and remains
+hidden from the composer of the score.
+</p>
+<hr size="10"></hr><p>
+Technical and Theoretical Background
+</p>
+<hr size="10"></hr><p>
+This project started with an attempt to render Terry Riley&#8217;s seminal
+&quot;In C&quot; in software (code and final rendered output are here:
+/compositions/Terry_Riley-In_C). In working on this piece, it struck me how
+such aleatoric compositions align very well with a computational model. For
+&quot;In C,&quot; for example, Riley composed 53 short musical phrases
+which the members of the ensemble work through sequentially. In addition
+the score includes a series of instructions from the composer to the
+players. The instructions are guidelines and leave room for the players to
+make their own choices, reacting to characteristics of a phrase, where they
+are in the sequence, and most of all to what they are hearing the rest of
+the ensemble play. Aleatoric compositions often follow this approach,
+providing some musical material (input) and some instructions (a
+prescription that leaves room for interpretation, reaction and
+improvisation in the hands of the performers). So one can think of the
+ensemble&#8217;s performance as an instance of a computation that processes
+input (the notes) directed by an algorithm (the aleatoric rules) to produce
+an output (a musical performance, in our case rendered by software and
+saved as a sound file).
 </p>
 <p>
-To run the application and generate a Score file, you simply run the
-command line &#8216;ruby in_c.rb&#8217;. Right now there is one optional
-argument &#8217;--render_only&#8217; which you can use to run the
-program but not wait on CSound to render. This is useful if you are just
-debugging an merely want to see stdout debugging messages, etc. All other
-configuration comes from the three .yml files.
-</p>
-<p>
-To render your Score into a sound file you can listen to, you need the
-CSound binary. Running the script produces a CSound Score file, which it
-then passes to CSound to render into a binary sound file. CSound is a
-venerable open source project, and happens to be an incredibly rich and
-useful tool for electronic music synthesis and composition. Versions exist
-for Linux, Mac and Windows, available here:
-http://csound.sourceforge.net/#Downloads.
-</p>
-<p>
-Currently, all the code is set up to run in one directory. You&#8217;ll
-need to clone the /aleatoric/compositions/Terry_Riley-In_C tree and put the
-files from code, code_param, and render_param in one flat directory. This
-is annoying, but this code is only proof-of-concept. I may fix this code to
-run in the directory strucure in the future &#8212; if I do there will be
-clear check-in comment indicating that.
-</p>
-<p>
-For rendering, the script assumes CSound in the directory where it&#8217;s
-running, but you could add a config entry to csound.yml and modify
-in_c.rb::render_output() to change this. The Windows binary of CSound is in
-/aleatoric/compositions/render/csound, for (my) convenience.
-</p>
-<p>
-The render_param files are a CSound .orc Orchestra file, defining a simple
-two-channel oscillator instrument. This instrument eschews even basic FM
-synthesis and produces simple output in order to promote focus on the
-output from the parameterized system and on the effect of changing
-parameters.
+However, in this first attempt , I became frustrated by the idea that all
+of the code could be used to perform only this one composition, especially
+given how much work it was to interpret, encode and tweak the
+composition&#8217;s rules into software. Aleatoric is the response to this
+motivation, a general library for creating aleatoric compositions and
+software ensembles to perform them.
 </p>
 
       </div>
     </div>
     <div id="yard_info">
-  Generated on Friday, August 14 2009 at  by 
+  Generated on Sunday, August 16 2009 at  by 
   <abbr class="yard" title="Yay! A Ruby Documentation Tool"><a href="http://yard.soen.ca">YARD</a></abbr> 
   0.2.3.3 (ruby-1.8.6).
 </div>
