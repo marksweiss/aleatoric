@@ -306,7 +306,9 @@ class ComposerAST_Test < Test::Unit::TestCase
     assert(! lang.valid_child_kw?('render', 'repeat'))
     assert(! lang.valid_child_kw?('render', 'write'))
     assert(! lang.valid_child_kw?('render', 'render'))
-    assert(! lang.valid_child_kw?('render', 'format'))
+    # Later language changed and this became legal
+    # assert(! lang.valid_child_kw?('render', 'format'))
+    assert(lang.valid_child_kw?('render', 'format'))
 
 		# parent == 'format'
     assert(! lang.valid_child_kw?('format', 'note'))

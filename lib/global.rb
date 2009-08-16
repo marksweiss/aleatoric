@@ -5,6 +5,7 @@ module Aleatoric
 # TODO Add all of these consts and put them in a '' conf somewhere
 REST = 0.0
 
+# Default durations in seconds
 WHL = 4.0 
 HLF = 2.0
 QRTR = 1.0
@@ -13,10 +14,13 @@ SXTNTH = 0.25
 THRTYSCND = 0.125
 SXTYFRTH = 0.0625
 
-# Lookup tables to match global Note names to tuning
-# The values are CSound standard Western 12-tone scale values, in CSound CPSPCH format
-#  which is middle C (C4) is 8.0, and .01 to .11 are the next 11 notes of the scale from D to BFlat
-#  and of course 7.0 is C3, 9.0 is C5 etc.  So this is just a way of writing standard pitch notation
+
+=begin 
+Lookup tables to match global Note names to tuning
+The values are CSound standard Western 12-tone scale values, in CSound CPSPCH format
+which is middle C (C4) is 8.0, and .01 to .11 are the next 11 notes of the scale from D to BFlat
+and of course 7.0 is C3, 9.0 is C5 etc.  So this is just a way of writing standard pitch notation
+=end
 C1 = 5.00
 C1S = 5.01
 D1 = 5.02

@@ -87,7 +87,7 @@ class ComposerAST
     'section' => ['phrase', 'measure', 'copy_measure'],
     'repeat' => ['note', 'measure', 'play', 'improvise'],
     'write' => ['format', 'players', 'ensembles'],
-    'render' => [],
+    'render' => ['format'],
     'format' => [],
     'def' => [],
     'measure' => ['note'],
@@ -111,7 +111,7 @@ class ComposerAST
     'repeat' => ['root', 'phrase'],
     'write' => ['root'],
     'render' => ['root'],
-    'format' => ['write'],
+    'format' => ['write', 'render'],
     'def' => ['root'],
     'measure' => ['root', 'section', 'repeat', 'ensemble', 'player'],
     'copy_measure' => ['root', 'section', 'ensemble', 'player'],
@@ -153,8 +153,8 @@ class ComposerAST
       child_kws.include? 'format'
     end, # 'write' has 'format' child
     'format' => lambda do |node|
-      node.parent.kw == 'write'
-    end, # 'format' has 'write' parent,
+      node.parent.kw == 'write' or node.parent.kw == 'render'
+    end, # 'format' has 'write' or 'render' parent,
     'ensemble' => lambda do |node|
       child_kws = node.children.collect {|child| child.kw}      
       child_kws.include? 'players' or child_kws.include? 'player'

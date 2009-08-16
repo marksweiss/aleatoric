@@ -124,6 +124,8 @@ end
 @players = []
 @players_by_name = {}
 
+@write_called = false
+DEFAULT_EXT = '.ext'
 @score_out = ScoreWriter.instance
 @processing_score = false
 @score_notes = []
@@ -366,8 +368,9 @@ def players(*names)
   end
   
   if @processing_instruction
-    names.each do |name| 
-      player = @players_by_name[name.strip]
+    names.each do |name|
+      name = name.strip
+      player = @players_by_name[name]
       instr_name = @cur_instruction.name
       # Note the pass by '&' to pass as a lambda which the recieving method in Player stores as a Proc and then calls 'call()' to run it
       player.add_preplay_hook(instr_name, &@@player_preplay_instructions[instr_name]) if @@player_preplay_instructions.include? instr_name
@@ -377,21 +380,23 @@ def players(*names)
 
   if @processing_improvisation
     names.each do |name| 
-      player = @players_by_name[name.strip]
+      player = @players_by_name[name]
       improv_name = @cur_improvisation.name      
       player.add_improvisation_hook(improv_name, &@@improvisations[improv_name]) if @@improvisations.include? improv_name
     end    
   end
   
   if @processing_play
-    names.each do |name| 
-      @players_by_name[name.strip].play if @players_by_name.include? name
+    names.each do |name|
+      name = name.strip    
+      @players_by_name[name].play if @players_by_name.include? name
     end 
   end
   
   if @processing_improvise
-    names.each do |name| 
-      @players_by_name[name.strip].improvise(@cur_improvisation.name) if @players_by_name.include? name
+    names.each do |name|
+      name = name.strip
+      @players_by_name[name].improvise(@cur_improvisation.name) if @players_by_name.include? name
     end 
   end  
   
@@ -546,6 +551,7 @@ def format(name)
 end
 
 def write(name, &args_blk)
+  
   @processing_score = true
   @score_out.name = name
   # Sets write properties, and writes all notes of all Phrases and Sections into a queue
@@ -556,15 +562,24 @@ def write(name, &args_blk)
   File.open(name, "w") do |f|
     f << @score_out.to_s
   end
-  @processing_score = false  
+  @processing_score = false
+  @write_called = true
 end
 
 # Handles "render" keyword, renders for csound now, eventually midi support
 # score_file_name, orc_file_name=nil
-def render(out_file, &args_blk)
+def render(out_file, &args_blk)  
+
+  # TEMP DEBUG
+  debug_log "HERE"
+
   @processing_renderer = true
   # Set rendering params as child keyword calls in the "render" block
   yield  
+  
+  # If write not called, then call it here to flush all notes before rendering
+  write(out_file + DEFAULT_EXT, &args_blk) if not @write_called
+
   @renderer.render(renderer=@score_out.format, out_file=out_file, score_file=@score_out.name)
   @processing_renderer = false
 end
@@ -679,6 +694,7 @@ def reset_script_state
   @players = []
   @players_by_name = {}
 
+  @write_called = false
   @processing_score = false
   @score_notes = []
   

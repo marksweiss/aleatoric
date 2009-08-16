@@ -6,6 +6,7 @@ require 'ruby-debug' ; Debugger.start
 
 module Aleatoric
 
+# A very simple type to hold the name and description of data provided by Composer keyword 'instruction'
 class Instruction
 
   attr_accessor :name, :description
@@ -16,6 +17,7 @@ class Instruction
 
 end
 
+# A very simple type to hold the name and description of data provided by Composer keyword 'improvisation'
 class Improvisation < Instruction
 end
 

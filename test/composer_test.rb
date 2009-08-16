@@ -888,6 +888,44 @@ render '..\\lib\\composer_test.wav'
   puts tester.to_s  
 end
 
+def test__render_lite_syntax_default_write
+  throw_on_failure = false
+  lite_syntax = true
+  test_name = "test__render_lite_syntax_default_write"
+  script = 
+%Q{
+# TESTING PURPOSES ONLY
+reset_script_state
+# test__render_lite_syntax_default_write
+
+phrase "Intro Phrase"
+
+  note "1"
+    instrument  1 
+    start       0.0 
+    duration    0.5
+    amplitude   1000
+    pitch       7.01
+    func_table  1
+  
+  note "2"
+    instrument  1
+    start       1.0 
+    duration    1.0
+    amplitude   1100
+    pitch       7.02
+    func_table  1
+
+render '..\\lib\\composer_test.wav'
+  phrases   "Intro Phrase"
+  format    csound
+  orchestra  '..\\lib\\markov_opt_1.orc'
+}
+  tester, results = test_runner(test_name, throw_on_failure, script, lite_syntax)
+  tester.assert(File.size("C:\\projects\\aleatoric\\lib\\composer_test.wav") > 0)
+  puts tester.to_s  
+end
+
 def test__assignment
   throw_on_failure = false
   lite_syntax = true
@@ -1611,7 +1649,7 @@ write "composer_test_results.txt"
   players "Player 1"
 }
   tester, results = test_runner(test_name, throw_on_failure, script, lite_syntax)
-  actual = results  
+  actual = results   
   expected0 = 'i 1 0.00000 4.00000 1000 8.01000 1 ;'  
   tester.assert(expected0 == actual[2])
 
@@ -1718,6 +1756,7 @@ def run_tests(flags='all')
     begin    
       
       # *** run_only TESTS GO HERE ***
+      test__render_lite_syntax_default_write
       # *** run_only TESTS GO HERE ***
     
     rescue AleatoricTestException => e

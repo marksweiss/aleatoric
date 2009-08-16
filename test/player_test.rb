@@ -4,6 +4,10 @@ require 'test/unit'
 require 'rubygems'
 require 'ruby-debug' ; Debugger.start
 
+comment=<<comment
+This is a comment
+comment
+
 module Aleatoric
 
 class Player_Test < Test::Unit::TestCase
@@ -437,8 +441,8 @@ class Player_Test < Test::Unit::TestCase
     puts "test__improvising ENTERED"
 
     player = Player.new("Test Player")
-    expected = false
-    # Test default - NOTE - opposite default to playing?()
+    expected = true
+    # Test default
     assert(player.improvising? == expected)
     # Toggle value
     player.improvising?(expected)

@@ -4,6 +4,10 @@ require 'singleton'
 
 module Aleatoric
 
+# Models an ordered sequence of Notes.  #<< is used to add Notes using stream/string
+# append syntax. Only trivial accessors are defined for name and the collection of notes.
+# Users dynamically add attributes which are processed by #method_missing.  Attribute
+# names can be retrieved in the order they were added.
 class Score
   attr_reader :notes
   attr_accessor :name
@@ -18,13 +22,17 @@ class Score
     @notes = []
     @score_attrs = []
   end
-    
+  
+  # Append an Enumerable of Notes to the Score.  Does a deep copy on each Note added
+  # so that any subsequent manipulation by this Score won't affect the source Note.
+  # @param[Enumerable<Aleatoric::Note>]
   def <<(notes)
     notes.each do |note| 
       @notes << note.dup
     end    
   end
 
+  # Creates accessors for newly created attributes of the object
   def method_missing(name, val)  
     def_accessor(name, val)
     @score_attrs.push name.to_sym
@@ -46,11 +54,13 @@ class Score
   end
   public
   
+  # Clears the collection of Notes held by this Score
   def clear
     @notes = []
     @score_attrs = []  
   end
-    
+  
+  # Returns a deep copy of the object
   def dup
     ret = Score.new
     ret.name = self.name
@@ -61,7 +71,10 @@ class Score
     end
     ret
   end   
-         
+  
+  # Iterates over the Notes in this Score, calls note.#to_s, appends the result to an output
+  # string and then returns that output string
+  # @return [String] the concatenation of the #to_s of each Note in the Score
   def to_s
     s = ''
     @notes.each do |note|    
@@ -71,15 +84,20 @@ class Score
   end
 end
 
+# Inherits from Score and adds ability to prepend header information to the string
+# output of the object.  Supports format just as Score does.
 class ScoreWriter < Score
   include Singleton
   attr_reader :format
   
+  # Modifies the Note #to_s format being used by all Scores in the current process.
+  # @param [:csound, :midi] The format to set
   def to_s_format(format)  
     @format = format.to_sym
     Note.to_s_format = @format
   end
   
+  # Prepends header to #to_s output and then calls parent Score.#to_s
   def to_s 
     s = ''
     case @format
@@ -96,10 +114,12 @@ class ScoreWriter < Score
   end
 end
 
+# An alias for Score
 class Phrase < Score
 end
 
-
+# Extends Score to also support manipulating the start property of the note so that
+# as Notes are added they automatically start after the last note added
 class Measure < Score
   attr_reader :start
   
@@ -108,6 +128,8 @@ class Measure < Score
     @start = start    
   end
   
+  # Resets the start time of all notes in this Score to value passed in param start
+  # param [Float] the value to set for the start attribute for all Notes in the Score
   def reset_notes(start)
     @start = start
     @notes = @notes.collect do |note| 
@@ -117,6 +139,8 @@ class Measure < Score
     end
   end
   
+  # Adds an Enumerable of Notes to the collection held by this object.  Also adjusts
+  # the start time of each note in the Score.
   def <<(notes)  
     notes.each do |note|
       new_note = note.dup
@@ -125,6 +149,7 @@ class Measure < Score
     end    
   end
   
+  # Returns a deep copy of the object 
   def dup
     # TODO better than this ugly hack
     ret = Measure.new(self.name, self.start)
@@ -134,7 +159,10 @@ class Measure < Score
   end
 end
 
-#TODO THIS IS BEGGING FOR A MIX-IN - identical code, different 'types'
+# Models a section of a composition in a Composer score file.  The section can have
+# Measures within it.  The notion is that this has the same syntax and semantics as 
+# Score, but that it is itself the next level up in the hierarchy, an ordered sequence
+# of Scores.
 class Section
   attr_reader :phrases
   attr_accessor :name
@@ -143,13 +171,15 @@ class Section
     @name = name
     @phrases = []
   end
-    
+
+  # Append an Enumerable of Phrases
   def <<(phrases)
      phrases.each do |phrase| 
       @phrases << phrase.dup
     end    
   end
   
+  # Creates accessors for newly created attributes of the object
   def method_missing(name, val)
     def_accessor(name, val)
     self.send(name.to_sym, val)
@@ -180,6 +210,7 @@ class Section
   end
 end
 
+# An alias for Score
 class Player < Score
 end
 
