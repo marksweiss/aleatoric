@@ -1,7 +1,7 @@
 # TODO and ROADMAP
 
-# Learn RSpec and design an RSpec-style tool for defining declarative compositions
-# Consider the balance of natural language strings and a DSL in this tool
-# Learn Archaeopteryx or another Ruby MIDI library
-# Develop MIDI Note implementation
-# Generalize Note backend to support CSound and Archaeopteryx MIDI bindings
+- Document Composer language for composers and programmers, on project Wiki
+- Add MIDI format support for rendering scores to MIDI files
+- Port "In C" to use the library, to provide a non-trivial example of implementing aleatoric directions using the programmers' API
+- Minor simplifications, feature requests and bug fixes suggested by users
+- Complete and as simple as possible installation and configuration packages for Windows, Mac and Linux
