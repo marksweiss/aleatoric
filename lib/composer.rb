@@ -5,6 +5,7 @@ require 'player'
 require 'ensemble'
 require 'instruction'
 require 'renderer'
+require 'midi'
 
 # This module implements the basic parser/processor for the Composer language.
 # At the core of the language is a simple class hierarchy that models both the main entities
@@ -157,7 +158,7 @@ def note(name=nil, &args_blk)
   
   # Each note can adjust @cur_start, which supports start NEXT in 'measure' blocks
   # Sort of lame we have to list-ify it, but the same method takes a list for 'copy_measure'
-  adjust_cur_start [@cur_note]
+  adjust_cur_start([@cur_note])
   
   # Return the note, useful for testing purposes only. Allows independent testing of function
   #  and no additional exposure of module state, e.g. @notes
@@ -245,7 +246,16 @@ def copy_measure(src_name, target_name)
 end
 
 def adjust_cur_start(notes)
-  new_start = (notes.collect {|note| note.start + note.duration}).max  
+  #case @score_out.format.to_sym
+  #when :csound
+  new_start = 0
+  begin
+    new_start = (notes.collect {|note| note.start + note.duration}).max
+  rescue ArgumentError # if format is :midi, then note.start will throw ArgumentError
+  #when :midi
+    new_start = (notes.collect {|note| note.time + note.duration}).max # If this fails then note is neither valid :csound or valid :midi format, doesn't have start or time
+  end
+  #end
   @cur_start = new_start if new_start > @cur_start
 end
 
@@ -543,6 +553,7 @@ end
 # Handles constant arg to method_missing "format" function in "write" block
 # NOTE: This didn't work returning a symbol, but did work returning a string, why?
 def csound; "csound"; end
+def midi; "midi"; end
 # handles keyword "write"
 # NOTE: MUST implement "format" keyword, because can't method_missing() it because there is a
 #  default private format() method on class Object. Nice.
@@ -550,37 +561,42 @@ def format(name)
   @format = name
 end
 
-def write(name, &args_blk)
-  
+def write(file_name, &args_blk)  
   @processing_score = true
-  @score_out.name = name
+  @score_out.name = file_name
   # Sets write properties, and writes all notes of all Phrases and Sections into a queue
   yield
   @score_out << @score_notes
-  @score_out.to_s_format @format  
+  @score_out.set_notes_to_s_format @format  
   
-  File.open(name, "w") do |f|
-    f << @score_out.to_s
+  case @score_out.format.to_sym
+  when :csound
+    File.open(file_name, 'w') do |f|
+      f << @score_out.to_s
+    end
+  when :midi  
+    # Note annoying need for global scope to access a non-module scope method
+    # from an included translation unit into this translation unit which is 
+    # executing all of its code in (Aleatoric) module scope. Reminds me of C++. Eh.
+    midi_writer = ::FileMIDI.new
+    @score_out.notes.each do |note|
+      midi_writer.add_note_event(note.channel, note.pitch, note.duration, note.velocity, note.time)
+    end
+    midi_writer.save file_name
   end
   @processing_score = false
-  @write_called = true
+  @is_write_called = true
 end
 
 # Handles "render" keyword, renders for csound now, eventually midi support
 # score_file_name, orc_file_name=nil
-def render(out_file, &args_blk)  
-
-  # TEMP DEBUG
-  debug_log "HERE"
-
+def render(out_file_name, &args_blk)  
   @processing_renderer = true
   # Set rendering params as child keyword calls in the "render" block
   yield  
-  
   # If write not called, then call it here to flush all notes before rendering
-  write(out_file + DEFAULT_EXT, &args_blk) if not @write_called
-
-  @renderer.render(renderer=@score_out.format, out_file=out_file, score_file=@score_out.name)
+  write(out_file_name + DEFAULT_EXT, &args_blk) if not @is_write_called
+  @renderer.render(render_format=@score_out.format, out_file=out_file_name, score_file=@score_out.name)
   @processing_renderer = false
 end
 
@@ -694,7 +710,7 @@ def reset_script_state
   @players = []
   @players_by_name = {}
 
-  @write_called = false
+  @is_write_called = false
   @processing_score = false
   @score_notes = []
   

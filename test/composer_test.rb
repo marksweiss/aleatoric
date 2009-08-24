@@ -4,6 +4,7 @@ require 'composer_lang_test'
 require 'meter_test'
 require 'player_test'
 require 'ensemble_test'
+require 'midi_test'
 require 'set'
 require 'thread'
 require 'rubygems'
@@ -505,6 +506,50 @@ write "composer_test_results.txt"
 }
   tester, results = test_runner(test_name, throw_on_failure, script, lite_syntax)
   actual = results
+  
+  expected0 = 'i 1 0.00000 0.50000 1000 7.01000 1 ; 1'
+  expected1 = 'i 1 1.00000 1.00000 1100 7.02000 1 ; 2'
+  tester.assert(expected0 == actual[2])
+  tester.assert(expected1 == actual[3])
+  puts tester.to_s  
+end
+
+def test__phrase_midi_lite_syntax
+  throw_on_failure = true
+  lite_syntax = true
+  test_name = "test__phrase_midi_lite_syntax"
+  script = 
+%Q{
+# TESTING PURPOSES ONLY
+reset_script_state
+# test__phrase_midi_lite_syntax
+
+phrase "Intro Phrase"
+  
+  # note.channel, note.note, note.duration, note.velocity, note.time
+  note "1"
+    channel   1 
+    pitch     64 
+    duration  1.0
+    velocity  100
+    time      0.0
+
+  note "2"
+    channel   1 
+    pitch     65 
+    duration  1.0
+    velocity  100
+    time      1.0
+    
+write "composer_test_results.mid"
+  format    midi
+  phrases   "Intro Phrase"
+}
+  tester, results = test_runner(test_name, throw_on_failure, script, lite_syntax)
+  actual = results
+  
+  # TEMP DEBUG
+  puts actual
   
   expected0 = 'i 1 0.00000 0.50000 1000 7.01000 1 ; 1'
   expected1 = 'i 1 1.00000 1.00000 1100 7.02000 1 ; 2'
@@ -1744,6 +1789,7 @@ def run_tests(flags='all')
       test__instruction_ensemble_state ; num_tests += 1
       test__improvise_player ; num_tests += 1
       test__improvise2_player ; num_tests += 1
+      test__render_lite_syntax_default_write ; num_tests += 1
       
     rescue AleatoricTestException => e
       puts e.to_s
@@ -1756,7 +1802,7 @@ def run_tests(flags='all')
     begin    
       
       # *** run_only TESTS GO HERE ***
-      test__render_lite_syntax_default_write
+      test__phrase_midi_lite_syntax
       # *** run_only TESTS GO HERE ***
     
     rescue AleatoricTestException => e

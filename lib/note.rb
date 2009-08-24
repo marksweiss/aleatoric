@@ -11,16 +11,19 @@ module Aleatoric
 # in the order they are added to the object.  Format is class-scope, meaning that 
 # all Notes in one execution of a Composer score are of the same format.
 class Note
-  @@format = :csound
   attr_accessor :name
+  attr_reader :ordered_keys, :note_attrs
 
-  def initialize(name=nil, attrs=nil, format=nil)
+  def initialize(name=nil, format=nil, attrs=nil)
     @name = name
     @note_attrs = {}
-    @ordered_keys = [:instrument, :start, :duration, :amplitude, :pitch]
-    # Default formatter is csound. :midi formatter will eventually be supported also
-    format ||= :csound
-    @@format = format
+    @@format = format || :csound
+    case @@format
+    when :csound
+      # @ordered_keys = [:instrument, :start, :duration, :amplitude, :pitch]
+    when :midi
+      # @ordered_keys = [:channel, :pitch, :duration, :velocity, :time]
+    end 
     attrs ||= {}
     attrs.each {|name, val| self.method_missing(name, val)}  
   end
@@ -49,7 +52,7 @@ class Note
       ret = "i "
       @ordered_keys.each do |key|
         val = @note_attrs[key].to_s.strip	
-        # NOTE: This is a pretty terrible check for a float
+        # TODO: This is an abominable check for a float
         if val.include? '.'
           ret.concat(sprintf("%.5f", val) + " ")
         else
@@ -58,7 +61,7 @@ class Note
       end          
       ret.concat("; #{@name}")          
       ret
-    # TODO Actually support MIDI
+    # TODO This is useless
     when :midi
       ret = ""
       @ordered_keys.each do |key|
@@ -66,8 +69,7 @@ class Note
         ret.concat("#{val} ")
       end
       ret
-    end
-    
+    end    
   end
 
   # Creates accessors for newly created attributes of the object

@@ -96,6 +96,7 @@ class ScoreWriter < Score
     @format = format.to_sym
     Note.to_s_format = @format
   end
+  alias set_notes_to_s_format to_s_format
   
   # Prepends header to #to_s output and then calls parent Score.#to_s
   def to_s 
