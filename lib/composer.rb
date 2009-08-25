@@ -165,6 +165,51 @@ def note(name=nil, &args_blk)
   @cur_note
 end
 
+def instrument(arg)
+  @cur_note.instrument arg
+end
+def program_change(arg)
+  # We respect the wishes of the script and assume that a midi-only property
+  # means the script wants all Notes to be in MIDI format
+  Note.set_output_format_midi
+  @cur_note.instrument arg
+end
+
+def start(arg)
+  @cur_note.start arg
+end
+def time(arg)
+  # We respect the wishes of the script and assume that a midi-only property
+  # means the script wants all Notes to be in MIDI format
+  Note.set_output_format_midi
+  @cur_note.start arg
+end
+
+def duration(arg)
+  @cur_note.duration arg
+end
+
+def amplitude(arg)
+  @cur_note.amplitude arg
+end
+def velocity(arg)
+  @cur_note.amplitude arg
+end
+def volume(arg)
+  @cur_note.amplitude arg
+end
+
+def pitch(arg)
+  @cur_note.pitch arg
+end
+
+def channel(arg)
+  # We respect the wishes of the script and assume that a midi-only property
+  # means the script wants all Notes to be in MIDI format
+  Note.set_output_format_midi
+  @cur_note.channel arg
+end
+
 # Handles keyword "phrase"
 def phrase(name, &args_blk)
   @processing_phrase = true
@@ -246,16 +291,11 @@ def copy_measure(src_name, target_name)
 end
 
 def adjust_cur_start(notes)
-  #case @score_out.format.to_sym
-  #when :csound
-  new_start = 0
-  begin
-    new_start = (notes.collect {|note| note.start + note.duration}).max
-  rescue ArgumentError # if format is :midi, then note.start will throw ArgumentError
-  #when :midi
-    new_start = (notes.collect {|note| note.time + note.duration}).max # If this fails then note is neither valid :csound or valid :midi format, doesn't have start or time
-  end
-  #end
+
+  # TEMP DEBUG
+  notes.each {|note| debug_log "note.start #{note.start}  note.duration #{note.duration}"}
+
+  new_start = (notes.collect {|note| note.start + note.duration}).max
   @cur_start = new_start if new_start > @cur_start
 end
 
@@ -574,7 +614,17 @@ def write(file_name, &args_blk)
     File.open(file_name, 'w') do |f|
       f << @score_out.to_s
     end
-  when :midi  
+  when :midi
+    # TO SUPPORT UNIT TESTS ONLY
+    File.open(file_name, 'w') do |f|
+      f << @score_out.to_s
+    end
+    # NOTE: This hack allows a file name to be passed that isn't .mid
+    #  and have .mid added for the MIDI file only.  So testing works 
+    #  seamlessly. In the docs we tell users to always use ".mid" for
+    #  their own real script midi files and this never gets called
+    file_name += '.mid' if [file_name.length - 4..file_name.length - 1] != '.mid'
+    # TO SUPPORT UNIT TESTS ONLY
     # Note annoying need for global scope to access a non-module scope method
     # from an included translation unit into this translation unit which is 
     # executing all of its code in (Aleatoric) module scope. Reminds me of C++. Eh.

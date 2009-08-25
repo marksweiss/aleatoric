@@ -526,35 +526,45 @@ reset_script_state
 
 phrase "Intro Phrase"
   
-  # note.channel, note.note, note.duration, note.velocity, note.time
+  # Using aliased MIDI property names for note. Note 'channel' is midi-only
   note "1"
-    channel   1 
-    pitch     64 
-    duration  1.0
-    velocity  100
-    time      0.0
+    instrument  1  
+    time       0.0
+    duration    1.0
+    velocity    100
+    pitch       64 
+    channel     1 
 
+  # Using csound and "Aleatoric normal" property names for a note. Note 'channel' is midi-only
   note "2"
-    channel   1 
-    pitch     65 
-    duration  1.0
-    velocity  100
-    time      1.0
+    instrument  1
+    start       1.0
+    duration    1.0
+    amplitude   100
+    pitch       65 
+    channel     1
     
-write "composer_test_results.mid"
+  # Using csound and "Aleatoric normal" property names for a note, but switch to use 'volume' for 'velocity.' Note 'channel' is midi-only
+  note "3"
+    instrument  1
+    start       2.0
+    duration    1.0
+    volume      100
+    pitch       66 
+    channel     1     
+    
+write "composer_test_results.txt"
   format    midi
   phrases   "Intro Phrase"
 }
   tester, results = test_runner(test_name, throw_on_failure, script, lite_syntax)
-  actual = results
-  
-  # TEMP DEBUG
-  puts actual
-  
-  expected0 = 'i 1 0.00000 0.50000 1000 7.01000 1 ; 1'
-  expected1 = 'i 1 1.00000 1.00000 1100 7.02000 1 ; 2'
-  tester.assert(expected0 == actual[2])
-  tester.assert(expected1 == actual[3])
+  actual = results  
+  expected0 = 'instrument 1  start 0.00000  duration 1.00000  amplitude 100  pitch 64  channel 1 ; 1'
+  expected1 = 'instrument 1  start 1.00000  duration 1.00000  amplitude 100  pitch 65  channel 1 ; 2'
+  expected2 = 'instrument 1  start 2.00000  duration 1.00000  amplitude 100  pitch 66  channel 1 ; 3'
+  tester.assert(expected0 == actual[0])
+  tester.assert(expected1 == actual[1])
+  tester.assert(expected2 == actual[2])
   puts tester.to_s  
 end
 

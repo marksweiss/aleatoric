@@ -1,4 +1,8 @@
+require 'util'
+
 module Aleatoric
+
+class AleatoricIllegalNoteFormatException < Exception; end
 
 # Models a musical note.  Current implementation supports CSound.  Future implementation
 # will also support MIDI.  Two key ideas are used here.  First is that the class
@@ -18,14 +22,85 @@ class Note
     @name = name
     @note_attrs = {}
     @@format = format || :csound
-    case @@format
-    when :csound
-      # @ordered_keys = [:instrument, :start, :duration, :amplitude, :pitch]
-    when :midi
-      # @ordered_keys = [:channel, :pitch, :duration, :velocity, :time]
-    end 
+    @ordered_keys = [:instrument, :start, :duration, :amplitude, :pitch]
     attrs ||= {}
     attrs.each {|name, val| self.method_missing(name, val)}  
+  end
+
+  def instrument(instrument=nil)  
+    if instrument == nil
+      @note_attrs[:instrument]
+    else
+      @note_attrs[:instrument] = instrument
+      self
+    end
+  end
+   # alias midi name to csound name
+  def program_change(instrument=nil)
+    self.instrument(instrument)
+  end
+  
+  def start(start=nil)
+    if start == nil
+      @note_attrs[:start]
+    else
+      @note_attrs[:start] = start 
+      self
+    end
+  end
+  # alias midi name to csound name
+  def time(start=nil)
+    self.start(start)
+  end
+
+  def duration(duration=nil)
+    if duration == nil
+      @note_attrs[:duration]
+    else
+      @note_attrs[:duration] = duration 
+      self
+    end    
+  end
+  
+  def amplitude(amplitude=nil)    
+    if amplitude == nil
+      @note_attrs[:amplitude]
+    else
+      @note_attrs[:amplitude] = amplitude 
+      self
+    end
+  end
+  # alias midi name to csound name
+  def velocity(amplitude=nil)
+    self.amplitude(amplitude)
+  end
+  # alias normal real-world name to csound name
+  def volume(amplitude=nil)
+    self.amplitude(amplitude)
+  end
+
+  def pitch(pitch=nil)    
+    if pitch == nil
+      @note_attrs[:pitch]
+    else
+      @note_attrs[:pitch] = pitch 
+      self
+    end
+  end
+  # alias note pitch
+  
+  # MIDI only
+  def channel(channel=nil)    
+    if @@format == :midi
+      if channel == nil
+        @note_attrs[:channel]
+      else
+        @note_attrs[:channel] = channel
+        self
+      end
+    else
+      raise AleatoricIllegalNoteFormatException, "Cannot call note_obj.channel() method when Note::@@format != :midi", caller
+    end
   end
   
   # Returns a deep copy of the object
@@ -41,8 +116,20 @@ class Note
   def Note.to_s_format=(format)
     @@format = format.to_sym
   end
+  def Note.output_format=(format)
+    Note.to_s_format = format
+  end
   def Note.to_s_format
     @@format
+  end
+  def Note.output_format
+    Note.to_s_format
+  end
+  def Note.set_output_format_csound
+    Note.output_format = :csound
+  end
+  def Note.set_output_format_midi
+    Note.output_format = :midi
   end
   
   # Outputs a string representation of the note, based on the value for format passed to #initialize
@@ -51,7 +138,7 @@ class Note
     when :csound
       ret = "i "
       @ordered_keys.each do |key|
-        val = @note_attrs[key].to_s.strip	
+        val = @note_attrs[key].to_s.strip
         # TODO: This is an abominable check for a float
         if val.include? '.'
           ret.concat(sprintf("%.5f", val) + " ")
@@ -61,19 +148,27 @@ class Note
       end          
       ret.concat("; #{@name}")          
       ret
-    # TODO This is useless
+    # Used only for unit testing, to verify data in note is as expected. Not actually used to render MIDI file output
     when :midi
       ret = ""
       @ordered_keys.each do |key|
-        val = @note_attrs[key].to_s.strip	
-        ret.concat("#{val} ")
+        val = @note_attrs[key].to_s.strip
+        ret.concat("#{key.to_s.strip}")
+        # TODO: This is an abominable check for a float
+        if val.include? '.'
+          ret.concat(sprintf(" %.5f", val) + "  ")
+        else
+          ret.concat(" #{val}  ")
+        end	 
       end
+      ret.chop!
+      ret.concat("; #{@name}")
       ret
     end    
   end
 
   # Creates accessors for newly created attributes of the object
-  def method_missing(name, val)
+  def method_missing(name, val)    
     @note_attrs[name] = val
     @ordered_keys << name unless @ordered_keys.include? name
     def_accessor name

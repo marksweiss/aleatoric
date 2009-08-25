@@ -107,7 +107,9 @@ class ScoreWriter < Score
       s << "\n"
       s << "\n"
     when :midi
-      # TODO Really support MIDI
+      # No-op since Note::to_s() for :midi just outputs string for testing purposes. MIDI rendering is
+      #  straight to binary file via wrapped OS API calls to a MIDI library. No need to output text script for rendering
+      #  as with CSound
     end
     
     s << super.to_s
