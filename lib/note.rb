@@ -17,11 +17,11 @@ class AleatoricIllegalNoteFormatException < Exception; end
 class Note
   attr_accessor :name
   attr_reader :ordered_keys, :note_attrs
+  @@format = nil
 
-  def initialize(name=nil, format=nil, attrs=nil)
+  def initialize(name=nil, attrs=nil)
     @name = name
     @note_attrs = {}
-    @@format = format || :csound
     @ordered_keys = [:instrument, :start, :duration, :amplitude, :pitch]
     attrs ||= {}
     attrs.each {|name, val| self.method_missing(name, val)}  
@@ -113,28 +113,32 @@ class Note
   
   # Set to_s appropriately based on output format
   # Adds a to_s definition to the class based on format value passed to class method
-  def Note.to_s_format=(format)
-    @@format = format.to_sym
-  end
-  def Note.output_format=(format)
-    Note.to_s_format = format
-  end
-  def Note.to_s_format
+  def Note.to_s_format(format=nil)
+    if format == nil
+      @@format = $FORMAT
+    else
+      @@format = format.to_sym
+    end    
     @@format
   end
-  def Note.output_format
-    Note.to_s_format
+  def Note.output_format(format=nil)  
+    if format == nil
+      @@format = $FORMAT
+    else
+      @@format = format.to_sym
+    end    
+    @@format
   end
   def Note.set_output_format_csound
-    Note.output_format = :csound
+    @@format = :csound
   end
   def Note.set_output_format_midi
-    Note.output_format = :midi
+    @@format = :midi
   end
   
   # Outputs a string representation of the note, based on the value for format passed to #initialize
-  def to_s
-    case @@format
+  def to_s  
+    case @@format    
     when :csound
       ret = "i "
       @ordered_keys.each do |key|

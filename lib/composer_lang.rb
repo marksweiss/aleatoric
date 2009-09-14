@@ -81,7 +81,7 @@ class ComposerAST
   # NOTE: ANY TOP_LEVEL KW **MUST** BE ADDED TO LIST OF CHILDREN OF ROOT
   #       THIS IS EASY TO FORGET. SYMPTOM IS TEST.ALTC DOESN'T RENDER BLOCK FOR KW
   @@kw_children = {
-    'root' => ['note', 'phrase', 'section', 'repeat', 'write', 'render', 'def', 'measure', 'copy_measure', 'meter', 'ensemble', 'player', 'play', 'instruction', 'improvise', 'improvisation'],
+    'root' => ['note', 'phrase', 'section', 'repeat', 'write', 'render', 'format', 'def', 'measure', 'copy_measure', 'meter', 'ensemble', 'player', 'play', 'instruction', 'improvise', 'improvisation'],
     'note' => [],
     'phrase' => ['note', 'repeat'],
     'section' => ['phrase', 'measure', 'copy_measure'],
@@ -111,7 +111,7 @@ class ComposerAST
     'repeat' => ['root', 'phrase'],
     'write' => ['root'],
     'render' => ['root'],
-    'format' => ['write', 'render'],
+    'format' => ['root', 'write', 'render'],
     'def' => ['root'],
     'measure' => ['root', 'section', 'repeat', 'ensemble', 'player'],
     'copy_measure' => ['root', 'section', 'ensemble', 'player'],
@@ -120,7 +120,7 @@ class ComposerAST
     'ensemble' => ['root'],
     'ensembles' => ['instruction', 'play', 'write'],
     'player' => ['root', 'ensemble'],
-    'players' => ['ensemble', 'play', 'write'],
+    'players' => ['ensemble', 'play', 'write', 'improvise'],
     'play' => ['root', 'repeat'],
     'instruction' => ['root'],    
     'improvisation' => ['root'],
@@ -148,13 +148,15 @@ class ComposerAST
   }
   
   @@grammar_rules = {
-    'write' => lambda do |node|
-      child_kws = node.children.collect {|child| child.kw}      
-      child_kws.include? 'format'
-    end, # 'write' has 'format' child
+    # NOTE: Removed this rule after changing grammar to allow
+    #  defining format at top level
+    #'write' => lambda do |node|
+    #  child_kws = node.children.collect {|child| child.kw}      
+    #  child_kws.include? 'players' or child_kws.include? 'ensembles' or child_kws.include? 'format' 
+    #end, # 'write' has 'players' or 'ensembles' or 'phrases' or 'sections' child
     'format' => lambda do |node|
-      node.parent.kw == 'write' or node.parent.kw == 'render'
-    end, # 'format' has 'write' or 'render' parent,
+      node.parent.kw == 'write' or node.parent.kw == 'render' or node.parent.kw == 'root'
+    end, # 'format' has 'write' or 'render' or 'root' (no parent) parent,
     'ensemble' => lambda do |node|
       child_kws = node.children.collect {|child| child.kw}      
       child_kws.include? 'players' or child_kws.include? 'player'
@@ -174,7 +176,7 @@ class ComposerAST
     'improvise' => lambda do |node|
       child_kws = node.children.collect {|child| child.kw} 
       child_kws.include? 'players'
-    end,  # 'improvise' has 'players' child    
+    end  # 'improvise' has 'players' child    
   }
   
   @@operators = {:delim => [',', ';', "\n", '"'], 
@@ -554,7 +556,7 @@ class ComposerAST
         # TEMP DEBUG
         pp(@@root, [], 0)
         
-        raise ComposerASTException, "Line Number: #{line_no}. Illegal structure. Node '#{child.kw}' has an illegal parent or child"
+        raise ComposerASTException, "Line Number: #{line_no}. Illegal structure. Node '#{child.kw}' has an illegal parent or child\nFailing line: #{out_lines[line_no]}"
       end
       
       # Else recurse on each child, DFS

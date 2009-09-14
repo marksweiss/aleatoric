@@ -93,10 +93,12 @@ class ScoreWriter < Score
   # Modifies the Note #to_s format being used by all Scores in the current process.
   # @param [:csound, :midi] The format to set
   def to_s_format(format)  
-    @format = format.to_sym
-    Note.to_s_format = @format
+    @format = format.to_sym    
+    Note.output_format @format
   end
+  alias set_output_format to_s_format
   alias set_notes_to_s_format to_s_format
+  alias set_notes_output_format to_s_format
   
   # Prepends header to #to_s output and then calls parent Score.#to_s
   def to_s 

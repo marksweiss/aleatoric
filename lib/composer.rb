@@ -1,3 +1,4 @@
+require 'global'
 require 'util'
 require 'score'
 require 'meter'
@@ -75,7 +76,7 @@ module Aleatoric
 @processing_instruction = false
 @cur_instruction = nil
 @instructions_by_name = {}
-@processing_improvisation = false  
+@processing_improvise = false  
 @cur_improvisation = nil  
 @improvisations_by_name = {}
 @ordered_improvisations = []
@@ -114,7 +115,7 @@ def set_ensemble_postplay_instruction(instruction_name, &instr_blk)
 end
 
 @processing_play = false
-@processing_improvise = false
+@processing_improvisation = false
 @processing_player = false
 @processing_ensemble = false
 @cur_ensemble = nil
@@ -134,6 +135,8 @@ DEFAULT_EXT = '.ext'
 @renderer = Renderer.instance
 @processing_renderer = false
 
+Note.output_format $FORMAT
+
 
 # Handles keyword "note," assigns attrs in block to a new Note
 def note(name=nil, &args_blk)
@@ -141,9 +144,17 @@ def note(name=nil, &args_blk)
   @processing_note = true
   # Declare the new Note  
   @cur_note = Note.new(name)
+  
   # Now run the block. This call all the method_missing attribute functions, thus
   #  passing their name and arg to Note.method_missing, and thus adding them as attrs of this Note
   yield
+  
+  # If running note block didn't add a start attribute, then set it here to @cur_start
+  # This is the same behavior as if the Composer script used keyword NEXT like this:
+  #   note
+  #     start NEXT  
+  @cur_note.start(@cur_start) if @cur_note.start == nil
+  
   # Notes must always be created in the context of a containing Phrase or Section
   # This is the queue of Notes being created in that containing block, which that object
   #  will then pick up and append to its collection of Notes.  So the containing block
@@ -156,7 +167,7 @@ def note(name=nil, &args_blk)
   # We're done with this Note, unset method_missing() flag
   @processing_note = false
   
-  # Each note can adjust @cur_start, which supports start NEXT in 'measure' blocks
+  # Each note can adjust @cur_start, which supports start NEXT
   # Sort of lame we have to list-ify it, but the same method takes a list for 'copy_measure'
   adjust_cur_start([@cur_note])
   
@@ -166,7 +177,13 @@ def note(name=nil, &args_blk)
 end
 
 def instrument(arg)
-  @cur_note.instrument arg
+  # Need to check note first and elsif exclusion because can process note nested with player
+  #  so when this is being handled both @processing_note and @processing_player can be true
+  if @processing_note
+    @cur_note.instrument arg
+  elsif @processing_player   
+    @cur_player.instrument arg
+  end
 end
 def program_change(arg)
   # We respect the wishes of the script and assume that a midi-only property
@@ -291,10 +308,6 @@ def copy_measure(src_name, target_name)
 end
 
 def adjust_cur_start(notes)
-
-  # TEMP DEBUG
-  notes.each {|note| debug_log "note.start #{note.start}  note.duration #{note.duration}"}
-
   new_start = (notes.collect {|note| note.start + note.duration}).max
   @cur_start = new_start if new_start > @cur_start
 end
@@ -394,7 +407,7 @@ end
 def improvise(name=nil)
   @processing_improvise = true
   # If no name passed, set current improv to the most recent one declared, else
-  #  set it to the one matching the name passed in
+  #  set it to the one matching the name passed in  
   if name == nil  
     @cur_improvisation = @ordered_improvisations.last
   else
@@ -450,8 +463,8 @@ def players(*names)
     end 
   end  
   
-  if @processing_score
-    names.each do |name| 
+  if @processing_score  
+    names.each do |name|     
       name = name.strip
       player = @players_by_name[name]
       if player != nil
@@ -597,17 +610,24 @@ def midi; "midi"; end
 # handles keyword "write"
 # NOTE: MUST implement "format" keyword, because can't method_missing() it because there is a
 #  default private format() method on class Object. Nice.
-def format(name)
-  @format = name
+def format(fmt)
+  $FORMAT = fmt.to_sym  
+  @format = $FORMAT
+  @score_out.set_output_format $FORMAT
+  
+  if $FORMAT == :midi
+    set_midi_consts
+  elsif $FORMAT == :csound
+    set_csound_consts
+  end
 end
 
 def write(file_name, &args_blk)  
   @processing_score = true
-  @score_out.name = file_name
+  @score_out.name = file_name  
   # Sets write properties, and writes all notes of all Phrases and Sections into a queue
   yield
   @score_out << @score_notes
-  @score_out.set_notes_to_s_format @format  
   
   case @score_out.format.to_sym
   when :csound
@@ -624,7 +644,7 @@ def write(file_name, &args_blk)
     #  seamlessly. In the docs we tell users to always use ".mid" for
     #  their own real script midi files and this never gets called
     file_name += '.mid' if [file_name.length - 4..file_name.length - 1] != '.mid'
-    # TO SUPPORT UNIT TESTS ONLY
+    # /TO SUPPORT UNIT TESTS ONLY
     # Note annoying need for global scope to access a non-module scope method
     # from an included translation unit into this translation unit which is 
     # executing all of its code in (Aleatoric) module scope. Reminds me of C++. Eh.
@@ -700,6 +720,7 @@ def dump_last_player
     f << @players.last.name
   end
 end
+# /FOR UNIT TESTING
 
 def reset_script_state
   # *** KEEP THIS HERE ALWAYS ***
@@ -734,7 +755,7 @@ def reset_script_state
   @processing_instruction = false
   @cur_instruction = nil
   @instructions_by_name = {}
-  @processing_improvisation = false  
+  @processing_improvise = false  
   @cur_improvisation = nil  
   @improvisations_by_name = {}
   @@ordered_improv_instructions = []
@@ -749,7 +770,7 @@ def reset_script_state
   # *** KEEP THIS HERE ALWAYS ***
   
   @processing_play = false
-  @processing_improvise = false
+  @processing_improvisation = false
   @processing_player = false
   @processing_ensemble = false
   @cur_ensemble = nil
@@ -780,6 +801,7 @@ def method_missing(name, arg)
   @cur_phrase.method_missing(name, arg) if @processing_phrase
   @cur_section.method_missing(name, arg) if @processing_section
   @cur_measure.method_missing(name, arg) if @processing_measure
+  @cur_player.method_missing(name, arg) if @processing_player
   @score_out.method_missing(name, arg) if @processing_score
   @renderer.method_missing(name, arg) if @processing_renderer
 end

@@ -1,4 +1,3 @@
-# $LOAD_PATH << "..\\test"        # ugly, need to include this to support unit testing
 require 'composer'
 require 'composer_lang'
 require 'rubygems'
@@ -11,6 +10,7 @@ include Aleatoric
 #  breakpoint if true == false
 #  Debugger.tracing = false
 
+# TODO Real cmd line args handling.  This is lame
 def main
   script = ""
   
@@ -21,11 +21,14 @@ def main
   #  the script file they work with.  In default case we add all the do/end syntax, for example,
   #  and hide that from them.  And in all cases we add the module directive.
   file_name_tmp = file_name + '.tmp'
+  
+  $ARG_FORMAT = :midi #:csound
+  $ARG_FORMAT = ARGV[1].to_sym if (ARGV.length > 1 && ARGV[1] == ('csound' || 'midi')) 
     
   # Now preprocess to add 'do/end' syntax, add 'do |index|/end' to repeat blocks
   #  and validate syntax and grammar (structure)
   preprocess_flag = true
-  preprocess_flag = eval(ARGV[1]) if ARGV.length > 1
+  preprocess_flag = eval(ARGV[2]) if ARGV.length > 2
   if preprocess_flag  
     script = ComposerAST.new.preprocess_script(file_name).to_s
   else

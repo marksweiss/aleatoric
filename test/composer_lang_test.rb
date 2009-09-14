@@ -252,7 +252,7 @@ class ComposerAST_Test < Test::Unit::TestCase
     assert(lang.valid_child_kw?('root', 'repeat'))
     assert(lang.valid_child_kw?('root', 'write'))
     assert(lang.valid_child_kw?('root', 'render'))
-    assert(! lang.valid_child_kw?('root', 'format'))
+    assert(lang.valid_child_kw?('root', 'format'))
 		
 		# parent == 'note'
     assert(! lang.valid_child_kw?('note', 'note'))
