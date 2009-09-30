@@ -92,7 +92,7 @@ module Aleatoric
 @@player_preplay_instructions = {}
 @@player_postplay_instructions = {}
 # Supports syntax of passing an improve name (play by key) or not passing a name
-#  and then just playing the last 'improvisation' kw improv hook defined, i.e. @@ordered_improv_instructions.last 
+#  and then just playing the last 'improvisation' kw improv hook defined, i.e. @ordered_improvisations.last 
 @@improvisations = {}
 #
 def set_player_preplay_instruction(instruction_name, &instr_blk)
@@ -136,6 +136,7 @@ DEFAULT_EXT = '.ext'
 @processing_renderer = false
 
 Note.output_format $FORMAT
+@midi_mgr = ::MidiManager.new
 
 
 # Handles keyword "note," assigns attrs in block to a new Note
@@ -184,6 +185,10 @@ def instrument(arg)
   elsif @processing_player   
     @cur_player.instrument arg
   end
+  
+  if $FORMAT == :midi and @cur_note.respond_to? :channel and @cur_note.channel != nil
+    @midi_mgr.instrument(@cur_note.channel, @cur_note.instrument)
+  end
 end
 def program_change(arg)
   # We respect the wishes of the script and assume that a midi-only property
@@ -225,6 +230,8 @@ def channel(arg)
   # means the script wants all Notes to be in MIDI format
   Note.set_output_format_midi
   @cur_note.channel arg
+  # Allocate a MIDI channel for the channel number if there isn't one already
+  @midi_mgr.channel arg
 end
 
 # Handles keyword "phrase"
@@ -622,6 +629,8 @@ def format(fmt)
   end
 end
 
+# TODO Midi unit tests now broken if they rely on write() to create .mid file output
+#  That is now in render()
 def write(file_name, &args_blk)  
   @processing_score = true
   @score_out.name = file_name  
@@ -639,35 +648,36 @@ def write(file_name, &args_blk)
     File.open(file_name, 'w') do |f|
       f << @score_out.to_s
     end
-    # NOTE: This hack allows a file name to be passed that isn't .mid
-    #  and have .mid added for the MIDI file only.  So testing works 
-    #  seamlessly. In the docs we tell users to always use ".mid" for
-    #  their own real script midi files and this never gets called
-    file_name += '.mid' if [file_name.length - 4..file_name.length - 1] != '.mid'
-    # /TO SUPPORT UNIT TESTS ONLY
-    # Note annoying need for global scope to access a non-module scope method
-    # from an included translation unit into this translation unit which is 
-    # executing all of its code in (Aleatoric) module scope. Reminds me of C++. Eh.
-    midi_writer = ::FileMIDI.new
-    @score_out.notes.each do |note|
-      midi_writer.add_note_event(note.channel, note.pitch, note.duration, note.velocity, note.time)
-    end
-    midi_writer.save file_name
   end
   @processing_score = false
   @is_write_called = true
 end
 
-# Handles "render" keyword, renders for csound now, eventually midi support
+# TODO Midi unit tests now broken if they rely on write() to create .mid file output
+#  That is now in render()
+# Handles "render" keyword, renders for csound now
 # score_file_name, orc_file_name=nil
-def render(out_file_name, &args_blk)  
-  @processing_renderer = true
-  # Set rendering params as child keyword calls in the "render" block
-  yield  
-  # If write not called, then call it here to flush all notes before rendering
-  write(out_file_name + DEFAULT_EXT, &args_blk) if not @is_write_called
-  @renderer.render(render_format=@score_out.format, out_file=out_file_name, score_file=@score_out.name)
-  @processing_renderer = false
+def render(out_file_name, &args_blk)
+  if @score_out.format.to_sym == :midi
+    # Allows a file name to be passed that isn't .mid
+    #  and have .mid added for the MIDI file only.  So testing works 
+    #  seamlessly. In the docs we tell users to always use ".mid" for
+    #  their own real script midi files and this never gets called
+    out_file_name += '.mid' if [out_file_name.length - 4..out_file_name.length - 1] != '.mid'
+    # /TO SUPPORT UNIT TESTS ONLY
+    @score_out.notes.each do |note|
+      @midi_mgr.add_note(note.channel, note.pitch, note.velocity, note.duration)
+    end
+    @midi_mgr.save out_file_name 
+  elsif @score_out.format.to_sym == :csound
+    @processing_renderer = true
+    # Set rendering params as child keyword calls in the "render" block
+    yield  
+    # If write not called, then call it here to flush all notes before rendering
+    write(out_file_name + DEFAULT_EXT, &args_blk) if not @is_write_called
+    @renderer.render(render_format=@score_out.format, out_file=out_file_name, score_file=@score_out.name)
+    @processing_renderer = false
+  end
 end
 
 # FOR UNIT TESTING
@@ -786,6 +796,8 @@ def reset_script_state
   @score_notes = []
   
   @processing_renderer = false
+  
+  @midi_mgr = ::MidiManager.new
 
 end
 # /FOR UNIT TESTING

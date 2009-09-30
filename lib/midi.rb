@@ -1,103 +1,103 @@
-require 'dl/import'
-require 'rubygems'
-require 'midilib'
+# Start looking for MIDI module classes in the directory above this one.
+# This forces us to use the local copy, even if there is a previously
+# installed version out there somewhere.
+$LOAD_PATH[0, 0] = File.join(File.dirname(__FILE__), '..', 'lib')
+
+require 'midilib/sequence'
+require 'midilib/consts'
 require 'rubygems'
 require 'ruby-debug' ; Debugger.start
 
-module Enumerable
-  def rest
-    return [] if empty?
-    self[1..-1]
-  end
-end
+class AleatoricIllegalMidiOperationException < Exception; end
 
-class ChannelManager
-  def initialize(total)
-    @total = total
-    reset
-  end
+class MidiManager
 
-  def reset
-    @channels = (0...@total).to_a
-  end
+  include MIDI
 
-  def allocate(channel=nil)
-    raise "No channels left to allocate" if @channels.empty?
-    return @channels.shift if channel.nil?
-    raise "Channel unavailable" unless @channels.include?(channel)
-    @channels.delete(channel)
-    return channel
-  end
+  attr_reader :name
+  
+  def initialize(name=nil)
+    # custom init steps
+    @name = name || 'Sequence Name'
+    @channel_tracks = {}    
 
-  def release(channel)
-    @channels.push(channel)
-    @channels.sort!
-  end
-end
-
-class FileMIDI
-  attr_reader :interval
-  DFLT_BPM = 100
-  NUM_CHANNELS = 16
-
-  def initialize(bpm=nil)  
-    @bpm = bpm || DFLT_BPM      
-    @interval = 60.0 / @bpm
-    @channel_manager = ChannelManager.new(NUM_CHANNELS)
-
-    @base = Time.now.to_f
-    @seq = MIDI::Sequence.new
-
-    header_track = MIDI::Track.new(@seq)
-    @seq.tracks << header_track
-    header_track.events << MIDI::Tempo.new(MIDI::Tempo.bpm_to_mpq(@bpm))
-    
-    @tracks = []
-    @last = []
-  end
-
-  def new_track(channel)
-    track = MIDI::Track.new(@seq)
-    @tracks[channel] = track
+    # midilib init steps
+    @seq = Sequence.new()
+    # Create a first track for the sequence. This holds tempo events and stuff like that.
+    track = Track.new(@seq)
     @seq.tracks << track
-    return track
-  end
-
-  def program_change(channel, preset)
-    track = new_track(channel)
-    # Bind the preset to channel 0, since each channel has it's own track
-    track.events << MIDI::ProgramChange.new(0, preset, 0)
-  end
-
-  def channel_track(channel)
-    @tracks[channel] || new_track(channel)
-  end
-
-  def reset
-    @channel_manager.reset
-  end
-
-  def play(channel, note, duration=1, velocity=100, time=nil)
-    time ||= Time.now.to_f
-    on_delta = time - (@last[channel] || time)
-    off_delta = duration * @interval
-    @last[channel] = time
-    track = channel_track(channel)
-    track.events << MIDI::NoteOnEvent.new(0, note, velocity, seconds_to_delta(on_delta))
-    track.events << MIDI::NoteOffEvent.new(0, note, velocity, seconds_to_delta(off_delta))
-  end
-  alias add_note_event play
-
-  def save(output_filename)
-    File.open(output_filename, 'wb') do |file|
-      @seq.write(file)
-    end
+    track.events << Tempo.new(Tempo.bpm_to_mpq(120))
+    track.events << MetaEvent.new(META_SEQ_NAME, @name)    
   end
   
+  def channel(channel)
+    @channel_tracks[channel] ||= Track.new(@seq)
+  end
+
+  def instrument(channel, instrument, delta_time=0)
+    self.channel(channel) if channel_nil?(channel)
+    @channel_tracks[channel].events << ProgramChange.new(channel, instrument, delta_time)
+  end
+
+  # Args named with MIDI semantics. Converting to Composer semantics:
+  #  note == pitch, velocity == amplitude == volume, delta_time == duration  
+  def add_note(channel, note, velocity, delta_time) 
+    note_length = @seq.note_to_delta(delta_to_note_str(delta_time))
+    @channel_tracks[channel].events << NoteOnEvent.new(channel, note, velocity, 0)
+    @channel_tracks[channel].events << NoteOffEvent.new(channel, note, velocity, note_length)
+  end
+  
+  def save(file_name)
+    File.open(file_name, 'wb') {|file| @seq.write file}  
+  end
+  alias render save
+  
   private
-  def seconds_to_delta(secs)
-    bps = 60.0 / @bpm
-    beats = secs / bps
-    return @seq.length_to_delta(beats)
-  end  
+  
+  def channel_nil?(channel)
+    @channel_tracks[channel].nil?
+  end
+
+  NOTE_STR_TO_DUR	=	{'whole' => WHL, 
+                     'half' => HLF, 
+                     'quarter' => QRTR, 
+                     'eighth' => EITH, 
+                     '8th' => EITH, 
+                     'sixteenth' => SXTNTH, 
+                     '16th' => SXTNTH, 
+                     'thirty second' => THRTYSCND, 
+                     'thirtysecond' => THRTYSCND, 
+                     '32nd' => THRTYSCND, 
+                     'sixty fourth' => SXTYFRTH, 
+                     'sixtyfourth' => SXTYFRTH, 
+                     '64th' => SXTYFRTH}
+
+  DUR_TO_NOTE_STR	=	{WHL => 'whole', 
+                     HLF => 'half', 
+                     QRTR => 'quarter', 
+                     EITH => 'eighth', 
+                     EITH => '8th', 
+                     SXTNTH => 'sixteenth', 
+                     SXTNTH => '16th', 
+                     THRTYSCND => 'thirty second', 
+                     THRTYSCND => 'thirtysecond', 
+                     THRTYSCND => '32nd', 
+                     SXTYFRTH => 'sixty fourth', 
+                     SXTYFRTH => 'sixtyfourth', 
+                     SXTYFRTH => '64th'}                   
+                     
+  note_str_to_delta(note_str)
+    NOTE_STR_TO_DUR[note_str]
+  end
+  alias note_str_to_dur note_str_to_delta
+  alias note_to_dur note_str_to_delta
+  alias note_to_delta note_str_to_delta
+
+  delta_to_note_str(duration)
+    DUR_TO_NOTE_STR[duration]
+  end
+  alias dur_to_note_str delta_to_note_str
+  alias dur_to_note delta_to_note_str
+  alias delta_to_note delta_to_note_str
+  
 end
