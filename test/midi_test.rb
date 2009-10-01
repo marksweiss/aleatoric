@@ -61,6 +61,22 @@ class MidiManager_Test < Test::Unit::TestCase
     assert(midi_notes[0].note? && midi_notes[1].note?)
 
     puts "test__add_note COMPLETED"
-  end  
+  end
+  
+  def test__midi_save
+    puts "test__midi_save ENTERED"
+
+    midi = MidiManager.new
+    assert(midi != nil)
+    
+    # note here == pitch in MIDI lingo, 64 == C4
+    midi.add_note(channel=1, note=64, velocity=100, delta_time=4.0)
+    midi_notes = midi.channel_notes(1)
+    midi.save('midi_test.mid')
+
+    assert(File.size('midi_test.mid') > 0)
+
+    puts "test__midi_save COMPLETED"  
+  end
   
 end
