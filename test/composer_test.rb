@@ -110,6 +110,37 @@ end
 
 # TODO Add support for hash/rails style of passing args as hash
 
+def test__comment
+  throw_on_failure = false
+  test_name = "test__comment"
+  
+  script = 
+%Q{
+# TESTING PURPOSES ONLY
+reset_script_state
+# test__comment
+
+note "note 1" do  # naming notes is optional
+  instrument  1 
+  start       0.0 
+  duration    0.5
+  amplitude   1000
+  pitch       7.01
+  func_table  1
+end
+
+# This line has only a comment
+
+# FOR TESTING ONLY
+dump_last_note
+}
+  tester, results = test_runner(test_name, throw_on_failure, script)
+  actual = results.first
+  expected = "i 1 0.00000 0.50000 1000 7.01000 1 ; note 1"  
+  tester.assert(expected == actual)
+  puts tester.to_s  
+end
+
 def test__stmt_note_with_name
   throw_on_failure = false
   test_name = "test__stmt_note_with_name"
@@ -963,6 +994,56 @@ section "Intro Section"
       func_table  1
 
 write "composer_test_results.txt"
+  format    csound
+  sections   "Intro Section"
+}
+  tester, results = test_runner(test_name, throw_on_failure, script, lite_syntax)
+  actual = results
+  expected0 = 'i 3 0.00000 0.50000 1000 7.03000 1 ; 3'
+  expected1 = 'i 4 1.00000 1.00000 1100 7.04000 1 ; 4'
+  tester.assert(expected0 == actual[2])
+  tester.assert(expected1 == actual[3])
+  puts tester.to_s  
+end
+
+def test__assignment_comment
+  throw_on_failure = false
+  lite_syntax = true
+  test_name = "test__assignment_comment"
+  script =
+%Q{
+# TESTING PURPOSES ONLY
+reset_script_state
+# test__assignment_comment
+
+note_name_3 = "3"  # comment blah blah
+note_name_4 = "4"
+instr_num_3 = 3      # comment blah blah
+instr_num_4 = 4 # comment blah blah
+pitch_3 = 7.03
+pitch_4 = 7.04
+
+ # comment blah blah
+section "Intro Section"   # comment blah blah
+  phrase "Intro Phrase"     # comment blah blah
+    note note_name_3    # comment blah blah
+      instrument  instr_num_3    # comment blah blah
+      start       0.0 
+      duration    0.5
+      amplitude   1000
+      pitch       pitch_3
+      func_table  1
+# comment blah blah
+    note note_name_4
+      instrument  instr_num_4
+      start       1.0 
+      duration    1.0
+      amplitude   1100
+      pitch       pitch_4
+      func_table  1
+          # comment blah blah
+write "composer_test_results.txt"
+  # comment blah blah
   format    csound
   sections   "Intro Section"
 }
@@ -2042,6 +2123,7 @@ def run_tests(flags='all')
     all_pass = true
     begin
       #
+      test__comment ; num_tests += 1 
       test__stmt_note_with_name ; num_tests += 1 
       test__stmt_note_without_name ; num_tests += 1
       test__stmt_note_alt_syntax ; num_tests += 1
@@ -2058,6 +2140,7 @@ def run_tests(flags='all')
       test__repeat_index_lite_syntax ; num_tests += 1
       test__sections_phrases_lite_syntax ; num_tests += 1
       test__assignment ; num_tests += 1
+      test__assignment_comment ; num_tests += 1
       test__assignment_2 ; num_tests += 1
       test__repeat_assignment ; num_tests += 1
       test__func ; num_tests += 1
@@ -2092,7 +2175,7 @@ def run_tests(flags='all')
     begin    
       
       # *** run_only TESTS GO HERE ***
-   
+
       # *** run_only TESTS GO HERE ***
     
     rescue AleatoricTestException => e

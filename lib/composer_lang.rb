@@ -228,7 +228,7 @@ class ComposerAST
   # HELPERS
   private
   
-  def tokenize(script_lines, op_list=nil)
+  def tokenize(script_lines, op_list=nil)      
     tkns = []    
     op_list ||= @@op_values
       # For each operator token, replace it with the token plus ws on each side of it
@@ -239,8 +239,8 @@ class ComposerAST
           expr.gsub!(op, ' ' + op + ' ')
         end
         # NOTE: This strips trailing '\n' which we will restore at the end of all line preprocessing
-        expr_tkns = expr.split(' ').collect{|tkn| tkn.strip} 
-        expr_tkns = tokenize_join_str expr_tkns
+        expr_tkns = expr.split(' ').collect{|tkn| tkn.strip}         
+        expr_tkns = tokenize_join_str expr_tkns                
         tkns << expr_tkns
       end
     tkns
@@ -249,19 +249,33 @@ class ComposerAST
   def tokenize_join_str(tkns)    
     tkns_out = []
     str_expr_tkns = []
+    comment_delim_tkns = []
     str_delim_flag = false
+    comment_delim_flag = false
     delim = ""
-    tkns.length.times do |j|
+    tkns.length.times do |j|      
       tkn = tkns[j]
-
-      if ! str_delim_flag and (tkn != '"' and tkn != "'")
-        tkns_out << tkn
-      elsif ! str_delim_flag and (tkn == '"' or tkn == "'")
+      if ! comment_delim_flag && ! str_delim_flag && (tkn != '"' && tkn != "'" && tkn != '#')
+        tkns_out << tkn      
+      elsif ! comment_delim_flag && ! str_delim_flag && (tkn == '"' or tkn == "'")
         str_delim_flag = true
         delim = tkn
-      elsif (str_delim_flag && (tkn != delim))
+      # Check for comment, if set skip everything else on this line
+      elsif ! comment_delim_flag && ! str_delim_flag && tkn == '#'
+        comment_delim_flag = true
+        # Make a single token that is the token for start of a comment
+        # Used later in insert_node() and find_insert_position()
+        tkns_out << tkn
+      # Check for tokens in a comment
+      elsif comment_delim_flag
+        # All tokens once in a comment are flattened into one comment token
+        #  collected in this var then appended at end below
+        comment_delim_tkns << tkn
+      # Check for string interior
+      elsif str_delim_flag && tkn != delim
         str_expr_tkns << tkn
-      elsif (str_delim_flag && (tkn == delim))
+      # Check for string closer
+      elsif str_delim_flag && tkn == delim
         str_delim_flag = false
         expr = delim + str_expr_tkns.join(' ') + delim
         tkns_out << expr
@@ -270,6 +284,8 @@ class ComposerAST
       end
     end
     
+    # Append the single comment token to the end, if there was one
+    tkns_out << comment_delim_tkns.join(' ') if comment_delim_tkns.size > 0
     tkns_out.flatten
   end
 
@@ -310,8 +326,8 @@ class ComposerAST
             # So assignments can take previously declared vars as values
             lidx = 2 # because we are skipping ['x', '=', ...]
             tkn_line = ass_replace_tkns_helper(tkn_line, lidx)
-            # Found an assignment, store value mapped to name, for substituting once state is :invocation                        
-            @@var_map[tkn_line[0]] = tkn_line[2..tkn_line.length].join('')
+            # Found an assignment, store value mapped to name, for substituting once state is :invocation                                    
+            @@var_map[tkn_line[0]] = tkn_line[2..find_comment_delim_position(tkn_line) - 1].join('')          
           end
         # Not assigning vars so look for var invocations and substitute the value for the var name in the script
         else # if state == :invoking
@@ -393,8 +409,9 @@ class ComposerAST
         raise ComposerASTException, "Source File Name: #{src_file_name}. Line Number: #{line_no}. Illegal argument '#{kw_arg}' passed to function '#{kw}'."
       end
 
-      # Add the kw completion tokens to the end of the line
-      tkn_line.insert(tkn_line.length, tokenize(@@kw_completions[kw]))
+      # Add the kw completion tokens to the correct position in the line
+      tkns = tokenize(@@kw_completions[kw])
+      tkn_line.insert(find_insert_position(tkn_line), tkns)
       
       # If kw is valid child of @parent, new more nested parent, add_new node as child of @parent
       #  and make it the new @parent
@@ -429,11 +446,33 @@ class ComposerAST
           @parent = new_node          
         end        
       end
+      # for debugging
+      new_node.to_s
     # Not a new grammar node, just an attribute node of the current parent, so just add child
     else    
       @parent.add_child(ASTNode.new(expr=tkns_to_expr(tkn_line, append_newline=true), kw='', parent=@parent))
+      # for debugging
+      tkns_to_expr(tkn_line, append_newline=false)
     end    
   end
+  
+  def find_insert_position(tkns)
+    insert_pos = 0
+    tkns.each do |tkn|
+      break if tkn == '#'
+      insert_pos += 1
+    end
+    insert_pos    
+  end
+
+  def find_comment_delim_position(tkns)
+    pos = 0
+    tkns.each do |tkn|
+      break if tkn == '#'
+      pos += 1
+    end
+    pos
+  end  
         
   def kw?(tkn)
     if @@kw.include? tkn
@@ -511,8 +550,8 @@ class ComposerAST
     block_close_node = create_block_close_node(kw, parent)
     parent.add_child(block_close_node) unless block_close_node == nil
     new_node
-  end  
-  
+  end
+    
 	# This is not a standard accessor because want it only private because should only be used for testing
 	def root
 		@@root

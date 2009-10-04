@@ -1,6 +1,8 @@
 $LOAD_PATH << "..\\lib"
 require 'composer_lang'
+
 require 'test/unit'
+
 require 'rubygems'
 require 'ruby-debug' ; Debugger.start
 
@@ -72,7 +74,7 @@ class ComposerAST_Test < Test::Unit::TestCase
 #    end
 #    puts "test__append_completion COMPLETED"
 #  end
- 
+
   def test__kw?
     puts "test__kw? ENTERED"   
     ComposerAST.publicize_methods do
@@ -330,7 +332,7 @@ class ComposerAST_Test < Test::Unit::TestCase
     lang = ComposerAST.new
 
     actual = lang.tokenize("foo: a, b, c\n")    
-    expected = [['foo:', 'a', ',', 'b', ',', 'c']]
+    expected = [['foo:', 'a', ',', 'b', ',', 'c']]    
     assert(actual == expected)
 
     actual = lang.tokenize("instrument foo: a, b, c\n")
@@ -385,6 +387,20 @@ class ComposerAST_Test < Test::Unit::TestCase
     
     end
     puts "test__preprocess_func_helper COMPLETED"  
+  end 
+
+  def test__preprocess_block_with_comment
+    puts "test__preprocess_block_with_comment ENTERED"   
+    ComposerAST.publicize_methods do
+		
+    lang = ComposerAST.new  
+    actual = lang.preprocess_expression(lang.tokenize("note \"one\" # comment about lots of stuff\n")[0], "file", 100)        
+    actual = actual.strip    
+    expected = 'note "one" do # comment about lots of stuff' 
+    assert(actual == expected)
+        
+    end
+    puts "test__preprocess_block_with_comment COMPLETED"  
   end  
   
 end   
