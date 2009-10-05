@@ -28,6 +28,7 @@ class MidiManager
     # Create a first track for the sequence. This holds tempo events and stuff like that.
     track = Track.new(@seq)
     @seq.tracks << track
+    # TODO support Tempo in Composer
     track.events << Tempo.new(Tempo.bpm_to_mpq(120))
     track.events << MetaEvent.new(META_SEQ_NAME, @name)    
   end
@@ -39,7 +40,12 @@ class MidiManager
   #  but even that isn't actually exposed in Composer (other than the abstract
   #  concept of multiple Channels available if you set format == :midi
   def channel(channel)
-    @channel_tracks[channel] ||= Track.new(@seq)
+    if channel_nil?(channel)
+      track = Track.new(@seq)
+      @seq.tracks << track
+      @channel_tracks[channel] = track
+    end
+    @channel_tracks[channel]
   end
 
   def channel_nil?(channel)
@@ -48,6 +54,10 @@ class MidiManager
   
   def instrument(channel, instrument, delta_time=0)
     self.channel(channel) if channel_nil?(channel)
+    
+    # TEMP DEBUG
+    debug_log "channel, instrument, delta_time #{channel} #{instrument} #{delta_time}"
+    
     @channel_tracks[channel].events << ProgramChange.new(channel, instrument, delta_time)
     @channel_instruments[channel] = instrument
   end
@@ -58,7 +68,7 @@ class MidiManager
   
   # Args named with MIDI semantics. Converting to Composer semantics:
   #  note == pitch, velocity == amplitude == volume, delta_time == duration  
-  def add_note(channel, note, velocity, delta_time) 
+  def add_note(channel, note, velocity, delta_time)   
     channel(channel) if channel_nil?(channel)
     note_length = @seq.note_to_delta(delta_to_note_str(delta_time))    
     @channel_tracks[channel].events << NoteOnEvent.new(channel, note, velocity, 0)
@@ -68,13 +78,13 @@ class MidiManager
   # NOTE: Breaks encapsulation and really only intended for unit testing add_note()
   def channel_notes(channel)
     notes = []
-    if not @channel_tracks[channel].nil?
+    if not channel_nil? channel
       @channel_tracks[channel].each {|note| notes << note if note.note?}
     end
     notes
   end
     
-  def save(file_name)
+  def save(file_name)  
     File.open(file_name, 'wb') {|file| @seq.write file}  
   end
   alias render save

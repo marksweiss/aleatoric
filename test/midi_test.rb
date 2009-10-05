@@ -40,8 +40,10 @@ class MidiManager_Test < Test::Unit::TestCase
     midi = MidiManager.new
     assert(midi != nil)
     
-    midi.instrument(channel=1, instrument=100, delta_time=1.0)
-    assert(midi.channel_instrument(1) == 100)
+    midi.instrument(channel=0, instrument=100)
+    assert(midi.channel_instrument(0) == 100)
+    midi.instrument(channel=1, instrument=101)
+    assert(midi.channel_instrument(1) == 101)
 
     puts "test__instrument COMPLETED"
   end  
@@ -53,8 +55,8 @@ class MidiManager_Test < Test::Unit::TestCase
     assert(midi != nil)
     
     # note here == pitch in MIDI lingo, 64 == C4
-    midi.add_note(channel=1, note=64, velocity=100, delta_time=4.0)
-    midi_notes = midi.channel_notes(1)
+    midi.add_note(channel=0, note=64, velocity=100, delta_time=4.0)
+    midi_notes = midi.channel_notes(0)
     # length == 2 because this sets NoteOn and NoteOff
     assert(midi_notes.length == 2)
     # returns true if event is either NoteOn or NoteOff
@@ -70,8 +72,12 @@ class MidiManager_Test < Test::Unit::TestCase
     assert(midi != nil)
     
     # note here == pitch in MIDI lingo, 64 == C4
-    midi.add_note(channel=1, note=64, velocity=100, delta_time=4.0)
-    midi_notes = midi.channel_notes(1)
+    midi.instrument(channel=0, instrument=1)
+    midi.add_note(channel=0, note=64, velocity=100, delta_time=4.0)
+    midi.instrument(channel=1, instrument=20)
+    midi.add_note(channel=1, note=65, velocity=100, delta_time=4.0)
+    # midi_notes = midi.channel_notes(0)
+    # midi_notes = midi.channel_notes(1)
     midi.save('midi_test.mid')
 
     assert(File.size('midi_test.mid') > 0)

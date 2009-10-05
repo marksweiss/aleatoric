@@ -186,7 +186,7 @@ def instrument(arg)
     @cur_player.instrument arg
   end
   
-  if $FORMAT == :midi and @cur_note.respond_to? :channel and @cur_note.channel != nil
+  if $FORMAT == :midi
     @midi_mgr.instrument(@cur_note.channel, @cur_note.instrument)
   end
 end
@@ -231,7 +231,9 @@ def channel(arg)
   Note.set_output_format_midi
   @cur_note.channel arg
   # Allocate a MIDI channel for the channel number if there isn't one already
-  @midi_mgr.channel arg
+  if $FORMAT == :midi
+    @midi_mgr.channel arg
+  end
 end
 
 # Handles keyword "phrase"
@@ -659,19 +661,23 @@ end
 # score_file_name, orc_file_name=nil
 def render(out_file_name, &args_blk)
   if @score_out.format.to_sym == :midi
+    @processing_renderer = true
+    yield  
     # Allows a file name to be passed that isn't .mid
     #  and have .mid added for the MIDI file only.  So testing works 
-    #  seamlessly. In the docs we tell users to always use ".mid" for
-    #  their own real script midi files and this never gets called
-    out_file_name += '.mid' if [out_file_name.length - 4..out_file_name.length - 1] != '.mid'
-    # /TO SUPPORT UNIT TESTS ONLY
-    @score_out.notes.each do |note|
+    #  seamlessly. In the docs we tell users to always use ".mid"
+    out_file_name += '.mid' if out_file_name[out_file_name.length - 4..out_file_name.length - 1] != '.mid'    
+    write(out_file_name + DEFAULT_EXT, &args_blk) if not @is_write_called
+    # /TO SUPPORT UNIT TESTS ONLY      
+    @score_out.notes.each do |note|       
+      # NOTE: named args caused error on this call, no reason why, all args had values. Nice.
+      # MIDI arg names: channel, note, velocity, delta_time
       @midi_mgr.add_note(note.channel, note.pitch, note.velocity, note.duration)
     end
-    @midi_mgr.save out_file_name 
+    @midi_mgr.save out_file_name
+    @processing_renderer = false
   elsif @score_out.format.to_sym == :csound
     @processing_renderer = true
-    # Set rendering params as child keyword calls in the "render" block
     yield  
     # If write not called, then call it here to flush all notes before rendering
     write(out_file_name + DEFAULT_EXT, &args_blk) if not @is_write_called
