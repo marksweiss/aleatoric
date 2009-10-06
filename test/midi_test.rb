@@ -4,6 +4,17 @@ require 'test/unit'
 require 'rubygems'
 require 'ruby-debug' ; Debugger.start
 
+# Super-elegant solution for temporarily getting access to private methods to test stolen from here:
+#  http://blog.jayfields.com/2007/11/ruby-testing-private-methods.html
+class Class
+  def publicize_methods
+    saved_private_instance_methods = self.private_instance_methods
+    self.class_eval {public(*saved_private_instance_methods)}
+    yield
+    self.class_eval {private(*saved_private_instance_methods)}
+  end
+end
+
 class MidiManager_Test < Test::Unit::TestCase
   # def setup
   # end
@@ -51,17 +62,28 @@ class MidiManager_Test < Test::Unit::TestCase
   def test__add_note
     puts "test__add_note ENTERED"
 
-    midi = MidiManager.new
+    bpm = 60
+    midi = MidiManager.new('Test Manager', bpm)
     assert(midi != nil)
     
     # note here == pitch in MIDI lingo, 64 == C4
-    midi.add_note(channel=0, note=64, velocity=100, delta_time=4.0)
+    note_length = 4.0
+    midi.add_note(channel=0, note=64, velocity=100, delta_time=note_length)
     midi_notes = midi.channel_notes(0)
     # length == 2 because this sets NoteOn and NoteOff
     assert(midi_notes.length == 2)
     # returns true if event is either NoteOn or NoteOff
     assert(midi_notes[0].note? && midi_notes[1].note?)
-
+    
+    # note.delta_time == 1920
+    # 60.0 / (4.0 / 60)
+    # MIDI::Sequence.length_to_delta(seconds_per_min / (note_length_in_seconds / beats_per_min))
+    # MIDI Sequence has 480 ticks per quarter note when bpm = 60, so whole == 1920
+    secs_per_min = 60.0    
+    MidiManager.publicize_methods do
+      assert(midi_notes[1].delta_time == midi.seq.length_to_delta(midi.seconds_to_beats(note_length)))
+    end
+      
     puts "test__add_note COMPLETED"
   end
   

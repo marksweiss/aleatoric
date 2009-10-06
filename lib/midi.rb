@@ -15,11 +15,14 @@ class MidiManager
   include MIDI
   include Aleatoric
 
-  attr_reader :name
+  attr_reader :name, :bpm
   
-  def initialize(name=nil)
+  DEFAULT_BPM = 120
+  
+  def initialize(name=nil, bpm=nil)
     # custom init steps
     @name = name || 'Sequence Name'
+    @bpm = bpm || DEFAULT_BPM
     @channel_tracks = {}
     @channel_instruments = {}
 
@@ -29,7 +32,7 @@ class MidiManager
     track = Track.new(@seq)
     @seq.tracks << track
     # TODO support Tempo in Composer
-    track.events << Tempo.new(Tempo.bpm_to_mpq(120))
+    track.events << Tempo.new(Tempo.bpm_to_mpq(@bpm))
     track.events << MetaEvent.new(META_SEQ_NAME, @name)    
   end
   
@@ -53,11 +56,7 @@ class MidiManager
   end
   
   def instrument(channel, instrument, delta_time=0)
-    self.channel(channel) if channel_nil?(channel)
-    
-    # TEMP DEBUG
-    debug_log "channel, instrument, delta_time #{channel} #{instrument} #{delta_time}"
-    
+    self.channel(channel) if channel_nil?(channel)    
     @channel_tracks[channel].events << ProgramChange.new(channel, instrument, delta_time)
     @channel_instruments[channel] = instrument
   end
@@ -70,7 +69,7 @@ class MidiManager
   #  note == pitch, velocity == amplitude == volume, delta_time == duration  
   def add_note(channel, note, velocity, delta_time)   
     channel(channel) if channel_nil?(channel)
-    note_length = @seq.note_to_delta(delta_to_note_str(delta_time))    
+    note_length = @seq.length_to_delta(seconds_to_beats(delta_time))    
     @channel_tracks[channel].events << NoteOnEvent.new(channel, note, velocity, 0)
     @channel_tracks[channel].events << NoteOffEvent.new(channel, note, velocity, note_length)
   end
@@ -91,26 +90,35 @@ class MidiManager
   
   private
   
-  def delta_to_note_str(duration)
-    DUR_TO_NOTE_STR[duration]
+  def seconds_to_beats(secs)
+    secs / (60.0 / @bpm)
   end
-  alias dur_to_note_str delta_to_note_str
-  alias dur_to_note delta_to_note_str
-  alias delta_to_note delta_to_note_str
   
-  DUR_TO_NOTE_STR	=	{WHL => 'whole', 
-                     HLF => 'half', 
-                     QRTR => 'quarter', 
-                     EITH => 'eighth', 
-                     EITH => '8th', 
-                     SXTNTH => 'sixteenth', 
-                     SXTNTH => '16th', 
-                     THRTYSCND => 'thirty second', 
-                     THRTYSCND => 'thirtysecond', 
-                     THRTYSCND => '32nd', 
-                     SXTYFRTH => 'sixty fourth', 
-                     SXTYFRTH => 'sixtyfourth', 
-                     SXTYFRTH => '64th'}                   
+  # For testing only, exposed with temporary make private methods public in one midi_test.rb test
+  def seq
+    @seq
+  end
+  
+  # def delta_to_note_str(duration)
+  #  DUR_TO_NOTE_STR[duration]
+  #end
+  #alias dur_to_note_str delta_to_note_str
+  #alias dur_to_note delta_to_note_str
+  #alias delta_to_note delta_to_note_str
+  
+  #DUR_TO_NOTE_STR	=	{WHL => 'whole', 
+  #                   HLF => 'half', 
+  #                   QRTR => 'quarter', 
+  #                   EITH => 'eighth', 
+  #                   EITH => '8th', 
+  #                   SXTNTH => 'sixteenth', 
+  #                   SXTNTH => '16th', 
+  #                   THRTYSCND => 'thirty second', 
+  #                   THRTYSCND => 'thirtysecond', 
+  #                   THRTYSCND => '32nd', 
+  #                   SXTYFRTH => 'sixty fourth', 
+  #                   SXTYFRTH => 'sixtyfourth', 
+  #                   SXTYFRTH => '64th'}                   
   
   # We don't need this right now, but it will be annoying to do it over if we ever do  
   #note_str_to_delta(note_str)
