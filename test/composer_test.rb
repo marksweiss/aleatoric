@@ -1,12 +1,9 @@
 $LOAD_PATH << "..\\lib"
 require 'composer'
-require 'composer_lang_test'
-require 'meter_test'
-require 'player_test'
-require 'ensemble_test'
-require 'midi_test'
+
 require 'set'
 require 'thread'
+
 require 'rubygems'
 require 'ruby-debug' ; Debugger.start
 
@@ -164,7 +161,7 @@ end
 dump_last_note
 }
   tester, results = test_runner(test_name, throw_on_failure, script)
-  actual = results.first
+  actual = results.first  
   expected = "i 1 0.00000 0.50000 1000 7.01000 1 ; note 1"  
   tester.assert(expected == actual)
   puts tester.to_s  
@@ -1619,7 +1616,7 @@ ensemble "In C Orchestra"
   players "Player 1", "Player 2"  
 
 player "Player 1"  
-  phrase "Phrase 1"
+  phrase "Phrase 1 1"
     note "1"
       instrument  1 
       start       1.0 
@@ -1637,7 +1634,7 @@ player "Player 1"
       func_table  1
 
 player "Player 2"  
-  phrase "Phrase 1"
+  phrase "Phrase 2 1"
     note "3"
       instrument  3 
       start       3.0 
@@ -1673,7 +1670,7 @@ write "composer_test_results.txt"
   ensembles "In C Orchestra"
 }
   tester, results = test_runner(test_name, throw_on_failure, script, lite_syntax)
-  actual = results   
+  actual = results    
   expected0 = 'i 1 1.00000 0.50000 0 7.01000 1 ; 1'
   expected1 = 'i 2 2.00000 1.00000 0 7.02000 1 ; 2'
   expected2 = 'i 1 1.00000 0.50000 1000 7.01000 1 ; 1'
@@ -2175,7 +2172,11 @@ def run_tests(flags='all')
     begin    
       
       # *** run_only TESTS GO HERE ***
-
+      test__instruction_ensemble_state
+      #test__instruction_players_ensembles
+      #test__instruction_players_state
+      #test__sections_phrases_lite_syntax
+      #test__write_format_sections_phrases 
       # *** run_only TESTS GO HERE ***
     
     rescue AleatoricTestException => e

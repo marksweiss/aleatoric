@@ -189,9 +189,12 @@ class ComposerAST_Test < Test::Unit::TestCase
     actual = lang.valid_kw_arg?(kw, expr)    
     assert(actual == false)
 
+    # This used to be correct if it was false
+    #  but type restrictions in composer were relaxed to eval() this
+    #  arg to support passing expressions as args to repeat.
     kw = 'repeat'; expr = ['repeat', '"1"']    
     actual = lang.valid_kw_arg?(kw, expr)    
-    assert(actual == false)
+    assert(actual == true)
     
     kw = 'repeat'; expr = ['repeat', '1']    
     actual = lang.valid_kw_arg?(kw, expr)    
@@ -284,7 +287,7 @@ class ComposerAST_Test < Test::Unit::TestCase
     assert(! lang.valid_child_kw?('section', 'format'))
 		
 		# parent == 'repeat'
-    assert(lang.valid_child_kw?('repeat', 'note'))
+    assert(lang.valid_child_kw?('repeat', 'note'))    
     assert(! lang.valid_child_kw?('repeat', 'phrase')) 
     assert(! lang.valid_child_kw?('repeat', 'section'))
     assert(! lang.valid_child_kw?('repeat', 'repeat'))
@@ -377,8 +380,8 @@ class ComposerAST_Test < Test::Unit::TestCase
     expected = ['def', 'foo(', 'a', ',', 'b', ',', 'bar(', 'c', ',', 'baz(', 'd', ')', ')', ')']  
     assert(actual == expected)
 
-    actual = lang.preprocess_func_helper(lang.tokenize('instrument foo: a, b, bar: c, baz: d')[0])
-    expected = ['instrument', 'foo(', 'a', ',', 'b', ',', 'bar(', 'c', ',', 'baz(', 'd', ')', ')', ')']  
+    actual = lang.preprocess_func_helper(lang.tokenize('instrument foo: a, b, bar: c, baz: d')[0])      
+    expected = ['instrument', 'foo(', 'a', ',', 'b', ',', 'bar(', 'c', ',', 'baz(', 'd', ')', ')', ')']     
     assert(actual == expected)
     
     actual = lang.preprocess_func_helper(lang.tokenize('instrument 1, 2, 3')[0])    

@@ -53,7 +53,8 @@ module Aleatoric
 @notes_by_name = {}
 @processing_note = false
 
-@cur_phrase = nil
+# TODO - remove this - aliasing bug
+# @cur_phrase = nil
 @cur_phrases = []
 @phrases = []
 @phrases_by_name = {}
@@ -144,7 +145,7 @@ def note(name=nil, &args_blk)
   # Set flag for method_missing() so it traps methods and adds to this Note
   @processing_note = true
   # Declare the new Note  
-  @cur_note = Note.new(name)
+  @cur_note = Note.new(name)  
   
   # Now run the block. This call all the method_missing attribute functions, thus
   #  passing their name and arg to Note.method_missing, and thus adding them as attrs of this Note
@@ -161,6 +162,7 @@ def note(name=nil, &args_blk)
   #  will then pick up and append to its collection of Notes.  So the containing block
   #  is responsible for clearing this at the start and end of its block, before its yield.
   @notes << @cur_note
+  
   # Notes are also stored by name, if they are named, for convenient random access by key
   #  at any point later in the script. This is an internal data structure and these are not
   #  put into the output Score
@@ -170,8 +172,7 @@ def note(name=nil, &args_blk)
   
   # Each note can adjust @cur_start, which supports start NEXT
   # Sort of lame we have to list-ify it, but the same method takes a list for 'copy_measure'
-  adjust_cur_start([@cur_note])
-  
+  adjust_cur_start([@cur_note])  
   # Return the note, useful for testing purposes only. Allows independent testing of function
   #  and no additional exposure of module state, e.g. @notes
   @cur_note
@@ -241,17 +242,19 @@ def phrase(name, &args_blk)
   @processing_phrase = true
   # Init (clear) the queue of notes created -- this holds state contained by this block scope
   @notes.clear
-  @cur_phrase = Phrase.new(name)
-  # State that persists for the life of the score
-  @phrases << @cur_phrase
-  # State that is built/torn down within current containing section block, if any, or just ignored
-  @cur_phrases << @cur_phrase
-  # NOTE: nil name breaks because then Phrase can't be retrieved by key in write() block
-  @phrases_by_name[name] = @cur_phrase
+  cur_phrase = Phrase.new(name)  
+
   # Construct and put into @notes queue all Notes in the block for this Phrase block
-  yield args_blk
-  # Now add them to the Notes in this Phrase object
-  @cur_phrase << @notes  
+  yield
+
+  # Now add them to the Notes in this Phrase object  
+  cur_phrase << @notes
+  # State that persists for the life of the score
+  @phrases << cur_phrase
+  # State that is built/torn down within current containing section block, if any, or just ignored
+  @cur_phrases << cur_phrase
+  # NOTE: nil name breaks because then Phrase can't be retrieved by key in write() block  
+  @phrases_by_name[name] = cur_phrase    
   # Phrase just copied the Notes, so clear the queue again (redundant, but a bug waiting to happen)
   @notes.clear
   @processing_phrase = false
@@ -514,10 +517,10 @@ def phrases(*names)
   # This is bad because it goes in the opposite direction of the nesting logic for Notes, Phrases, etc.
   # So, lurking bugs.  Also it breaks if we want to have more than on Score.  Fine for "now."
   names.each do |name| 
-    name = name.strip
-    phrase = @phrases_by_name[name]
-    phrase.notes.each do |note|
-      @score_notes << note.dup
+    name = name.strip    
+    phrase = @phrases_by_name[name]    
+    phrase.notes.each do |note|    
+      @score_notes << note.dup      
     end
   end
 end
@@ -549,7 +552,7 @@ def sections(*names)
     section = @sections_by_name[name]
     section.phrases.each do |phrase|
       phrase.notes.each do |note|
-        @score_notes << note.dup
+        @score_notes << note.dup        
       end
     end
   end
@@ -601,15 +604,14 @@ def repeat(limit, &blk)
   #  not have it thrust on them silently.
   @notes.clear
   index = 1
+  # Somewhat hacky way to handle variables as args to repeat
+  # TODO: worse is that we don't check that limit evaluated to a Fixnum (int)
+  limit = eval(limit.to_s)  
   limit.times do
     # Pass the index to the block
     yield index
     index += 1
   end
-  
-  # Now add them to the Notes in the currently nearest Phrase, which should be the parent of this node
-  @cur_phrase << @notes  
-  @notes.clear
 end
 
 # Handles constant arg to method_missing "format" function in "write" block
@@ -636,10 +638,11 @@ end
 def write(file_name, &args_blk)  
   @processing_score = true
   @score_out.name = file_name  
-  # Sets write properties, and writes all notes of all Phrases and Sections into a queue
-  yield
-  @score_out << @score_notes
   
+  # Sets write properties, and writes all notes of all Phrases and Sections into a queue  
+  yield
+  
+  @score_out << @score_notes  
   case @score_out.format.to_sym
   when :csound
     File.open(file_name, 'w') do |f|
@@ -660,30 +663,30 @@ end
 # Handles "render" keyword, renders for csound now
 # score_file_name, orc_file_name=nil
 def render(out_file_name, &args_blk)
+  @processing_renderer = true
+
+  yield  
+
   if @score_out.format.to_sym == :midi
-    @processing_renderer = true
-    yield  
-    # Allows a file name to be passed that isn't .mid
-    #  and have .mid added for the MIDI file only.  So testing works 
-    #  seamlessly. In the docs we tell users to always use ".mid"
-    out_file_name += '.mid' if out_file_name[out_file_name.length - 4..out_file_name.length - 1] != '.mid'    
-    write(out_file_name + DEFAULT_EXT, &args_blk) if not @is_write_called
-    # /TO SUPPORT UNIT TESTS ONLY      
+    # Allows a file name to be passed that isn't .mid and have .mid added.  So testing works 
+    # In the docs we tell users to always use ".mid"
+    out_file_name += '.mid' if out_file_name[out_file_name.length - 4..out_file_name.length - 1] != '.mid'        
+    # NOTE: pass empty block to write() because called render block yield here already
+    # But we want write() and render() to each have a yield since each can take blocks
+    write(out_file_name + DEFAULT_EXT){} if not @is_write_called    
+    # /TO SUPPORT UNIT TESTS ONLY    
     @score_out.notes.each do |note|       
       # NOTE: named args caused error on this call, no reason why, all args had values. Nice.
       # MIDI arg names: channel, note, velocity, delta_time
       @midi_mgr.add_note(note.channel, note.pitch, note.velocity, note.duration)
     end
     @midi_mgr.save out_file_name
-    @processing_renderer = false
   elsif @score_out.format.to_sym == :csound
-    @processing_renderer = true
-    yield  
     # If write not called, then call it here to flush all notes before rendering
-    write(out_file_name + DEFAULT_EXT, &args_blk) if not @is_write_called
+    write(out_file_name + DEFAULT_EXT){} if not @is_write_called
     @renderer.render(render_format=@score_out.format, out_file=out_file_name, score_file=@score_out.name)
-    @processing_renderer = false
   end
+  @processing_renderer = false
 end
 
 # FOR UNIT TESTING
@@ -748,7 +751,8 @@ def reset_script_state
   @notes_by_name = {}
   @processing_note = false
 
-  @cur_phrase = nil
+  # TODO remove this - aliasing bug
+  # @cur_phrase = nil
   @cur_phrases = []
   @phrases = []
   @phrases_by_name = {}
@@ -814,7 +818,7 @@ def method_missing(name, arg)
   # This is in reverse order of the nested order of the blocks, so it's an implicit
   #  stack of precedence -- Notes are deepest and so always evaluated first, Phrases
   #  can contain Notes so a Note in scope should come first, but otherwise the Phrase
-  #  should be considered before a Section, and so on.
+  #  should be considered before a Section, and so on.  
   @cur_note.method_missing(name, arg) if @processing_note
   @cur_phrase.method_missing(name, arg) if @processing_phrase
   @cur_section.method_missing(name, arg) if @processing_section

@@ -1,6 +1,7 @@
 $LOAD_PATH << "..\\lib"
 require 'util'
 require 'score'
+
 require 'rubygems'
 require 'ruby-debug' ; Debugger.start
 
@@ -34,7 +35,7 @@ class Player
     @name = name
     @instrument = instrument
     @scores = {}
-    @scores_idx = 0
+    @scores_idx = -1
     @scores_ordered_names = []
     @preplay_hooks_ordered_names = []
     @preplay_hooks = {}
@@ -104,6 +105,19 @@ class Player
       break if name == score_name
     end
     @scores[score_name] = score if valid_scores_idx? idx
+    self
+  end
+  
+  def set_current_score(score_name)
+    # Start out in invalid position and index for each score until we match
+    idx = -1
+    @scores_ordered_names.each do |name|
+      idx += 1
+      if name == score_name
+        @scores_idx = idx
+        break
+      end
+    end
     self
   end
   
@@ -189,7 +203,7 @@ class Player
     cur_score = @scores[name] if name != nil
     cur_score = current_score if name == nil
     cur_score = cur_score.dup
-        
+                
     # NOTE: hooks can have whatever side effects they want, based on the access they have through
     #  the Player public API.  But barring that the promise the class makes in #play is like a 
     #  a functional map idea -- each hook is called, in order, and transforms the current state
@@ -207,9 +221,9 @@ class Player
       note = note.dup
       ret << note
       note.instrument(self.instrument) if self.instrument
-      @out_notes << note
+      @out_notes << note      
     end
-    
+
     # Now run postplay hooks. 
     # NOTE: These make no promise as far as manipulating the current_score.  These rely on the
     #  Player API and the client simply must implement whatever logic they want.  Only promise
@@ -222,7 +236,7 @@ class Player
     end    
     
     # Also return the notes written, for client convenience in case they want a local copy, 
-    #  and, more so, for convenience of unit testing
+    #  and, more so, for convenience of unit testing    
     ret
   end
   

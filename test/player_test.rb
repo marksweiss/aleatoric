@@ -4,10 +4,6 @@ require 'test/unit'
 require 'rubygems'
 require 'ruby-debug' ; Debugger.start
 
-comment=<<comment
-This is a comment
-comment
-
 module Aleatoric
 
 class Player_Test < Test::Unit::TestCase

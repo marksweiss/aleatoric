@@ -19,9 +19,9 @@ end
 
 
 # Default format set in script invocation command line or set to :csound if no format arg passed
+# TODO Make this support command-line argument or config for which is default
 $FORMAT = $ARG_FORMAT || :csound
 $LAST_FORMAT = $FORMAT
-
 
 # TODO implement this to load both csound and midi from a config and then fill in values from the first
 #  'format' statement it encounters
@@ -36,7 +36,6 @@ EITH = 0.5
 SXTNTH = 0.25
 THRTYSCND = 0.125
 SXTYFRTH = 0.0625
-
 
 # Remove MIDI consts only used by MIDI to avoid using them with CSound format
 #  and silently passing bogus values to CSound that might not cause errors but

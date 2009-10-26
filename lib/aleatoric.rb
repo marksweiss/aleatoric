@@ -1,7 +1,8 @@
 require 'composer'
 require 'composer_lang'
-require 'rubygems'
-require 'ruby-debug' ; Debugger.start
+
+#require 'rubygems'
+#require 'ruby-debug' ; Debugger.start
 
 include Aleatoric
 
@@ -22,30 +23,73 @@ def main
   #  and hide that from them.  And in all cases we add the module directive.
   file_name_tmp = file_name + '.tmp'
   
-  $ARG_FORMAT = :midi #:csound
-  $ARG_FORMAT = ARGV[1].to_sym if (ARGV.length > 1 && ARGV[1] == ('csound' || 'midi')) 
-    
+  # Set global format and make call to load consts for that format
+  # TODO Make default format configurable
+  $ARG_FORMAT = :csound  
+  fmt_arg = '' 
+  fmt_arg = ARGV[1] if ARGV.length > 1
+  fmt_arg = fmt_arg.strip.downcase
+  $ARG_FORMAT = fmt_arg.to_sym if (fmt_arg == 'csound' || fmt_arg == 'midi') 
+
+  if $ARG_FORMAT == :csound
+    set_csound_consts
+  elsif $ARG_FORMAT == :midi
+    set_midi_consts
+  end
+  
+  # TODO Verbose flag
+  # LOGGING
+  puts "Format set to #{$ARG_FORMAT}"
+  
   # Now preprocess to add 'do/end' syntax, add 'do |index|/end' to repeat blocks
   #  and validate syntax and grammar (structure)
   preprocess_flag = true
   preprocess_flag = eval(ARGV[2]) if ARGV.length > 2
-  if preprocess_flag  
+  if preprocess_flag      
+    # LOGGING
+    t = Time.now
+    puts "Preprocessing started at #{t}"
+    
     script = ComposerAST.new.preprocess_script(file_name).to_s
+
+    # LOGGING
+    t_new = Time.now
+    puts "Preprocessing took #{(t_new - t) * 1000.0} milliseconds"
   else
     script = File.readlines file_name
   end
   
   # Wrap the script in necessary directives, so user doesn't have to 
-  File.open(file_name_tmp, "w") do |f|
+  File.open(file_name_tmp, "w") do |f| 
+    # LOGGING
+    t = Time.now
+    puts "Started writing preprocessed score file at #{t}"
+  
     f << "require 'util'\nrequire 'global'\nrequire 'user_instruction'\nmodule Aleatoric\n\n"  
     script.each do |line|
       f << line
     end    
     f << "\n\nend\n"
+    
+    # LOGGING
+    t_new = Time.now
+    puts "Writing preprocessed score file took #{(t_new - t) * 1000.0} milliseconds"    
   end  
   
-  # Run the script in Ruby, as a Ruby script, in the context of the 'Aleatoric' namespace included above
+  # *********************************
+  # Run the script in Ruby, as a Ruby script, 
+  #  in the context of the 'Aleatoric' namespace included above
+  #  with all the constants loaded above
+  
+  # LOGGING
+  t = Time.now
+  puts "Started interpreting and rendering score #{t}"   
+  
   load file_name_tmp
+
+  # LOGGING
+  t_new = Time.now
+  puts "Interpreting and rendering score took #{(t_new - t) * 1000.0} milliseconds"     
 end
 
 main

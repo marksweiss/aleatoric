@@ -1,4 +1,5 @@
 # TODO Rewrite as a real parser using Treetop: http://treetop.rubyforge.org/
+require 'global'
 
 module Aleatoric
  
@@ -132,7 +133,7 @@ class ComposerAST
     'note' =>     lambda {|x| x == nil or x[0] == nil or x[0].kind_of? String},     # 1st arg optional, valid type
     'phrase' => 	lambda {|x| x == nil or x[0] == nil or x[0].kind_of? String},     # 1st arg optional, valid type
     'section' => 	lambda {|x| x == nil or x[0] == nil or x[0].kind_of? String},     # 1st arg optional, valid type
-    'repeat' => 	lambda {|x| x != nil and x[0] != nil and x[0].kind_of? Fixnum},                       		       # 1st arg required, valid type
+    'repeat' => 	lambda {|x| x != nil and x[0] != nil },# and eval(x[0].to_s).kind_of? Fixnum},                       		       # 1st arg required, valid type
     'render' => 	lambda {|x| x != nil and x[0] != nil and (x[0].kind_of? String and x[0].length > 0)},            # 1st arg required, valid type
     'write' => 		lambda {|x| x != nil and x[0] != nil and (x[0].kind_of? String and x[0].length > 0)},            # 1st arg required, valid type
     'format' => 	lambda {|x| x != nil and x[0] != nil and (x[0].to_s == 'csound' or x[0].to_s == 'midi')},        # 1st arg required, valid value
@@ -243,7 +244,7 @@ class ComposerAST
         expr_tkns = tokenize_join_str expr_tkns                
         tkns << expr_tkns
       end
-    tkns
+    tkns    
   end
   
   def tokenize_join_str(tkns)    
@@ -372,7 +373,14 @@ class ComposerAST
         # tkn_line[j] = tkn
         # If this is the first token in the line, then this is a function delcaration, do
         #  precede with 'def ' keyword so statement preprocessing that follows will make this a block
-        tkn_line_out = ['def'] + tkn_line_out if j == 0
+        if j == 0
+          tkn_line_out = ['def'] + tkn_line_out 
+        # To wrap function calls which are args in parens, e.g. 'instrument (foo(bar))' instead of 'instrument foo(bar)'
+        # But as it turns out this doesn't matter, ruby handles either the same. But left it as a relic/clue
+        #elsif j == 1
+        #  tkn_line_out.insert(1, '(')
+        #  func_cnt += 1
+        end
       end      
       tkn_line_out << tkn
     end

@@ -10,6 +10,7 @@ require 'ruby-debug' ; Debugger.start
 
 class AleatoricIllegalMidiOperationException < Exception; end
 
+# TODO - need a Composer keyword to set bpm, child of format midi, make that a block
 class MidiManager
 
   include MIDI

@@ -1,9 +1,12 @@
 $LOAD_PATH << "..\\lib"
 require 'ensemble'
+
 require 'test/unit'
+
 require 'rubygems'
 require 'ruby-debug' ; Debugger.start
 
+module Aleatoric
 
 class Ensemble_Test < Test::Unit::TestCase
 
@@ -359,5 +362,6 @@ class Ensemble_Test < Test::Unit::TestCase
     puts "test__play_all_repeat COMPLETED"
   end
   
-  
+end
+
 end

@@ -31,6 +31,11 @@ class Score
       @notes << note.dup
     end    
   end
+  
+  def size
+    @notes.size
+  end
+  alias length size
 
   # Creates accessors for newly created attributes of the object
   def method_missing(name, val)  

@@ -79,7 +79,7 @@ set_player_postplay_instruction("Alternate", &set_alternate_after_play)
  
 # NOTE: Ensemble preplay hook just takes container, ref to self, doesn't assume Score input
 # NOTE: Ensemble preplay hook returns nil, unlike Player which returns a Score
-get_alternate_before_play_ens = lambda do |container|
+get_alternate_before_play_ens = lambda do |container|  
   if not container.get_state("alternate_flag")
     container.players.each do |player|
       # get a copy of the current score
@@ -92,6 +92,10 @@ get_alternate_before_play_ens = lambda do |container|
       end
       # set the altered score as the score for that score.name for the player
       # Effectively, we have stored a copy and replaced what was there with a silent score
+      
+      # TEMP DEBUG
+      debug_log "score.name #{score.name}"
+      
       player.set_score(score.name, score)
     end
   end

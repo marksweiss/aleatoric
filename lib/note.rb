@@ -35,7 +35,8 @@ class Note
       self
     end
   end
-   # alias midi name to csound name
+  # TODO REAL MIDI PROGRAM CHANGE
+  # alias midi name to csound name
   def program_change(instrument=nil)
     self.instrument(instrument)
   end
@@ -172,7 +173,7 @@ class Note
   end
 
   # Creates accessors for newly created attributes of the object
-  def method_missing(name, val)    
+  def method_missing(name, val)     
     @note_attrs[name] = val
     @ordered_keys << name unless @ordered_keys.include? name
     def_accessor name
