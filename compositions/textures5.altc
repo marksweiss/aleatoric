@@ -1,0 +1,13 @@
+format midi
+
+section "s1"
+phrase "p1"
+note "n1"
+      channel     0 
+      instrument  1
+      duration    1.0
+      amplitude   50
+      pitch       C3
+      
+render "..\\compositions\\textures4.mid"
+  sections "1"

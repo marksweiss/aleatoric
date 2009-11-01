@@ -1,0 +1,318 @@
+# Declare Variables 
+
+_midi_max = 127
+_pi_rng = 314
+_loop_rng = _midi_max
+_pi_fctr = 100.0
+_midi_min = 0
+_dampen_fctr = 0.7
+_ampfctr = 1.0
+
+_blen = 0.05 # 0.01
+_blenrst =  0.005 # 0.001
+
+sign:
+  x = rand(2) % 1
+  1 if x == 1
+  -1 if x == 0  
+   
+cycle: index 
+  Math.sin(index % _pi_rng / _pi_fctr)
+
+# Offsets a value within a range
+# swing(0.98, 5, 0.01) ==> 0.98 - 1.02
+swing: base_val, num_steps, swing_step
+  base_val + (rand(num_steps) * swing_step)
+
+midi_rng: index
+  index % _midi_max
+  
+rise: index, limit
+  if index <= limit 
+    index % limit
+  else
+    limit
+  end
+
+dampen: index, fctr
+  (Math.log10(index + 1)) * fctr
+
+format midi
+
+phrase "p0"     
+  repeat 157
+    note 
+      # TODO This must precede instrument, bug
+      channel     0
+      instrument  MIDI_Blown_Bottle
+      duration    _blen * (cycle: index) + (0.01 * rand)
+      velocity    _midi_max * (cycle: index) * (0.2 + rand)
+      pitch       G2 + (rand(5) * sign:)      
+    note 
+      # TODO This must precede instrument, bug
+      channel     1 
+      instrument  MIDI_Open_Triangle
+      duration    _blen * (cycle: index) + (0.01 * rand)
+      velocity    0
+      pitch       C0       
+    note 
+      # TODO This must precede instrument, bug
+      channel     2 
+      instrument  MIDI_Open_Triangle
+      duration    _blen * (cycle: index)
+      velocity    0
+      pitch       C0
+    note 
+      # TODO This must precede instrument, bug
+      channel     3 
+      instrument  MIDI_Open_Triangle
+      duration    _blen * (cycle: index)
+      velocity    0
+      pitch       C0      
+    note 
+      # TODO This must precede instrument, bug
+      channel     8 
+      instrument  MIDI_Open_Triangle
+      duration    _blen * (cycle: index)
+      velocity    0
+      pitch       C0
+    note 
+      # TODO This must precede instrument, bug
+      channel     9 
+      instrument  MIDI_Open_Triangle
+      duration    _blen * (cycle: index)
+      velocity    0
+      pitch       C0
+    note 
+      # TODO This must precede instrument, bug
+      channel     11 
+      instrument  MIDI_Open_Triangle
+      duration    _blen * (cycle: index)
+      velocity    0
+      pitch       C0
+    note 
+      # TODO This must precede instrument, bug
+      channel     12 
+      instrument  MIDI_Open_Triangle
+      duration    _blen * (cycle: index)
+      velocity    0
+      pitch       C0
+      
+phrase "p1"     
+  repeat 314
+    note 
+      # TODO This must precede instrument, bug
+      channel     0 
+      instrument  MIDI_Violin
+      duration    _blen * (cycle: index) + (0.01 * rand)
+      velocity    70 * (cycle: index) * (0.2 + rand)
+      pitch       C6 + (rand(5) * sign:)
+    note 
+      # TODO This must precede instrument, bug
+      channel     1 
+      instrument  MIDI_Open_Triangle + (0.01 * rand)
+      duration    _blenrst * (cycle: index)
+      velocity    0
+      pitch       C0
+    note 
+      # TODO This must precede instrument, bug
+      channel     2 
+      instrument  MIDI_Choir_Aahs
+      duration    _blen * (cycle: index)
+      velocity    100 * (cycle: index) * (0.2 + rand)
+      pitch       E3 + (rand(5) * sign:)
+    note 
+      # TODO This must precede instrument, bug
+      channel     1 
+      instrument  MIDI_Open_Triangle
+      duration    _blenrst * (cycle: index)
+      velocity    0
+      pitch       C0
+    note 
+      # TODO This must precede instrument, bug
+      channel     3 
+      instrument  MIDI_Blown_Bottle
+      duration    _blen * (cycle: index) + (0.01 * rand)
+      velocity    50 * (cycle: index) * (0.2 + rand)
+      pitch       G4 + (rand(5) * sign:) 
+    note 
+      # TODO This must precede instrument, bug
+      channel     1 
+      instrument  MIDI_Open_Triangle
+      duration    _blenrst * (cycle: index)
+      velocity    0
+      pitch       C0      
+
+  repeat 314
+    note 
+      # TODO This must precede instrument, bug
+      channel     0 
+      instrument  MIDI_Violin
+      duration    _blen * (cycle: index) + (0.01 * rand)
+      velocity    70 * (cycle: index) * (0.2 + rand)
+      pitch       C6 + (rand(5) * sign:) 
+    note 
+      # TODO This must precede instrument, bug
+      channel     1 
+      instrument  MIDI_Open_Triangle
+      duration    _blenrst * (cycle: index) + (0.01 * rand)
+      velocity    0
+      pitch       C0
+    note 
+      # TODO This must precede instrument, bug
+      channel     2 
+      instrument  MIDI_Choir_Aahs
+      duration    _blen * (cycle: index)
+      velocity    100 * (cycle: index) * (0.2 + rand)
+      pitch       E4 + (rand(5) * sign:) 
+    note 
+      # TODO This must precede instrument, bug
+      channel     1 
+      instrument  MIDI_Open_Triangle
+      duration    _blenrst * (cycle: index)
+      velocity    0
+      pitch       C0      
+    note 
+      # TODO This must precede instrument, bug
+      channel     3 
+      instrument  MIDI_Blown_Bottle
+      duration    _blen * (cycle: index) + (0.01 * rand)
+      velocity    50 * (cycle: index) * (0.2 + rand)
+      pitch       G4 + (rand(5) * sign:)  
+    note 
+      # TODO This must precede instrument, bug
+      channel     1 
+      instrument  MIDI_Open_Triangle
+      duration    _blenrst * (cycle: index)
+      velocity    0
+      pitch       C0       
+      
+phrase "p2"
+  repeat 157
+    note 
+      channel     8 
+      instrument  MIDI_Trumpet
+      duration    _blen * 0.5 * (cycle: index) + (0.01 * rand)
+      velocity    70 * 0.5 * (cycle: index) * (0.2 + rand)
+      pitch       C6 + (rand(5) * sign:) 
+    note 
+      # TODO This must precede instrument, bug
+      channel     9 
+      instrument  MIDI_Open_Triangle
+      duration    _blenrst * 0.5 * (cycle: index) + (0.01 * rand)
+      velocity    0
+      pitch       C0      
+    note 
+      channel     11 
+      instrument  MIDI_Flute
+      duration    _blen * 0.5 * (cycle: index)
+      velocity    70 * 0.5 * (cycle: index) * (0.2 + rand)
+      pitch       E7 + (rand(5) * sign:) 
+    note 
+      # TODO This must precede instrument, bug
+      channel     9 
+      instrument  MIDI_Open_Triangle
+      duration    _blenrst * 0.5 * (cycle: index)
+      velocity    0
+      pitch       C0
+    note 
+      # TODO This must precede instrument, bug
+      channel     12 
+      instrument  MIDI_Blown_Bottle
+      duration    _blen * 0.5 * (cycle: index) + (0.01 * rand)
+      velocity    50 * (cycle: index) * (0.2 + rand)
+      pitch       G4F + (rand(5) * sign:) 
+    note 
+      # TODO This must precede instrument, bug
+      channel     9 
+      instrument  MIDI_Open_Triangle
+      duration    _blenrst * 0.5 * (cycle: index)
+      velocity    0
+      pitch       C0 
+      
+  repeat 157
+    note 
+      channel     8 
+      instrument  MIDI_Trumpet
+      duration    _blen * 0.5 * (cycle: 158 - index) + (0.01 * rand)
+      velocity    70 * 0.5 * (cycle: index) * (0.2 + rand)
+      pitch       C5 + (rand(5) * sign:) 
+    note 
+      # TODO This must precede instrument, bug
+      channel     9 
+      instrument  MIDI_Open_Triangle
+      duration    _blenrst * 0.5 * (cycle: 158 - index) + (0.01 * rand)
+      velocity    0
+      pitch       C0      
+    note 
+      channel     11 
+      instrument  MIDI_Flute
+      duration    _blen * 0.5 * (cycle: 158 - index)
+      velocity    70 * 0.5 * (cycle: 158 - index) * (0.2 + rand)
+      pitch       E3 + (rand(5) * sign:)      
+    note 
+      # TODO This must precede instrument, bug
+      channel     9 
+      instrument  MIDI_Open_Triangle
+      duration    _blenrst * 0.5 * (cycle: 158 - index)
+      velocity    0
+      pitch       C0
+    note 
+      # TODO This must precede instrument, bug
+      channel     12 
+      instrument  MIDI_Blown_Bottle
+      duration    _blen * 0.5 * (cycle: index) + (0.01 * rand)
+      velocity    50 * (cycle: index) * (0.2 + rand)
+      pitch       G4 + (rand(5) * sign:)  
+    note 
+      # TODO This must precede instrument, bug
+      channel     9 
+      instrument  MIDI_Open_Triangle
+      duration    _blenrst * 0.5 * (cycle: index)
+      velocity    0
+      pitch       C0       
+          
+  repeat 314
+    note 
+      channel     8 
+      instrument  MIDI_Trumpet
+      duration    _blen * (cycle: index) + (0.01 * rand)
+      velocity    80 * (cycle: index) * (0.2 + rand)
+      pitch       C1 + (rand(5) * sign:) 
+    note 
+      # TODO This must precede instrument, bug
+      channel     9 
+      instrument  MIDI_Open_Triangle
+      duration    _blenrst * (cycle: index) + (0.01 * rand)
+      velocity    0
+      pitch       C0      
+    note 
+      channel     11 
+      instrument  MIDI_Flute
+      duration    _blen * (cycle: index)
+      velocity    70 * (cycle: index) * (0.2 + rand)
+      pitch       E4 + (rand(5) * sign:)  
+    note 
+      # TODO This must precede instrument, bug
+      channel     9 
+      instrument  MIDI_Open_Triangle
+      duration    _blenrst * (cycle: index)
+      velocity    0
+      pitch       C0
+    note 
+      # TODO This must precede instrument, bug
+      channel     12 
+      instrument  MIDI_Blown_Bottle
+      duration    _blen * (cycle: index) + (0.01 * rand)
+      velocity    80 * (cycle: index) * (0.2 + rand)
+      pitch       G2 + (rand(5) * sign:)  
+    note 
+      # TODO This must precede instrument, bug
+      channel     9 
+      instrument  MIDI_Open_Triangle
+      duration    _blenrst * (cycle: index)
+      velocity    0
+      pitch       C0        
+      
+render "..\\compositions\\textures3.mid"
+  phrases "p0", "p1", "p2"

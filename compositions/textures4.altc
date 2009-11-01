@@ -1,0 +1,75 @@
+# Declare Variables #
+
+_pi_rng = 314
+_pi_rng_hlf = 157
+_pi_rng_fth = 63
+_pi_rng_tnth = 31
+_pi_rng_f = 314.0
+_pi_fctr = 100.0
+_midi_min = 0
+_midi_max = 127
+_loops_factor = 1
+
+_blen = 0.025
+_blenrst = 0.00995
+_ampfctr = 0.4
+    
+cycle: index 
+  Math.sin(index % _pi_rng / _pi_fctr)
+  
+# Offsets a value within a range
+# swing(0.98, 5, 0.01) ==> 0.98 - 1.02
+swing: base_val, num_steps, swing_step
+  base_val + (rand(num_steps) * swing_step)
+
+midi_rng: index
+  (index % 127).to_i  
+  
+#
+# The Score #
+#
+
+# Set format as first statement  
+format midi
+
+# Declare all the phrases, notes, etc. Call functions, use vars.
+
+
+# phrase "init"
+#  note "dummy init"
+#    dummy init_cycle:
+
+section "1"
+
+phrase "p11"
+  repeat _pi_rng
+  
+    note "p11 n1"
+      # Open Bug: channel must be declared before instrument
+      channel     0 
+      instrument  MIDI_Blown_Bottle
+      duration    _blen * (cycle: index)  
+      amplitude   _midi_max * (cycle: index) * _ampfctr * rand + 0.1
+      pitch       C6
+
+    note "p11 n1 rest 1"
+      channel     0 
+      instrument  MIDI_Blown_Bottle
+      duration    _blenrst * (cycle: index) + (swing: 0.0005, 5, 0.001) 
+      velocity    0
+      pitch       Cneg1
+      
+    note "p11 n2"
+      # Open Bug: channel must be declared before instrument
+      channel     0 
+      instrument  MIDI_Blown_Bottle # midi_rng: index
+      duration    _blen * (cycle: index)  
+      amplitude   _midi_max * (cycle: index) * _ampfctr * rand
+      pitch       C6S
+
+      
+# Call render to generate output      
+render "..\\compositions\\textures3.mid"
+  sections "1" 
+  #, "2", "bass line 1", "3", 
+  # phrases "p1", "p2", "p3", "p4", "p5", "p6", "p7"

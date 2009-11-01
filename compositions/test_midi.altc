@@ -1,0 +1,24 @@
+format midi
+
+phrase "1"
+  repeat 10
+    note "vibes"
+      # TODO - Open bug, must declare Channel first before Instrument
+      channel     0 
+      instrument  MIDI_Reed_Organ
+      duration    HLF
+      velocity    100 
+      pitch       64
+
+phrase "2"      
+  repeat 80  
+    note "piano"
+      # TODO - Open bug, must declare Channel first before Instrument
+      channel     1       
+      instrument  MIDI_Xylophone
+      duration    SXTNTH
+      velocity    80
+      pitch       127
+      
+render "..\\compositions\\test_midi.mid"
+  phrases "1", "2"
