@@ -20,6 +20,7 @@ legato_duration: dur
 # Define the score.  Ensemble, players, instruments, improvisations, sections,
 #  measures, phrases, notes, note properties.  Then render at the end.
 
+# Declare format for rendering to a sound file. CSound and MIDI supported.
 format csound
 
 
@@ -32,1898 +33,2057 @@ format csound
 #  orchestra defintion being used.  This wouldn't be necessary if the rendering
 #  of the score was in MIDI
 
-phrase "1"
-  note
-    start legato_start: 0.0, EITH
-    duration legato_duration: EITH
-    volume _default_volume
-    pitch C4
-    func_table 1
-  note
-    start legato_start: 0.0 + EITH, QRTR
-    duration legato_duration: QRTR
-    volume _default_volume
-    pitch E4
-    func_table 1
-  note
-    start legato_start: EITH + QRTR, EITH
-    duration legato_duration: EITH
-    volume _default_volume
-    pitch C4
-    func_table 1
-  note
-    start legato_start: HLF, QRTR
-    duration legato_duration: QRTR
-    volume _default_volume
-    pitch E4
-    func_table 1
-  note
-    start legato_start: HLF + QRTR, EITH
-    duration legato_duration: EITH
-    volume _default_volume
-    pitch C4
-    func_table 1
-  note
-    start legato_start: HLF + QRTR + EITH, QRTR
-    duration legato_duration: QRTR
-    volume _default_volume
-    pitch E4
-    func_table 1
+
+# Declare Players in the Ensemble, and assign them instruments
+player "Player 1"
+  instrument 1
+player "Player 2"
+  instrument 1
+player "Player 3"
+  instrument 1
+player "Player 4"
+  instrument 1
+player "Player 5"
+  instrument 1
+player "Player 6"
+  instrument 1
+player "Player 7"
+  instrument 1
+player "Player 8"
+  instrument 1
+
+# Declare Ensemble, assign Players to Ensemble, and define all Phrases
+#  within the Ensemble block, thereby assigning all Phrases to all Players
+#  in the Ensemble
+ensemble "In C Orchestra"
+  players "Player 1", "Player 2", "Player 3", "Player 4", "Player 5", "Player 6", "Player 7", "Player 8"
+  
+  phrase "1"
+    note
+      start legato_start: 0.0, EITH
+      duration legato_duration: EITH
+      volume _default_volume
+      pitch C4
+      func_table 1
+    note
+      start legato_start: 0.0 + EITH, QRTR
+      duration legato_duration: QRTR
+      volume _default_volume
+      pitch E4
+      func_table 1
+    note
+      start legato_start: EITH + QRTR, EITH
+      duration legato_duration: EITH
+      volume _default_volume
+      pitch C4
+      func_table 1
+    note
+      start legato_start: HLF, QRTR
+      duration legato_duration: QRTR
+      volume _default_volume
+      pitch E4
+      func_table 1
+    note
+      start legato_start: HLF + QRTR, EITH
+      duration legato_duration: EITH
+      volume _default_volume
+      pitch C4
+      func_table 1
+    note
+      start legato_start: HLF + QRTR + EITH, QRTR
+      duration legato_duration: QRTR
+      volume _default_volume
+      pitch E4
+      func_table 1
     
-phrase "2"
-  note
-    start legato_start: 0.0, EITH
-    duration legato_duration: EITH
-    volume _default_volume
-    pitch C4
-    func_table 1
-  note
-    start legato_start: EITH, EITH
-    duration legato_duration: EITH
-    volume _default_volume
-    pitch E4
-    func_table 1
-  note
-    start QRTR
-    duration EITH
-    volume _default_volume
-    pitch F4
-    func_table 1
-  note
-    start QRTR + EITH
-    duration EITH
-    volume _default_volume
-    pitch E4
-    func_table 1
+  phrase "2"
+    note
+      start legato_start: 0.0, EITH
+      duration legato_duration: EITH
+      volume _default_volume
+      pitch C4
+      func_table 1
+    note
+      start legato_start: EITH, EITH
+      duration legato_duration: EITH
+      volume _default_volume
+      pitch E4
+      func_table 1
+    note
+      start QRTR
+      duration EITH
+      volume _default_volume
+      pitch F4
+      func_table 1
+    note
+      start QRTR + EITH
+      duration EITH
+      volume _default_volume
+      pitch E4
+      func_table 1
 
-phrase "3"
-  note
-    start 0.0
-    duration EITH
-    volume REST
-    pitch C4
-    func_table 1
-  note
-    start EITH
-    duration EITH
-    volume _default_volume
-    pitch E4
-    func_table 1
-  note
-    start QRTR
-    duration EITH
-    volume _default_volume
-    pitch F4
-  note
-    start QRTR + EITH
-    duration EITH
-    volume _default_volume
-    pitch E4
-    func_table 1
+  phrase "3"
+    note
+      start 0.0
+      duration EITH
+      volume REST
+      pitch C4
+      func_table 1
+    note
+      start EITH
+      duration EITH
+      volume _default_volume
+      pitch E4
+      func_table 1
+    note
+      start QRTR
+      duration EITH
+      volume _default_volume
+      pitch F4
+    note
+      start QRTR + EITH
+      duration EITH
+      volume _default_volume
+      pitch E4
+      func_table 1
 
-phrase "4"
-  note
-    start 0.0
-    duration EITH
-    volume REST
-    pitch C4
-    func_table 1
-  note
-    start EITH
-    duration EITH
-    volume _default_volume
-    pitch E4
-    func_table 1
-  note
-    start QRTR
-    duration EITH
-    volume _default_volume
-    pitch F4
-    func_table 1
-  note
-    start QRTR + EITH
-    duration EITH
-    volume _default_volume
-    pitch G4
-    func_table 1
+  phrase "4"
+    note
+      start 0.0
+      duration EITH
+      volume REST
+      pitch C4
+      func_table 1
+    note
+      start EITH
+      duration EITH
+      volume _default_volume
+      pitch E4
+      func_table 1
+    note
+      start QRTR
+      duration EITH
+      volume _default_volume
+      pitch F4
+      func_table 1
+    note
+      start QRTR + EITH
+      duration EITH
+      volume _default_volume
+      pitch G4
+      func_table 1
 
-phrase "5"
-  note
-    start 0.0
-    duration EITH
-    volume REST
-    pitch C4
-    func_table 1
-  note
-    start EITH
-    duration EITH
-    volume _default_volume
-    pitch E4
-    func_table 1
-  note
-    start QRTR
-    duration EITH
-    volume _default_volume
-    pitch F4
-    func_table 1
-  note
-    start QRTR
-    duration EITH
-    volume _default_volume
-    pitch G4
-    func_table 1
-  note
-    start HLF
-    duration EITH
-    volume REST
-    pitch C4
-    func_table 1
+  phrase "5"
+    note
+      start 0.0
+      duration EITH
+      volume REST
+      pitch C4
+      func_table 1
+    note
+      start EITH
+      duration EITH
+      volume _default_volume
+      pitch E4
+      func_table 1
+    note
+      start QRTR
+      duration EITH
+      volume _default_volume
+      pitch F4
+      func_table 1
+    note
+      start QRTR
+      duration EITH
+      volume _default_volume
+      pitch G4
+      func_table 1
+    note
+      start HLF
+      duration EITH
+      volume REST
+      pitch C4
+      func_table 1
 
-phrase "6"
-  note
-    start legato_start: 0.0, WHL
-    duration legato_duration: WHL
-    volume _default_volume
-    pitch C5
-    func_table 1
-  note
-    start legato_start: WHL, WHL
-    duration legato_duration: WHL
-    volume _default_volume
-    pitch C5
-    func_table 1
-phrase "7"
-  note
-    start 0.0
-    duration QRTR
-    volume REST
-    pitch C4
-    func_table 1
-  note
-    start QRTR
-    duration QRTR
-    volume REST
-    pitch C4
-    func_table 1
-  note
-    start HLF
-    duration QRTR
-    volume REST
-    pitch C4
-    func_table 1
-  note
-    start HLF + QRTR
-    duration EITH
-    volume REST
-    pitch C4
-    func_table 1
-  note
-    start HLF + QRTR + EITH
-    duration EITH
-    volume _default_volume
-    pitch C4
-    func_table 1
-  note
-    start WHL
-    duration SXTNTH
-    volume _default_volume
-    pitch C4
-    func_table 1
-  note
-    start WHL + SXTNTH
-    duration EITH
-    volume _default_volume
-    pitch C4
-    func_table 1
-  note
-    start WHL + EITH + SXTNTH
-    duration EITH
-    volume REST
-    pitch C4
-    func_table 1
-  note
-    start WHL + QRTR + SXTNTH
-    duration QRTR
-    volume REST
-    pitch C4
-    func_table 1
-  note
-    start WHL + HLF + SXTNTH
-    duration QRTR
-    volume REST
-    pitch C4
-    func_table 1
-  note
-    start WHL + HLF + QRTR + SXTNTH
-    duration QRTR
-    volume REST
-    pitch C4
-    func_table 1
-  note
-    start WHL + HLF + HLF + SXTNTH
-    duration QRTR
-    volume REST
-    pitch C4
-    func_table 1
+  phrase "6"
+    note
+      start legato_start: 0.0, WHL
+      duration legato_duration: WHL
+      volume _default_volume
+      pitch C5
+      func_table 1
+    note
+      start legato_start: WHL, WHL
+      duration legato_duration: WHL
+      volume _default_volume
+      pitch C5
+      func_table 1
+  phrase "7"
+    note
+      start 0.0
+      duration QRTR
+      volume REST
+      pitch C4
+      func_table 1
+    note
+      start QRTR
+      duration QRTR
+      volume REST
+      pitch C4
+      func_table 1
+    note
+      start HLF
+      duration QRTR
+      volume REST
+      pitch C4
+      func_table 1
+    note
+      start HLF + QRTR
+      duration EITH
+      volume REST
+      pitch C4
+      func_table 1
+    note
+      start HLF + QRTR + EITH
+      duration EITH
+      volume _default_volume
+      pitch C4
+      func_table 1
+    note
+      start WHL
+      duration SXTNTH
+      volume _default_volume
+      pitch C4
+      func_table 1
+    note
+      start WHL + SXTNTH
+      duration EITH
+      volume _default_volume
+      pitch C4
+      func_table 1
+    note
+      start WHL + EITH + SXTNTH
+      duration EITH
+      volume REST
+      pitch C4
+      func_table 1
+    note
+      start WHL + QRTR + SXTNTH
+      duration QRTR
+      volume REST
+      pitch C4
+      func_table 1
+    note
+      start WHL + HLF + SXTNTH
+      duration QRTR
+      volume REST
+      pitch C4
+      func_table 1
+    note
+      start WHL + HLF + QRTR + SXTNTH
+      duration QRTR
+      volume REST
+      pitch C4
+      func_table 1
+    note
+      start WHL + HLF + HLF + SXTNTH
+      duration QRTR
+      volume REST
+      pitch C4
+      func_table 1
 
-phrase "8"
-  note
-    start 0.0
-    duration WHL + HLF
-    volume _default_volume
-    pitch G4
-    func_table 1
-  note
-    start legato_start: WHL + HLF, WHL
-    duration legato_duration: WHL
-    volume _default_volume
-    pitch F4
-    func_table 1
-  note
-    start legato_start: 2.0 * WHL + HLF, WHL
-    duration legato_duration: WHL
-    volume _default_volume
-    pitch F4
-    func_table 1
-phrase "9"
-  note
-    start 0.0
-    duration SXTNTH
-    volume _default_volume
-    pitch B4
-    func_table 1
-  note
-    start SXTNTH
-    duration SXTNTH
-    volume _default_volume
-    pitch G4
-    func_table 1
-  note
-    start EITH
-    duration EITH
-    volume REST
-    pitch C4
-    func_table 1
-  note
-    start QRTR
-    duration QRTR
-    volume REST
-    pitch C4
-    func_table 1
-  note
-    start HLF
-    duration QRTR
-    volume REST
-    pitch C4
-    func_table 1
-  note
-    start HLF + QRTR
-    duration QRTR
-    volume REST
-    pitch C4
-    func_table 1
+  phrase "8"
+    note
+      start 0.0
+      duration WHL + HLF
+      volume _default_volume
+      pitch G4
+      func_table 1
+    note
+      start legato_start: WHL + HLF, WHL
+      duration legato_duration: WHL
+      volume _default_volume
+      pitch F4
+      func_table 1
+    note
+      start legato_start: 2.0 * WHL + HLF, WHL
+      duration legato_duration: WHL
+      volume _default_volume
+      pitch F4
+      func_table 1
+  phrase "9"
+    note
+      start 0.0
+      duration SXTNTH
+      volume _default_volume
+      pitch B4
+      func_table 1
+    note
+      start SXTNTH
+      duration SXTNTH
+      volume _default_volume
+      pitch G4
+      func_table 1
+    note
+      start EITH
+      duration EITH
+      volume REST
+      pitch C4
+      func_table 1
+    note
+      start QRTR
+      duration QRTR
+      volume REST
+      pitch C4
+      func_table 1
+    note
+      start HLF
+      duration QRTR
+      volume REST
+      pitch C4
+      func_table 1
+    note
+      start HLF + QRTR
+      duration QRTR
+      volume REST
+      pitch C4
+      func_table 1
 
-phrase "10"
-  note
-    start 0.0
-    duration SXTNTH
-    volume _default_volume
-    pitch B4
-    func_table 1
-  note
-    start SXTNTH
-    duration SXTNTH
-    volume _default_volume
-    pitch G4
-    func_table 1
+  phrase "10"
+    note
+      start 0.0
+      duration SXTNTH
+      volume _default_volume
+      pitch B4
+      func_table 1
+    note
+      start SXTNTH
+      duration SXTNTH
+      volume _default_volume
+      pitch G4
+      func_table 1
 
-phrase "11"
-  note
-    start 0.0
-    duration SXTNTH
-    volume _default_volume
-    pitch F4
-    func_table 1
-  note
-    start EITH
-    duration SXTNTH
-    volume _default_volume
-    pitch G4
-    func_table 1
-  note
-    start EITH + SXTNTH
-    duration SXTNTH
-    volume _default_volume
-    pitch B4
-    func_table 1
-  note
-    start QRTR
-    duration SXTNTH
-    volume _default_volume
-    pitch G4
-    func_table 1
-  note
-    start QRTR + SXTNTH
-    duration SXTNTH
-    volume _default_volume
-    pitch B4    
-    func_table 1
-  note
-    start QRTR + EITH
-    duration SXTNTH
-    volume _default_volume
-    pitch G4
-    func_table 1
+  phrase "11"
+    note
+      start 0.0
+      duration SXTNTH
+      volume _default_volume
+      pitch F4
+      func_table 1
+    note
+      start EITH
+      duration SXTNTH
+      volume _default_volume
+      pitch G4
+      func_table 1
+    note
+      start EITH + SXTNTH
+      duration SXTNTH
+      volume _default_volume
+      pitch B4
+      func_table 1
+    note
+      start QRTR
+      duration SXTNTH
+      volume _default_volume
+      pitch G4
+      func_table 1
+    note
+      start QRTR + SXTNTH
+      duration SXTNTH
+      volume _default_volume
+      pitch B4    
+      func_table 1
+    note
+      start QRTR + EITH
+      duration SXTNTH
+      volume _default_volume
+      pitch G4
+      func_table 1
 
-phrase "12"
-  note
-    start 0.0
-    duration EITH
-    volume _default_volume
-    pitch F4
-    func_table 1
-  note
-    start EITH
-    duration EITH
-    volume _default_volume
-    pitch G4
-    func_table 1
-  note
-    start QRTR
-    duration WHL
-    volume _default_volume
-    pitch B4
-    func_table 1
-  note
-    start QRTR + WHL
-    duration QRTR
-    volume _default_volume
-    pitch C5
-    func_table 1
+  phrase "12"
+    note
+      start 0.0
+      duration EITH
+      volume _default_volume
+      pitch F4
+      func_table 1
+    note
+      start EITH
+      duration EITH
+      volume _default_volume
+      pitch G4
+      func_table 1
+    note
+      start QRTR
+      duration WHL
+      volume _default_volume
+      pitch B4
+      func_table 1
+    note
+      start QRTR + WHL
+      duration QRTR
+      volume _default_volume
+      pitch C5
+      func_table 1
 
-phrase "13"
-  note
-    start 0.0
-    duration SXTNTH
-    volume _default_volume
-    pitch B4
-    func_table 1
-  note
-    start SXTNTH
-    duration SXTNTH + THRTYSCND
-    volume _default_volume
-    pitch G4
-    func_table 1
-  note
-    start EITH + THRTYSCND
-    duration SXTNTH
-    volume _default_volume
-    pitch G4
-    func_table 1
-  note
-    start EITH + SXTNTH + THRTYSCND
-    duration SXTNTH
-    volume _default_volume
-    pitch F4
-    func_table 1
-  note
-    start QRTR + THRTYSCND
-    duration EITH
-    volume _default_volume
-    pitch G4    
-    func_table 1
-  note
-    start QRTR + EITH + THRTYSCND
-    duration EITH + SXTNTH
-    volume REST
-    pitch C4
-    func_table 1
-  note
-    start legato_start: HLF + SXTNTH + THRTYSCND, SXTNTH
-    duration legato_duration: SXTNTH
-    volume _default_volume
-    pitch G4
-    func_table 1
-  note
-    start legato_start: HLF + EITH + THRTYSCND, HLF + QRTR
-    duration legato_duration: HLF + QRTR
-    volume _default_volume
-    pitch G4
-    func_table 1
+  phrase "13"
+    note
+      start 0.0
+      duration SXTNTH
+      volume _default_volume
+      pitch B4
+      func_table 1
+    note
+      start SXTNTH
+      duration SXTNTH + THRTYSCND
+      volume _default_volume
+      pitch G4
+      func_table 1
+    note
+      start EITH + THRTYSCND
+      duration SXTNTH
+      volume _default_volume
+      pitch G4
+      func_table 1
+    note
+      start EITH + SXTNTH + THRTYSCND
+      duration SXTNTH
+      volume _default_volume
+      pitch F4
+      func_table 1
+    note
+      start QRTR + THRTYSCND
+      duration EITH
+      volume _default_volume
+      pitch G4    
+      func_table 1
+    note
+      start QRTR + EITH + THRTYSCND
+      duration EITH + SXTNTH
+      volume REST
+      pitch C4
+      func_table 1
+    note
+      start legato_start: HLF + SXTNTH + THRTYSCND, SXTNTH
+      duration legato_duration: SXTNTH
+      volume _default_volume
+      pitch G4
+      func_table 1
+    note
+      start legato_start: HLF + EITH + THRTYSCND, HLF + QRTR
+      duration legato_duration: HLF + QRTR
+      volume _default_volume
+      pitch G4
+      func_table 1
 
-phrase "14"
-  note
-    start 0.0
-    duration WHL
-    volume _default_volume
-    pitch C5
-    func_table 1
-  note
-    start WHL
-    duration WHL
-    volume _default_volume
-    pitch B4
-    func_table 1
-  note
-    start 2.0 * WHL
-    duration WHL
-    volume _default_volume
-    pitch G4    
-    func_table 1
-  note
-    start 3.0 * WHL
-    duration WHL
-    volume _default_volume
-    pitch F4S    
-    func_table 1
+  phrase "14"
+    note
+      start 0.0
+      duration WHL
+      volume _default_volume
+      pitch C5
+      func_table 1
+    note
+      start WHL
+      duration WHL
+      volume _default_volume
+      pitch B4
+      func_table 1
+    note
+      start 2.0 * WHL
+      duration WHL
+      volume _default_volume
+      pitch G4    
+      func_table 1
+    note
+      start 3.0 * WHL
+      duration WHL
+      volume _default_volume
+      pitch F4S    
+      func_table 1
 
-phrase "15"
-  note
-    start 0.0
-    duration SXTNTH
-    volume _default_volume
-    pitch G4
-    func_table 1
-  note
-    start SXTNTH
-    duration EITH + SXTNTH
-    volume REST
-    pitch C4
-    func_table 1
-  note
-    start QRTR
-    duration QRTR
-    volume REST
-    pitch C4    
-    func_table 1
-  note
-    start HLF
-    duration QRTR
-    volume REST
-    pitch C4    
-    func_table 1
-  note
-    start HLF + QRTR
-    duration QRTR
-    volume REST
-    pitch C4
-    func_table 1
+  phrase "15"
+    note
+      start 0.0
+      duration SXTNTH
+      volume _default_volume
+      pitch G4
+      func_table 1
+    note
+      start SXTNTH
+      duration EITH + SXTNTH
+      volume REST
+      pitch C4
+      func_table 1
+    note
+      start QRTR
+      duration QRTR
+      volume REST
+      pitch C4    
+      func_table 1
+    note
+      start HLF
+      duration QRTR
+      volume REST
+      pitch C4    
+      func_table 1
+    note
+      start HLF + QRTR
+      duration QRTR
+      volume REST
+      pitch C4
+      func_table 1
 
-phrase "16"
-  note
-    start 0.0
-    duration SXTNTH
-    volume _default_volume
-    pitch G4
-    func_table 1
-  note
-    start EITH
-    duration SXTNTH
-    volume _default_volume
-    pitch B4
-    func_table 1
-  note
-    start EITH + SXTNTH
-    duration SXTNTH
-    volume _default_volume
-    pitch C5    
-    func_table 1
-  note
-    start QRTR
-    duration SXTNTH
-    volume _default_volume
-    pitch B4
-    func_table 1
+  phrase "16"
+    note
+      start 0.0
+      duration SXTNTH
+      volume _default_volume
+      pitch G4
+      func_table 1
+    note
+      start EITH
+      duration SXTNTH
+      volume _default_volume
+      pitch B4
+      func_table 1
+    note
+      start EITH + SXTNTH
+      duration SXTNTH
+      volume _default_volume
+      pitch C5    
+      func_table 1
+    note
+      start QRTR
+      duration SXTNTH
+      volume _default_volume
+      pitch B4
+      func_table 1
 
-phrase "17"
-  note
-    start 0.0
-    duration SXTNTH
-    volume _default_volume
-    pitch B4
-    func_table 1
-  note
-    start EITH
-    duration SXTNTH
-    volume _default_volume
-    pitch C5
-    func_table 1
-  note
-    start EITH + SXTNTH
-    duration SXTNTH
-    volume _default_volume
-    pitch B4    
-    func_table 1
-  note
-    start QRTR
-    duration SXTNTH
-    volume _default_volume
-    pitch C5
-    func_table 1
-  note
-    start QRTR + SXTNTH
-    duration SXTNTH
-    volume _default_volume
-    pitch B4
-    func_table 1
-  note
-    start QRTR + EITH
-    duration SXTNTH
-    volume REST
-    pitch C4    
-    func_table 1
+  phrase "17"
+    note
+      start 0.0
+      duration SXTNTH
+      volume _default_volume
+      pitch B4
+      func_table 1
+    note
+      start EITH
+      duration SXTNTH
+      volume _default_volume
+      pitch C5
+      func_table 1
+    note
+      start EITH + SXTNTH
+      duration SXTNTH
+      volume _default_volume
+      pitch B4    
+      func_table 1
+    note
+      start QRTR
+      duration SXTNTH
+      volume _default_volume
+      pitch C5
+      func_table 1
+    note
+      start QRTR + SXTNTH
+      duration SXTNTH
+      volume _default_volume
+      pitch B4
+      func_table 1
+    note
+      start QRTR + EITH
+      duration SXTNTH
+      volume REST
+      pitch C4    
+      func_table 1
 
-phrase "18"
-  note
-    start 0.0
-    duration SXTNTH
-    volume _default_volume
-    pitch E4
-    func_table 1
-  note
-    start EITH
-    duration SXTNTH
-    volume _default_volume
-    pitch F4S
-    func_table 1
-  note
-    start EITH + SXTNTH
-    duration SXTNTH
-    volume _default_volume
-    pitch E4    
-    func_table 1
-  note
-    start QRTR
-    duration SXTNTH
-    volume _default_volume
-    pitch F4S
-    func_table 1
-  note
-    start QRTR + SXTNTH
-    duration EITH + SXTNTH
-    volume _default_volume
-    pitch E4
-    func_table 1
-  note
-    start QRTR + EITH
-    duration EITH
-    volume _default_volume
-    pitch E4    
-    func_table 1
+  phrase "18"
+    note
+      start 0.0
+      duration SXTNTH
+      volume _default_volume
+      pitch E4
+      func_table 1
+    note
+      start EITH
+      duration SXTNTH
+      volume _default_volume
+      pitch F4S
+      func_table 1
+    note
+      start EITH + SXTNTH
+      duration SXTNTH
+      volume _default_volume
+      pitch E4    
+      func_table 1
+    note
+      start QRTR
+      duration SXTNTH
+      volume _default_volume
+      pitch F4S
+      func_table 1
+    note
+      start QRTR + SXTNTH
+      duration EITH + SXTNTH
+      volume _default_volume
+      pitch E4
+      func_table 1
+    note
+      start QRTR + EITH
+      duration EITH
+      volume _default_volume
+      pitch E4    
+      func_table 1
 
-phrase "19"
-  note
-    start 0.0
-    duration QRTR + EITH
-    volume REST
-    pitch E4
-    func_table 1
-  note
-    start QRTR + EITH
-    duration QRTR + EITH
-    volume _default_volume
-    pitch G5
-    func_table 1
+  phrase "19"
+    note
+      start 0.0
+      duration QRTR + EITH
+      volume REST
+      pitch E4
+      func_table 1
+    note
+      start QRTR + EITH
+      duration QRTR + EITH
+      volume _default_volume
+      pitch G5
+      func_table 1
 
-phrase "20"
-  note
-    start 0.0
-    duration SXTNTH
-    volume _default_volume
-    pitch E4
-    func_table 1
-  note
-    start EITH
-    duration SXTNTH
-    volume _default_volume
-    pitch F4S
-    func_table 1
-  note
-    start EITH + SXTNTH
-    duration SXTNTH
-    volume _default_volume
-    pitch E4    
-    func_table 1
-  note
-    start QRTR
-    duration SXTNTH
-    volume _default_volume
-    pitch F4S
-    func_table 1
-  note
-    start QRTR + SXTNTH
-    duration SXTNTH + THRTYSCND
-    volume _default_volume
-    pitch G3
-    func_table 1
-  note
-    start QRTR + EITH + THRTYSCND
-    duration SXTNTH
-    volume _default_volume
-    pitch E4   
-    func_table 1
-  note
-    start QRTR + EITH + SXTNTH + THRTYSCND
-    duration SXTNTH
-    volume _default_volume
-    pitch F4S
-    func_table 1
-  note
-    start HLF + THRTYSCND
-    duration SXTNTH
-    volume _default_volume
-    pitch E4
-    func_table 1
-  note
-    start HLF + SXTNTH + THRTYSCND
-    duration SXTNTH
-    volume _default_volume
-    pitch F4S
-    func_table 1
-  note
-    start HLF + EITH + THRTYSCND
-    duration SXTNTH
-    volume _default_volume
-    pitch E4    
-    func_table 1
+  phrase "20"
+    note
+      start 0.0
+      duration SXTNTH
+      volume _default_volume
+      pitch E4
+      func_table 1
+    note
+      start EITH
+      duration SXTNTH
+      volume _default_volume
+      pitch F4S
+      func_table 1
+    note
+      start EITH + SXTNTH
+      duration SXTNTH
+      volume _default_volume
+      pitch E4    
+      func_table 1
+    note
+      start QRTR
+      duration SXTNTH
+      volume _default_volume
+      pitch F4S
+      func_table 1
+    note
+      start QRTR + SXTNTH
+      duration SXTNTH + THRTYSCND
+      volume _default_volume
+      pitch G3
+      func_table 1
+    note
+      start QRTR + EITH + THRTYSCND
+      duration SXTNTH
+      volume _default_volume
+      pitch E4   
+      func_table 1
+    note
+      start QRTR + EITH + SXTNTH + THRTYSCND
+      duration SXTNTH
+      volume _default_volume
+      pitch F4S
+      func_table 1
+    note
+      start HLF + THRTYSCND
+      duration SXTNTH
+      volume _default_volume
+      pitch E4
+      func_table 1
+    note
+      start HLF + SXTNTH + THRTYSCND
+      duration SXTNTH
+      volume _default_volume
+      pitch F4S
+      func_table 1
+    note
+      start HLF + EITH + THRTYSCND
+      duration SXTNTH
+      volume _default_volume
+      pitch E4    
+      func_table 1
 
-phrase "21"
-  note
-    start 0.0
-    duration HLF + QRTR
-    volume _default_volume
-    pitch F4S
-    func_table 1
+  phrase "21"
+    note
+      start 0.0
+      duration HLF + QRTR
+      volume _default_volume
+      pitch F4S
+      func_table 1
 
-phrase "22"
-  note
-    start 0.0
-    duration QRTR + EITH
-    volume _default_volume
-    pitch E4
-    func_table 1
-  note
-    start QRTR + EITH
-    duration QRTR + EITH
-    volume _default_volume
-    pitch E4
-    func_table 1
-  note
-    start 2.0 *  QRTR + EITH
-    duration QRTR + EITH
-    volume _default_volume
-    pitch E4    
-    func_table 1
-  note
-    start 3.0 *  QRTR + EITH
-    duration QRTR + EITH
-    volume _default_volume
-    pitch E4
-    func_table 1
-  note
-    start 4.0 *  QRTR + EITH
-    duration QRTR + EITH
-    volume _default_volume
-    pitch E4
-    func_table 1
-  note
-    start 5.0 *  QRTR + EITH
-    duration QRTR + EITH
-    volume _default_volume
-    pitch F4S
-    func_table 1
-  note
-    start 6.0 *  QRTR + EITH
-    duration QRTR + EITH
-    volume _default_volume
-    pitch G4
-    func_table 1
-  note
-    start 7.0 *  QRTR + EITH
-    duration QRTR + EITH
-    volume _default_volume
-    pitch A4
-    func_table 1
-  note
-    start 8.0 *  QRTR + EITH
-    duration EITH
-    volume _default_volume
-    pitch B4
-    func_table 1
+  phrase "22"
+    note
+      start 0.0
+      duration QRTR + EITH
+      volume _default_volume
+      pitch E4
+      func_table 1
+    note
+      start QRTR + EITH
+      duration QRTR + EITH
+      volume _default_volume
+      pitch E4
+      func_table 1
+    note
+      start 2.0 *  QRTR + EITH
+      duration QRTR + EITH
+      volume _default_volume
+      pitch E4    
+      func_table 1
+    note
+      start 3.0 *  QRTR + EITH
+      duration QRTR + EITH
+      volume _default_volume
+      pitch E4
+      func_table 1
+    note
+      start 4.0 *  QRTR + EITH
+      duration QRTR + EITH
+      volume _default_volume
+      pitch E4
+      func_table 1
+    note
+      start 5.0 *  QRTR + EITH
+      duration QRTR + EITH
+      volume _default_volume
+      pitch F4S
+      func_table 1
+    note
+      start 6.0 *  QRTR + EITH
+      duration QRTR + EITH
+      volume _default_volume
+      pitch G4
+      func_table 1
+    note
+      start 7.0 *  QRTR + EITH
+      duration QRTR + EITH
+      volume _default_volume
+      pitch A4
+      func_table 1
+    note
+      start 8.0 *  QRTR + EITH
+      duration EITH
+      volume _default_volume
+      pitch B4
+      func_table 1
 
-phrase "23"
-  note
-    start 0.0
-    duration EITH
-    volume _default_volume
-    pitch E4
-    func_table 1
-  note
-    start EITH
-    duration QRTR + EITH
-    volume _default_volume
-    pitch F4S
-    func_table 1
-  note
-    start HLF
-    duration QRTR + EITH
-    volume _default_volume
-    pitch F4S    
-    func_table 1
-  note
-    start HLF +  QRTR + EITH
-    duration QRTR + EITH
-    volume _default_volume
-    pitch F4S
-    func_table 1
-  note
-    start HLF +  2.0 *  QRTR + EITH
-    duration QRTR + EITH
-    volume _default_volume
-    pitch F4S
-    func_table 1
-  note
-    start HLF +  3.0 *  QRTR + EITH
-    duration QRTR + EITH
-    volume _default_volume
-    pitch F4S    
-    func_table 1
-  note
-    start HLF +  4.0 *  QRTR + EITH
-    duration QRTR + EITH
-    volume _default_volume
-    pitch G4
-    func_table 1
-  note
-    start HLF +  5.0 *  QRTR + EITH
-    duration QRTR + EITH
-    volume _default_volume
-    pitch A4
-    func_table 1
-  note
-    start HLF +  6.0 *  QRTR + EITH
-    duration QRTR
-    volume _default_volume
-    pitch B4
-    func_table 1
+  phrase "23"
+    note
+      start 0.0
+      duration EITH
+      volume _default_volume
+      pitch E4
+      func_table 1
+    note
+      start EITH
+      duration QRTR + EITH
+      volume _default_volume
+      pitch F4S
+      func_table 1
+    note
+      start HLF
+      duration QRTR + EITH
+      volume _default_volume
+      pitch F4S    
+      func_table 1
+    note
+      start HLF +  QRTR + EITH
+      duration QRTR + EITH
+      volume _default_volume
+      pitch F4S
+      func_table 1
+    note
+      start HLF +  2.0 *  QRTR + EITH
+      duration QRTR + EITH
+      volume _default_volume
+      pitch F4S
+      func_table 1
+    note
+      start HLF +  3.0 *  QRTR + EITH
+      duration QRTR + EITH
+      volume _default_volume
+      pitch F4S    
+      func_table 1
+    note
+      start HLF +  4.0 *  QRTR + EITH
+      duration QRTR + EITH
+      volume _default_volume
+      pitch G4
+      func_table 1
+    note
+      start HLF +  5.0 *  QRTR + EITH
+      duration QRTR + EITH
+      volume _default_volume
+      pitch A4
+      func_table 1
+    note
+      start HLF +  6.0 *  QRTR + EITH
+      duration QRTR
+      volume _default_volume
+      pitch B4
+      func_table 1
 
-phrase "24"
-  note
-    start 0.0
-    duration EITH
-    volume _default_volume
-    pitch E4
-    func_table 1
-  note
-    start EITH
-    duration EITH
-    volume _default_volume
-    pitch F4S
-    func_table 1
-  note
-    start QRTR
-    duration QRTR + EITH
-    volume _default_volume
-    pitch G4    
-    func_table 1
-  note
-    start HLF + EITH
-    duration QRTR + EITH
-    volume _default_volume
-    pitch G4
-    func_table 1
-  note
-    start WHL
-    duration QRTR + EITH
-    volume _default_volume
-    pitch G4
-    func_table 1
-  note
-    start WHL +  QRTR + EITH
-    duration QRTR + EITH
-    volume _default_volume
-    pitch G4    
-    func_table 1
-  note
-    start WHL +  2.0 *  QRTR + EITH
-    duration QRTR + EITH
-    volume _default_volume
-    pitch G4
-    func_table 1
-  note
-    start WHL +  3.0 *  QRTR + EITH
-    duration QRTR + EITH
-    volume _default_volume
-    pitch A4
-    func_table 1
-  note
-    start WHL +  4.0 *  QRTR + EITH
-    duration EITH
-    volume _default_volume
-    pitch B4
-    func_table 1
+  phrase "24"
+    note
+      start 0.0
+      duration EITH
+      volume _default_volume
+      pitch E4
+      func_table 1
+    note
+      start EITH
+      duration EITH
+      volume _default_volume
+      pitch F4S
+      func_table 1
+    note
+      start QRTR
+      duration QRTR + EITH
+      volume _default_volume
+      pitch G4    
+      func_table 1
+    note
+      start HLF + EITH
+      duration QRTR + EITH
+      volume _default_volume
+      pitch G4
+      func_table 1
+    note
+      start WHL
+      duration QRTR + EITH
+      volume _default_volume
+      pitch G4
+      func_table 1
+    note
+      start WHL +  QRTR + EITH
+      duration QRTR + EITH
+      volume _default_volume
+      pitch G4    
+      func_table 1
+    note
+      start WHL +  2.0 *  QRTR + EITH
+      duration QRTR + EITH
+      volume _default_volume
+      pitch G4
+      func_table 1
+    note
+      start WHL +  3.0 *  QRTR + EITH
+      duration QRTR + EITH
+      volume _default_volume
+      pitch A4
+      func_table 1
+    note
+      start WHL +  4.0 *  QRTR + EITH
+      duration EITH
+      volume _default_volume
+      pitch B4
+      func_table 1
 
-phrase "25"
-  note
-    start 0.0
-    duration EITH
-    volume _default_volume
-    pitch E4
-    func_table 1
-  note
-    start EITH
-    duration EITH
-    volume _default_volume
-    pitch F4S
-    func_table 1
-  note
-    start QRTR
-    duration QRTR + EITH
-    volume _default_volume
-    pitch G4    
-    func_table 1
-  note
-    start HLF + EITH
-    duration QRTR + EITH
-    volume _default_volume
-    pitch A4
-    func_table 1
-  note
-    start WHL
-    duration QRTR + EITH
-    volume _default_volume
-    pitch A4
-    func_table 1
-  note
-    start WHL +  QRTR + EITH
-    duration QRTR + EITH
-    volume _default_volume
-    pitch A4    
-    func_table 1
-  note
-    start WHL +  2.0 *  QRTR + EITH
-    duration QRTR + EITH
-    volume _default_volume
-    pitch A4
-    func_table 1
-  note
-    start WHL +  3.0 *  QRTR + EITH
-    duration QRTR + EITH
-    volume _default_volume
-    pitch A4
-    func_table 1
-  note
-    start WHL +  4.0 *  QRTR + EITH
-    duration EITH
-    volume _default_volume
-    pitch B4
-    func_table 1
+  phrase "25"
+    note
+      start 0.0
+      duration EITH
+      volume _default_volume
+      pitch E4
+      func_table 1
+    note
+      start EITH
+      duration EITH
+      volume _default_volume
+      pitch F4S
+      func_table 1
+    note
+      start QRTR
+      duration QRTR + EITH
+      volume _default_volume
+      pitch G4    
+      func_table 1
+    note
+      start HLF + EITH
+      duration QRTR + EITH
+      volume _default_volume
+      pitch A4
+      func_table 1
+    note
+      start WHL
+      duration QRTR + EITH
+      volume _default_volume
+      pitch A4
+      func_table 1
+    note
+      start WHL +  QRTR + EITH
+      duration QRTR + EITH
+      volume _default_volume
+      pitch A4    
+      func_table 1
+    note
+      start WHL +  2.0 *  QRTR + EITH
+      duration QRTR + EITH
+      volume _default_volume
+      pitch A4
+      func_table 1
+    note
+      start WHL +  3.0 *  QRTR + EITH
+      duration QRTR + EITH
+      volume _default_volume
+      pitch A4
+      func_table 1
+    note
+      start WHL +  4.0 *  QRTR + EITH
+      duration EITH
+      volume _default_volume
+      pitch B4
+      func_table 1
 
-phrase "26"
-  note
-    start 0.0
-    duration EITH
-    volume _default_volume
-    pitch E4
-    func_table 1
-  note
-    start EITH
-    duration EITH
-    volume _default_volume
-    pitch F4S
-    func_table 1
-  note
-    start QRTR
-    duration EITH
-    volume _default_volume
-    pitch G4    
-    func_table 1
-  note
-    start QRTR + EITH
-    duration EITH
-    volume _default_volume
-    pitch A4    
-    func_table 1
-  note
-    start HLF
-    duration QRTR + EITH
-    volume _default_volume
-    pitch B4
-    func_table 1
-  note
-    start HLF + QRTR + EITH
-    duration QRTR + EITH
-    volume _default_volume
-    pitch B4
-    func_table 1
-  note
-    start WHL + QRTR
-    duration QRTR + EITH
-    volume _default_volume
-    pitch B4    
-    func_table 1
-  note
-    start WHL + HLF + EITH
-    duration QRTR + EITH
-    volume _default_volume
-    pitch B4
-    func_table 1
-  note
-    start 2.0 * WHL
-    duration QRTR + EITH
-    volume _default_volume
-    pitch B4   
-    func_table 1
+  phrase "26"
+    note
+      start 0.0
+      duration EITH
+      volume _default_volume
+      pitch E4
+      func_table 1
+    note
+      start EITH
+      duration EITH
+      volume _default_volume
+      pitch F4S
+      func_table 1
+    note
+      start QRTR
+      duration EITH
+      volume _default_volume
+      pitch G4    
+      func_table 1
+    note
+      start QRTR + EITH
+      duration EITH
+      volume _default_volume
+      pitch A4    
+      func_table 1
+    note
+      start HLF
+      duration QRTR + EITH
+      volume _default_volume
+      pitch B4
+      func_table 1
+    note
+      start HLF + QRTR + EITH
+      duration QRTR + EITH
+      volume _default_volume
+      pitch B4
+      func_table 1
+    note
+      start WHL + QRTR
+      duration QRTR + EITH
+      volume _default_volume
+      pitch B4    
+      func_table 1
+    note
+      start WHL + HLF + EITH
+      duration QRTR + EITH
+      volume _default_volume
+      pitch B4
+      func_table 1
+    note
+      start 2.0 * WHL
+      duration QRTR + EITH
+      volume _default_volume
+      pitch B4   
+      func_table 1
 
-phrase "27"
-  note
-    start 0.0
-    duration SXTNTH
-    volume _default_volume
-    pitch E4
-    func_table 1
-  note
-    start SXTNTH
-    duration SXTNTH
-    volume _default_volume
-    pitch F4S
-    func_table 1
-  note
-    start EITH
-    duration SXTNTH
-    volume _default_volume
-    pitch E4    
-    func_table 1
-  note
-    start EITH + SXTNTH
-    duration SXTNTH
-    volume _default_volume
-    pitch F4S    
-    func_table 1
-  note
-    start QRTR
-    duration EITH
-    volume _default_volume
-    pitch G4
-    func_table 1
-  note
-    start QRTR + EITH
-    duration SXTNTH
-    volume _default_volume
-    pitch E4
-    func_table 1
-  note
-    start QRTR + EITH + SXTNTH
-    duration SXTNTH
-    volume _default_volume
-    pitch G4    
-    func_table 1
-  note
-    start HLF
-    duration SXTNTH
-    volume _default_volume
-    pitch F4S
-    func_table 1
-  note
-    start HLF + SXTNTH
-    duration SXTNTH
-    volume _default_volume
-    pitch E4
-    func_table 1
-  note
-    start HLF + EITH
-    duration SXTNTH
-    volume _default_volume
-    pitch F4S
-    func_table 1
-  note
-    start HLF + EITH + SXTNTH
-    duration SXTNTH
-    volume _default_volume
-    pitch E4
-    func_table 1
+  phrase "27"
+    note
+      start 0.0
+      duration SXTNTH
+      volume _default_volume
+      pitch E4
+      func_table 1
+    note
+      start SXTNTH
+      duration SXTNTH
+      volume _default_volume
+      pitch F4S
+      func_table 1
+    note
+      start EITH
+      duration SXTNTH
+      volume _default_volume
+      pitch E4    
+      func_table 1
+    note
+      start EITH + SXTNTH
+      duration SXTNTH
+      volume _default_volume
+      pitch F4S    
+      func_table 1
+    note
+      start QRTR
+      duration EITH
+      volume _default_volume
+      pitch G4
+      func_table 1
+    note
+      start QRTR + EITH
+      duration SXTNTH
+      volume _default_volume
+      pitch E4
+      func_table 1
+    note
+      start QRTR + EITH + SXTNTH
+      duration SXTNTH
+      volume _default_volume
+      pitch G4    
+      func_table 1
+    note
+      start HLF
+      duration SXTNTH
+      volume _default_volume
+      pitch F4S
+      func_table 1
+    note
+      start HLF + SXTNTH
+      duration SXTNTH
+      volume _default_volume
+      pitch E4
+      func_table 1
+    note
+      start HLF + EITH
+      duration SXTNTH
+      volume _default_volume
+      pitch F4S
+      func_table 1
+    note
+      start HLF + EITH + SXTNTH
+      duration SXTNTH
+      volume _default_volume
+      pitch E4
+      func_table 1
 
-phrase "28"
-  note
-    start 0.0
-    duration SXTNTH
-    volume _default_volume
-    pitch E4
-    func_table 1
-  note
-    start SXTNTH
-    duration SXTNTH
-    volume _default_volume
-    pitch F4S
-    func_table 1
-  note
-    start EITH
-    duration SXTNTH
-    volume _default_volume
-    pitch E4    
-    func_table 1
-  note
-    start EITH + SXTNTH
-    duration SXTNTH
-    volume _default_volume
-    pitch F4S
-    func_table 1
-  note
-    start QRTR
-    duration EITH + SXTNTH
-    volume _default_volume
-    pitch E4
-    func_table 1
-  note
-    start QRTR + EITH + SXTNTH
-    duration SXTNTH
-    volume _default_volume
-    pitch E4
-    func_table 1
+  phrase "28"
+    note
+      start 0.0
+      duration SXTNTH
+      volume _default_volume
+      pitch E4
+      func_table 1
+    note
+      start SXTNTH
+      duration SXTNTH
+      volume _default_volume
+      pitch F4S
+      func_table 1
+    note
+      start EITH
+      duration SXTNTH
+      volume _default_volume
+      pitch E4    
+      func_table 1
+    note
+      start EITH + SXTNTH
+      duration SXTNTH
+      volume _default_volume
+      pitch F4S
+      func_table 1
+    note
+      start QRTR
+      duration EITH + SXTNTH
+      volume _default_volume
+      pitch E4
+      func_table 1
+    note
+      start QRTR + EITH + SXTNTH
+      duration SXTNTH
+      volume _default_volume
+      pitch E4
+      func_table 1
 
-phrase "29"
-  note
-    start 0.0
-    duration HLF + QRTR
-    volume _default_volume
-    pitch E4
-    func_table 1
-  note
-    start HLF + QRTR
-    duration HLF + QRTR
-    volume _default_volume
-    pitch G4
-    func_table 1
-  note
-    start WHL + HLF
-    duration HLF + QRTR
-    volume _default_volume
-    pitch C5
-    func_table 1
+  phrase "29"
+    note
+      start 0.0
+      duration HLF + QRTR
+      volume _default_volume
+      pitch E4
+      func_table 1
+    note
+      start HLF + QRTR
+      duration HLF + QRTR
+      volume _default_volume
+      pitch G4
+      func_table 1
+    note
+      start WHL + HLF
+      duration HLF + QRTR
+      volume _default_volume
+      pitch C5
+      func_table 1
 
-phrase "30"
-  note
-    start 0.0
-    duration WHL + HLF
-    volume _default_volume
-    pitch C5
-    func_table 1
+  phrase "30"
+    note
+      start 0.0
+      duration WHL + HLF
+      volume _default_volume
+      pitch C5
+      func_table 1
 
-phrase "31"
-  note
-    start 0.0
-    duration SXTNTH
-    volume _default_volume
-    pitch G4
-    func_table 1
-  note
-    start SXTNTH
-    duration SXTNTH
-    volume _default_volume
-    pitch F4
-    func_table 1
-  note
-    start EITH
-    duration SXTNTH
-    volume _default_volume
-    pitch G4    
-    func_table 1
-  note
-    start EITH + SXTNTH
-    duration SXTNTH
-    volume _default_volume
-    pitch B4
-    func_table 1
-  note
-    start QRTR
-    duration SXTNTH
-    volume _default_volume
-    pitch G4
-    func_table 1
-  note
-    start QRTR + SXTNTH
-    duration SXTNTH
-    volume _default_volume
-    pitch B4
-    func_table 1
+  phrase "31"
+    note
+      start 0.0
+      duration SXTNTH
+      volume _default_volume
+      pitch G4
+      func_table 1
+    note
+      start SXTNTH
+      duration SXTNTH
+      volume _default_volume
+      pitch F4
+      func_table 1
+    note
+      start EITH
+      duration SXTNTH
+      volume _default_volume
+      pitch G4    
+      func_table 1
+    note
+      start EITH + SXTNTH
+      duration SXTNTH
+      volume _default_volume
+      pitch B4
+      func_table 1
+    note
+      start QRTR
+      duration SXTNTH
+      volume _default_volume
+      pitch G4
+      func_table 1
+    note
+      start QRTR + SXTNTH
+      duration SXTNTH
+      volume _default_volume
+      pitch B4
+      func_table 1
 
-phrase "32"
-  note
-    start 0.0
-    duration SXTNTH
-    volume _default_volume
-    pitch F4
-    func_table 1
-  note
-    start SXTNTH
-    duration SXTNTH
-    volume _default_volume
-    pitch G4
-    func_table 1
-  note
-    start EITH
-    duration SXTNTH
-    volume _default_volume
-    pitch F4    
-    func_table 1
-  note
-    start EITH + SXTNTH
-    duration SXTNTH
-    volume _default_volume
-    pitch G4
-    func_table 1
-  note
-    start QRTR
-    duration SXTNTH
-    volume _default_volume
-    pitch B4
-    func_table 1
-  note
-    start legato_start: QRTR + SXTNTH, SXTNTH
-    duration legato_duration: SXTNTH
-    volume _default_volume
-    pitch F4
-    func_table 1
-  note
-    start legato_start: QRTR + EITH, HLF + QRTR
-    duration legato_duration: HLF + QRTR
-    volume _default_volume
-    pitch F4
-    func_table 1
-  note
-    start WHL + EITH
-    duration QRTR + EITH
-    volume _default_volume
-    pitch G4  
-    func_table 1
+  phrase "32"
+    note
+      start 0.0
+      duration SXTNTH
+      volume _default_volume
+      pitch F4
+      func_table 1
+    note
+      start SXTNTH
+      duration SXTNTH
+      volume _default_volume
+      pitch G4
+      func_table 1
+    note
+      start EITH
+      duration SXTNTH
+      volume _default_volume
+      pitch F4    
+      func_table 1
+    note
+      start EITH + SXTNTH
+      duration SXTNTH
+      volume _default_volume
+      pitch G4
+      func_table 1
+    note
+      start QRTR
+      duration SXTNTH
+      volume _default_volume
+      pitch B4
+      func_table 1
+    note
+      start legato_start: QRTR + SXTNTH, SXTNTH
+      duration legato_duration: SXTNTH
+      volume _default_volume
+      pitch F4
+      func_table 1
+    note
+      start legato_start: QRTR + EITH, HLF + QRTR
+      duration legato_duration: HLF + QRTR
+      volume _default_volume
+      pitch F4
+      func_table 1
+    note
+      start WHL + EITH
+      duration QRTR + EITH
+      volume _default_volume
+      pitch G4  
+      func_table 1
 
-phrase "33"
-  note
-    start 0.0
-    duration SXTNTH
-    volume _default_volume
-    pitch G4
-    func_table 1
-  note
-    start SXTNTH
-    duration SXTNTH
-    volume _default_volume
-    pitch F4
-    func_table 1
-  note
-    start EITH
-    duration EITH
-    volume REST
-    pitch C4  
-    func_table 1
+  phrase "33"
+    note
+      start 0.0
+      duration SXTNTH
+      volume _default_volume
+      pitch G4
+      func_table 1
+    note
+      start SXTNTH
+      duration SXTNTH
+      volume _default_volume
+      pitch F4
+      func_table 1
+    note
+      start EITH
+      duration EITH
+      volume REST
+      pitch C4  
+      func_table 1
 
-phrase "34"
-  note
-    start 0.0
-    duration SXTNTH
-    volume _default_volume
-    pitch G4
-    func_table 1
-  note
-    start SXTNTH
-    duration SXTNTH
-    volume _default_volume
-    pitch F4
-    func_table 1
+  phrase "34"
+    note
+      start 0.0
+      duration SXTNTH
+      volume _default_volume
+      pitch G4
+      func_table 1
+    note
+      start SXTNTH
+      duration SXTNTH
+      volume _default_volume
+      pitch F4
+      func_table 1
 
-phrase "35"
-  note
-    start 0.0
-    duration SXTNTH
-    volume _default_volume
-    pitch F4
-    func_table 1
-  note
-    start SXTNTH
-    duration SXTNTH
-    volume _default_volume
-    pitch G4
-    func_table 1
-  note
-    start EITH
-    duration SXTNTH
-    volume _default_volume
-    pitch B4    
-    func_table 1
-  note
-    start EITH + SXTNTH
-    duration SXTNTH
-    volume _default_volume
-    pitch G4
-    func_table 1
-  note
-    start QRTR
-    duration SXTNTH
-    volume _default_volume
-    pitch B4
-    func_table 1
-  note
-    start QRTR + SXTNTH
-    duration SXTNTH
-    volume _default_volume
-    pitch G4
-    func_table 1
-  note
-    start QRTR + EITH
-    duration SXTNTH
-    volume _default_volume
-    pitch B4    
-    func_table 1
-  note
-    start QRTR + EITH + SXTNTH
-    duration SXTNTH
-    volume _default_volume
-    pitch G4
-    func_table 1
-  note
-    start HLF
-    duration SXTNTH
-    volume _default_volume
-    pitch B4
-    func_table 1
-  note
-    start HLF + SXTNTH
-    duration SXTNTH
-    volume _default_volume
-    pitch G4
-    func_table 1
-  note
-    start HLF + EITH
-    duration EITH
-    volume REST
-    pitch C4    
-    func_table 1
-  note
-    start HLF + QRTR
-    duration QRTR
-    volume REST
-    pitch C4
-    func_table 1
-  note
-    start WHL
-    duration QRTR
-    volume REST
-    pitch C4   
-    func_table 1
-  note
-    start WHL + QRTR
-    duration QRTR
-    volume REST
-    pitch C4 
-    func_table 1
-  note
-    start WHL + HLF
-    duration QRTR
-    volume _default_volume
-    pitch A4S  # BFlat    
-    func_table 1
-  note
-    start WHL + HLF + QRTR
-    duration HLF + QRTR
-    volume _default_volume
-    pitch G5
-    func_table 1
-  note
-    start 2.0 * WHL + HLF
-    duration EITH
-    volume _default_volume
-    pitch A5
-    func_table 1
-  note
-    start legato_start: 2.0 * WHL + HLF + EITH, EITH
-    duration legato_duration: EITH
-    volume _default_volume
-    pitch G5
-    func_table 1
-  note
-    start  legato_start: 2.0 * WHL + HLF + QRTR, EITH
-    duration legato_duration: EITH
-    volume _default_volume
-    pitch G5
-    func_table 1
-  note
-    start  2.0 * WHL + HLF + QRTR + EITH
-    duration EITH
-    volume _default_volume
-    pitch B5
-    func_table 1
-  note
-    start  3.0 * WHL
-    duration QRTR + EITH
-    volume _default_volume
-    pitch A5   
-    func_table 1
-  note
-    start  3.0 * WHL + QRTR + EITH
-    duration EITH
-    volume _default_volume
-    pitch G5
-    func_table 1
-  note
-    start  3.0 * WHL + HLF
-    duration HLF + QRTR
-    volume _default_volume
-    pitch E5
-    func_table 1
-  note
-    start  4.0 * WHL + QRTR
-    duration EITH
-    volume _default_volume
-    pitch G5
-    func_table 1
-  note
-    start  legato_start: 4.0 * WHL + QRTR + EITH, EITH
-    duration legato_duration: EITH
-    volume _default_volume
-    pitch F5S
-    func_table 1
-  note
-    start  legato_start: 4.0 * WHL + HLF, HLF + QRTR
-    duration legato_duration: HLF + QRTR
-    volume _default_volume
-    pitch F5S
-    func_table 1
-  note
-    start  5.0 * WHL + QRTR
-    duration QRTR
-    volume REST
-    pitch C4
-    func_table 1
-  note
-    start  5.0 * WHL + HLF
-    duration QRTR
-    volume REST
-    pitch C4
-    func_table 1
-  note
-    start  5.0 * WHL + HLF + QRTR
-    duration EITH
-    volume REST
-    pitch C4
-    func_table 1
-  note
-    start legato_start: 5.0 * WHL + HLF + QRTR + EITH, EITH
-    duration legato_duration: EITH
-    volume _default_volume
-    pitch E5
-    func_table 1
-  note
-    start legato_start: 6.0 * WHL, HLF
-    duration legato_duration: HLF
-    volume _default_volume
-    pitch E5
-    func_table 1
-  note
-    start  6.0 * WHL + HLF
-    duration WHL + HLF
-    volume _default_volume
-    pitch F5     
-    func_table 1
+  phrase "35"
+    note
+      start 0.0
+      duration SXTNTH
+      volume _default_volume
+      pitch F4
+      func_table 1
+    note
+      start SXTNTH
+      duration SXTNTH
+      volume _default_volume
+      pitch G4
+      func_table 1
+    note
+      start EITH
+      duration SXTNTH
+      volume _default_volume
+      pitch B4    
+      func_table 1
+    note
+      start EITH + SXTNTH
+      duration SXTNTH
+      volume _default_volume
+      pitch G4
+      func_table 1
+    note
+      start QRTR
+      duration SXTNTH
+      volume _default_volume
+      pitch B4
+      func_table 1
+    note
+      start QRTR + SXTNTH
+      duration SXTNTH
+      volume _default_volume
+      pitch G4
+      func_table 1
+    note
+      start QRTR + EITH
+      duration SXTNTH
+      volume _default_volume
+      pitch B4    
+      func_table 1
+    note
+      start QRTR + EITH + SXTNTH
+      duration SXTNTH
+      volume _default_volume
+      pitch G4
+      func_table 1
+    note
+      start HLF
+      duration SXTNTH
+      volume _default_volume
+      pitch B4
+      func_table 1
+    note
+      start HLF + SXTNTH
+      duration SXTNTH
+      volume _default_volume
+      pitch G4
+      func_table 1
+    note
+      start HLF + EITH
+      duration EITH
+      volume REST
+      pitch C4    
+      func_table 1
+    note
+      start HLF + QRTR
+      duration QRTR
+      volume REST
+      pitch C4
+      func_table 1
+    note
+      start WHL
+      duration QRTR
+      volume REST
+      pitch C4   
+      func_table 1
+    note
+      start WHL + QRTR
+      duration QRTR
+      volume REST
+      pitch C4 
+      func_table 1
+    note
+      start WHL + HLF
+      duration QRTR
+      volume _default_volume
+      pitch A4S  # BFlat    
+      func_table 1
+    note
+      start WHL + HLF + QRTR
+      duration HLF + QRTR
+      volume _default_volume
+      pitch G5
+      func_table 1
+    note
+      start 2.0 * WHL + HLF
+      duration EITH
+      volume _default_volume
+      pitch A5
+      func_table 1
+    note
+      start legato_start: 2.0 * WHL + HLF + EITH, EITH
+      duration legato_duration: EITH
+      volume _default_volume
+      pitch G5
+      func_table 1
+    note
+      start  legato_start: 2.0 * WHL + HLF + QRTR, EITH
+      duration legato_duration: EITH
+      volume _default_volume
+      pitch G5
+      func_table 1
+    note
+      start  2.0 * WHL + HLF + QRTR + EITH
+      duration EITH
+      volume _default_volume
+      pitch B5
+      func_table 1
+    note
+      start  3.0 * WHL
+      duration QRTR + EITH
+      volume _default_volume
+      pitch A5   
+      func_table 1
+    note
+      start  3.0 * WHL + QRTR + EITH
+      duration EITH
+      volume _default_volume
+      pitch G5
+      func_table 1
+    note
+      start  3.0 * WHL + HLF
+      duration HLF + QRTR
+      volume _default_volume
+      pitch E5
+      func_table 1
+    note
+      start  4.0 * WHL + QRTR
+      duration EITH
+      volume _default_volume
+      pitch G5
+      func_table 1
+    note
+      start  legato_start: 4.0 * WHL + QRTR + EITH, EITH
+      duration legato_duration: EITH
+      volume _default_volume
+      pitch F5S
+      func_table 1
+    note
+      start  legato_start: 4.0 * WHL + HLF, HLF + QRTR
+      duration legato_duration: HLF + QRTR
+      volume _default_volume
+      pitch F5S
+      func_table 1
+    note
+      start  5.0 * WHL + QRTR
+      duration QRTR
+      volume REST
+      pitch C4
+      func_table 1
+    note
+      start  5.0 * WHL + HLF
+      duration QRTR
+      volume REST
+      pitch C4
+      func_table 1
+    note
+      start  5.0 * WHL + HLF + QRTR
+      duration EITH
+      volume REST
+      pitch C4
+      func_table 1
+    note
+      start legato_start: 5.0 * WHL + HLF + QRTR + EITH, EITH
+      duration legato_duration: EITH
+      volume _default_volume
+      pitch E5
+      func_table 1
+    note
+      start legato_start: 6.0 * WHL, HLF
+      duration legato_duration: HLF
+      volume _default_volume
+      pitch E5
+      func_table 1
+    note
+      start  6.0 * WHL + HLF
+      duration WHL + HLF
+      volume _default_volume
+      pitch F5     
+      func_table 1
 
-phrase "36"
-  note
-    start 0.0
-    duration SXTNTH
-    volume _default_volume
-    pitch F4
-    func_table 1
-  note
-    start SXTNTH
-    duration SXTNTH
-    volume _default_volume
-    pitch G4
-    func_table 1
-  note
-    start EITH
-    duration SXTNTH
-    volume _default_volume
-    pitch B4
-    func_table 1
-  note
-    start EITH + SXTNTH
-    duration SXTNTH
-    volume _default_volume
-    pitch G4
-    func_table 1
-  note
-    start QRTR
-    duration SXTNTH
-    volume _default_volume
-    pitch B4
-    func_table 1
-  note
-    start QRTR + SXTNTH
-    duration SXTNTH
-    volume _default_volume
-    pitch G4    
-    func_table 1
+  phrase "36"
+    note
+      start 0.0
+      duration SXTNTH
+      volume _default_volume
+      pitch F4
+      func_table 1
+    note
+      start SXTNTH
+      duration SXTNTH
+      volume _default_volume
+      pitch G4
+      func_table 1
+    note
+      start EITH
+      duration SXTNTH
+      volume _default_volume
+      pitch B4
+      func_table 1
+    note
+      start EITH + SXTNTH
+      duration SXTNTH
+      volume _default_volume
+      pitch G4
+      func_table 1
+    note
+      start QRTR
+      duration SXTNTH
+      volume _default_volume
+      pitch B4
+      func_table 1
+    note
+      start QRTR + SXTNTH
+      duration SXTNTH
+      volume _default_volume
+      pitch G4    
+      func_table 1
 
-phrase "37"
-  note
-    start 0.0
-    duration SXTNTH
-    volume _default_volume
-    pitch F4
-    func_table 1
-  note
-    start SXTNTH
-    duration SXTNTH
-    volume _default_volume
-    pitch G4   
-    func_table 1
+  phrase "37"
+    note
+      start 0.0
+      duration SXTNTH
+      volume _default_volume
+      pitch F4
+      func_table 1
+    note
+      start SXTNTH
+      duration SXTNTH
+      volume _default_volume
+      pitch G4   
+      func_table 1
 
-phrase "38"
-  note
-    start 0.0
-    duration SXTNTH
-    volume _default_volume
-    pitch F4
-    func_table 1
-  note
-    start SXTNTH
-    duration SXTNTH
-    volume _default_volume
-    pitch G4
-    func_table 1
-  note
-    start EITH
-    duration SXTNTH
-    volume _default_volume
-    pitch B4    
-    func_table 1
+  phrase "38"
+    note
+      start 0.0
+      duration SXTNTH
+      volume _default_volume
+      pitch F4
+      func_table 1
+    note
+      start SXTNTH
+      duration SXTNTH
+      volume _default_volume
+      pitch G4
+      func_table 1
+    note
+      start EITH
+      duration SXTNTH
+      volume _default_volume
+      pitch B4    
+      func_table 1
 
-phrase "39"
-  note
-    start 0.0
-    duration SXTNTH
-    volume _default_volume
-    pitch B4
-    func_table 1
-  note
-    start SXTNTH
-    duration SXTNTH
-    volume _default_volume
-    pitch G4
-    func_table 1
-  note
-    start EITH
-    duration SXTNTH
-    volume _default_volume
-    pitch F4
-    func_table 1
-  note
-    start EITH + SXTNTH
-    duration SXTNTH
-    volume _default_volume
-    pitch G4
-    func_table 1
-  note
-    start QRTR
-    duration SXTNTH
-    volume _default_volume
-    pitch B4
-    func_table 1
-  note
-    start QRTR + SXTNTH
-    duration SXTNTH
-    volume _default_volume
-    pitch C5     
-    func_table 1
+  phrase "39"
+    note
+      start 0.0
+      duration SXTNTH
+      volume _default_volume
+      pitch B4
+      func_table 1
+    note
+      start SXTNTH
+      duration SXTNTH
+      volume _default_volume
+      pitch G4
+      func_table 1
+    note
+      start EITH
+      duration SXTNTH
+      volume _default_volume
+      pitch F4
+      func_table 1
+    note
+      start EITH + SXTNTH
+      duration SXTNTH
+      volume _default_volume
+      pitch G4
+      func_table 1
+    note
+      start QRTR
+      duration SXTNTH
+      volume _default_volume
+      pitch B4
+      func_table 1
+    note
+      start QRTR + SXTNTH
+      duration SXTNTH
+      volume _default_volume
+      pitch C5     
+      func_table 1
 
-phrase "40"
-  note
-    start 0.0
-    duration SXTNTH
-    volume _default_volume
-    pitch B4
-    func_table 1
-  note
-    start SXTNTH
-    duration SXTNTH
-    volume _default_volume
-    pitch F4   
-    func_table 1
+  phrase "40"
+    note
+      start 0.0
+      duration SXTNTH
+      volume _default_volume
+      pitch B4
+      func_table 1
+    note
+      start SXTNTH
+      duration SXTNTH
+      volume _default_volume
+      pitch F4   
+      func_table 1
 
-phrase "41"
-  note
-    start 0.0
-    duration SXTNTH
-    volume _default_volume
-    pitch B4
-    func_table 1
-  note
-    start SXTNTH
-    duration SXTNTH
-    volume _default_volume
-    pitch G4   
-    func_table 1
+  phrase "41"
+    note
+      start 0.0
+      duration SXTNTH
+      volume _default_volume
+      pitch B4
+      func_table 1
+    note
+      start SXTNTH
+      duration SXTNTH
+      volume _default_volume
+      pitch G4   
+      func_table 1
 
-phrase "42"
-  note
-    start 0.0
-    duration WHL
-    volume _default_volume
-    pitch C5
-    func_table 1
-  note
-    start WHL
-    duration WHL
-    volume _default_volume
-    pitch B4
-    func_table 1
-  note
-    start 2.0 * WHL
-    duration WHL
-    volume _default_volume
-    pitch A4
-    func_table 1
-  note
-    start 3.0 * WHL
-    duration WHL
-    volume _default_volume
-    pitch C4    
-    func_table 1
+  phrase "42"
+    note
+      start 0.0
+      duration WHL
+      volume _default_volume
+      pitch C5
+      func_table 1
+    note
+      start WHL
+      duration WHL
+      volume _default_volume
+      pitch B4
+      func_table 1
+    note
+      start 2.0 * WHL
+      duration WHL
+      volume _default_volume
+      pitch A4
+      func_table 1
+    note
+      start 3.0 * WHL
+      duration WHL
+      volume _default_volume
+      pitch C4    
+      func_table 1
 
-phrase "43"
-  note
-    start 0.0
-    duration SXTNTH
-    volume _default_volume
-    pitch F5
-    func_table 1
-  note
-    start SXTNTH
-    duration SXTNTH
-    volume _default_volume
-    pitch E5
-    func_table 1
-  note
-    start EITH
-    duration SXTNTH
-    volume _default_volume
-    pitch F5
-    func_table 1
-  note
-    start EITH + SXTNTH
-    duration SXTNTH
-    volume _default_volume
-    pitch E5
-    func_table 1
-  note
-    start QRTR
-    duration EITH
-    volume _default_volume
-    pitch E5    
-    func_table 1
-  note
-    start QRTR + EITH
-    duration EITH
-    volume _default_volume
-    pitch E5
-    func_table 1
-  note
-    start HLF
-    duration EITH
-    volume _default_volume
-    pitch E5
-    func_table 1
-  note
-    start HLF + EITH
-    duration SXTNTH
-    volume _default_volume
-    pitch F5 
-    func_table 1
-  note
-    start HLF + EITH + SXTNTH
-    duration SXTNTH
-    volume _default_volume
-    pitch E5 
-    func_table 1
+  phrase "43"
+    note
+      start 0.0
+      duration SXTNTH
+      volume _default_volume
+      pitch F5
+      func_table 1
+    note
+      start SXTNTH
+      duration SXTNTH
+      volume _default_volume
+      pitch E5
+      func_table 1
+    note
+      start EITH
+      duration SXTNTH
+      volume _default_volume
+      pitch F5
+      func_table 1
+    note
+      start EITH + SXTNTH
+      duration SXTNTH
+      volume _default_volume
+      pitch E5
+      func_table 1
+    note
+      start QRTR
+      duration EITH
+      volume _default_volume
+      pitch E5    
+      func_table 1
+    note
+      start QRTR + EITH
+      duration EITH
+      volume _default_volume
+      pitch E5
+      func_table 1
+    note
+      start HLF
+      duration EITH
+      volume _default_volume
+      pitch E5
+      func_table 1
+    note
+      start HLF + EITH
+      duration SXTNTH
+      volume _default_volume
+      pitch F5 
+      func_table 1
+    note
+      start HLF + EITH + SXTNTH
+      duration SXTNTH
+      volume _default_volume
+      pitch E5 
+      func_table 1
 
-phrase "44"
-  note
-    start 0.0
-    duration EITH
-    volume _default_volume
-    pitch F5
-    func_table 1
-  note
-    start legato_start: EITH, EITH
-    duration legato_duration: EITH
-    volume _default_volume
-    pitch E5
-    func_table 1
-  note
-    start legato_start: QRTR, EITH
-    duration legato_duration: EITH
-    volume _default_volume
-    pitch E5
-    func_table 1
-  note
-    start QRTR + EITH
-    duration EITH
-    volume _default_volume
-    pitch E5
-    func_table 1
-  note
-    start HLF
-    duration QRTR
-    volume _default_volume
-    pitch C5 
-    func_table 1
+  phrase "44"
+    note
+      start 0.0
+      duration EITH
+      volume _default_volume
+      pitch F5
+      func_table 1
+    note
+      start legato_start: EITH, EITH
+      duration legato_duration: EITH
+      volume _default_volume
+      pitch E5
+      func_table 1
+    note
+      start legato_start: QRTR, EITH
+      duration legato_duration: EITH
+      volume _default_volume
+      pitch E5
+      func_table 1
+    note
+      start QRTR + EITH
+      duration EITH
+      volume _default_volume
+      pitch E5
+      func_table 1
+    note
+      start HLF
+      duration QRTR
+      volume _default_volume
+      pitch C5 
+      func_table 1
 
-phrase "45"
-  note
-    start 0.0
-    duration QRTR
-    volume _default_volume
-    pitch D5
-    func_table 1
-  note
-    start QRTR
-    duration QRTR
-    volume _default_volume
-    pitch D5
-    func_table 1
-  note
-    start HLF
-    duration QRTR
-    volume _default_volume
-    pitch G4 
-    func_table 1
+  phrase "45"
+    note
+      start 0.0
+      duration QRTR
+      volume _default_volume
+      pitch D5
+      func_table 1
+    note
+      start QRTR
+      duration QRTR
+      volume _default_volume
+      pitch D5
+      func_table 1
+    note
+      start HLF
+      duration QRTR
+      volume _default_volume
+      pitch G4 
+      func_table 1
 
-phrase "46"
-  note
-    start 0.0
-    duration SXTNTH
-    volume _default_volume
-    pitch G4
-    func_table 1
-  note
-    start SXTNTH
-    duration SXTNTH
-    volume _default_volume
-    pitch D5
-    func_table 1
-  note
-    start EITH
-    duration SXTNTH
-    volume _default_volume
-    pitch E5
-    func_table 1
-  note
-    start EITH + SXTNTH
-    duration SXTNTH
-    volume _default_volume
-    pitch D5
-    func_table 1
-  note
-    start QRTR
-    duration EITH
-    volume REST
-    pitch C4
-    func_table 1
-  note
-    start QRTR + EITH
-    duration EITH
-    volume _default_volume
-    pitch G4    
-    func_table 1
-  note
-    start HLF
-    duration EITH
-    volume REST
-    pitch C4
-    func_table 1
-  note
-    start HLF + EITH
-    duration EITH
-    volume _default_volume
-    pitch G4    
-    func_table 1
-  note
-    start HLF + QRTR
-    duration EITH
-    volume REST
-    pitch C4
-    func_table 1
-  note
-    start HLF + QRTR + EITH
-    duration EITH
-    volume _default_volume
-    pitch G4
-    func_table 1
-  note
-    start WHL
-    duration SXTNTH
-    volume _default_volume
-    pitch G4
-    func_table 1
-  note
-    start WHL + SXTNTH
-    duration SXTNTH
-    volume _default_volume
-    pitch D5
-    func_table 1
-  note
-    start WHL + EITH
-    duration SXTNTH
-    volume _default_volume
-    pitch E5
-    func_table 1
-  note
-    start WHL + EITH + SXTNTH
-    duration SXTNTH
-    volume _default_volume
-    pitch D5
-    func_table 1
+  phrase "46"
+    note
+      start 0.0
+      duration SXTNTH
+      volume _default_volume
+      pitch G4
+      func_table 1
+    note
+      start SXTNTH
+      duration SXTNTH
+      volume _default_volume
+      pitch D5
+      func_table 1
+    note
+      start EITH
+      duration SXTNTH
+      volume _default_volume
+      pitch E5
+      func_table 1
+    note
+      start EITH + SXTNTH
+      duration SXTNTH
+      volume _default_volume
+      pitch D5
+      func_table 1
+    note
+      start QRTR
+      duration EITH
+      volume REST
+      pitch C4
+      func_table 1
+    note
+      start QRTR + EITH
+      duration EITH
+      volume _default_volume
+      pitch G4    
+      func_table 1
+    note
+      start HLF
+      duration EITH
+      volume REST
+      pitch C4
+      func_table 1
+    note
+      start HLF + EITH
+      duration EITH
+      volume _default_volume
+      pitch G4    
+      func_table 1
+    note
+      start HLF + QRTR
+      duration EITH
+      volume REST
+      pitch C4
+      func_table 1
+    note
+      start HLF + QRTR + EITH
+      duration EITH
+      volume _default_volume
+      pitch G4
+      func_table 1
+    note
+      start WHL
+      duration SXTNTH
+      volume _default_volume
+      pitch G4
+      func_table 1
+    note
+      start WHL + SXTNTH
+      duration SXTNTH
+      volume _default_volume
+      pitch D5
+      func_table 1
+    note
+      start WHL + EITH
+      duration SXTNTH
+      volume _default_volume
+      pitch E5
+      func_table 1
+    note
+      start WHL + EITH + SXTNTH
+      duration SXTNTH
+      volume _default_volume
+      pitch D5
+      func_table 1
 
-phrase "47"
-  note
-    start 0.0
-    duration SXTNTH
-    volume _default_volume
-    pitch D5
-    func_table 1
-  note
-    start SXTNTH
-    duration SXTNTH
-    volume _default_volume
-    pitch E5
-    func_table 1
-  note
-    start EITH
-    duration SXTNTH
-    volume _default_volume
-    pitch D5
-    func_table 1
+  phrase "47"
+    note
+      start 0.0
+      duration SXTNTH
+      volume _default_volume
+      pitch D5
+      func_table 1
+    note
+      start SXTNTH
+      duration SXTNTH
+      volume _default_volume
+      pitch E5
+      func_table 1
+    note
+      start EITH
+      duration SXTNTH
+      volume _default_volume
+      pitch D5
+      func_table 1
 
-phrase "8"
-  note
-    start 0.0
-    duration WHL + HLF
-    volume _default_volume
-    pitch G4
-    func_table 1
-  note
-    start WHL + HLF
-    duration WHL
-    volume _default_volume
-    pitch G4
-    func_table 1
-  note
-    start legato_start: 2.0 * WHL + HLF, WHL
-    duration legato_duration: WHL
-    volume _default_volume
-    pitch F4
-    func_table 1
-  note
-    start legato_start: 3.0 * WHL + HLF, QRTR
-    duration legato_duration: QRTR
-    volume _default_volume
-    pitch F4
-    func_table 1
-phrase "49"
-  note
-    start 0.0
-    duration SXTNTH
-    volume _default_volume
-    pitch F4
-    func_table 1
-  note
-    start SXTNTH
-    duration SXTNTH
-    volume _default_volume
-    pitch G4
-    func_table 1
-  note
-    start EITH
-    duration SXTNTH
-    volume _default_volume
-    pitch A4S # B Flat
-    func_table 1
-  note
-    start EITH + SXTNTH
-    duration SXTNTH
-    volume _default_volume
-    pitch G4
-    func_table 1
-  note
-    start QRTR
-    duration SXTNTH
-    volume _default_volume
-    pitch A4S  
-    func_table 1
-  note
-    start QRTR + SXTNTH
-    duration SXTNTH
-    volume _default_volume
-    pitch G4    
-    func_table 1
+  phrase "8"
+    note
+      start 0.0
+      duration WHL + HLF
+      volume _default_volume
+      pitch G4
+      func_table 1
+    note
+      start WHL + HLF
+      duration WHL
+      volume _default_volume
+      pitch G4
+      func_table 1
+    note
+      start legato_start: 2.0 * WHL + HLF, WHL
+      duration legato_duration: WHL
+      volume _default_volume
+      pitch F4
+      func_table 1
+    note
+      start legato_start: 3.0 * WHL + HLF, QRTR
+      duration legato_duration: QRTR
+      volume _default_volume
+      pitch F4
+      func_table 1
+  phrase "49"
+    note
+      start 0.0
+      duration SXTNTH
+      volume _default_volume
+      pitch F4
+      func_table 1
+    note
+      start SXTNTH
+      duration SXTNTH
+      volume _default_volume
+      pitch G4
+      func_table 1
+    note
+      start EITH
+      duration SXTNTH
+      volume _default_volume
+      pitch A4S # B Flat
+      func_table 1
+    note
+      start EITH + SXTNTH
+      duration SXTNTH
+      volume _default_volume
+      pitch G4
+      func_table 1
+    note
+      start QRTR
+      duration SXTNTH
+      volume _default_volume
+      pitch A4S  
+      func_table 1
+    note
+      start QRTR + SXTNTH
+      duration SXTNTH
+      volume _default_volume
+      pitch G4    
+      func_table 1
 
-phrase "50"
-  note
-    start 0.0
-    duration SXTNTH
-    volume _default_volume
-    pitch F4
-    func_table 1
-  note
-    start SXTNTH
-    duration SXTNTH
-    volume _default_volume
-    pitch G4  
-    func_table 1
+  phrase "50"
+    note
+      start 0.0
+      duration SXTNTH
+      volume _default_volume
+      pitch F4
+      func_table 1
+    note
+      start SXTNTH
+      duration SXTNTH
+      volume _default_volume
+      pitch G4  
+      func_table 1
 
-phrase "51"
-  note
-    start 0.0
-    duration SXTNTH
-    volume _default_volume
-    pitch F4
-    func_table 1
-  note
-    start SXTNTH
-    duration SXTNTH
-    volume _default_volume
-    pitch G4
-    func_table 1
-  note
-    start EITH
-    duration SXTNTH
-    volume _default_volume
-    pitch A4S # B Flat    
-    func_table 1
+  phrase "51"
+    note
+      start 0.0
+      duration SXTNTH
+      volume _default_volume
+      pitch F4
+      func_table 1
+    note
+      start SXTNTH
+      duration SXTNTH
+      volume _default_volume
+      pitch G4
+      func_table 1
+    note
+      start EITH
+      duration SXTNTH
+      volume _default_volume
+      pitch A4S # B Flat    
+      func_table 1
 
-phrase "52"
-  note
-    start 0.0
-    duration SXTNTH
-    volume _default_volume
-    pitch G4
-    func_table 1
-  note
-    start SXTNTH
-    duration SXTNTH
-    volume _default_volume
-    pitch A4S # B Flat    
-    func_table 1
+  phrase "52"
+    note
+      start 0.0
+      duration SXTNTH
+      volume _default_volume
+      pitch G4
+      func_table 1
+    note
+      start SXTNTH
+      duration SXTNTH
+      volume _default_volume
+      pitch A4S # B Flat    
+      func_table 1
 
-phrase "53"
-  note
-    start 0.0
-    duration SXTNTH
-    volume _default_volume
-    pitch A4S # B Flat
-    func_table 1
-  note
-    start SXTNTH
-    duration SXTNTH
-    volume _default_volume
-    pitch G4   
-    func_table 1
+  phrase "53"
+    note
+      start 0.0
+      duration SXTNTH
+      volume _default_volume
+      pitch A4S # B Flat
+      func_table 1
+    note
+      start SXTNTH
+      duration SXTNTH
+      volume _default_volume
+      pitch G4   
+      func_table 1
+
+
+# Instruction block for each aleatoric instruction in the original score of "In C"
+# Each Instruction is assigneed to Ensemble, so the Ensemble plays it
+instruction "Instruction 1"
+  description ""
+  ensembles "In C Orchestra"
+
+instruction "Instruction 2"
+  description ""
+  ensembles "In C Orchestra"
+
+instruction "Instruction 3"
+  description ""
+  ensembles "In C Orchestra"
+
+instruction "Instruction 4"
+  description ""
+  ensembles "In C Orchestra"
+
+instruction "Instruction 5"
+  description ""
+  ensembles "In C Orchestra"
+
+instruction "Instruction 6"
+  description ""
+  ensembles "In C Orchestra"
+
+instruction "Instruction 7"
+  description ""
+  ensembles "In C Orchestra"
+
+instruction "Instruction 8"
+  description ""
+  ensembles "In C Orchestra"
+
+instruction "Instruction 9"
+  description ""
+  ensembles "In C Orchestra"
+
+instruction "Instruction 10"
+  description ""
+  ensembles "In C Orchestra"
+
+instruction "Instruction 11"
+  description ""
+  ensembles "In C Orchestra"
+
+instruction "Instruction 12"
+  description ""
+  ensembles "In C Orchestra"
+
+instruction "Instruction 13"
+  description ""
+  ensembles "In C Orchestra"
+
+instruction "Instruction 14"
+  description ""
+  ensembles "In C Orchestra"
+
+instruction "Instruction 15"
+  description ""
+  ensembles "In C Orchestra"
+
+instruction "Instruction 16"
+  description ""
+  ensembles "In C Orchestra"
+
+instruction "Instruction 17"
+  description ""
+  ensembles "In C Orchestra"
+
+instruction "Instruction 18"
+  description ""
+  ensembles "In C Orchestra"
+
+instruction "Instruction 19"
+  description ""
+  ensembles "In C Orchestra"
+
+instruction "Instruction 20"
+  description ""
+  ensembles "In C Orchestra"
+
+instruction "Instruction 21"
+  description ""
+  ensembles "In C Orchestra"
+
+instruction "Instruction 22"
+  description ""
+  ensembles "In C Orchestra"
+
+instruction "Instruction 23"
+  description ""
+  ensembles "In C Orchestra"
+
+instruction "Instruction 24"
+  description ""
+  ensembles "In C Orchestra"
+
+instruction "Instruction 25"
+  description ""
+  ensembles "In C Orchestra"
+
+instruction "Instruction 26"
+  description ""
+  ensembles "In C Orchestra"
+
+instruction "Instruction 27"
+  description ""
+  ensembles "In C Orchestra"
+
+instruction "Instruction 28"
+  description ""
+  ensembles "In C Orchestra"
+
+instruction "Instruction 29"
+  description ""
+  ensembles "In C Orchestra"
+
+instruction "Instruction 30"
+  description ""
+  ensembles "In C Orchestra"
+  
+
+# Tell the Ensemble to perform
+# Tell all players in the ensemble to play
+play
+  ensembles "In C Orchestra"
+
+# Capture the performance in rendered sound file
+render 'in_c.aiff'
+  orchestra  'markov_opt_1.orc'
+
