@@ -2011,14 +2011,16 @@ instruction "Instruction 13"
   ensembles "In C Orchestra"
 
 instruction "Instruction 14"
-  description "IN C is ended in this way:  when each performer arrives at figure #53, he or she stays on it until the entire ensemble has arrived there.  The group then makes a large crescendo and diminuendo a few times and each player drops out as he or she wishes."
+  description "In C is ended in this way:  when each performer arrives at figure #53, he or she stays on it until the entire ensemble has arrived there.  The group then makes a large crescendo and diminuendo a few times and each player drops out as he or she wishes."
   ensembles "In C Orchestra"
 
 
-# Tell the Ensemble to perform
-# Tell all players in the ensemble to play
-play
-  ensembles "In C Orchestra"
+# Tell the Ensemble to perform, tell all Players in the Ensemble to play
+# 'repeat' the 'play' command (that is, have each member of the Ensemble go through all the Instructions)
+#   until the 'continue' condition is met
+repeat until "All players have reached figure #53 and then dropped out."
+  play
+    ensembles "In C Orchestra"
 
 # Capture the performance in rendered sound file
 render 'in_c.aiff'

@@ -201,14 +201,26 @@ class ComposerAST
   def initialize
     @parent = @@root
   end
+  
+  def mandatory_preprocess_script(script_lines)
+    tkn_lines = tokenize script_lines
+    out_lines = []
+    tkn_lines.each do |tkn_line|
+      if tkn_line.length >= 2 and (tkn_line[0] == 'repeat' and tkn_line[1] == 'until')
+        tkn_line = ['repeat_until'] + tkn_line[2..tkn_line.length]
+      end
+      out_lines += tkn_line.join(' ')
+    end
+    out_lines
+  end
  
-  def preprocess_script(src_file_name)
-    script_lines = File.readlines src_file_name
+  def optional_preprocess_script(script_lines)
     tkns = tokenize script_lines
 		tkns = preprocess_assignment tkns
     tkns = preprocess_func tkns
     preprocess_expressions(tkns, src_file_name)
-    self
+    # Returns the tokens put back into list of strings, one string per script line, then all those lines joined
+    to_s
   end
   
   # DFS the tree and print nodes pre-order.  This prints each line in order at
@@ -246,7 +258,7 @@ class ComposerAST
       end
     tkns    
   end
-  
+    
   def tokenize_join_str(tkns)    
     tkns_out = []
     str_expr_tkns = []
@@ -286,7 +298,7 @@ class ComposerAST
     end
     
     # Append the single comment token to the end, if there was one
-    tkns_out << comment_delim_tkns.join(' ') if comment_delim_tkns.size > 0
+    tkns_out << comment_delim_tkns. (' ') if comment_delim_tkns.size > 0
     tkns_out.flatten
   end
 
@@ -391,6 +403,13 @@ class ComposerAST
     
     tkn_line_out
   end
+
+	def scrub_keywords(tkns, src_file_name)
+	  
+    tkns.each do |tkn_line|
+      
+    end	
+	end
 	
 	def preprocess_expressions(tkns, src_file_name)
 	  line_no = 0

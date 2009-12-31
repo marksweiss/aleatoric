@@ -92,9 +92,13 @@ module Aleatoric
 #  puts 'instruction' keyword definitions and maps them to their name with the set_*_instruction() call
 @@player_preplay_instructions = {}
 @@player_postplay_instructions = {}
-# Supports syntax of passing an improve name (play by key) or not passing a name
+# Supports syntax of passing an improv name (play by key) or not passing a name
 #  and then just playing the last 'improvisation' kw improv hook defined, i.e. @ordered_improvisations.last 
 @@improvisations = {}
+# Supports a repeat_until loop exit condition with a name that can be manipulated by instruction 
+#  code in another translation unit. Initializes to 'true' so the loop runs until the outside call to
+#  set_repeat_until_exit(name) is called
+@@repeat_until_loop_flags = {}
 #
 def set_player_preplay_instruction(instruction_name, &instr_blk)
   @@player_preplay_instructions[instruction_name] = instr_blk
@@ -113,6 +117,31 @@ def set_ensemble_preplay_instruction(instruction_name, &instr_blk)
 end
 def set_ensemble_postplay_instruction(instruction_name, &instr_blk)
   @@ensemble_postplay_instructions[instruction_name] = instr_blk
+end
+
+# This is set when repeat_until(name) is called, 
+#  setting the flag to loop for that named repeat_until loop
+def set_repeat_until_loop(name)
+  @@repeat_until_loop_flags[name] = true
+end
+# This can be called by any outside code implementing an instruction
+#  to force the loop to exit.  The idea is the composer creates
+#  a named repeat_until loop, with the name string defining the
+#  the logic to be implemented to force the loop to end
+#  e.g. - repeat until "All players have played the final phrase"
+#  ...
+#  # in instruction code
+#  set_repeat_until_exit("All players have played the final phrase") if all_players_finished?
+def set_repeat_until_exit(name)
+  @@repeat_until_loop_flags[name] = false
+end
+# Convenience predicates complete the interface to this functionality 
+#  repeat_until_loop?() is called in repeat_until()
+def repeat_until_loop?(name)
+  @@repeat_until_loop_flags[name]
+end
+def repeat_until_exit?(name)
+  ! @@repeat_until_loop_flags[name]
 end
 
 @processing_play = false
@@ -320,6 +349,7 @@ def copy_measure(src_name, target_name)
 end
 
 def adjust_cur_start(notes)
+  # TEMP DEBUG  
   new_start = (notes.collect {|note| note.start + note.duration}).max
   @cur_start = new_start if new_start > @cur_start
 end
@@ -612,6 +642,12 @@ def repeat(limit, &blk)
     yield index
     index += 1
   end
+end
+
+def repeat_until(name)
+  set_repeat_until_loop name
+  while repeat_until_loop?
+    yield
 end
 
 # Handles constant arg to method_missing "format" function in "write" block

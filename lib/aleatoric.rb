@@ -1,8 +1,8 @@
 require 'composer'
 require 'composer_lang'
 
-#require 'rubygems'
-#require 'ruby-debug' ; Debugger.start
+require 'rubygems'
+require 'ruby-debug' ; Debugger.start
 
 include Aleatoric
 
@@ -41,6 +41,12 @@ def main
   # LOGGING
   puts "Format set to #{$ARG_FORMAT}"
   
+  script_lines = File.readlines src_file_name
+  # Composer reuses some Ruby keywords which need to be modified so they don't get interpreted as Ruby
+  # This is non-optional preprocessing
+  # Returns the script lines preprocessed
+  script_lines = ComposerAST.new.mandatory_preprocess_script(script_lines)
+  
   # Now preprocess to add 'do/end' syntax, add 'do |index|/end' to repeat blocks
   #  and validate syntax and grammar (structure)
   preprocess_flag = true
@@ -50,7 +56,8 @@ def main
     t = Time.now
     puts "Preprocessing started at #{t}"
     
-    script = ComposerAST.new.preprocess_script(file_name).to_s
+    # Returns the script lines preprocessed, and joined into one big string, i.e. - the whole script preprocessed
+    script = ComposerAST.new.optional_preprocess_script(script_lines)
 
     # LOGGING
     t_new = Time.now
