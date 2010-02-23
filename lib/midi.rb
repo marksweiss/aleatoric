@@ -2,9 +2,11 @@ require 'global'
 
 require 'rubygems'
 
+if RUBY_PLATFORM.include?('mswin')
 require 'dl/import'
 require 'midilib/sequence'
 require 'midilib/consts'
+end
 
 require 'ruby-debug' ; Debugger.start
 
@@ -13,7 +15,9 @@ class AleatoricIllegalMidiOperationException < Exception; end
 # TODO - need a Composer keyword to set bpm, child of format midi, make that a block
 class MidiManager
 
+  if RUBY_PLATFORM.include?('mswin')
   include MIDI
+  end
   include Aleatoric
 
   attr_reader :name, :bpm
@@ -21,6 +25,7 @@ class MidiManager
   DEFAULT_BPM = 120
   
   def initialize(name=nil, bpm=nil)
+    if RUBY_PLATFORM.include?('mswin')
     # custom init steps
     @name = name || 'Sequence Name'
     @bpm = bpm || DEFAULT_BPM
@@ -34,7 +39,8 @@ class MidiManager
     @seq.tracks << track
     # TODO support Tempo in Composer
     track.events << Tempo.new(Tempo.bpm_to_mpq(@bpm))
-    track.events << MetaEvent.new(META_SEQ_NAME, @name)    
+    track.events << MetaEvent.new(META_SEQ_NAME, @name)
+    end
   end
   
   # NOTE: MIDI doesn't require this, but this interface assumes each track will be
@@ -44,60 +50,78 @@ class MidiManager
   #  but even that isn't actually exposed in Composer (other than the abstract
   #  concept of multiple Channels available if you set format == :midi
   def channel(channel)
+    if RUBY_PLATFORM.include?('mswin')
     if channel_nil?(channel)
       track = Track.new(@seq)
       @seq.tracks << track
       @channel_tracks[channel] = track
     end
     @channel_tracks[channel]
+    end
   end
 
   def channel_nil?(channel)
+    if RUBY_PLATFORM.include?('mswin')
     @channel_tracks[channel].nil?
+    end
   end
   
   def instrument(channel, instrument, delta_time=0)
+    if RUBY_PLATFORM.include?('mswin')
     self.channel(channel) if channel_nil?(channel)    
     @channel_tracks[channel].events << ProgramChange.new(channel, instrument, delta_time)
     @channel_instruments[channel] = instrument
+    end
   end
 
   def channel_instrument(channel)
+    if RUBY_PLATFORM.include?('mswin')    
     @channel_instruments[channel]
+    end
   end
   
   # Args named with MIDI semantics. Converting to Composer semantics:
   #  note == pitch, velocity == amplitude == volume, delta_time == duration  
   def add_note(channel, note, velocity, delta_time)   
+    if RUBY_PLATFORM.include?('mswin')
     channel(channel) if channel_nil?(channel)
     note_length = @seq.length_to_delta(seconds_to_beats(delta_time))    
     @channel_tracks[channel].events << NoteOnEvent.new(channel, note, velocity, 0)
     @channel_tracks[channel].events << NoteOffEvent.new(channel, note, velocity, note_length)
+    end
   end
   
   # NOTE: Breaks encapsulation and really only intended for unit testing add_note()
   def channel_notes(channel)
+    if RUBY_PLATFORM.include?('mswin')
     notes = []
     if not channel_nil? channel
       @channel_tracks[channel].each {|note| notes << note if note.note?}
     end
     notes
+    end
   end
     
   def save(file_name)  
+    if RUBY_PLATFORM.include?('mswin')
     File.open(file_name, 'wb') {|file| @seq.write file}  
+    end
   end
   alias render save
   
   private
   
   def seconds_to_beats(secs)
+    if RUBY_PLATFORM.include?('mswin')
     secs / (60.0 / @bpm)
+    end
   end
   
   # For testing only, exposed with temporary make private methods public in one midi_test.rb test
   def seq
+    if RUBY_PLATFORM.include?('mswin')    
     @seq
+    end
   end
   
   # def delta_to_note_str(duration)

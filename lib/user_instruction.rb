@@ -1,23 +1,17 @@
+$LOAD_PATH << "../compositions/Terry_Riley-In_C"
 require 'composer'
-
 include Aleatoric
 
 ##########################################################
 # PLACE YOUR MAPPINGS AND INSTRUCTION IMPLEMENTATIONS HERE
 
-
-# NOTE: Instruction hooks must take a Score as an argument and return a Score
-#fortissimo = lambda do |score|
-#  score.notes.each do |note|
-#    note = note.dup
-#    note.amplitude(note.amplitude * 2)
-#  end
-#  score
-#end
-# ENSEMBLE INSTRUCTION
-#set_ensemble_preplay_instruction("Fortissimo", &fortissimo)
-# OR COULD DO PLAYER INSTRUCTION
-#set_player_preplay_instruction("Fortissimo", &fortissimo)
-
 # /PLACE YOUR MAPPINGS AND INSTRUCTION IMPLEMENTATIONS HERE
 ##########################################################
+
+# Or add a path to the first line of this file to the directory where
+# your [NAME]_user_instruction.rb file lives
+# $LOAD_PATH << "../my_compositions"
+
+# NOTE: Your user_instruction file must be named [CompositionName]_user_instruction.rb
+# For example, if your composition is In_C.altc, 
+#  then your user instruction must be In_C_user_instruction.rb

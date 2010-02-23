@@ -17,14 +17,23 @@ class AleatoricIllegalNoteFormatException < Exception; end
 class Note
   attr_accessor :name
   attr_reader :ordered_keys, :note_attrs
+  # Default is to not include appended player_id, ensemble_id and score_id
+  #  with note to_s output, but this can be turned on for logging it, which can help
+  #  with debugging, especially when implementing instruction handlers for scores with
+  attr_accessor :ensemble_id  # For debugging
+  attr_accessor :to_s_with_debug_info
+
   @@format = nil
 
   def initialize(name=nil, attrs=nil)
     @name = name
+    # For debugging, so can print these out as comments in a score
+    @player_id = nil; @ensemble_id = nil; @score_id = nil
     @note_attrs = {}
     @ordered_keys = [:instrument, :start, :duration, :amplitude, :pitch]
     attrs ||= {}
-    attrs.each {|name, val| self.method_missing(name, val)}  
+    attrs.each {|name, val| self.method_missing(name, val)}
+    @to_s_with_debug_info = false
   end
 
   def instrument(instrument=nil)  
@@ -41,7 +50,7 @@ class Note
     self.instrument(instrument)
   end
   
-  def start(start=nil)
+  def start(start=nil)    
     if start == nil
       @note_attrs[:start]
     else
@@ -104,10 +113,29 @@ class Note
     end
   end
   
+  def player_id=(id)
+    @player_id = id
+    @player_id
+  end
+  def player_id
+    @player_id
+  end
+  
+  def score_id=(id)        
+    @score_id = id
+    @score_id
+  end
+  def score_id
+    @score_id
+  end
+  
   # Returns a deep copy of the object
   def dup
     ret = Note.new
     ret.name = self.name
+    ret.player_id = self.player_id      # For debugging
+    ret.ensemble_id = self.ensemble_id  # For debugging
+    ret.score_id = self.score_id        # For debugging
     @note_attrs.each {|name, val| ret.method_missing(name, val)}
     ret
   end  
@@ -151,7 +179,12 @@ class Note
           ret.concat("#{val} ")
         end	  
       end          
-      ret.concat("; #{@name}")          
+      ret.concat("; #{@name}")
+      if @to_s_with_debug_info 
+        ret.concat(" #{@player_id}")    # For debugging  
+        ret.concat(" #{@ensemble_id}")  # For debugging                      
+        ret.concat(" #{@score_id}")     # For debugging
+      end
       ret
     # Used only for unit testing, to verify data in note is as expected. Not actually used to render MIDI file output
     when :midi

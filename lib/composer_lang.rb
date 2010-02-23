@@ -36,6 +36,7 @@ class ComposerAST
     'phrase' => " do\n",
     'section' => " do\n",
     'repeat' => " do |index|\n",
+    'repeat_until' => " do\n",
     'write' => " do\n",
     'render' => " do\n",
     'format' => "\n",
@@ -60,6 +61,7 @@ class ComposerAST
     'phrase' => "end\n",
     'section' => "end\n",
     'repeat' => "end\n",
+    'repeat_until' => "end\n",
     'write' => "end\n",
     'render' => "end\n",
     'format' => "",
@@ -80,13 +82,14 @@ class ComposerAST
   }
  
   # NOTE: ANY TOP_LEVEL KW **MUST** BE ADDED TO LIST OF CHILDREN OF ROOT
-  #       THIS IS EASY TO FORGET. SYMPTOM IS TEST.ALTC DOESN'T RENDER BLOCK FOR KW
+  #  ***THIS IS EASY TO FORGET.*** SYMPTOM IS TEST.ALTC DOESN'T RENDER BLOCK FOR KW
   @@kw_children = {
-    'root' => ['note', 'phrase', 'section', 'repeat', 'write', 'render', 'format', 'def', 'measure', 'copy_measure', 'meter', 'ensemble', 'player', 'play', 'instruction', 'improvise', 'improvisation'],
+    'root' => ['note', 'phrase', 'section', 'repeat', 'repeat_until', 'write', 'render', 'format', 'def', 'measure', 'copy_measure', 'meter', 'ensemble', 'player', 'play', 'instruction', 'improvise', 'improvisation'],
     'note' => [],
-    'phrase' => ['note', 'repeat'],
+    'phrase' => ['note', 'repeat', 'repeat_until'],
     'section' => ['phrase', 'measure', 'copy_measure'],
     'repeat' => ['note', 'measure', 'play', 'improvise'],
+    'repeat_until' => ['note', 'measure', 'play', 'improvise'],
     'write' => ['format', 'players', 'ensembles'],
     'render' => ['format'],
     'format' => [],
@@ -110,6 +113,7 @@ class ComposerAST
     'phrase' => ['root', 'section', 'ensemble', 'player'],
     'section' => ['root', 'ensemble', 'player'],
     'repeat' => ['root', 'phrase'],
+    'repeat_until' => ['root', 'phrase'],
     'write' => ['root'],
     'render' => ['root'],
     'format' => ['root', 'write', 'render'],
@@ -122,7 +126,7 @@ class ComposerAST
     'ensembles' => ['instruction', 'play', 'write'],
     'player' => ['root', 'ensemble'],
     'players' => ['ensemble', 'play', 'write', 'improvise'],
-    'play' => ['root', 'repeat'],
+    'play' => ['root', 'repeat', 'repeat_until'],
     'instruction' => ['root'],    
     'improvisation' => ['root'],
     'improvise' => ['root', 'repeat']
@@ -133,19 +137,20 @@ class ComposerAST
     'note' =>     lambda {|x| x == nil or x[0] == nil or x[0].kind_of? String},     # 1st arg optional, valid type
     'phrase' => 	lambda {|x| x == nil or x[0] == nil or x[0].kind_of? String},     # 1st arg optional, valid type
     'section' => 	lambda {|x| x == nil or x[0] == nil or x[0].kind_of? String},     # 1st arg optional, valid type
-    'repeat' => 	lambda {|x| x != nil and x[0] != nil },# and eval(x[0].to_s).kind_of? Fixnum},                       		       # 1st arg required, valid type
-    'render' => 	lambda {|x| x != nil and x[0] != nil and (x[0].kind_of? String and x[0].length > 0)},            # 1st arg required, valid type
-    'write' => 		lambda {|x| x != nil and x[0] != nil and (x[0].kind_of? String and x[0].length > 0)},            # 1st arg required, valid type
-    'format' => 	lambda {|x| x != nil and x[0] != nil and (x[0].to_s == 'csound' or x[0].to_s == 'midi')},        # 1st arg required, valid value
+    'repeat' => 	lambda {|x| x != nil and x[0] != nil },# and eval(x[0].to_s).kind_of? Fixnum},  # 1st arg required, valid type
+    'repeat_until' => lambda {|x| x != nil and x[0] != nil and (x[0].kind_of? String and x[0].length > 0)},       # 1st arg optional, valid type
+    'render' => 	lambda {|x| x != nil and x[0] != nil and (x[0].kind_of? String and x[0].length > 0)},       # 1st arg required, valid type
+    'write' => 		lambda {|x| x != nil and x[0] != nil and (x[0].kind_of? String and x[0].length > 0)},       # 1st arg required, valid type
+    'format' => 	lambda {|x| x != nil and x[0] != nil and (x[0].to_s == 'csound' or x[0].to_s == 'midi')},   # 1st arg required, valid value
     'measure' => 	lambda {|x| x == nil or x[0] == nil or x[0].kind_of? String},     # 1st arg optional, valid type
     'copy_measure' => lambda {|x| x != nil and x.length == 2 and x[0] != nil and x[1] != nil and x[0].kind_of? String and x[1].kind_of? String},   # 1st and second arg required, valid types    
     'meter' =>    lambda {|x| x != nil and x.length == 2 and x[0] != nil and x[1] != nil and x[0].kind_of? Fixnum and x[1].kind_of? Fixnum},       # 1st and second arg required, valid types    
     'quantize' => lambda {|x| x != nil and x[0] != nil and (x[0].to_s == 'on' or x[0].to_s == 'off')},
-    'ensemble' => lambda {|x| x != nil and x[0] != nil and (x[0].kind_of? String and x[0].length > 0)},            # 1st arg required, valid type    
-    'players' =>  lambda {|x| x != nil and x[0] != nil and (x[0].kind_of? String and x[0].length > 0)},            # 1st arg required, valid type    
-    'ensembles' =>     lambda {|x| x != nil and x[0] != nil and (x[0].kind_of? String and x[0].length > 0)},       # 1st arg required, valid type    
-    'instruction' =>   lambda {|x| x != nil and x[0] != nil and x[0].kind_of? String},                       		   # 1st arg required, valid type
-    'improvisation' => lambda {|x| x != nil and x[0] != nil and x[0].kind_of? String}                       		   # 1st arg required, valid type
+    'ensemble' => lambda {|x| x != nil and x[0] != nil and (x[0].kind_of? String and x[0].length > 0)},       # 1st arg required, valid type    
+    'players' =>  lambda {|x| x != nil and x[0] != nil and (x[0].kind_of? String and x[0].length > 0)},       # 1st arg required, valid type    
+    'ensembles' =>     lambda {|x| x != nil and x[0] != nil and (x[0].kind_of? String and x[0].length > 0)},  # 1st arg required, valid type    
+    'instruction' =>   lambda {|x| x != nil and x[0] != nil and x[0].kind_of? String},                       	# 1st arg required, valid type
+    'improvisation' => lambda {|x| x != nil and x[0] != nil and x[0].kind_of? String}                       	# 1st arg required, valid type
   }
   
   @@grammar_rules = {
@@ -209,12 +214,12 @@ class ComposerAST
       if tkn_line.length >= 2 and (tkn_line[0] == 'repeat' and tkn_line[1] == 'until')
         tkn_line = ['repeat_until'] + tkn_line[2..tkn_line.length]
       end
-      out_lines += tkn_line.join(' ')
+      out_lines += [tkn_line.join(' ')]
     end
     out_lines
   end
  
-  def optional_preprocess_script(script_lines)
+  def optional_preprocess_script(script_lines, src_file_name)
     tkns = tokenize script_lines
 		tkns = preprocess_assignment tkns
     tkns = preprocess_func tkns
@@ -298,7 +303,7 @@ class ComposerAST
     end
     
     # Append the single comment token to the end, if there was one
-    tkns_out << comment_delim_tkns. (' ') if comment_delim_tkns.size > 0
+    tkns_out << comment_delim_tkns.join(' ') if comment_delim_tkns.size > 0
     tkns_out.flatten
   end
 
@@ -307,6 +312,10 @@ class ComposerAST
       return true if @@debug_stmts.include?(tkn)
     end
     false
+  end
+  
+  def string_token?(tkn)
+    tkn.length >= 2 and tkn[0].chr == '"' and tkn[-1].chr == '"'
   end
   
   def ass_replace_tkns_helper(tkn_line, lidx)
@@ -319,8 +328,8 @@ class ComposerAST
   
   def validate_skip_line(tkn_line)
     tkn_line == nil or tkn_line.length == 0 or tkn_line[0] == '"' or tkn_line[0] == "'" or tkn_line[0] == "#" or ((@@debug_stmts & tkn_line).length > 0)  
-  end  
-  
+  end
+    
   def preprocess_assignment(tkns)
     state = :declaring    
     tkns_out = []
@@ -366,20 +375,22 @@ class ComposerAST
   # Warning: this is a hack. Further proof that eventually this needs a real parser. 
   # Scanning instead of really building AST.  Only allowing nested functions as last args in parent expression
   def preprocess_func_helper(tkn_line)
+    
     # Empty expr or expr is a string, or it has no colons then it's not a func dec or func call
     return tkn_line if validate_skip_line tkn_line
     num_tkns = tkn_line.size
     func_cnt = 0
     tkn_line_out = []
-    num_tkns.times do |j|
+    num_tkns.times do |j|      
+      tkn = tkn_line[j].strip      
       # Skipping length == 0 tkns, which should never happen since we stripped newlines
-      #  and delimited on ws and made all deliting chars separate tokens
-      tkn = tkn_line[j].strip
+      #  and delimited on ws and made all deliting chars separate tokens            
       next if tkn.length == 0
+      # Skip string tokens because any colon inside them is irrelevant, can't indicate a token is a function name
       # Do subsititutions for function tkns
       # Converts foo: a, b, c -> def foo(a,b,c)
       # Conerts instrument foo: a, b, c -> instrument foo(a,b,c)      
-      if tkn.include?(':') and not tkn.include?('::') # [tkn.length - 1] == ':' and tkn.length > 1 and tkn[tkn.length - 2] != ':'
+      if tkn.include?(':') and not tkn.include?('::') and not string_token? tkn
         func_cnt += 1
         tkn = tkn.sub(':', '(')
         # tkn_line[j] = tkn
@@ -387,11 +398,11 @@ class ComposerAST
         #  precede with 'def ' keyword so statement preprocessing that follows will make this a block
         if j == 0
           tkn_line_out = ['def'] + tkn_line_out 
-        # To wrap function calls which are args in parens, e.g. 'instrument (foo(bar))' instead of 'instrument foo(bar)'
-        # But as it turns out this doesn't matter, ruby handles either the same. But left it as a relic/clue
-        #elsif j == 1
-        #  tkn_line_out.insert(1, '(')
-        #  func_cnt += 1
+          # To wrap function calls which are args in parens, e.g. 'instrument (foo(bar))' instead of 'instrument foo(bar)'
+          # But as it turns out this doesn't matter, ruby handles either the same. But left it as a relic/clue
+          #elsif j == 1
+          #  tkn_line_out.insert(1, '(')
+          #  func_cnt += 1
         end
       end      
       tkn_line_out << tkn

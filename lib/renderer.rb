@@ -31,7 +31,11 @@ class Renderer
     case render_format.to_sym
     when :csound
       # TODO From config, base path, should be a setting used all over project
+      if RUBY_PLATFORM.include?('mswin')
       system("consound -m0 -d -g -s -W -o#{out_file_name} #{$csound_orc_file_name} #{score_file_name}")
+      else
+      system("csound -m7 -d -g -s -A -o#{out_file_name} #{$csound_orc_file_name} #{score_file_name}")        
+      end
     when :midi
       # no-op
       # TODO Make this play interactively?

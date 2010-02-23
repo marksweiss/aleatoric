@@ -23,6 +23,7 @@ class Player
   attr_accessor :preplay_hooks_ordered_names, :postplay_hooks_ordered_names, :improvising_hooks_ordered_names
   attr_accessor :preplay_hooks, :postplay_hooks, :improvising_hooks
   attr_accessor :state, :is_playing, :is_improvising, :out_notes
+  attr_reader   :current_start
   
   @@NO_INDEX = -1
   def Player.no_index
@@ -47,6 +48,12 @@ class Player
     @is_playing = true
     @is_improvising = true    
     @out_notes = []
+    @current_start = 0.0
+    @auto_next_start = true
+  end
+  
+  def handle
+    self.object_id
   end
   
   def instrument(instrument=nil)
@@ -65,6 +72,8 @@ class Player
   # @param [String] name of the Aleatoric::Score object being added
   # @param [Aleatoric::Score] the score object being added
   def add_score(score_name, score)
+    # Append player name and id to each note for debugging
+    score.notes.each {|note| note.player_id = "#{@name}_#{self.object_id}"}    
     @scores[score_name] = score
     @scores_ordered_names << score_name
     # If there were no scores, set index to new first score
@@ -104,7 +113,11 @@ class Player
       idx += 1
       break if name == score_name
     end
-    @scores[score_name] = score if valid_scores_idx? idx
+    if valid_scores_idx? idx
+      # For debugging
+      score.notes.each {|note| note.player_id = "#{@name}_#{self.object_id}"}
+      @scores[score_name] = score 
+    end
     self
   end
   
@@ -182,6 +195,16 @@ class Player
   end
   alias decrement decrement_scores_index
   alias dec decrement_scores_index  
+
+  # By default Player will make sure each note starts after the last one, which is very useful
+  #  for using players in real long-running compositions.  User can override this behavior
+  #  by calling auto_next_start_off, and then the player will output notes with their given start time
+  def auto_next_start_on
+    @auto_next_start = true
+  end
+  def auto_next_start_off
+    @auto_next_start = false
+  end
   
   # Plays the currently active score, which means, precisely:
   # - set current score to the name argument passed, if name is not nil
@@ -199,7 +222,7 @@ class Player
     ret = []
     return ret if not playing?
     # NOTE: Default is to NOT change the state of score but to make a copy for each play call.
-    #  Client can call
+    #  Client can call    
     cur_score = @scores[name] if name != nil
     cur_score = current_score if name == nil
     cur_score = cur_score.dup
@@ -218,12 +241,20 @@ class Player
     # Now push the notes cur_score to output. Store added notes just from
     #  this #play call in separate step to return them for client convenience, testing
     cur_score.notes.each do |note| 
-      note = note.dup
-      ret << note
-      note.instrument(self.instrument) if self.instrument
-      @out_notes << note      
+      new_note = note.dup
+      new_note.instrument(self.instrument) if self.instrument
+      # NOTE: This is a very important business rule on this line, namely that Player silently pushes
+      #  the start time of notes ahead of their literal value.  Modified this because it broke a test
+      #  which pointed out the subtle issue that it should really only do this if the new note is before
+      #  the current Player start time. So added the if check.
+      if @auto_next_start and new_note.start < @current_start
+        new_note.start(new_note.start + self.current_start)
+      end
+      ret << new_note
+      @out_notes << new_note
+      @current_start += new_note.duration      
     end
-
+            
     # Now run postplay hooks. 
     # NOTE: These make no promise as far as manipulating the current_score.  These rely on the
     #  Player API and the client simply must implement whatever logic they want.  Only promise
@@ -248,7 +279,10 @@ class Player
     return ret if not improvising? or @improvising_hooks.empty? or not @improvising_hooks.include? name   
     @improvising_hooks[name].call.notes.each do |note| 
       note.instrument(self.instrument) if self.instrument
+      # For debugging
+      note.player_id = "#{@name}_#{self.object_id}"      
       @out_notes << note
+      @current_start += note.duration
       ret << note.dup
     end    
     ret
@@ -401,8 +435,12 @@ class Player
   # @return [self]
   def set_output_notes(notes)
     @out_notes.clear
-    note.instrument(self.instrument) if self.instrument
-    notes.each {|note | @out_notes << note}
+    notes.each do |note | 
+      # For debugging
+      note.player_id = "#{@name}_#{self.object_id}"    
+      note.instrument(self.instrument) if self.instrument      
+      @out_notes << note
+    end
     self
   end
   alias set_output set_output_notes
@@ -413,8 +451,20 @@ class Player
   def append_note_to_output(note)
     dup_note = note.dup
     dup_note.instrument(self.instrument) if self.instrument
+    # For debugging
+    dup_note.player_id = "#{@name}_#{self.object_id}"    
     @out_notes << dup_note
     self
+  end
+  
+  # TODO UNIT def TEST
+  def prepend_note_to_output(note)
+    dup_note = note.dup
+    dup_note.instrument(self.instrument) if self.instrument
+    # For debugging
+    dup_note.player_id = "#{@name}_#{self.object_id}"    
+    @out_notes.insert(0, dup_note)
+    self    
   end
   
   # Appends a score to the current output
@@ -424,11 +474,14 @@ class Player
     score.notes.each do |note| 
       dup_note = note.dup
       dup_note.instrument(self.instrument) if self.instrument 
+      # For debugging
+      dup_note.player_id = "#{@name}_#{self.object_id}"      
       @out_notes << dup_note
     end
     self
   end
-  
+  alias append_phrase_to_output append_score_to_output
+    
   # Tests whether there is any output, that is, any notes in the current output
   # @return [true, false] indicates whethere ther are currently any notes in the output of this Player
   def output_empty?
@@ -466,6 +519,7 @@ class Player
     ret.preplay_hooks = @preplay_hooks
     ret.postplay_hooks = @postplay_hooks
     ret.improvising_hooks = @improvising_hooks
+    ret.current_start = @current_start
     
     ret
   end

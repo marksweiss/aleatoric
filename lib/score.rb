@@ -27,9 +27,40 @@ class Score
   # so that any subsequent manipulation by this Score won't affect the source Note.
   # @param[Enumerable<Aleatoric::Note>]
   def <<(notes)
-    notes.each do |note| 
-      @notes << note.dup
+    notes.each do |note|
+      new_note = note.dup
+      # For debugging
+      new_note.score_id = "#{@name}_#{self.object_id}"  
+      @notes << new_note
     end    
+  end
+  
+  # TODO UNIT TEST
+  def prepend(notes)
+    ret = []
+    notes.each do |note| 
+      new_note = note.dup
+      # For debugging
+      new_note.score_id = "#{@name}_#{self.object_id}"        
+      ret << new_note
+    end
+    @notes = ret + @notes
+  end
+  
+  # TODO UNIT TEST
+  def append_note(note)
+    new_note = note.dup
+    # For debugging
+    new_note.score_id = "#{@name}_#{self.object_id}"        
+    @notes << new_note
+  end
+  
+  # TODO UNIT TEST
+  def prepend_note(note)
+    new_note = note.dup
+    # For debugging
+    new_note.score_id = "#{@name}_#{self.object_id}"        
+    @notes = [new_note] + @notes
   end
   
   def size
@@ -65,6 +96,12 @@ class Score
     @score_attrs = []  
   end
   
+  def attr_slice(attr)
+    ret = []
+    self.notes.each {|note| ret << note.send(attr.to_sym)}
+    ret
+  end
+  
   # Returns a deep copy of the object
   def dup
     ret = Score.new
@@ -94,6 +131,7 @@ end
 class ScoreWriter < Score
   include Singleton
   attr_reader :format
+  attr_accessor :file_name
   
   # Modifies the Note #to_s format being used by all Scores in the current process.
   # @param [:csound, :midi] The format to set
@@ -133,7 +171,7 @@ end
 class Measure < Score
   attr_reader :start
   
-  def initialize(name, start=0.0)
+  def initialize(name, start=0.0)    
     super(name)
     @start = start    
   end
@@ -154,14 +192,16 @@ class Measure < Score
   def <<(notes)  
     notes.each do |note|
       new_note = note.dup
-      new_note = new_note.start(new_note.start + self.start)       
+      new_note = new_note.start(new_note.start + self.start)
+      # For debugging
+      new_note.score_id = "#{@name}_#{self.object_id}"     
       @notes << new_note
     end    
   end
   
   # Returns a deep copy of the object 
   def dup
-    # TODO better than this ugly hack
+    # TODO Shouldn't deep copy include @start?
     ret = Measure.new(self.name, self.start)
     ret << self.notes
     ret.score_attrs = self.score_attrs    
@@ -218,10 +258,6 @@ class Section
     end
     s
   end
-end
-
-# An alias for Score
-class Player < Score
 end
 
 end

@@ -5,7 +5,7 @@ include Aleatoric
 ##########################################################
 # PLACE YOUR MAPPINGS AND INSTRUCTION IMPLEMENTATIONS HERE
 
-# NOTE: ALL nooks MUST take a container arg, the object they are loaded into
+# NOTE: ALL Player and Ensemble hooks MUST take a container arg, the object they are loaded into
 #       For player hooks this is a Player, for ensemble hooks it's an Ensemble
 #       The container is the mechanism for accessing the public methods of that type
 #        and all the current public attributes of the object the method is loaded into.
@@ -91,15 +91,24 @@ get_alternate_before_play_ens = lambda do |container|
         note.amplitude(0)
       end
       # set the altered score as the score for that score.name for the player
-      # Effectively, we have stored a copy and replaced what was there with a silent score
-      
-      # TEMP DEBUG
-      debug_log "score.name #{score.name}"
-      
+      # Effectively, we have stored a copy and replaced what was there with a silent score      
       player.set_score(score.name, score)
     end
   end
 end
+
+# repeat_until() stop test handlers take no argument
+# *** NOTE: To avoid repeat_until() loops neve exiting and haning score execution
+# ***  this handler MUST call set_repeat_until_stop('MY_REPEAT_UNTIL_LOOP') under
+# ***  some conditions that are eventually met, otherwise the loop will never exit
+# This handler (and any others registered to the same loop) are run in the order
+#  registered before or after (preplay or postplay) each itereation of the loop 
+_exit_loop_count = 0
+exit_loop = lambda do
+  set_repeat_until_stop("I want to stop") if _exit_loop_count == 2
+  _exit_loop_count +=1
+end
+set_repeat_until_stop_postplay_test("I want to stop", &exit_loop)
 
 set_alternate_after_play_ens = lambda do |container|
   # toggle the flag
@@ -131,6 +140,8 @@ improvise_whole_d = lambda do
   score
 end
 set_improvisation("Play a whole note on Middle D", &improvise_whole_d)
+
+
 
 # /PLACE YOUR MAPPINGS AND INSTRUCTION IMPLEMENTATIONS HERE
 ##########################################################

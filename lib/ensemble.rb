@@ -33,6 +33,10 @@ class Ensemble
     @state = {}    
   end
   
+  def handle
+    self.object_id
+  end
+    
   # Get an Array of refs to all players held by this Ensemble
   # @return [Array<Aleatoric::Player>]
   def get_players
@@ -82,6 +86,10 @@ class Ensemble
   # @return [true, false]    
   def players_empty?
     @players.length == 0
+  end
+  
+  def players_attr_slice(attr)    
+    @players.values.collect {|player| player.send(attr.to_sym)}
   end
   
   # Store a value by keyname, serving as a generic interface for hooks to store state for later use.

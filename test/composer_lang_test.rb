@@ -386,8 +386,13 @@ class ComposerAST_Test < Test::Unit::TestCase
     
     actual = lang.preprocess_func_helper(lang.tokenize('instrument 1, 2, 3')[0])    
     expected = ['instrument', '1', ',', '2', ',', '3']  
-    assert(actual == expected)    
+    assert(actual == expected)
     
+    # Test case of a string arg with colons in it that are the last char of a word
+    actual = lang.preprocess_func_helper(lang.tokenize('description "My description: rock and roll"')[0])        
+    expected = ['description', '"My description: rock and roll"']      
+    assert(actual == expected)    
+        
     end
     puts "test__preprocess_func_helper COMPLETED"  
   end 

@@ -23,6 +23,20 @@ def main
   #  and hide that from them.  And in all cases we add the module directive.
   file_name_tmp = file_name + '.tmp'
   
+  # Get the name minus the last section of '.altc' which is the extension, if any
+  # We can have a name like this though, My.Tune.altc -> My.Tune
+  # NOTE: If user wants to include an external user_instruction file
+  #  they need to add the path to lib/user_instruction.rb (as noted there)
+  #  and the need to put the user_instruction file in that path and they need
+  #  to name that file [file_name - extension]_user_instruction_rb
+  # NOTE: ONLY SUPPORTS *.altc EXTENSION
+  #  e.g. if the composition is "In_C.altc" then the 
+  #  instruction file is "In_C_user_instruction.rb"
+  user_instr_file_name = file_name
+  ext_idx = file_name.downcase.rindex(".altc")
+  user_instr_file_name = file_name[0..(ext_idx-1)] unless ext_idx.nil?
+  user_instr_file_name += "_user_instruction.rb"
+  
   # Set global format and make call to load consts for that format
   # TODO Make default format configurable
   $ARG_FORMAT = :csound  
@@ -41,7 +55,8 @@ def main
   # LOGGING
   puts "Format set to #{$ARG_FORMAT}"
   
-  script_lines = File.readlines src_file_name
+  script_lines = portable_readlines(file_name)
+    
   # Composer reuses some Ruby keywords which need to be modified so they don't get interpreted as Ruby
   # This is non-optional preprocessing
   # Returns the script lines preprocessed
@@ -57,13 +72,18 @@ def main
     puts "Preprocessing started at #{t}"
     
     # Returns the script lines preprocessed, and joined into one big string, i.e. - the whole script preprocessed
-    script = ComposerAST.new.optional_preprocess_script(script_lines)
+    script = ComposerAST.new.optional_preprocess_script(script_lines, file_name)
 
     # LOGGING
     t_new = Time.now
     puts "Preprocessing took #{(t_new - t) * 1000.0} milliseconds"
   else
-    script = File.readlines file_name
+    # TODO VERIFY THIS IS RIGHT
+    # Use the portable_readline() call above.
+    # Which is the point of it since readlines isn't portable and doesn't work on Mac without
+    #  compiling your own 3p lib!
+    # script = File.readlines file_name
+    script = script_lines.join('')
   end
   
   # Wrap the script in necessary directives, so user doesn't have to 
@@ -72,11 +92,13 @@ def main
     t = Time.now
     puts "Started writing preprocessed score file at #{t}"
   
-    f << "require 'util'\nrequire 'global'\nrequire 'user_instruction'\nmodule Aleatoric\n\n"  
-    script.each do |line|
-      f << line
-    end    
-    f << "\n\nend\n"
+    f << "require 'util'\nrequire 'global'\nrequire '" + user_instr_file_name + "'\nmodule Aleatoric\n\n" +
+         script + 
+         "\n\nend\n"
+    # TODO VERIFY THIS IS RIGHT - script is now already one big joined string, don't need to iterate
+    # script.each do |line|
+    #  f << line
+    # end    
     
     # LOGGING
     t_new = Time.now

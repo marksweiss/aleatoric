@@ -48,6 +48,133 @@ require 'midi'
 
 module Aleatoric
 
+# NOTE: these need to be module scope across all files in the module, which is
+#  true @@ 'module scope' rather than @ 'module scope'.  The latter is visible
+#  across translation units in the module, but is not guaranteed to be 
+#  initialized when called from another translation unit.  @@ is true module scope
+#  and is guaranteed to be initialized when referenced by any methods in the module
+#  in any translation unit.
+# These guys are referred to by the set_*instruction() methods, which live here but are called
+#  from the 'user_instructions.rb' translation unit, where the programmer/composer
+#  puts 'instruction' keyword definitions and maps them to their name with the set_*_instruction() call
+@@player_preplay_instructions = {}
+@@player_postplay_instructions = {}
+# Supports syntax of passing an improv name (play by key) or not passing a name
+#  and then just playing the last 'improvisation' kw improv hook defined, i.e. @ordered_improvisations.last 
+@@improvisations = {}
+# Supports a repeat_until loop exit condition with a name that can be manipulated by instruction 
+#  code in another translation unit. Initializes to 'true' so the loop runs until the outside call to
+#  set_repeat_until_exit(name) is called
+@@repeat_until_is_looping = {}
+#
+def set_player_preplay_instruction(instruction_name, &instr_blk)
+  @@player_preplay_instructions[instruction_name] = instr_blk
+end
+def set_player_postplay_instruction(instruction_name, &instr_blk)
+  @@player_postplay_instructions[instruction_name] = instr_blk
+end
+def set_improvisation(instruction_name, &instr_blk)
+  @@improvisations[instruction_name] = instr_blk
+end
+
+@@ensemble_preplay_instructions = {}
+@@ensemble_postplay_instructions = {}
+def set_ensemble_preplay_instruction(instruction_name, &instr_blk)
+  @@ensemble_preplay_instructions[instruction_name] = instr_blk
+end
+def set_ensemble_postplay_instruction(instruction_name, &instr_blk)
+  @@ensemble_postplay_instructions[instruction_name] = instr_blk
+end
+
+# Allows access to references to Ensembles and Players created, 
+#  in case Instruction implementations want to, for example,
+#  create a class that manages their specific Player state to implement
+#  the rules of some composition.  This "shadow" object needs to know
+#  which Player it is manipulating
+@@ensembles = {}
+@@players = {}
+# Flag indicating play() callbacks have been called
+@@play_init_handlers = []
+def set_play_init_handler(name, &instr_blk)
+  @@play_init_handlers << instr_blk
+end
+@play_init_called = false
+def play_init_called?
+  @play_init_called
+end
+def set_play_init_called
+  @play_init_called = true
+end
+def call_play_init_handlers
+  @@play_init_handlers.each do |handler|
+    handler.call(@notes, @scores, @measures, @phrases, @sections, @players, @ensembles)
+  end
+end
+
+# This registers a handler that the user must implement to set the stop condition
+#  for a repeat_until loop.  So this is a named handler in user_instruction.rb
+#  that must call set_repeat_until_exit() for the repeat_until loop to stop
+# Each iteration of repeat_until() will call all registered handlers for the
+#  named repeat_until() loop, in the order they were registered
+@@repeat_until_stop_preplay_tests = {}
+@@repeat_until_stop_postplay_tests = {}
+def set_repeat_until_stop_preplay_test(name, &test)
+  if not @@repeat_until_stop_preplay_tests.has_key? name
+    @@repeat_until_stop_preplay_tests[name] = [test] 
+  else
+    @@repeat_until_stop_preplay_tests[name] << test
+  end  
+end
+def set_repeat_until_stop_postplay_test(name, &test)  
+  if not @@repeat_until_stop_postplay_tests.has_key? name
+    @@repeat_until_stop_postplay_tests[name] = [test] 
+  else
+    @@repeat_until_stop_postplay_tests[name] << test
+  end
+end
+# This runs the stop test handlers in order for the name of a repeat_until loop passed in
+# This runs the stop tests set in set_repeat_until_stop_test()
+def call_repeat_until_stop_preplay_tests(name)
+  if @@repeat_until_stop_preplay_tests.has_key? name
+    @@repeat_until_stop_preplay_tests[name].each {|test| test.call}
+  end
+end
+def call_repeat_until_stop_postplay_tests(name)
+  if @@repeat_until_stop_postplay_tests.has_key? name
+    @@repeat_until_stop_postplay_tests[name].each {|test| test.call}
+  end
+end
+# This is just called once in composer.rb::repeat_until() to regiser the
+#  loop handler and initialize it to continue looping
+def init_repeat_until(name)
+  @@repeat_until_is_looping[name] = true if not @@repeat_until_is_looping.has_key? name
+end
+#
+# *** These three methods are the public API for this functionality
+# They are to be used in user_instruction repeat_until() handlers
+#
+# This can be called by set_repeat_until_stop_test() handler to force the loop to exit, 
+#  or undo that and allow it to continue.
+#  # e.g. - repeat_until "All players finished"
+#  # in set_repeat_until_stop_test() registered handler
+#  set_repeat_until_stop("All players finished") if all_players_finished?
+#  # ... But then something happens to make you change your mind
+#  set_repeat_until_continue("All players finished") if sky_is_falling?
+#  # ... This time we mean it ...
+#  set_repeat_until_stop("All players finished")
+#  # function returns here
+def set_repeat_until_continue(name)
+  @@repeat_until_is_looping[name] = true
+end
+def set_repeat_until_stop(name)
+  @@repeat_until_is_looping[name] = false  
+end
+# Convenience predicates complete the interface to this functionality 
+def repeat_until_is_looping?(name)
+  @@repeat_until_is_looping[name]
+end
+
+
 @cur_note = nil
 @notes = []
 @notes_by_name = {}
@@ -81,68 +208,6 @@ module Aleatoric
 @cur_improvisation = nil  
 @improvisations_by_name = {}
 @ordered_improvisations = []
-# NOTE: these need to be module scope across all files in the module, which is
-#  true @@ 'module scope' rather than @ 'module scope'.  The latter is visible
-#  across translation units in the module, but is not guaranteed to be 
-#  initialized when called from another translation unit.  @@ is true module scope
-#  and is guaranteed to be initialized when referenced by any methods in the module
-#  in any translation unit.
-# These guys are referred to by the set_*instruction() methods, which live here but are called
-#  from the 'user_instructions.rb' translation unit, where the programmer/composer
-#  puts 'instruction' keyword definitions and maps them to their name with the set_*_instruction() call
-@@player_preplay_instructions = {}
-@@player_postplay_instructions = {}
-# Supports syntax of passing an improv name (play by key) or not passing a name
-#  and then just playing the last 'improvisation' kw improv hook defined, i.e. @ordered_improvisations.last 
-@@improvisations = {}
-# Supports a repeat_until loop exit condition with a name that can be manipulated by instruction 
-#  code in another translation unit. Initializes to 'true' so the loop runs until the outside call to
-#  set_repeat_until_exit(name) is called
-@@repeat_until_loop_flags = {}
-#
-def set_player_preplay_instruction(instruction_name, &instr_blk)
-  @@player_preplay_instructions[instruction_name] = instr_blk
-end
-def set_player_postplay_instruction(instruction_name, &instr_blk)
-  @@player_postplay_instructions[instruction_name] = instr_blk
-end
-def set_improvisation(instruction_name, &instr_blk)
-  @@improvisations[instruction_name] = instr_blk
-end
-
-@@ensemble_preplay_instructions = {}
-@@ensemble_postplay_instructions = {}
-def set_ensemble_preplay_instruction(instruction_name, &instr_blk)
-  @@ensemble_preplay_instructions[instruction_name] = instr_blk
-end
-def set_ensemble_postplay_instruction(instruction_name, &instr_blk)
-  @@ensemble_postplay_instructions[instruction_name] = instr_blk
-end
-
-# This is set when repeat_until(name) is called, 
-#  setting the flag to loop for that named repeat_until loop
-def set_repeat_until_loop(name)
-  @@repeat_until_loop_flags[name] = true
-end
-# This can be called by any outside code implementing an instruction
-#  to force the loop to exit.  The idea is the composer creates
-#  a named repeat_until loop, with the name string defining the
-#  the logic to be implemented to force the loop to end
-#  e.g. - repeat until "All players have played the final phrase"
-#  ...
-#  # in instruction code
-#  set_repeat_until_exit("All players have played the final phrase") if all_players_finished?
-def set_repeat_until_exit(name)
-  @@repeat_until_loop_flags[name] = false
-end
-# Convenience predicates complete the interface to this functionality 
-#  repeat_until_loop?() is called in repeat_until()
-def repeat_until_loop?(name)
-  @@repeat_until_loop_flags[name]
-end
-def repeat_until_exit?(name)
-  ! @@repeat_until_loop_flags[name]
-end
 
 @processing_play = false
 @processing_improvisation = false
@@ -158,6 +223,7 @@ end
 
 @write_called = false
 DEFAULT_EXT = '.ext'
+CSOUND_SCORE_EXT = '.sco'
 @score_out = ScoreWriter.instance
 @processing_score = false
 @score_notes = []
@@ -170,7 +236,7 @@ Note.output_format $FORMAT
 
 
 # Handles keyword "note," assigns attrs in block to a new Note
-def note(name=nil, &args_blk)
+def note(name=nil, &args_blk)    
   # Set flag for method_missing() so it traps methods and adds to this Note
   @processing_note = true
   # Declare the new Note  
@@ -190,8 +256,7 @@ def note(name=nil, &args_blk)
   # This is the queue of Notes being created in that containing block, which that object
   #  will then pick up and append to its collection of Notes.  So the containing block
   #  is responsible for clearing this at the start and end of its block, before its yield.
-  @notes << @cur_note
-  
+  @notes << @cur_note    
   # Notes are also stored by name, if they are named, for convenient random access by key
   #  at any point later in the script. This is an internal data structure and these are not
   #  put into the output Score
@@ -304,7 +369,7 @@ def quantize(flag_str)
   @meter.quantizing?(false) if flag_str == off
 end
 
-def measure(name, &args_blk)
+def measure(name, &args_blk)  
   @processing_measure = true
   @notes.clear
   # A measure is a Phrase but it's also passed a position, which is the ordinal position of the
@@ -349,7 +414,6 @@ def copy_measure(src_name, target_name)
 end
 
 def adjust_cur_start(notes)
-  # TEMP DEBUG  
   new_start = (notes.collect {|note| note.start + note.duration}).max
   @cur_start = new_start if new_start > @cur_start
 end
@@ -377,10 +441,13 @@ def player(name, &args_blk)
   else
     @cur_player = @players_by_name[name]
   end
+  @@players[name] = @cur_player
   @cur_player.ensemble = @cur_ensemble
   
   @cur_sections.clear
   @cur_phrases.clear
+  # TODO Make this consistent with phrases, @cur_phrases
+  @measures.clear
   
   yield
   
@@ -394,8 +461,13 @@ def player(name, &args_blk)
     @cur_player.add_score(phrase.name, phrase)
   end
 
+  @measures.each do |measure|
+    @cur_player.add_score(measure.name, measure)
+  end
+
   @cur_sections.clear
   @cur_phrases.clear 
+  @measures.clear
   @processing_player = false  
 end
 
@@ -408,10 +480,13 @@ def ensemble(name, &args_blk)
   @cur_players.clear
   @cur_sections.clear
   @cur_phrases.clear
+  # TODO Make consisten with phrases, @cur_measures
+  @measures.clear
   
   @cur_ensemble = Ensemble.new(name)
   @ensembles << @cur_ensemble
   @ensembles_by_name[name] = @cur_ensemble
+  @@ensembles[name] = @cur_ensemble
 
   yield
 
@@ -432,15 +507,24 @@ def ensemble(name, &args_blk)
         player.add_score(phrase.name, phrase)
       end
     end
+    
+    if @measures.length > 0
+      @measures.each do |measure|
+        player.add_score(measure.name, measure)
+      end
+    end    
   end
       
   @cur_players.clear
   @cur_sections.clear
-  @cur_phrases.clear  
+  @cur_phrases.clear
+  @measures.clear  
   @processing_ensemble = false  
 end
 
 def play
+  call_play_init_handlers unless play_init_called?
+  set_play_init_called
   @processing_play = true
   yield
   @processing_play = false
@@ -448,6 +532,8 @@ end
 
 def improvise(name=nil)
   @processing_improvise = true
+  call_play_init_handlers unless play_init_called?
+
   # If no name passed, set current improv to the most recent one declared, else
   #  set it to the one matching the name passed in  
   if name == nil  
@@ -455,8 +541,8 @@ def improvise(name=nil)
   else
     @cur_improvisation = @improvisations_by_name[name]
   end
-  #
   yield
+  set_play_init_called
   @processing_improvise = false
 end
 
@@ -494,14 +580,22 @@ def players(*names)
   if @processing_play
     names.each do |name|
       name = name.strip    
-      @players_by_name[name].play if @players_by_name.include? name
+        if @players_by_name.include? name
+          player = @players_by_name[name] 
+          player.play
+          @cur_start = player.current_start if player.current_start > @cur_start 
+        end
     end 
   end
   
   if @processing_improvise
     names.each do |name|
       name = name.strip
-      @players_by_name[name].improvise(@cur_improvisation.name) if @players_by_name.include? name
+       if @players_by_name.include? name
+         player = @players_by_name[name]
+         player.improvise(@cur_improvisation.name)
+         @cur_start = player.current_start if player.current_start > @cur_start 
+       end
     end 
   end  
   
@@ -546,9 +640,10 @@ def phrases(*names)
   # Because Score is a singleton, this can just write its notes to Score's output notes
   # This is bad because it goes in the opposite direction of the nesting logic for Notes, Phrases, etc.
   # So, lurking bugs.  Also it breaks if we want to have more than on Score.  Fine for "now."
+    
   names.each do |name| 
     name = name.strip    
-    phrase = @phrases_by_name[name]    
+    phrase = @phrases_by_name[name]        
     phrase.notes.each do |note|    
       @score_notes << note.dup      
     end
@@ -608,7 +703,11 @@ def ensembles(*names)
       #  calls play on each player in ensemble (running their preplay hooks, 
       #  then generating their output, then running their postplay hooks),
       #  then calls ensemble postplay hooks
-      ensemble.play_all if ensemble != nil
+      if ensemble != nil
+        ensemble.play_all
+        max_ensemble_cur_start = (ensemble.players.collect {|player| player.current_start}).max 
+        @cur_start = max_ensemble_cur_start if max_ensemble_cur_start > @cur_start
+      end
     end 
   end
   
@@ -632,7 +731,6 @@ def repeat(limit, &blk)
   #  a loop.  In that case, identity is 1 (the base case, that has no effect) and 0 is a special
   #  case returning no value.  The user should have to choose the 0 case,
   #  not have it thrust on them silently.
-  @notes.clear
   index = 1
   # Somewhat hacky way to handle variables as args to repeat
   # TODO: worse is that we don't check that limit evaluated to a Fixnum (int)
@@ -644,10 +742,16 @@ def repeat(limit, &blk)
   end
 end
 
-def repeat_until(name)
-  set_repeat_until_loop name
-  while repeat_until_loop?
+def repeat_until(name, &blk)  
+  # init_repeat_until registers the named repeat_until just on the first call
+  # After that continue? and stop? predicates controlled by API calls
+  #  from Instruction handlers or the repeat_until() handler -- i.e. by user code
+  init_repeat_until name
+  while repeat_until_is_looping? name
+    call_repeat_until_stop_preplay_tests name
     yield
+    call_repeat_until_stop_postplay_tests name
+  end
 end
 
 # Handles constant arg to method_missing "format" function in "write" block
@@ -673,19 +777,19 @@ end
 #  That is now in render()
 def write(file_name, &args_blk)  
   @processing_score = true
-  @score_out.name = file_name  
-  
+  @score_out.file_name = file_name  
+    
   # Sets write properties, and writes all notes of all Phrases and Sections into a queue  
   yield
-  
+
   @score_out << @score_notes  
   case @score_out.format.to_sym
-  when :csound
+  when :csound    
     File.open(file_name, 'w') do |f|
       f << @score_out.to_s
     end
+  # TO SUPPORT UNIT TESTS ONLY
   when :midi
-    # TO SUPPORT UNIT TESTS ONLY
     File.open(file_name, 'w') do |f|
       f << @score_out.to_s
     end
@@ -718,16 +822,17 @@ def render(out_file_name, &args_blk)
     end
     @midi_mgr.save out_file_name
   elsif @score_out.format.to_sym == :csound
-    # If write not called, then call it here to flush all notes before rendering
-    write(out_file_name + DEFAULT_EXT){} if not @is_write_called
-    @renderer.render(render_format=@score_out.format, out_file=out_file_name, score_file=@score_out.name)
+    @renderer.render(render_format=@score_out.format, out_file=out_file_name, score_file=@score_out.file_name)
   end
+  
   @processing_renderer = false
 end
 
 # FOR UNIT TESTING
+# TODO FIX TO SUPPORT WIN AND MAC
 def dump_notes
-  File.open("..\\test\\composer_test_results.txt", "w") do |f|
+  # File.open("..\\test\\composer_test_results.txt", "w") do |f|
+  File.open("../test/composer_test_results.txt", "w") do |f|
     @notes.each do |note|
       f << (note.to_s + "\n")
     end
@@ -735,13 +840,15 @@ def dump_notes
 end
 
 def dump_last_note
-  File.open("..\\test\\composer_test_results.txt", "w") do |f|
+  # File.open("..\\test\\composer_test_results.txt", "w") do |f|
+  File.open("../test/composer_test_results.txt", "w") do |f|
     f << @notes.last.to_s
   end
 end
 
 def dump_last_phrase
-  File.open("..\\test\\composer_test_results.txt", "w") do |f|
+  # File.open("..\\test\\composer_test_results.txt", "w") do |f|
+  File.open("../test/composer_test_results.txt", "w") do |f|
     @phrases.last.notes.each do |note|
       f << (note.to_s + "\n")
     end
@@ -749,7 +856,8 @@ def dump_last_phrase
 end
 
 def dump_last_section
-  File.open("..\\test\\composer_test_results.txt", "w") do |f|
+  # File.open("..\\test\\composer_test_results.txt", "w") do |f|
+  File.open("../test/composer_test_results.txt", "w") do |f|
     @sections.last.phrases.each do |phrase|
       phrase.notes.each do |note|
         f << (note.to_s + "\n")
@@ -759,7 +867,8 @@ def dump_last_section
 end
 
 def dump_last_ensemble
-  File.open("..\\test\\composer_test_results.txt", "w") do |f|    
+  # File.open("..\\test\\composer_test_results.txt", "w") do |f|    
+  File.open("../test/composer_test_results.txt", "w") do |f|    
     ensemble = @ensembles.last
     players = ensemble.players
     f << ensemble.name + "\n"
@@ -771,7 +880,8 @@ def dump_last_ensemble
 end
 
 def dump_last_player
-  File.open("..\\test\\composer_test_results.txt", "w") do |f|
+  # File.open("..\\test\\composer_test_results.txt", "w") do |f|
+  File.open("../test/composer_test_results.txt", "w") do |f|
     f << @players.last.name
   end
 end

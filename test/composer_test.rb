@@ -1,4 +1,17 @@
-$LOAD_PATH << "..\\lib"
+if RUBY_PLATFORM.include?('mswin')
+  LIB = "..\\lib\\"
+  LOAD = "..\\lib"
+elsif RUBY_PLATFORM.include?('darwin')
+  LIB = "../lib/"
+  LOAD = "../lib"
+else # *nix not osx
+  LIB = "../lib/"
+  LOAD = "../lib"  
+end
+
+$LOAD_PATH << LIB
+puts $LOAD_PATH
+require 'composer_lang'
 require 'composer'
 
 require 'set'
@@ -66,7 +79,16 @@ def write_test_script(script, lite_syntax=false)
   # TODO Include this in composition.rb preprocessing of load() call
   # Read each line of script, and make necessary modifications to transform "almost Ruby" 
   #  input into legal Ruby
-  script = preprocess_script(script) if lite_syntax    
+  script_name = "test.altc"
+  composer = ComposerAST.new  
+  script_lines = script.split("\n")
+  script_lines = composer.mandatory_preprocess_script(script_lines)  
+  if lite_syntax
+    script = composer.optional_preprocess_script(script_lines, script_name)
+  else
+    script = script_lines.join("\n")
+  end
+  
   # NOTE !!!!!!!!!!!!!!!!!!!!!!!
   # We needed a mutex here to guard from multiple method calls writing to the same file
   #  even though each call comes from a separate function, which should complete
@@ -76,12 +98,10 @@ def write_test_script(script, lite_syntax=false)
   #  has race condition related to not releasing file handles at block exit and can't be trusted 
   #  even in a single-threaded program properly scoping all calls, at least on 1.8.6 on Windows
   @write_mutex.lock
-  File.open("test.altc", "w") do |f|
-    f << "$LOAD_PATH << \"..\\lib\"\nrequire 'composer'\nrequire 'test_user_instruction'\nmodule Aleatoric\n\n"  
-    script.each do |line|
-      f << line
-    end    
-    f << "\n\nend\n"
+  File.open(script_name, "w") do |f|
+    f << "$LOAD_PATH << \"#{LOAD}\"\nrequire 'composer'\nrequire 'test_user_instruction'\nmodule Aleatoric\n\n" +       
+         script +
+         "\n\nend\n"   
   end 
   @write_mutex.unlock
 end
@@ -91,12 +111,12 @@ def run_test_script
 end
 
 def read_test_results
-  results = File.readlines("composer_test_results.txt")
+  results = portable_readlines("composer_test_results.txt")
   results.map! {|r| r = r.strip}
 end
 
 def test_runner(test_name, throw_on_failure, script, lite_syntax=false)
-  tester = AleatoricTest.new(test_name, throw_on_failure)
+  tester = AleatoricTest.new(test_name, throw_on_failure)  
   write_test_script(script, lite_syntax)
   run_test_script
   results = read_test_results
@@ -486,17 +506,17 @@ phrase "Intro Phrase" do
 
 end
 
-write '..\\lib\\composer_test_results.txt' do
+write "composer_test_results.txt" do
   format    csound
   phrases   "Intro Phrase"
 end
 
-render '..\\lib\\composer_test.wav' do
-  orchestra  '..\\lib\\markov_opt_1.orc'
+render "composer_test.wav" do
+  orchestra  "markov_opt_1.orc"
 end
 }
   tester, results = test_runner(test_name, throw_on_failure, script)
-  tester.assert(File.size("..\\lib\\composer_test.wav") > 0)
+  tester.assert(File.size("composer_test.wav") > 0)
   puts tester.to_s  
 end
 
@@ -533,12 +553,11 @@ write "composer_test_results.txt"
   phrases   "Intro Phrase"
 }
   tester, results = test_runner(test_name, throw_on_failure, script, lite_syntax)
-  actual = results
-  
+  actual = results  
   expected0 = 'i 1 0.00000 0.50000 1000 7.01000 1 ; 1'
   expected1 = 'i 1 1.00000 1.00000 1100 7.02000 1 ; 2'
-  tester.assert(expected0 == actual[2])
-  tester.assert(expected1 == actual[3])
+  tester.assert(expected0 == actual[2][0...expected0.length])
+  tester.assert(expected1 == actual[3][0...expected1.length])
   puts tester.to_s  
 end
 
@@ -905,15 +924,15 @@ phrase "Intro Phrase"
     pitch       7.02
     func_table  1
 
-write '..\\lib\\composer_test_results.txt'
+write "composer_test_results.txt"
   format    csound
   phrases   "Intro Phrase"
 
-render '..\\lib\\composer_test.wav'
-  orchestra  '..\\lib\\markov_opt_1.orc'
+render "composer_test.wav"
+  orchestra  "markov_opt_1.orc"
 }
   tester, results = test_runner(test_name, throw_on_failure, script, lite_syntax)
-  tester.assert(File.size("C:\\projects\\aleatoric\\lib\\composer_test.wav") > 0)
+  tester.assert(File.size("composer_test.wav") > 0)
   puts tester.to_s  
 end
 
@@ -945,13 +964,13 @@ phrase "Intro Phrase"
     pitch       7.02
     func_table  1
 
-render '..\\lib\\composer_test.wav'
+render "composer_test.wav"
   phrases   "Intro Phrase"
   format    csound
-  orchestra  '..\\lib\\markov_opt_1.orc'
+  orchestra  "markov_opt_1.orc"
 }
   tester, results = test_runner(test_name, throw_on_failure, script, lite_syntax)
-  tester.assert(File.size("C:\\projects\\aleatoric\\lib\\composer_test.wav") > 0)
+  tester.assert(File.size("composer_test.wav") > 0)
   puts tester.to_s  
 end
 
@@ -1118,6 +1137,47 @@ write "composer_test_results.txt"
   expected1 = 'i 1 2.00000 0.20000 1200 7.02000 1 ;'
   tester.assert(expected0 == actual[2])
   tester.assert(expected1 == actual[3])
+  puts tester.to_s  
+end
+
+def test__repeat_until
+  throw_on_failure = false
+  test_name = "test__repeat_until"
+  lite_syntax = true
+  script = 
+%Q{
+# TESTING PURPOSES ONLY
+reset_script_state
+# test__repeat_until
+
+player "Player 1"
+
+phrase "Loop"
+  repeat until "I want to stop"
+    note
+      instrument  1
+      start       1.0 * index
+      duration    0.2
+      amplitude   1000 + (100 * index) 
+      pitch       7.02
+      func_table  1
+
+instruction "Exit Loop"
+  description "call repeat_until_stop('I want to stop')"
+  players     "Player 1"
+
+play
+  players "Player 1"
+
+write "composer_test_results.txt"
+  format    csound
+  phrases   "Loop"
+}
+  tester, results = test_runner(test_name, throw_on_failure, script, lite_syntax)
+  actual = results
+  # Instruction is postplay so the loop above produces one note and then exits the loop
+  expected0 = 'i 1 1.00000 0.20000 1100 7.02000 1 ;'
+  tester.assert(expected0 == actual[2])
   puts tester.to_s  
 end
 
@@ -1572,19 +1632,22 @@ write "composer_test_results.txt"
 }
   tester, results = test_runner(test_name, throw_on_failure, script, lite_syntax)
   actual = results
-  
+  # TODO THIS NEEDS TO BE IN ONLINE DOCUMENTATION
+  # NOTE: These start times advance to start at the next current starting time for each Player
+  #  because players are set to work this way, because otherwise they are painful to use in a 
+  #  real composition.  The behavior can be overriddent with attribute player.auto_next_start_off
   expected0 = 'i 1 1.00000 0.50000 0 7.01000 1 ; 1'
   expected1 = 'i 2 2.00000 1.00000 0 7.02000 1 ; 2'
-  expected2 = 'i 1 1.00000 0.50000 1000 7.01000 1 ; 1'
+  expected2 = 'i 1 2.50000 0.50000 1000 7.01000 1 ; 1'
   expected3 = 'i 2 2.00000 1.00000 1100 7.02000 1 ; 2'
-  expected4 = 'i 1 1.00000 0.50000 0 7.01000 1 ; 1'
-  expected5 = 'i 2 2.00000 1.00000 0 7.02000 1 ; 2'
+  expected4 = 'i 1 4.00000 0.50000 0 7.01000 1 ; 1'
+  expected5 = 'i 2 5.50000 1.00000 0 7.02000 1 ; 2'
   expected6 = 'i 3 3.00000 1.50000 0 7.03000 1 ; 3'
   expected7 = 'i 4 4.00000 2.00000 0 7.04000 1 ; 4'
-  expected8 = 'i 3 3.00000 1.50000 1200 7.03000 1 ; 3'
-  expected9 = 'i 4 4.00000 2.00000 1300 7.04000 1 ; 4'
-  expected10 = 'i 3 3.00000 1.50000 0 7.03000 1 ; 3'
-  expected11 = 'i 4 4.00000 2.00000 0 7.04000 1 ; 4'
+  expected8 = 'i 3 6.50000 1.50000 1200 7.03000 1 ; 3'
+  expected9 = 'i 4 9.00000 2.00000 1300 7.04000 1 ; 4'
+  expected10 = 'i 3 10.00000 1.50000 0 7.03000 1 ; 3'
+  expected11 = 'i 4 12.50000 2.00000 0 7.04000 1 ; 4'
   
   tester.assert(expected0 == actual[2])
   tester.assert(expected1 == actual[3])
@@ -1670,19 +1733,20 @@ write "composer_test_results.txt"
   ensembles "In C Orchestra"
 }
   tester, results = test_runner(test_name, throw_on_failure, script, lite_syntax)
-  actual = results    
+  actual = results
+        
   expected0 = 'i 1 1.00000 0.50000 0 7.01000 1 ; 1'
   expected1 = 'i 2 2.00000 1.00000 0 7.02000 1 ; 2'
-  expected2 = 'i 1 1.00000 0.50000 1000 7.01000 1 ; 1'
+  expected2 = 'i 1 2.50000 0.50000 1000 7.01000 1 ; 1'
   expected3 = 'i 2 2.00000 1.00000 1100 7.02000 1 ; 2'
-  expected4 = 'i 1 1.00000 0.50000 0 7.01000 1 ; 1'
-  expected5 = 'i 2 2.00000 1.00000 0 7.02000 1 ; 2'
+  expected4 = 'i 1 4.00000 0.50000 0 7.01000 1 ; 1'
+  expected5 = 'i 2 5.50000 1.00000 0 7.02000 1 ; 2'
   expected6 = 'i 3 3.00000 1.50000 0 7.03000 1 ; 3'
   expected7 = 'i 4 4.00000 2.00000 0 7.04000 1 ; 4'
-  expected8 = 'i 3 3.00000 1.50000 1200 7.03000 1 ; 3'
-  expected9 = 'i 4 4.00000 2.00000 1300 7.04000 1 ; 4'
-  expected10 = 'i 3 3.00000 1.50000 0 7.03000 1 ; 3'
-  expected11 = 'i 4 4.00000 2.00000 0 7.04000 1 ; 4'
+  expected8 = 'i 3 6.50000 1.50000 1200 7.03000 1 ; 3'
+  expected9 = 'i 4 9.00000 2.00000 1300 7.04000 1 ; 4'
+  expected10 = 'i 3 10.00000 1.50000 0 7.03000 1 ; 3'
+  expected11 = 'i 4 12.50000 2.00000 0 7.04000 1 ; 4'
   
   tester.assert(expected0 == actual[2])
   tester.assert(expected1 == actual[3])
@@ -2037,11 +2101,11 @@ write "composer_test_results.txt"
   players "Player 1", "Player 2"
 }
   tester, results = test_runner(test_name, throw_on_failure, script, lite_syntax)
-  actual = results  
+  actual = results    
   expected0 = 'i 1 1.00000 0.50000 1000 7.01000 1 ; 1'
   expected1 = 'i 1 2.00000 1.00000 1100 7.02000 1 ; 2'
   expected2 = 'i 2 1.00000 0.50000 1000 7.01000 1 ; 1'
-  expected3 = 'i 2 2.00000 1.00000 1100 7.02000 1 ; 2'
+  expected3 = 'i 2 2.00000 1.00000 1100 7.02000 1 ; 2'    
   tester.assert(expected0 == actual[2])
   tester.assert(expected1 == actual[3])
   tester.assert(expected2 == actual[4])
@@ -2107,13 +2171,12 @@ end
 
 # Call each test in here
 def run_tests(flags='all')
-
   # TODO - shore this up someday
   # Right now just a way to run just the tests in the else block below
   # Should eventually be able to take a list of tests or 'all' or something like that
   run_only = false
-  run_only = true if flags.grep(/[!]*run_only/).length > 0
-  
+  run_only = true if flags[0] == "^run_only"
+    
   num_tests = 0
   if not run_only
   
@@ -2173,13 +2236,10 @@ def run_tests(flags='all')
       
       # *** run_only TESTS GO HERE ***
       test__instruction_ensemble_state
-      #test__instruction_players_ensembles
-      #test__instruction_players_state
-      #test__sections_phrases_lite_syntax
-      #test__write_format_sections_phrases 
+      test__instruction_players_state
       # *** run_only TESTS GO HERE ***
     
-    rescue AleatoricTestException => e
+    rescue AleatoricTestException => e      
       puts e.to_s
       all_pass = false
     end 
