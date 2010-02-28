@@ -1,0 +1,50 @@
+1. Download and install Ruby 1.8.6
+
+Click this link and follow the installation steps: http://rubyforge.org/frs/download.php/47082/ruby186-27_rc2.exe
+
+
+2. Add Ruby to Your Path
+
+On Windows XP:
+
+- Open Windows Explorer
+- Click on "My Computer"  
+- Click on "Local Disk (C:)"
+- Ruby is installed by default in a directory named "ruby."  Confirm that Ruby is installed in this directory, or note the name of the directory if you chose to install it in a different directory
+- Click on the name of the Ruby directory to select it, as though you were going to change the name.  Click the Ctrl and C (Ctrl-C) keys at the same time
+- Right click on the "My Computer" icon on your desktop and choose Properties
+- Click the "Advanced" tab
+- Click on the "Environment Variables" button
+- Under "System Variables" click on the row in the list box for the Variable named "Path"
+- Click the Edit button
+- Click the box named Variable value and make use the right arrow to make sure your cursor is at the very end
+- Type a semicolon and then press the Ctrl key and V (Ctrl-V) to paste the name of the Ruby directory
+- Click the OK button
+- Click the OK button
+- Click the OK button
+
+3. Install midilib
+
+- In the same "cmd" window as above, type "gem install midilib"
+- You will see text indicating the progress of the install.  At every prompt labeled "(Y/N)" Type "Y"
+
+4. Create aleatoric folder
+
+- In Windows Explorere, click on "Local Disk (C:)"
+- Click on the "File" menu, then choose "New" and "Folder"
+- A new folder labeled "New Folder" will appear, with "New Folder" highlighted for editing
+- Type "aleatoric" to rename the folder
+
+
+5. Install aleatoric
+
+- Open a web browser to http://github.com/marksweiss/aleatoric/archives/master
+- Click on the "Zip" icon
+- Click "Save"
+- In the "Save As" dialog click "My Computer" and then "Local Disk (C:)" and then "aleatoric"
+- When the file is done saving, return to Windows Explorer
+- Click on "C:\aleatoric"
+- Click on the compressed folder you just downloaded, named something like "marksweiss-aleatoric-b1bf39d.zip" (the "b1bf39d" part of the name might be a little different
+- This opens the compressed folder, you will see another folder named with the same name (for example, "marksweiss-aleatoric-b1bf39d.zip") but without the zipper on the folder.  Double click this folder open
+- You will see a series of folders and files.  Folders include "compositions", "doc", "lib", "test" and files include "README", "ROADMAP" and a few named "aleatoric_install_win.txt", "aleatoric_install_mac.txt" and "aleatoric_install_linux.txt" and so on. Press the Shift key and hold it down while clicking on every file and folder you see.  Then, keeping the Shift key pressed, click and drag all the folders and files into the "C:\aleatoric" folder in the main Windows Explorer window. 
+

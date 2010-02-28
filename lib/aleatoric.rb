@@ -2,7 +2,7 @@ require 'composer'
 require 'composer_lang'
 
 require 'rubygems'
-require 'ruby-debug' ; Debugger.start
+# require 'ruby-debug' ; Debugger.start
 
 include Aleatoric
 
@@ -78,11 +78,6 @@ def main
     t_new = Time.now
     puts "Preprocessing took #{(t_new - t) * 1000.0} milliseconds"
   else
-    # TODO VERIFY THIS IS RIGHT
-    # Use the portable_readline() call above.
-    # Which is the point of it since readlines isn't portable and doesn't work on Mac without
-    #  compiling your own 3p lib!
-    # script = File.readlines file_name
     script = script_lines.join('')
   end
   
@@ -91,14 +86,11 @@ def main
     # LOGGING
     t = Time.now
     puts "Started writing preprocessed score file at #{t}"
-  
-    f << "require 'util'\nrequire 'global'\nrequire '" + user_instr_file_name + "'\nmodule Aleatoric\n\n" +
-         script + 
-         "\n\nend\n"
-    # TODO VERIFY THIS IS RIGHT - script is now already one big joined string, don't need to iterate
-    # script.each do |line|
-    #  f << line
-    # end    
+      
+    header = "require 'util'\nrequire 'global'\nrequire 'user_instruction'\n"
+    header += "require '" + user_instr_file_name + "'\n" if File::exists?("user_instr_file_name")
+  	header += "module Aleatoric\n\n"  
+    f << header + script + "\n\nend\n"
     
     # LOGGING
     t_new = Time.now

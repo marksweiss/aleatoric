@@ -14,14 +14,19 @@ NO_FACTOR = 1.0
 # NOTE: 0.0 >= threshold < 1.0
 # TODO Use seeding of srand() to get repeatable psuedo-random sequences for testing
 def meets_condition?(threshold)
-  meets = (rand <= threshold)
-  meets
+  rand <= threshold
+end
+
+# Have seen both forms on Windows platforms, even though both installed from
+#  Win binary installer of 1.8.6.
+def include_win?
+  RUBY_PLATFORM.include?('mswin') or RUBY_PLATFORM.include?('mingw')
 end
 
 # Returns correct path for Win and Mac/*nix, regardless of what comes in
 # Intended as a macro wrapping hard-coded paths in code, e.g. esp. in tests
 def psub(path)
-  if RUBY_PLATFORM.include?('mswin')
+  if include_win?
     path.gsub("/", "\\")
   else
     path.gsub("\\", "/")
@@ -32,7 +37,7 @@ end
 # Call this to write log statements to file, which will include all the current context
 # of the script execution in composer_lang.rb and composer.rb.
 def debug_log(msg)
-  if RUBY_PLATFORM.include?('mswin')  
+  if include_win?  
     File.open("..\\test\\test_debug_log.txt", File::WRONLY|File::APPEND|File::CREAT) do |f|
       f << Time.now.to_s + "\t" + msg.to_s + "\n"
     end
