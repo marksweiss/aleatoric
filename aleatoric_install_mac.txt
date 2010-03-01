@@ -1,0 +1,28 @@
+1. Install midilib
+
+- From the default menu, go to Go -> Applications -> Utilities -> Terminal
+- Type "sudo gem install midilib"
+- Enter your password when prompted
+- You will see text indicating the progress of the install
+
+2. Create aleatoric folder
+
+- In the same Terminal window, do the following: Type "mkdir ~/aleatoric"
+OR
+- Open Finder
+- Under "Places" in the left margin of the Finder, click the icon labelled with your user name
+- Click the "Action" button at the top and then choose "New Folder"
+- This will create a folder named "untitled folder" with the name highlighted for editing.  Type "aleatoric" to rename the folder
+
+3. Install aleatoric
+
+- Open a web browser to http://github.com/marksweiss/aleatoric/archives/master
+- Click on the "Zip" icon
+- Click "Save"
+- Under "Places" in the left margin of the Finder, click the icon labelled with your user name
+- Click on the folder named "aleatoric"
+- Click Save
+- When the file is done saving, return to Finder
+- Whichever view of Finder folders you prefer, open the "aleatoric" folder and double click on the compressed folder you just downloaded, named something like "marksweiss-aleatoric-b1bf39d.zip" (the "b1bf39d" part of the name might be a little different).
+- This opens the compressed folder, you will see a folder named with the same name (for example, "marksweiss-aleatoric-b1bf39d.zip").  Double click this folder open.
+- You will see a series of folders and files.  Folders include "compositions", "doc", "lib", "test" and files include "README", "ROADMAP" and a few named "aleatoric_install_win.txt", "aleatoric_install_mac.txt" and "aleatoric_install_linux.txt" and so on. Press the Command and Shift keys and hold them down while clicking on the first and last files or folders listed to hightlight all of them.  Drag all the folders and files into the "aleatoric" folder.
