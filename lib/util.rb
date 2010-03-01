@@ -23,6 +23,10 @@ def include_win?
   RUBY_PLATFORM.include?('mswin') or RUBY_PLATFORM.include?('mingw')
 end
 
+def include_mac?
+  RUBY_PLATFORM.include?('darwin')  
+end
+
 # Returns correct path for Win and Mac/*nix, regardless of what comes in
 # Intended as a macro wrapping hard-coded paths in code, e.g. esp. in tests
 def psub(path)
