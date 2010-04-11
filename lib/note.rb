@@ -136,7 +136,7 @@ class Note
     ret.player_id = self.player_id      # For debugging
     ret.ensemble_id = self.ensemble_id  # For debugging
     ret.score_id = self.score_id        # For debugging
-    @note_attrs.each {|name, val| ret.method_missing(name, val)}
+    @note_attrs.each {|name, val| ret.method_missing(name, val)}    
     ret
   end  
   
