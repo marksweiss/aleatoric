@@ -272,19 +272,35 @@ def note(name=nil, &args_blk)
   @cur_note
 end
 
-def instrument(arg)
+def channel(channel, instrument=nil)
+  # Allocate a MIDI channel for the channel number if there isn't one already
+  @midi_mgr.channel channel if $FORMAT == :midi 
+  
   # Need to check note first and elsif exclusion because can process note nested with player
   #  so when this is being handled both @processing_note and @processing_player can be true
   if @processing_note
-    @cur_note.instrument arg
-  elsif @processing_player   
-    @cur_player.instrument arg
-  end
-  
-  if $FORMAT == :midi
-    @midi_mgr.instrument(@cur_note.channel, @cur_note.instrument)
+    @cur_note.channel channel
+    @midi_mgr.instrument(@cur_note.channel, @cur_note.instrument) if $FORMAT == :midi and not @cur_note.instrument.nil?
+  elsif @processing_player       
+    @cur_player.channel channel
+    @cur_player.instrument instrument if not instrument.nil?
+    @midi_mgr.instrument(channel, instrument) if $FORMAT == :midi and not instrument.nil?    
   end
 end
+
+def instrument(instrument, channel=nil)
+  # Need to check note first and elsif exclusion because can process note nested with player
+  #  so when this is being handled both @processing_note and @processing_player can be true
+  if @processing_note
+    @cur_note.instrument instrument
+    @midi_mgr.instrument(@cur_note.channel, @cur_note.instrument) if $FORMAT == :midi and not @cur_note.channel.nil?
+  elsif @processing_player   
+    @cur_player.instrument instrument    
+    @cur_player.channel channel if not channel.nil?
+    @midi_mgr.instrument(channel, instrument) if $FORMAT == :midi and not channel.nil?
+  end
+end
+
 def program_change(arg)
   # We respect the wishes of the script and assume that a midi-only property
   # means the script wants all Notes to be in MIDI format
@@ -318,17 +334,6 @@ end
 
 def pitch(arg)
   @cur_note.pitch arg
-end
-
-def channel(arg)
-  # We respect the wishes of the script and assume that a midi-only property
-  # means the script wants all Notes to be in MIDI format
-  Note.set_output_format_midi
-  @cur_note.channel arg
-  # Allocate a MIDI channel for the channel number if there isn't one already
-  if $FORMAT == :midi
-    @midi_mgr.channel arg
-  end
 end
 
 # Handles keyword "phrase"
@@ -815,7 +820,7 @@ def render(out_file_name, &args_blk)
     # But we want write() and render() to each have a yield since each can take blocks
     write(out_file_name + DEFAULT_EXT){} if not @is_write_called    
     # /TO SUPPORT UNIT TESTS ONLY    
-    @score_out.notes.each do |note|       
+    @score_out.notes.each do |note|      
       # NOTE: named args caused error on this call, no reason why, all args had values. Nice.
       # MIDI arg names: channel, note, velocity, delta_time
       @midi_mgr.add_note(note.channel, note.pitch, note.velocity, note.duration)
