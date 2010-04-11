@@ -1,10 +1,10 @@
 #!/usr/bin/env ruby
 
 # BOILERPLATE FOR ALL user_instruction.rb FILES
-$LOAD_PATH << "../lib"
-include Aleatoric
 # for calling sign(), swing(), swing?() no_swing(), meets_condition?()
+$LOAD_PATH << "../../lib"
 require 'util' 
+include Aleatoric
 # /BOILERPLATE FOR ALL user_instruction.rb FILES
 
 
@@ -105,7 +105,7 @@ PLAYER_SETTINGS = {
 # Ensemble State Management
 # These values govern the behavior of the Ensemble
 ENSEMBLE_SETTINGS = {
-  "num_players" => 8,
+  "num_players" => 12,
   # Threshold number of phrases behind the furthest ahead any Player is allowed to slip.
   # If they are more than 3 behind the leader, they must advance.     
   "phrases_idx_range_threshold" => 3,

@@ -251,5 +251,5 @@ write "exstatic.sco"
   phrases "foreground 1"
   # "C => EFlat, EFlat => C", "EFlat => F, F => EFlat", "F => BFlat, BFlat => F", "BFlat => C, C => BFlat" , 
 
-render "exstatic.wav"
+render "exstatic.aif"
   orchestra  "markov_opt_1.orc"
