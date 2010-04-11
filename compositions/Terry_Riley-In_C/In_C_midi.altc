@@ -1,0 +1,2013 @@
+##############################################################################
+# Define variables and assign a default value. User-defined variables must be at top of score
+_default_volume = 30
+# TODO Support user variables defined here and used in user function defs immediately below. Uggh.
+
+##############################################################################
+# Define user-defined functions.  These must immediately follow the variables.
+# TODO Why can't we define variables and use them in function bodies?
+legato_start: start, dur
+  adj_dur = ((dur * 1.02) - dur)
+  if start >= adj_dur
+    start - adj_dur
+  else
+    start
+  end
+
+legato_duration: dur
+  dur * 1.02
+
+
+##############################################################################
+# Define the score.  Ensemble, players, instruments, improvisations, sections,
+#  measures, phrases, notes, note properties.  Then render at the end.
+
+# Declare format for rendering to a sound file. CSound and MIDI supported.
+format midi
+
+
+# TODO BUG IN CRESCENDO IN USER INSTRUCTION
+# It increments once per player but it should increment once per ENSEMBLE loop
+
+##############################################################################
+# Transcribe the 53 phrases from the original score into Composer notation
+# Note the function calls on the note start and note duration properties to
+#  create legato (by stretching the note start back and the duration forward)
+
+
+# Declare Players in the Ensemble, and assign them instruments
+player "Player 1"
+  instrument MIDI_Glockenspiel, channel=0
+player "Player 2"
+  instrument MIDI_Marimba, channel=1
+player "Player 3"
+  instrument MIDI_Pan_Flute, channel=2
+player "Player 4"
+  instrument MIDI_Pan_Flute, channel=3
+player "Player 5"
+  instrument MIDI_Pan_Flute, channel=4
+player "Player 6"
+  instrument MIDI_Recorder, channel=5
+player "Player 7"
+  instrument MIDI_Recorder, channel=6
+player "Player 8"
+  instrument MIDI_Celesta, channel=7
+player "Player 9"
+  instrument MIDI_Recorder, channel=8
+player "Player 10"
+  instrument MIDI_Recorder, channel=9  # MIDI_Piccolo
+player "Player 11"
+  instrument MIDI_Recorder, channel=11
+player "Player 12"
+  instrument MIDI_Recorder, channel=12
+
+
+# Declare Ensemble, assign Players to Ensemble, and define all Phrases
+#  within the Ensemble block, thereby assigning all Phrases to all Players
+#  in the Ensemble
+ensemble "In C Orchestra"
+  players "Player 1", "Player 2", "Player 3", "Player 4" , "Player 5"#, "Player 6", "Player 7", "Player 8", "Player 9", "Player 10", "Player 11", "Player 12"
+    phrase "1"
+    note
+      start legato_start: 0.0, EITH
+      duration legato_duration: EITH
+      volume _default_volume
+      pitch C4
+
+    note
+      start legato_start: 0.0 + EITH, QRTR
+      duration legato_duration: QRTR
+      volume _default_volume
+      pitch E4
+
+    note
+      start legato_start: EITH + QRTR, EITH
+      duration legato_duration: EITH
+      volume _default_volume
+      pitch C4
+
+    note
+      start legato_start: HLF, QRTR
+      duration legato_duration: QRTR
+      volume _default_volume
+      pitch E4
+
+    note
+      start legato_start: HLF + QRTR, EITH
+      duration legato_duration: EITH
+      volume _default_volume
+      pitch C4
+
+    note
+      start legato_start: HLF + QRTR + EITH, QRTR
+      duration legato_duration: QRTR
+      volume _default_volume
+      pitch E4
+
+  phrase "2"
+    note
+      start legato_start: 0.0, EITH
+      duration legato_duration: EITH
+      volume _default_volume
+      pitch C4
+
+    note
+      start legato_start: EITH, EITH
+      duration legato_duration: EITH
+      volume _default_volume
+      pitch E4
+
+    note
+      start QRTR
+      duration EITH
+      volume _default_volume
+      pitch F4
+
+    note
+      start QRTR + EITH
+      duration EITH
+      volume _default_volume
+      pitch E4
+
+  phrase "3"
+    note
+      start 0.0
+      duration EITH
+      volume REST
+      pitch C4
+
+    note
+      start EITH
+      duration EITH
+      volume _default_volume
+      pitch E4
+
+    note
+      start QRTR
+      duration EITH
+      volume _default_volume
+      pitch F4
+    note
+      start QRTR + EITH
+      duration EITH
+      volume _default_volume
+      pitch E4
+
+  phrase "4"
+    note
+      start 0.0
+      duration EITH
+      volume REST
+      pitch C4
+
+    note
+      start EITH
+      duration EITH
+      volume _default_volume
+      pitch E4
+
+    note
+      start QRTR
+      duration EITH
+      volume _default_volume
+      pitch F4
+
+    note
+      start QRTR + EITH
+      duration EITH
+      volume _default_volume
+      pitch G4
+
+  phrase "5"
+    note
+      start 0.0
+      duration EITH
+      volume REST
+      pitch C4
+
+    note
+      start EITH
+      duration EITH
+      volume _default_volume
+      pitch E4
+
+    note
+      start QRTR
+      duration EITH
+      volume _default_volume
+      pitch F4
+
+    note
+      start QRTR
+      duration EITH
+      volume _default_volume
+      pitch G4
+
+    note
+      start HLF
+      duration EITH
+      volume REST
+      pitch C4
+
+  phrase "6"
+    note
+      start legato_start: 0.0, WHL
+      duration legato_duration: WHL
+      volume _default_volume
+      pitch C5
+
+    note
+      start legato_start: WHL, WHL
+      duration legato_duration: WHL
+      volume _default_volume
+      pitch C5
+
+  phrase "7"
+    note
+      start 0.0
+      duration QRTR
+      volume REST
+      pitch C4
+
+    note
+      start QRTR
+      duration QRTR
+      volume REST
+      pitch C4
+
+    note
+      start HLF
+      duration QRTR
+      volume REST
+      pitch C4
+
+    note
+      start HLF + QRTR
+      duration EITH
+      volume REST
+      pitch C4
+
+    note
+      start HLF + QRTR + EITH
+      duration EITH
+      volume _default_volume
+      pitch C4
+
+    note
+      start WHL
+      duration SXTNTH
+      volume _default_volume
+      pitch C4
+
+    note
+      start WHL + SXTNTH
+      duration EITH
+      volume _default_volume
+      pitch C4
+
+    note
+      start WHL + EITH + SXTNTH
+      duration EITH
+      volume REST
+      pitch C4
+
+    note
+      start WHL + QRTR + SXTNTH
+      duration QRTR
+      volume REST
+      pitch C4
+
+    note
+      start WHL + HLF + SXTNTH
+      duration QRTR
+      volume REST
+      pitch C4
+
+    note
+      start WHL + HLF + QRTR + SXTNTH
+      duration QRTR
+      volume REST
+      pitch C4
+
+    note
+      start WHL + HLF + HLF + SXTNTH
+      duration QRTR
+      volume REST
+      pitch C4
+
+  phrase "8"
+    note
+      start 0.0
+      duration WHL + HLF
+      volume _default_volume
+      pitch G4
+
+    note
+      start legato_start: WHL + HLF, WHL
+      duration legato_duration: WHL
+      volume _default_volume
+      pitch F4
+
+    note
+      start legato_start: 2.0 * WHL + HLF, WHL
+      duration legato_duration: WHL
+      volume _default_volume
+      pitch F4
+
+  phrase "9"
+    note
+      start 0.0
+      duration SXTNTH
+      volume _default_volume
+      pitch B4
+
+    note
+      start SXTNTH
+      duration SXTNTH
+      volume _default_volume
+      pitch G4
+
+    note
+      start EITH
+      duration EITH
+      volume REST
+      pitch C4
+
+    note
+      start QRTR
+      duration QRTR
+      volume REST
+      pitch C4
+
+    note
+      start HLF
+      duration QRTR
+      volume REST
+      pitch C4
+
+    note
+      start HLF + QRTR
+      duration QRTR
+      volume REST
+      pitch C4
+
+  phrase "10"
+    note
+      start 0.0
+      duration SXTNTH
+      volume _default_volume
+      pitch B4
+
+    note
+      start SXTNTH
+      duration SXTNTH
+      volume _default_volume
+      pitch G4
+
+  phrase "11"
+    note
+      start 0.0
+      duration SXTNTH
+      volume _default_volume
+      pitch F4
+
+    note
+      start EITH
+      duration SXTNTH
+      volume _default_volume
+      pitch G4
+
+    note
+      start EITH + SXTNTH
+      duration SXTNTH
+      volume _default_volume
+      pitch B4
+
+    note
+      start QRTR
+      duration SXTNTH
+      volume _default_volume
+      pitch G4
+
+    note
+      start QRTR + SXTNTH
+      duration SXTNTH
+      volume _default_volume
+      pitch B4    
+
+    note
+      start QRTR + EITH
+      duration SXTNTH
+      volume _default_volume
+      pitch G4
+
+  phrase "12"
+    note
+      start 0.0
+      duration EITH
+      volume _default_volume
+      pitch F4
+
+    note
+      start EITH
+      duration EITH
+      volume _default_volume
+      pitch G4
+
+    note
+      start QRTR
+      duration WHL
+      volume _default_volume
+      pitch B4
+
+    note
+      start QRTR + WHL
+      duration QRTR
+      volume _default_volume
+      pitch C5
+
+  phrase "13"
+    note
+      start 0.0
+      duration SXTNTH
+      volume _default_volume
+      pitch B4
+
+    note
+      start SXTNTH
+      duration SXTNTH + THRTYSCND
+      volume _default_volume
+      pitch G4
+
+    note
+      start EITH + THRTYSCND
+      duration SXTNTH
+      volume _default_volume
+      pitch G4
+
+    note
+      start EITH + SXTNTH + THRTYSCND
+      duration SXTNTH
+      volume _default_volume
+      pitch F4
+
+    note
+      start QRTR + THRTYSCND
+      duration EITH
+      volume _default_volume
+      pitch G4    
+
+    note
+      start QRTR + EITH + THRTYSCND
+      duration EITH + SXTNTH
+      volume REST
+      pitch C4
+
+    note
+      start legato_start: HLF + SXTNTH + THRTYSCND, SXTNTH
+      duration legato_duration: SXTNTH
+      volume _default_volume
+      pitch G4
+
+    note
+      start legato_start: HLF + EITH + THRTYSCND, HLF + QRTR
+      duration legato_duration: HLF + QRTR
+      volume _default_volume
+      pitch G4
+
+  phrase "14"
+    note
+      start 0.0
+      duration WHL
+      volume _default_volume
+      pitch C5
+
+    note
+      start WHL
+      duration WHL
+      volume _default_volume
+      pitch B4
+
+    note
+      start 2.0 * WHL
+      duration WHL
+      volume _default_volume
+      pitch G4    
+
+    note
+      start 3.0 * WHL
+      duration WHL
+      volume _default_volume
+      pitch F4S    
+
+  phrase "15"
+    note
+      start 0.0
+      duration SXTNTH
+      volume _default_volume
+      pitch G4
+
+    note
+      start SXTNTH
+      duration EITH + SXTNTH
+      volume REST
+      pitch C4
+
+    note
+      start QRTR
+      duration QRTR
+      volume REST
+      pitch C4    
+
+    note
+      start HLF
+      duration QRTR
+      volume REST
+      pitch C4    
+
+    note
+      start HLF + QRTR
+      duration QRTR
+      volume REST
+      pitch C4
+
+  phrase "16"
+    note
+      start 0.0
+      duration SXTNTH
+      volume _default_volume
+      pitch G4
+
+    note
+      start EITH
+      duration SXTNTH
+      volume _default_volume
+      pitch B4
+
+    note
+      start EITH + SXTNTH
+      duration SXTNTH
+      volume _default_volume
+      pitch C5    
+
+    note
+      start QRTR
+      duration SXTNTH
+      volume _default_volume
+      pitch B4
+
+  phrase "17"
+    note
+      start 0.0
+      duration SXTNTH
+      volume _default_volume
+      pitch B4
+
+    note
+      start EITH
+      duration SXTNTH
+      volume _default_volume
+      pitch C5
+
+    note
+      start EITH + SXTNTH
+      duration SXTNTH
+      volume _default_volume
+      pitch B4    
+
+    note
+      start QRTR
+      duration SXTNTH
+      volume _default_volume
+      pitch C5
+
+    note
+      start QRTR + SXTNTH
+      duration SXTNTH
+      volume _default_volume
+      pitch B4
+
+    note
+      start QRTR + EITH
+      duration SXTNTH
+      volume REST
+      pitch C4    
+
+  phrase "18"
+    note
+      start 0.0
+      duration SXTNTH
+      volume _default_volume
+      pitch E4
+
+    note
+      start EITH
+      duration SXTNTH
+      volume _default_volume
+      pitch F4S
+
+    note
+      start EITH + SXTNTH
+      duration SXTNTH
+      volume _default_volume
+      pitch E4    
+
+    note
+      start QRTR
+      duration SXTNTH
+      volume _default_volume
+      pitch F4S
+
+    note
+      start QRTR + SXTNTH
+      duration EITH + SXTNTH
+      volume _default_volume
+      pitch E4
+
+    note
+      start QRTR + EITH
+      duration EITH
+      volume _default_volume
+      pitch E4    
+
+  phrase "19"
+    note
+      start 0.0
+      duration QRTR + EITH
+      volume REST
+      pitch E4
+
+    note
+      start QRTR + EITH
+      duration QRTR + EITH
+      volume _default_volume
+      pitch G5
+
+  phrase "20"
+    note
+      start 0.0
+      duration SXTNTH
+      volume _default_volume
+      pitch E4
+
+    note
+      start EITH
+      duration SXTNTH
+      volume _default_volume
+      pitch F4S
+
+    note
+      start EITH + SXTNTH
+      duration SXTNTH
+      volume _default_volume
+      pitch E4    
+
+    note
+      start QRTR
+      duration SXTNTH
+      volume _default_volume
+      pitch F4S
+
+    note
+      start QRTR + SXTNTH
+      duration SXTNTH + THRTYSCND
+      volume _default_volume
+      pitch G3
+
+    note
+      start QRTR + EITH + THRTYSCND
+      duration SXTNTH
+      volume _default_volume
+      pitch E4   
+
+    note
+      start QRTR + EITH + SXTNTH + THRTYSCND
+      duration SXTNTH
+      volume _default_volume
+      pitch F4S
+
+    note
+      start HLF + THRTYSCND
+      duration SXTNTH
+      volume _default_volume
+      pitch E4
+
+    note
+      start HLF + SXTNTH + THRTYSCND
+      duration SXTNTH
+      volume _default_volume
+      pitch F4S
+
+    note
+      start HLF + EITH + THRTYSCND
+      duration SXTNTH
+      volume _default_volume
+      pitch E4    
+
+  phrase "21"
+    note
+      start 0.0
+      duration HLF + QRTR
+      volume _default_volume
+      pitch F4S
+
+  phrase "22"
+    note
+      start 0.0
+      duration QRTR + EITH
+      volume _default_volume
+      pitch E4
+
+    note
+      start QRTR + EITH
+      duration QRTR + EITH
+      volume _default_volume
+      pitch E4
+
+    note
+      start 2.0 *  QRTR + EITH
+      duration QRTR + EITH
+      volume _default_volume
+      pitch E4    
+
+    note
+      start 3.0 *  QRTR + EITH
+      duration QRTR + EITH
+      volume _default_volume
+      pitch E4
+
+    note
+      start 4.0 *  QRTR + EITH
+      duration QRTR + EITH
+      volume _default_volume
+      pitch E4
+
+    note
+      start 5.0 *  QRTR + EITH
+      duration QRTR + EITH
+      volume _default_volume
+      pitch F4S
+
+    note
+      start 6.0 *  QRTR + EITH
+      duration QRTR + EITH
+      volume _default_volume
+      pitch G4
+
+    note
+      start 7.0 *  QRTR + EITH
+      duration QRTR + EITH
+      volume _default_volume
+      pitch A4
+
+    note
+      start 8.0 *  QRTR + EITH
+      duration EITH
+      volume _default_volume
+      pitch B4
+
+  phrase "23"
+    note
+      start 0.0
+      duration EITH
+      volume _default_volume
+      pitch E4
+
+    note
+      start EITH
+      duration QRTR + EITH
+      volume _default_volume
+      pitch F4S
+
+    note
+      start HLF
+      duration QRTR + EITH
+      volume _default_volume
+      pitch F4S    
+
+    note
+      start HLF +  QRTR + EITH
+      duration QRTR + EITH
+      volume _default_volume
+      pitch F4S
+
+    note
+      start HLF +  2.0 *  QRTR + EITH
+      duration QRTR + EITH
+      volume _default_volume
+      pitch F4S
+
+    note
+      start HLF +  3.0 *  QRTR + EITH
+      duration QRTR + EITH
+      volume _default_volume
+      pitch F4S    
+
+    note
+      start HLF +  4.0 *  QRTR + EITH
+      duration QRTR + EITH
+      volume _default_volume
+      pitch G4
+
+    note
+      start HLF +  5.0 *  QRTR + EITH
+      duration QRTR + EITH
+      volume _default_volume
+      pitch A4
+
+    note
+      start HLF +  6.0 *  QRTR + EITH
+      duration QRTR
+      volume _default_volume
+      pitch B4
+
+  phrase "24"
+    note
+      start 0.0
+      duration EITH
+      volume _default_volume
+      pitch E4
+
+    note
+      start EITH
+      duration EITH
+      volume _default_volume
+      pitch F4S
+
+    note
+      start QRTR
+      duration QRTR + EITH
+      volume _default_volume
+      pitch G4    
+
+    note
+      start HLF + EITH
+      duration QRTR + EITH
+      volume _default_volume
+      pitch G4
+
+    note
+      start WHL
+      duration QRTR + EITH
+      volume _default_volume
+      pitch G4
+
+    note
+      start WHL +  QRTR + EITH
+      duration QRTR + EITH
+      volume _default_volume
+      pitch G4    
+
+    note
+      start WHL +  2.0 *  QRTR + EITH
+      duration QRTR + EITH
+      volume _default_volume
+      pitch G4
+
+    note
+      start WHL +  3.0 *  QRTR + EITH
+      duration QRTR + EITH
+      volume _default_volume
+      pitch A4
+
+    note
+      start WHL +  4.0 *  QRTR + EITH
+      duration EITH
+      volume _default_volume
+      pitch B4
+
+  phrase "25"
+    note
+      start 0.0
+      duration EITH
+      volume _default_volume
+      pitch E4
+
+    note
+      start EITH
+      duration EITH
+      volume _default_volume
+      pitch F4S
+
+    note
+      start QRTR
+      duration QRTR + EITH
+      volume _default_volume
+      pitch G4    
+
+    note
+      start HLF + EITH
+      duration QRTR + EITH
+      volume _default_volume
+      pitch A4
+
+    note
+      start WHL
+      duration QRTR + EITH
+      volume _default_volume
+      pitch A4
+
+    note
+      start WHL +  QRTR + EITH
+      duration QRTR + EITH
+      volume _default_volume
+      pitch A4    
+
+    note
+      start WHL +  2.0 *  QRTR + EITH
+      duration QRTR + EITH
+      volume _default_volume
+      pitch A4
+
+    note
+      start WHL +  3.0 *  QRTR + EITH
+      duration QRTR + EITH
+      volume _default_volume
+      pitch A4
+
+    note
+      start WHL +  4.0 *  QRTR + EITH
+      duration EITH
+      volume _default_volume
+      pitch B4
+
+  phrase "26"
+    note
+      start 0.0
+      duration EITH
+      volume _default_volume
+      pitch E4
+
+    note
+      start EITH
+      duration EITH
+      volume _default_volume
+      pitch F4S
+
+    note
+      start QRTR
+      duration EITH
+      volume _default_volume
+      pitch G4    
+
+    note
+      start QRTR + EITH
+      duration EITH
+      volume _default_volume
+      pitch A4    
+
+    note
+      start HLF
+      duration QRTR + EITH
+      volume _default_volume
+      pitch B4
+
+    note
+      start HLF + QRTR + EITH
+      duration QRTR + EITH
+      volume _default_volume
+      pitch B4
+
+    note
+      start WHL + QRTR
+      duration QRTR + EITH
+      volume _default_volume
+      pitch B4    
+
+    note
+      start WHL + HLF + EITH
+      duration QRTR + EITH
+      volume _default_volume
+      pitch B4
+
+    note
+      start 2.0 * WHL
+      duration QRTR + EITH
+      volume _default_volume
+      pitch B4   
+
+  phrase "27"
+    note
+      start 0.0
+      duration SXTNTH
+      volume _default_volume
+      pitch E4
+
+    note
+      start SXTNTH
+      duration SXTNTH
+      volume _default_volume
+      pitch F4S
+
+    note
+      start EITH
+      duration SXTNTH
+      volume _default_volume
+      pitch E4    
+
+    note
+      start EITH + SXTNTH
+      duration SXTNTH
+      volume _default_volume
+      pitch F4S    
+
+    note
+      start QRTR
+      duration EITH
+      volume _default_volume
+      pitch G4
+
+    note
+      start QRTR + EITH
+      duration SXTNTH
+      volume _default_volume
+      pitch E4
+
+    note
+      start QRTR + EITH + SXTNTH
+      duration SXTNTH
+      volume _default_volume
+      pitch G4    
+
+    note
+      start HLF
+      duration SXTNTH
+      volume _default_volume
+      pitch F4S
+
+    note
+      start HLF + SXTNTH
+      duration SXTNTH
+      volume _default_volume
+      pitch E4
+
+    note
+      start HLF + EITH
+      duration SXTNTH
+      volume _default_volume
+      pitch F4S
+
+    note
+      start HLF + EITH + SXTNTH
+      duration SXTNTH
+      volume _default_volume
+      pitch E4
+
+  phrase "28"
+    note
+      start 0.0
+      duration SXTNTH
+      volume _default_volume
+      pitch E4
+
+    note
+      start SXTNTH
+      duration SXTNTH
+      volume _default_volume
+      pitch F4S
+
+    note
+      start EITH
+      duration SXTNTH
+      volume _default_volume
+      pitch E4    
+
+    note
+      start EITH + SXTNTH
+      duration SXTNTH
+      volume _default_volume
+      pitch F4S
+
+    note
+      start QRTR
+      duration EITH + SXTNTH
+      volume _default_volume
+      pitch E4
+
+    note
+      start QRTR + EITH + SXTNTH
+      duration SXTNTH
+      volume _default_volume
+      pitch E4
+
+  phrase "29"
+    note
+      start 0.0
+      duration HLF + QRTR
+      volume _default_volume
+      pitch E4
+
+    note
+      start HLF + QRTR
+      duration HLF + QRTR
+      volume _default_volume
+      pitch G4
+
+    note
+      start WHL + HLF
+      duration HLF + QRTR
+      volume _default_volume
+      pitch C5
+
+  phrase "30"
+    note
+      start 0.0
+      duration WHL + HLF
+      volume _default_volume
+      pitch C5
+
+  phrase "31"
+    note
+      start 0.0
+      duration SXTNTH
+      volume _default_volume
+      pitch G4
+
+    note
+      start SXTNTH
+      duration SXTNTH
+      volume _default_volume
+      pitch F4
+
+    note
+      start EITH
+      duration SXTNTH
+      volume _default_volume
+      pitch G4    
+
+    note
+      start EITH + SXTNTH
+      duration SXTNTH
+      volume _default_volume
+      pitch B4
+
+    note
+      start QRTR
+      duration SXTNTH
+      volume _default_volume
+      pitch G4
+
+    note
+      start QRTR + SXTNTH
+      duration SXTNTH
+      volume _default_volume
+      pitch B4
+
+  phrase "32"
+    note
+      start 0.0
+      duration SXTNTH
+      volume _default_volume
+      pitch F4
+
+    note
+      start SXTNTH
+      duration SXTNTH
+      volume _default_volume
+      pitch G4
+
+    note
+      start EITH
+      duration SXTNTH
+      volume _default_volume
+      pitch F4    
+
+    note
+      start EITH + SXTNTH
+      duration SXTNTH
+      volume _default_volume
+      pitch G4
+
+    note
+      start QRTR
+      duration SXTNTH
+      volume _default_volume
+      pitch B4
+
+    note
+      start legato_start: QRTR + SXTNTH, SXTNTH
+      duration legato_duration: SXTNTH
+      volume _default_volume
+      pitch F4
+
+    note
+      start legato_start: QRTR + EITH, HLF + QRTR
+      duration legato_duration: HLF + QRTR
+      volume _default_volume
+      pitch F4
+
+    note
+      start WHL + EITH
+      duration QRTR + EITH
+      volume _default_volume
+      pitch G4  
+
+  phrase "33"
+    note
+      start 0.0
+      duration SXTNTH
+      volume _default_volume
+      pitch G4
+
+    note
+      start SXTNTH
+      duration SXTNTH
+      volume _default_volume
+      pitch F4
+
+    note
+      start EITH
+      duration EITH
+      volume REST
+      pitch C4  
+
+  phrase "34"
+    note
+      start 0.0
+      duration SXTNTH
+      volume _default_volume
+      pitch G4
+
+    note
+      start SXTNTH
+      duration SXTNTH
+      volume _default_volume
+      pitch F4
+
+  phrase "35"
+    note
+      start 0.0
+      duration SXTNTH
+      volume _default_volume
+      pitch F4
+
+    note
+      start SXTNTH
+      duration SXTNTH
+      volume _default_volume
+      pitch G4
+
+    note
+      start EITH
+      duration SXTNTH
+      volume _default_volume
+      pitch B4    
+
+    note
+      start EITH + SXTNTH
+      duration SXTNTH
+      volume _default_volume
+      pitch G4
+
+    note
+      start QRTR
+      duration SXTNTH
+      volume _default_volume
+      pitch B4
+
+    note
+      start QRTR + SXTNTH
+      duration SXTNTH
+      volume _default_volume
+      pitch G4
+
+    note
+      start QRTR + EITH
+      duration SXTNTH
+      volume _default_volume
+      pitch B4    
+
+    note
+      start QRTR + EITH + SXTNTH
+      duration SXTNTH
+      volume _default_volume
+      pitch G4
+
+    note
+      start HLF
+      duration SXTNTH
+      volume _default_volume
+      pitch B4
+
+    note
+      start HLF + SXTNTH
+      duration SXTNTH
+      volume _default_volume
+      pitch G4
+
+    note
+      start HLF + EITH
+      duration EITH
+      volume REST
+      pitch C4    
+
+    note
+      start HLF + QRTR
+      duration QRTR
+      volume REST
+      pitch C4
+
+    note
+      start WHL
+      duration QRTR
+      volume REST
+      pitch C4   
+
+    note
+      start WHL + QRTR
+      duration QRTR
+      volume REST
+      pitch C4 
+
+    note
+      start WHL + HLF
+      duration QRTR
+      volume _default_volume
+      pitch A4S  # BFlat    
+
+    note
+      start WHL + HLF + QRTR
+      duration HLF + QRTR
+      volume _default_volume
+      pitch G5
+
+    note
+      start 2.0 * WHL + HLF
+      duration EITH
+      volume _default_volume
+      pitch A5
+
+    note
+      start legato_start: 2.0 * WHL + HLF + EITH, EITH
+      duration legato_duration: EITH
+      volume _default_volume
+      pitch G5
+
+    note
+      start  legato_start: 2.0 * WHL + HLF + QRTR, EITH
+      duration legato_duration: EITH
+      volume _default_volume
+      pitch G5
+
+    note
+      start  2.0 * WHL + HLF + QRTR + EITH
+      duration EITH
+      volume _default_volume
+      pitch B5
+
+    note
+      start  3.0 * WHL
+      duration QRTR + EITH
+      volume _default_volume
+      pitch A5   
+
+    note
+      start  3.0 * WHL + QRTR + EITH
+      duration EITH
+      volume _default_volume
+      pitch G5
+
+    note
+      start  3.0 * WHL + HLF
+      duration HLF + QRTR
+      volume _default_volume
+      pitch E5
+
+    note
+      start  4.0 * WHL + QRTR
+      duration EITH
+      volume _default_volume
+      pitch G5
+
+    note
+      start  legato_start: 4.0 * WHL + QRTR + EITH, EITH
+      duration legato_duration: EITH
+      volume _default_volume
+      pitch F5S
+
+    note
+      start  legato_start: 4.0 * WHL + HLF, HLF + QRTR
+      duration legato_duration: HLF + QRTR
+      volume _default_volume
+      pitch F5S
+
+    note
+      start  5.0 * WHL + QRTR
+      duration QRTR
+      volume REST
+      pitch C4
+
+    note
+      start  5.0 * WHL + HLF
+      duration QRTR
+      volume REST
+      pitch C4
+
+    note
+      start  5.0 * WHL + HLF + QRTR
+      duration EITH
+      volume REST
+      pitch C4
+
+    note
+      start legato_start: 5.0 * WHL + HLF + QRTR + EITH, EITH
+      duration legato_duration: EITH
+      volume _default_volume
+      pitch E5
+
+    note
+      start legato_start: 6.0 * WHL, HLF
+      duration legato_duration: HLF
+      volume _default_volume
+      pitch E5
+
+    note
+      start  6.0 * WHL + HLF
+      duration WHL + HLF
+      volume _default_volume
+      pitch F5     
+
+  phrase "36"
+    note
+      start 0.0
+      duration SXTNTH
+      volume _default_volume
+      pitch F4
+
+    note
+      start SXTNTH
+      duration SXTNTH
+      volume _default_volume
+      pitch G4
+
+    note
+      start EITH
+      duration SXTNTH
+      volume _default_volume
+      pitch B4
+
+    note
+      start EITH + SXTNTH
+      duration SXTNTH
+      volume _default_volume
+      pitch G4
+
+    note
+      start QRTR
+      duration SXTNTH
+      volume _default_volume
+      pitch B4
+
+    note
+      start QRTR + SXTNTH
+      duration SXTNTH
+      volume _default_volume
+      pitch G4    
+
+  phrase "37"
+    note
+      start 0.0
+      duration SXTNTH
+      volume _default_volume
+      pitch F4
+
+    note
+      start SXTNTH
+      duration SXTNTH
+      volume _default_volume
+      pitch G4   
+
+  phrase "38"
+    note
+      start 0.0
+      duration SXTNTH
+      volume _default_volume
+      pitch F4
+
+    note
+      start SXTNTH
+      duration SXTNTH
+      volume _default_volume
+      pitch G4
+
+    note
+      start EITH
+      duration SXTNTH
+      volume _default_volume
+      pitch B4    
+
+  phrase "39"
+    note
+      start 0.0
+      duration SXTNTH
+      volume _default_volume
+      pitch B4
+
+    note
+      start SXTNTH
+      duration SXTNTH
+      volume _default_volume
+      pitch G4
+
+    note
+      start EITH
+      duration SXTNTH
+      volume _default_volume
+      pitch F4
+
+    note
+      start EITH + SXTNTH
+      duration SXTNTH
+      volume _default_volume
+      pitch G4
+
+    note
+      start QRTR
+      duration SXTNTH
+      volume _default_volume
+      pitch B4
+
+    note
+      start QRTR + SXTNTH
+      duration SXTNTH
+      volume _default_volume
+      pitch C5     
+
+  phrase "40"
+    note
+      start 0.0
+      duration SXTNTH
+      volume _default_volume
+      pitch B4
+
+    note
+      start SXTNTH
+      duration SXTNTH
+      volume _default_volume
+      pitch F4   
+
+  phrase "41"
+    note
+      start 0.0
+      duration SXTNTH
+      volume _default_volume
+      pitch B4
+
+    note
+      start SXTNTH
+      duration SXTNTH
+      volume _default_volume
+      pitch G4   
+
+  phrase "42"
+    note
+      start 0.0
+      duration WHL
+      volume _default_volume
+      pitch C5
+
+    note
+      start WHL
+      duration WHL
+      volume _default_volume
+      pitch B4
+
+    note
+      start 2.0 * WHL
+      duration WHL
+      volume _default_volume
+      pitch A4
+
+    note
+      start 3.0 * WHL
+      duration WHL
+      volume _default_volume
+      pitch C4    
+
+  phrase "43"
+    note
+      start 0.0
+      duration SXTNTH
+      volume _default_volume
+      pitch F5
+
+    note
+      start SXTNTH
+      duration SXTNTH
+      volume _default_volume
+      pitch E5
+
+    note
+      start EITH
+      duration SXTNTH
+      volume _default_volume
+      pitch F5
+
+    note
+      start EITH + SXTNTH
+      duration SXTNTH
+      volume _default_volume
+      pitch E5
+
+    note
+      start QRTR
+      duration EITH
+      volume _default_volume
+      pitch E5    
+
+    note
+      start QRTR + EITH
+      duration EITH
+      volume _default_volume
+      pitch E5
+
+    note
+      start HLF
+      duration EITH
+      volume _default_volume
+      pitch E5
+
+    note
+      start HLF + EITH
+      duration SXTNTH
+      volume _default_volume
+      pitch F5 
+
+    note
+      start HLF + EITH + SXTNTH
+      duration SXTNTH
+      volume _default_volume
+      pitch E5 
+
+  phrase "44"
+    note
+      start 0.0
+      duration EITH
+      volume _default_volume
+      pitch F5
+
+    note
+      start legato_start: EITH, EITH
+      duration legato_duration: EITH
+      volume _default_volume
+      pitch E5
+
+    note
+      start legato_start: QRTR, EITH
+      duration legato_duration: EITH
+      volume _default_volume
+      pitch E5
+
+    note
+      start QRTR + EITH
+      duration EITH
+      volume _default_volume
+      pitch E5
+
+    note
+      start HLF
+      duration QRTR
+      volume _default_volume
+      pitch C5 
+
+  phrase "45"
+    note
+      start 0.0
+      duration QRTR
+      volume _default_volume
+      pitch D5
+
+    note
+      start QRTR
+      duration QRTR
+      volume _default_volume
+      pitch D5
+
+    note
+      start HLF
+      duration QRTR
+      volume _default_volume
+      pitch G4 
+
+  phrase "46"
+    note
+      start 0.0
+      duration SXTNTH
+      volume _default_volume
+      pitch G4
+
+    note
+      start SXTNTH
+      duration SXTNTH
+      volume _default_volume
+      pitch D5
+
+    note
+      start EITH
+      duration SXTNTH
+      volume _default_volume
+      pitch E5
+
+    note
+      start EITH + SXTNTH
+      duration SXTNTH
+      volume _default_volume
+      pitch D5
+
+    note
+      start QRTR
+      duration EITH
+      volume REST
+      pitch C4
+
+    note
+      start QRTR + EITH
+      duration EITH
+      volume _default_volume
+      pitch G4    
+
+    note
+      start HLF
+      duration EITH
+      volume REST
+      pitch C4
+
+    note
+      start HLF + EITH
+      duration EITH
+      volume _default_volume
+      pitch G4    
+
+    note
+      start HLF + QRTR
+      duration EITH
+      volume REST
+      pitch C4
+
+    note
+      start HLF + QRTR + EITH
+      duration EITH
+      volume _default_volume
+      pitch G4
+
+    note
+      start WHL
+      duration SXTNTH
+      volume _default_volume
+      pitch G4
+
+    note
+      start WHL + SXTNTH
+      duration SXTNTH
+      volume _default_volume
+      pitch D5
+
+    note
+      start WHL + EITH
+      duration SXTNTH
+      volume _default_volume
+      pitch E5
+
+    note
+      start WHL + EITH + SXTNTH
+      duration SXTNTH
+      volume _default_volume
+      pitch D5
+
+  phrase "47"
+    note
+      start 0.0
+      duration SXTNTH
+      volume _default_volume
+      pitch D5
+
+    note
+      start SXTNTH
+      duration SXTNTH
+      volume _default_volume
+      pitch E5
+
+    note
+      start EITH
+      duration SXTNTH
+      volume _default_volume
+      pitch D5
+
+  phrase "48"
+    note
+      start 0.0
+      duration WHL + HLF
+      volume _default_volume
+      pitch G4
+
+    note
+      start WHL + HLF
+      duration WHL
+      volume _default_volume
+      pitch G4
+
+    note
+      start legato_start: 2.0 * WHL + HLF, WHL
+      duration legato_duration: WHL
+      volume _default_volume
+      pitch F4
+
+    note
+      start legato_start: 3.0 * WHL + HLF, QRTR
+      duration legato_duration: QRTR
+      volume _default_volume
+      pitch F4
+
+  phrase "49"
+    note
+      start 0.0
+      duration SXTNTH
+      volume _default_volume
+      pitch F4
+
+    note
+      start SXTNTH
+      duration SXTNTH
+      volume _default_volume
+      pitch G4
+
+    note
+      start EITH
+      duration SXTNTH
+      volume _default_volume
+      pitch A4S # B Flat
+
+    note
+      start EITH + SXTNTH
+      duration SXTNTH
+      volume _default_volume
+      pitch G4
+
+    note
+      start QRTR
+      duration SXTNTH
+      volume _default_volume
+      pitch A4S  
+
+    note
+      start QRTR + SXTNTH
+      duration SXTNTH
+      volume _default_volume
+      pitch G4    
+
+  phrase "50"
+    note
+      start 0.0
+      duration SXTNTH
+      volume _default_volume
+      pitch F4
+
+    note
+      start SXTNTH
+      duration SXTNTH
+      volume _default_volume
+      pitch G4  
+
+  phrase "51"
+    note
+      start 0.0
+      duration SXTNTH
+      volume _default_volume
+      pitch F4
+
+    note
+      start SXTNTH
+      duration SXTNTH
+      volume _default_volume
+      pitch G4
+
+    note
+      start EITH
+      duration SXTNTH
+      volume _default_volume
+      pitch A4S # B Flat    
+
+  phrase "52"
+    note
+      start 0.0
+      duration SXTNTH
+      volume _default_volume
+      pitch G4
+
+    note
+      start SXTNTH
+      duration SXTNTH
+      volume _default_volume
+      pitch A4S # B Flat    
+
+  phrase "53"
+    note
+      start 0.0
+      duration SXTNTH
+      volume _default_volume
+      pitch A4S # B Flat
+
+    note
+      start SXTNTH
+      duration SXTNTH
+      volume _default_volume
+      pitch G4
+
+# Instruction block for each aleatoric instruction in the original score of "In C"
+# Each Instruction is assigneed to Ensemble, so the Ensemble plays it
+instruction "Instruction 1"
+  description "All performers play from the same page of 53 melodic patterns played in sequence."
+  # Assign all instructions to both Players individually and Ensemble as a whole
+  # This insures that each Player can do whatever it needs to on its own
+  #  to fulifll the instruction, and also insures that if there is 
+  #  information needed at the Ensemble level, such as what phrase each Player
+  #  is currently playing, then this can also be collected.
+  # As a composer, you need to ask the question, "Does this instruction apply
+  #  to just each Player, to just the Ensemble as a whole, or both?"
+  players "Player 1", "Player 2", "Player 3", "Player 4" , "Player 5"#, "Player 6", "Player 7", "Player 8", "Player 9", "Player 10", "Player 11", "Player 12"
+  ensembles "In C Orchestra"
+
+instruction "Instruction 2"
+  description "Any number of any kind of instruments can play.  A group of about 35 is desired if possible but smaller or larger groups will work.  If vocalist(s) join in they can use any vowel and consonant sounds they like."
+  players "Player 1", "Player 2", "Player 3", "Player 4" , "Player 5"#, "Player 6", "Player 7", "Player 8", "Player 9", "Player 10", "Player 11", "Player 12"
+  ensembles "In C Orchestra"
+
+instruction "Instruction 3"
+  description "Patterns are to be played consecutively with each performer having the freedom to determine how many times he or she will repeat each pattern before moving on to the next.  There is no fixed rule as to the number of repetitions a pattern may have, however, since performances normally average between 45 minutes and an hour and a half, it can be assumed that one would repeat each pattern from somewhere between 45 seconds and a minute and a half or longer."
+  players "Player 1", "Player 2", "Player 3", "Player 4" , "Player 5"#, "Player 6", "Player 7", "Player 8", "Player 9", "Player 10", "Player 11", "Player 12"
+  ensembles "In C Orchestra"
+
+instruction "Instruction 4"
+  description "It is very important that performers listen very carefully to one another and this means occasionally to drop out and listen.  As an ensemble, it is very desirable to play very softly as well as very loudly and to try to diminuendo and crescendo together."
+  players "Player 1", "Player 2", "Player 3", "Player 4" , "Player 5"#, "Player 6", "Player 7", "Player 8", "Player 9", "Player 10", "Player 11", "Player 12"
+  ensembles "In C Orchestra"
+
+instruction "Instruction 5"
+  description "Each pattern can be played in unison or canonically in any alignment with itself or with its neighboring patterns.  One of the joys of IN C is the interaction of the players in polyrhythmic combinations that spontaneously arise between patterns.  Some quite fantastic shapes will arise and disintegrate as the group moves through the piece when it is properly played."
+  players "Player 1", "Player 2", "Player 3", "Player 4" , "Player 5"#, "Player 6", "Player 7", "Player 8", "Player 9", "Player 10", "Player 11", "Player 12"
+  ensembles "In C Orchestra"
+
+instruction "Instruction 6"
+  description "It is important not to hurry from pattern to pattern but to stay on a pattern long enough to interlock with other patterns being played.  As the performance progresses, performers should stay within 2 or 3 patterns of each other.  It is important not to race too far ahead or to lag too far behind."
+  players "Player 1", "Player 2", "Player 3", "Player 4" , "Player 5"#, "Player 6", "Player 7", "Player 8", "Player 9", "Player 10", "Player 11", "Player 12"  
+  ensembles "In C Orchestra"
+
+# TODO Make this an Improvisation that fires every time?
+instruction "Instruction 7"
+  description "The ensemble can be aided by the means of an eighth note pulse played on the high c’s of the piano or on a mallet instrument.  It is also possible to use improvised percussion in strict rhythm (drum set, cymbals, bells, etc.), if it is carefully done and doesn’t overpower the ensemble.  All performers must play strictly in rhythm and it is essential that everyone play each pattern carefully.  It is advised to rehearse patterns in unison before attempting to play the piece, to determine that everyone is playing correctly."
+  players "Player 1", "Player 2", "Player 3", "Player 4" , "Player 5"#, "Player 6", "Player 7", "Player 8", "Player 9", "Player 10", "Player 11", "Player 12"  
+  ensembles "In C Orchestra"
+
+instruction "Instruction 8"
+  description "The tempo is left to the discretion of the performers, obviously not too slow, but not faster than performers can comfortably play."
+  players "Player 1", "Player 2", "Player 3", "Player 4" , "Player 5"#, "Player 6", "Player 7", "Player 8", "Player 9", "Player 10", "Player 11", "Player 12"
+  ensembles "In C Orchestra"
+
+instruction "Instruction 9"
+  description "It is important to think of patterns periodically so that when you are resting you are conscious of the larger periodic composite accents that are sounding, and when you re-enter you are aware of what effect your entrance will have on the music’s flow."
+  players "Player 1", "Player 2", "Player 3", "Player 4" , "Player 5"#, "Player 6", "Player 7", "Player 8", "Player 9", "Player 10", "Player 11", "Player 12"
+  ensembles "In C Orchestra"
+
+instruction "Instruction 10"
+  description "The group should aim to merge into a unison at least once or twice during the performance.  At the same time, if the players seem to be consistently too much in the same alignment of a pattern, they should try shifting their alignment by an eighth note or quarter note with what’s going on in the rest of the ensemble."
+  players "Player 1", "Player 2", "Player 3", "Player 4" , "Player 5"#, "Player 6", "Player 7", "Player 8", "Player 9", "Player 10", "Player 11", "Player 12"
+  ensembles "In C Orchestra"
+
+instruction "Instruction 11"
+  description "It is OK to transpose patterns by an octave, especially to transpose up.  Transposing down by octaves works best on the patterns containing notes of long durations. Augmentation of rhythmic values can also be effective."
+  players "Player 1", "Player 2", "Player 3", "Player 4" , "Player 5"#, "Player 6", "Player 7", "Player 8", "Player 9", "Player 10", "Player 11", "Player 12"
+  ensembles "In C Orchestra"
+
+instruction "Instruction 12"
+  description "If for some reason a pattern can’t be played, the performer should omit it and go on."
+  players "Player 1", "Player 2", "Player 3", "Player 4" , "Player 5"#, "Player 6", "Player 7", "Player 8", "Player 9", "Player 10", "Player 11", "Player 12"
+  ensembles "In C Orchestra"
+
+instruction "Instruction 13"
+  description "Instruments can be amplified if desired.  Electronic keyboards are welcome also."
+  players "Player 1", "Player 2", "Player 3", "Player 4" , "Player 5"#, "Player 6", "Player 7", "Player 8", "Player 9", "Player 10", "Player 11", "Player 12"
+  ensembles "In C Orchestra"
+
+instruction "Instruction 14"
+  description "In C is ended in this way: when each performer arrives at figure #53, he or she stays on it until the entire ensemble has arrived there.  The group then makes a large crescendo and diminuendo a few times and each player drops out as he or she wishes."
+  players "Player 1", "Player 2", "Player 3", "Player 4" , "Player 5"#, "Player 6", "Player 7", "Player 8", "Player 9", "Player 10", "Player 11", "Player 12"
+  ensembles "In C Orchestra"
+
+
+# Tell the Ensemble to perform, tell all Players in the Ensemble to play
+# 'repeat' the 'play' command (that is, have each member of the Ensemble go through all the Instructions)
+#   until the 'continue' condition is met
+repeat until "... each player drops out as he or she wishes."
+  play
+    ensembles "In C Orchestra"
+    
+# ** NOTE: For debugging only.  NOT necessary for rendering to MIDI, can just
+#  have a 'render' block
+write "../compositions/Terry_Riley-In_C/In_C_mid.txt"
+  format    midi
+  ensembles "In C Orchestra"
+
+# Capture the performance in rendered sound file
+# TODO make and In C orchestra
+render "../compositions/Terry_Riley-In_C/In_C.mid"
+  ensembles "In C Orchestra"
