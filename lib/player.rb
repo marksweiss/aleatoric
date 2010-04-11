@@ -1,9 +1,10 @@
-$LOAD_PATH << "..\\lib"
+$LOAD_PATH << psub("../lib")
 require 'util'
 require 'score'
 
 require 'rubygems'
-require 'ruby-debug' ; Debugger.start
+# TEMP DEBUG
+# require 'ruby-debug' ; Debugger.start
 
 module Aleatoric
 

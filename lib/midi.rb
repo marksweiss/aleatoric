@@ -1,4 +1,3 @@
-require 'util' # for include_win?() and include_mac?()
 include Aleatoric 
 
 require 'rubygems'

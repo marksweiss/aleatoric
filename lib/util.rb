@@ -17,26 +17,6 @@ def meets_condition?(threshold)
   rand <= threshold
 end
 
-# Have seen both forms on Windows platforms, even though both installed from
-#  Win binary installer of 1.8.6.
-def include_win?
-  RUBY_PLATFORM.include?('mswin') or RUBY_PLATFORM.include?('mingw')
-end
-
-def include_mac?
-  RUBY_PLATFORM.include?('darwin')  
-end
-
-# Returns correct path for Win and Mac/*nix, regardless of what comes in
-# Intended as a macro wrapping hard-coded paths in code, e.g. esp. in tests
-def psub(path)
-  if include_win?
-    path.gsub("/", "\\")
-  else
-    path.gsub("\\", "/")
-  end
-end
-
 # The only way to debug any statements running in the context of the #load call in aleatoric.rb
 # Call this to write log statements to file, which will include all the current context
 # of the script execution in composer_lang.rb and composer.rb.

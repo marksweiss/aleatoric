@@ -1,4 +1,5 @@
-$LOAD_PATH << "../compositions/Terry_Riley-In_C"
+$LOAD_PATH << psub("../compositions/Terry_Riley-In_C")
+
 require 'composer'
 include Aleatoric
 

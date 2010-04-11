@@ -1,4 +1,4 @@
-$LOAD_PATH << "..\\lib"
+$LOAD_PATH << psub("../lib")
 require 'util'
 require 'player'
 
