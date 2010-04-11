@@ -1,5 +1,5 @@
 require 'note'
-require 'conf_csound'
+# require 'conf_csound'
 require 'singleton'
 
 module Aleatoric
