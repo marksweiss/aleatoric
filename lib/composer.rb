@@ -70,7 +70,7 @@ module Aleatoric
 def set_player_preplay_instruction(instruction_name, &instr_blk)
   @@player_preplay_instructions[instruction_name] = instr_blk
 end
-def set_player_postplay_instruction(instruction_name, &instr_blk)
+def set_player_postplay_instruction(instruction_name, &instr_blk)  
   @@player_postplay_instructions[instruction_name] = instr_blk
 end
 def set_improvisation(instruction_name, &instr_blk)
@@ -529,7 +529,7 @@ end
 
 def play
   call_play_init_handlers unless play_init_called?
-  set_play_init_called
+  set_play_init_called  
   @processing_play = true
   yield
   @processing_play = false
@@ -951,7 +951,7 @@ def reset_script_state
   @cur_players = []
   @players = []
   @players_by_name = {}
-
+  
   @is_write_called = false
   @processing_score = false
   @score_notes = []
