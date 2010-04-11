@@ -2,6 +2,7 @@ require 'composer'
 require 'composer_lang'
 
 require 'rubygems'
+require 'optparse'
 # require 'ruby-debug' ; Debugger.start
 
 include Aleatoric
@@ -13,15 +14,32 @@ include Aleatoric
 
 # TODO Real cmd line args handling.  This is lame
 def main
-  script = ""
-  
-  # Get the name of the Composer score to render into a sound file
-  file_name = ARGV[0]
-    
+  options = {}
+  optparse = OptionParser.new do |opts|
+    options[:score_file_name] = ''
+    opts.on('-s', '--score_name SCORE_FILE', "Score file name") do |s|
+      options[:score_file_name] = s
+    end
+    options[:score_include_file_name] = ''
+    opts.on('-i', '--score_include_name SCORE_INCLUDE_FILE', "CSound score include file name") do |i|
+      options[:score_include_file_name] = i
+    end  
+    options[:format] = :csound
+    opts.on('-f', '--format FORMAT_ARG', "Output format") do |f|
+      options[:format] = f.to_sym
+    end
+    options[:preprocess_flag] = true     
+    opts.on('-n', '--no_preprocessing', "Flag to support syntax without ruby block keywords (do/end). On by default.") do
+      options[:preprocess_flag] = false
+    end     
+  end
+  optparse.parse!   
+  $csound_score_include_file_name = options[:score_include_file_name]
+        
   # Append to the file name, this is the file processed by this job, opaque to user, not
   #  the script file they work with.  In default case we add all the do/end syntax, for example,
   #  and hide that from them.  And in all cases we add the module directive.
-  file_name_tmp = file_name + '.tmp'
+  file_name_tmp = options[:score_file_name] + '.tmp'
   
   # Get the name minus the last section of '.altc' which is the extension, if any
   # We can have a name like this though, My.Tune.altc -> My.Tune
@@ -32,22 +50,17 @@ def main
   # NOTE: ONLY SUPPORTS *.altc EXTENSION
   #  e.g. if the composition is "In_C.altc" then the 
   #  instruction file is "In_C_user_instruction.rb"
-  user_instr_file_name = file_name
-  ext_idx = file_name.downcase.rindex(".altc")
-  user_instr_file_name = file_name[0..(ext_idx-1)] unless ext_idx.nil?
+  user_instr_file_name = options[:score_file_name]
+  ext_idx = options[:score_file_name].downcase.rindex(".altc")
+  user_instr_file_name = options[:score_file_name][0..(ext_idx-1)] unless ext_idx.nil?
   user_instr_file_name += "_user_instruction.rb"
   
   # Set global format and make call to load consts for that format
   # TODO Make default format configurable
-  $ARG_FORMAT = :csound  
-  fmt_arg = '' 
-  fmt_arg = ARGV[1] if ARGV.length > 1
-  fmt_arg = fmt_arg.strip.downcase
-  $ARG_FORMAT = fmt_arg.to_sym if (fmt_arg == 'csound' || fmt_arg == 'midi') 
-
-  if $ARG_FORMAT == :csound
+  $ARG_FORMAT = options[:format]
+  if options[:format] == :csound
     set_csound_consts
-  elsif $ARG_FORMAT == :midi
+  elsif options[:format] == :midi
     set_midi_consts
   end
   
@@ -55,7 +68,7 @@ def main
   # LOGGING
   puts "Format set to #{$ARG_FORMAT}"
   
-  script_lines = portable_readlines(file_name)
+  script_lines = portable_readlines(options[:score_file_name])
     
   # Composer reuses some Ruby keywords which need to be modified so they don't get interpreted as Ruby
   # This is non-optional preprocessing
@@ -64,15 +77,13 @@ def main
   
   # Now preprocess to add 'do/end' syntax, add 'do |index|/end' to repeat blocks
   #  and validate syntax and grammar (structure)
-  preprocess_flag = true
-  preprocess_flag = eval(ARGV[2]) if ARGV.length > 2
-  if preprocess_flag      
+  if options[:preprocess_flag]      
     # LOGGING
     t = Time.now
     puts "Preprocessing started at #{t}"
     
     # Returns the script lines preprocessed, and joined into one big string, i.e. - the whole script preprocessed
-    script = ComposerAST.new.optional_preprocess_script(script_lines, file_name)
+    script = ComposerAST.new.optional_preprocess_script(script_lines, options[:score_file_name])
 
     # LOGGING
     t_new = Time.now
@@ -87,8 +98,12 @@ def main
     t = Time.now
     puts "Started writing preprocessed score file at #{t}"
       
-    header = "require 'util'\nrequire 'global'\nrequire 'user_instruction'\n"
-    header += "require '" + user_instr_file_name + "'\n" if File::exists?("user_instr_file_name")
+    header = "require 'util'\nrequire 'global'\n"
+    if user_instr_file_name.nil?
+      header += "require 'user_instruction'\n"
+    else
+      header += "require '" + user_instr_file_name + "'\n"
+  	end
   	header += "module Aleatoric\n\n"  
     f << header + script + "\n\nend\n"
     
