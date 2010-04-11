@@ -26,16 +26,22 @@ $LAST_FORMAT = $FORMAT
 # TODO implement this to load both csound and midi from a config and then fill in values from the first
 #  'format' statement it encounters
 # TODO Add all of these consts and put them in a '' conf somewhere
-REST = 0.0
+REST = 0
 
+# Change dur_factor to change global tempo, this changes duration of all notes
+#  defined using these global constants
+# TODO make dur_factor configurable and rename to indicate it controls global tempo
+#  and expose it in Composer language to composition scripts so user can set, and so we can set it
+#  in testing so that tests that rely on actual tempo (of kw 'meter') don't break
+DUR_FACTOR = 1.0 # 0.4 for 'In_C'
 # Default durations in seconds
-WHL = 4.0 
-HLF = 2.0
-QRTR = 1.0
-EITH = 0.5
-SXTNTH = 0.25
-THRTYSCND = 0.125
-SXTYFRTH = 0.0625
+WHL = 4.0 * DUR_FACTOR
+HLF = 2.0 * DUR_FACTOR
+QRTR = 1.0 * DUR_FACTOR
+EITH = 0.5 * DUR_FACTOR
+SXTNTH = 0.25 * DUR_FACTOR
+THRTYSCND = 0.125 * DUR_FACTOR
+SXTYFRTH = 0.0625 * DUR_FACTOR
 
 # Remove MIDI consts only used by MIDI to avoid using them with CSound format
 #  and silently passing bogus values to CSound that might not cause errors but
