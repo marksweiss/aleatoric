@@ -1,15 +1,16 @@
-$LOAD_PATH << "..\\lib"
+require 'test_global'
+$LOAD_PATH << psub("../lib")
+
 require 'ensemble'
 
 require 'test/unit'
 
 require 'rubygems'
-require 'ruby-debug' ; Debugger.start
+# require 'ruby-debug' ; Debugger.start
 
 module Aleatoric
 
 class Ensemble_Test < Test::Unit::TestCase
-
   def test__initialize
     puts "test__initialize ENTERED"
 
@@ -179,8 +180,8 @@ class Ensemble_Test < Test::Unit::TestCase
     player_1 = Player.new(player_1_name)
     note_1_name = "note 1"
     note_2_name = "note 2"
-    note_1 = Note.new note_1_name
-    note_2 = Note.new note_2_name
+    note_1 = Note.new(note_1_name, {:instrument=>1, :start=>0.0, :duration=>4.0, :amplitude=>1000, :pitch=>8.01000, :func_table=>1})
+    note_2 = Note.new(note_2_name, {:instrument=>1, :start=>0.0, :duration=>4.0, :amplitude=>1000, :pitch=>8.01000, :func_table=>1})    
     expected_1 = [note_1, note_2]
     score_1_name = "score 1"
     score_1 = Score.new(score_1_name)
@@ -198,8 +199,8 @@ class Ensemble_Test < Test::Unit::TestCase
     player_2 = Player.new(player_2_name)
     note_3_name = "note 3"
     note_4_name = "note 4"
-    note_3 = Note.new note_3_name
-    note_4 = Note.new note_4_name
+    note_3 = Note.new(note_3_name, {:instrument=>1, :start=>0.0, :duration=>4.0, :amplitude=>1000, :pitch=>8.01000, :func_table=>1})
+    note_4 = Note.new(note_4_name, {:instrument=>1, :start=>0.0, :duration=>4.0, :amplitude=>1000, :pitch=>8.01000, :func_table=>1})    
     expected_2 = [note_3, note_4]
     score_2_name = "score 2"
     score_2 = Score.new(score_2_name)
@@ -232,8 +233,8 @@ class Ensemble_Test < Test::Unit::TestCase
     player_1 = Player.new(player_1_name)
     note_1_name = "note 1"
     note_2_name = "note 2"
-    note_1 = Note.new note_1_name
-    note_2 = Note.new note_2_name
+    note_1 = Note.new(note_1_name, {:instrument=>1, :start=>0.0, :duration=>4.0, :amplitude=>1000, :pitch=>8.01000, :func_table=>1})
+    note_2 = Note.new(note_2_name, {:instrument=>1, :start=>0.0, :duration=>4.0, :amplitude=>1000, :pitch=>8.01000, :func_table=>1})    
     score_1_name = "score 1"
     score_1 = Score.new(score_1_name)
     expected_1 = [note_1, note_2]
@@ -244,8 +245,8 @@ class Ensemble_Test < Test::Unit::TestCase
     player_2 = Player.new(player_2_name)
     note_3_name = "note 3"
     note_4_name = "note 4"
-    note_3 = Note.new note_3_name
-    note_4 = Note.new note_4_name
+    note_3 = Note.new(note_3_name, {:instrument=>1, :start=>0.0, :duration=>4.0, :amplitude=>1000, :pitch=>8.01000, :func_table=>1})
+    note_4 = Note.new(note_4_name, {:instrument=>1, :start=>0.0, :duration=>4.0, :amplitude=>1000, :pitch=>8.01000, :func_table=>1})    
     score_2_name = "score 2"
     score_2 = Score.new(score_2_name)
     expected_2 = [note_3, note_4]
@@ -274,8 +275,8 @@ class Ensemble_Test < Test::Unit::TestCase
     player_1 = Player.new(player_1_name)
     note_1_name = "note 1"
     note_2_name = "note 2"
-    note_1 = Note.new note_1_name
-    note_2 = Note.new note_2_name
+    note_1 = Note.new(note_1_name, {:instrument=>1, :start=>0.0, :duration=>4.0, :amplitude=>1000, :pitch=>8.01000, :func_table=>1})
+    note_2 = Note.new(note_2_name, {:instrument=>1, :start=>0.0, :duration=>4.0, :amplitude=>1000, :pitch=>8.01000, :func_table=>1})    
     expected_1 = [note_1, note_2]
     score_1_name = "score 1"
     score_1 = Score.new(score_1_name)
@@ -292,8 +293,8 @@ class Ensemble_Test < Test::Unit::TestCase
     player_2 = Player.new(player_2_name)
     note_3_name = "note 3"
     note_4_name = "note 4"
-    note_3 = Note.new note_3_name
-    note_4 = Note.new note_4_name
+    note_3 = Note.new(note_3_name, {:instrument=>1, :start=>0.0, :duration=>4.0, :amplitude=>1000, :pitch=>8.01000, :func_table=>1})
+    note_4 = Note.new(note_4_name, {:instrument=>1, :start=>0.0, :duration=>4.0, :amplitude=>1000, :pitch=>8.01000, :func_table=>1})    
     expected_2 = [note_3, note_4]
     score_2_name = "score 2"
     score_2 = Score.new(score_2_name)
@@ -327,8 +328,8 @@ class Ensemble_Test < Test::Unit::TestCase
     player_1 = Player.new(player_1_name)
     note_1_name = "note 1"
     note_2_name = "note 2"
-    note_1 = Note.new note_1_name
-    note_2 = Note.new note_2_name
+    note_1 = Note.new(note_1_name, {:instrument=>1, :start=>0.0, :duration=>4.0, :amplitude=>1000, :pitch=>8.01000, :func_table=>1})
+    note_2 = Note.new(note_2_name, {:instrument=>1, :start=>0.0, :duration=>4.0, :amplitude=>1000, :pitch=>8.01000, :func_table=>1})    
     score_1_name = "score 1"
     score_1 = Score.new(score_1_name)
     expected_1 = [note_1, note_2]
@@ -339,8 +340,8 @@ class Ensemble_Test < Test::Unit::TestCase
     player_2 = Player.new(player_2_name)
     note_3_name = "note 3"
     note_4_name = "note 4"
-    note_3 = Note.new note_3_name
-    note_4 = Note.new note_4_name
+    note_3 = Note.new(note_3_name, {:instrument=>1, :start=>0.0, :duration=>4.0, :amplitude=>1000, :pitch=>8.01000, :func_table=>1})
+    note_4 = Note.new(note_4_name, {:instrument=>1, :start=>0.0, :duration=>4.0, :amplitude=>1000, :pitch=>8.01000, :func_table=>1})    
     score_2_name = "score 2"
     score_2 = Score.new(score_2_name)
     expected_2 = [note_3, note_4]

@@ -35,7 +35,7 @@ def main
   end
   optparse.parse!   
   $csound_score_include_file_name = options[:score_include_file_name]
-        
+          
   # Append to the file name, this is the file processed by this job, opaque to user, not
   #  the script file they work with.  In default case we add all the do/end syntax, for example,
   #  and hide that from them.  And in all cases we add the module directive.

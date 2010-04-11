@@ -1,8 +1,10 @@
-$LOAD_PATH << "..\\lib"
+require 'test_global'
+$LOAD_PATH << psub("../lib")
+
 require 'player'
 require 'test/unit'
 require 'rubygems'
-require 'ruby-debug' ; Debugger.start
+# require 'ruby-debug' ; Debugger.start
 
 module Aleatoric
 
@@ -81,16 +83,16 @@ class Player_Test < Test::Unit::TestCase
     player = Player.new("Test Player")
     note_1_name = "note 1"
     note_2_name = "note 2"
-    note_1 = Note.new note_1_name
-    note_2 = Note.new note_2_name
+    note_1 = Note.new(note_1_name, {:instrument=>1, :start=>0.0, :duration=>4.0, :amplitude=>1000, :pitch=>8.01000, :func_table=>1})
+    note_2 = Note.new(note_2_name, {:instrument=>1, :start=>0.0, :duration=>4.0, :amplitude=>1000, :pitch=>8.01000, :func_table=>1})    
     score_1_name = "score 1"
     score_1 = Score.new(score_1_name)
     score_1 << [note_1, note_2]
     player.add_score(score_1.name, score_1)
     note_3_name = "note 3"
     note_4_name = "note 4"
-    note_3 = Note.new note_3_name
-    note_4 = Note.new note_4_name
+    note_3 = Note.new(note_3_name, {:instrument=>1, :start=>0.0, :duration=>4.0, :amplitude=>1000, :pitch=>8.01000, :func_table=>1})
+    note_4 = Note.new(note_4_name, {:instrument=>1, :start=>0.0, :duration=>4.0, :amplitude=>1000, :pitch=>8.01000, :func_table=>1})    
     score_2 = Score.new    
     score_2 << [note_3, note_4]
     player.add_score(score_2.name, score_2)
@@ -135,8 +137,8 @@ class Player_Test < Test::Unit::TestCase
     player = Player.new("Test Player")
     note_1_name = "note 1"
     note_2_name = "note 2"
-    note_1 = Note.new note_1_name
-    note_2 = Note.new note_2_name
+    note_1 = Note.new(note_1_name, {:instrument=>1, :start=>0.0, :duration=>4.0, :amplitude=>1000, :pitch=>8.01000, :func_table=>1})
+    note_2 = Note.new(note_2_name, {:instrument=>1, :start=>0.0, :duration=>4.0, :amplitude=>1000, :pitch=>8.01000, :func_table=>1})    
     expected_1 = [note_1, note_2]
     score_1_name = "score 1"
     score_1 = Score.new(score_1_name)
@@ -151,8 +153,8 @@ class Player_Test < Test::Unit::TestCase
 
     note_3_name = "note 3"
     note_4_name = "note 4"
-    note_3 = Note.new note_3_name
-    note_4 = Note.new note_4_name
+    note_3 = Note.new(note_3_name, {:instrument=>1, :start=>0.0, :duration=>4.0, :amplitude=>1000, :pitch=>8.01000, :func_table=>1})
+    note_4 = Note.new(note_4_name, {:instrument=>1, :start=>0.0, :duration=>4.0, :amplitude=>1000, :pitch=>8.01000, :func_table=>1})    
     expected_2 = [note_3, note_4]
     
     player.set_output(expected_2)    
@@ -167,9 +169,9 @@ class Player_Test < Test::Unit::TestCase
     puts "test__append_note_to_output ENTERED"
     player = Player.new("Test Player")
     note_1_name = "note 1"
-    note_2_name = "note 2"
-    note_1 = Note.new note_1_name
-    note_2 = Note.new note_2_name
+    note_2_name = "note 2"    
+    note_1 = Note.new(note_1_name, {:instrument=>1, :start=>0.0, :duration=>4.0, :amplitude=>1000, :pitch=>8.01000, :func_table=>1})
+    note_2 = Note.new(note_2_name, {:instrument=>1, :start=>0.0, :duration=>4.0, :amplitude=>1000, :pitch=>8.01000, :func_table=>1})    
     expected_1 = [note_1, note_2]
     score_1_name = "score 1"
     score_1 = Score.new(score_1_name)
@@ -183,7 +185,7 @@ class Player_Test < Test::Unit::TestCase
     assert(actual[0].name == expected_1[0].name && actual[1].name == expected_1[1].name)
 
     note_3_name = "note 3"
-    note_3 = Note.new note_3_name
+    note_3 = Note.new(note_3_name, {:instrument=>1, :start=>0.0, :duration=>4.0, :amplitude=>1000, :pitch=>8.01000, :func_table=>1})
     player.append_note_to_output(note_3)
 
     actual = player.output
@@ -200,8 +202,8 @@ class Player_Test < Test::Unit::TestCase
     
     note_1_name = "note 1"
     note_2_name = "note 2"
-    note_1 = Note.new note_1_name
-    note_2 = Note.new note_2_name
+    note_1 = Note.new(note_1_name, {:instrument=>1, :start=>0.0, :duration=>4.0, :amplitude=>1000, :pitch=>8.01000, :func_table=>1})
+    note_2 = Note.new(note_2_name, {:instrument=>1, :start=>0.0, :duration=>4.0, :amplitude=>1000, :pitch=>8.01000, :func_table=>1})    
     expected_1 = [note_1, note_2]
     score_1_name = "score 1"
     score_1 = Score.new(score_1_name)
@@ -214,8 +216,8 @@ class Player_Test < Test::Unit::TestCase
 
     note_3_name = "note 3"
     note_4_name = "note 4"
-    note_3 = Note.new note_3_name
-    note_4 = Note.new note_4_name
+    note_3 = Note.new(note_3_name, {:instrument=>1, :start=>0.0, :duration=>4.0, :amplitude=>1000, :pitch=>8.01000, :func_table=>1})
+    note_4 = Note.new(note_4_name, {:instrument=>1, :start=>0.0, :duration=>4.0, :amplitude=>1000, :pitch=>8.01000, :func_table=>1})    
     expected_2 = [note_3, note_4]
     score_2_name = "score 2"
     score_2 = Score.new(score_2_name)
@@ -236,8 +238,8 @@ class Player_Test < Test::Unit::TestCase
     player = Player.new("Test Player")
     note_1_name = "note 1"
     note_2_name = "note 2"
-    note_1 = Note.new note_1_name
-    note_2 = Note.new note_2_name
+    note_1 = Note.new(note_1_name, {:instrument=>1, :start=>0.0, :duration=>4.0, :amplitude=>1000, :pitch=>8.01000, :func_table=>1})
+    note_2 = Note.new(note_2_name, {:instrument=>1, :start=>0.0, :duration=>4.0, :amplitude=>1000, :pitch=>8.01000, :func_table=>1})    
     expected_1 = [note_1, note_2]
     score_1_name = "score 1"
     score_1 = Score.new(score_1_name)
@@ -254,8 +256,8 @@ class Player_Test < Test::Unit::TestCase
 
     note_3_name = "note 3"
     note_4_name = "note 4"
-    note_3 = Note.new note_3_name
-    note_4 = Note.new note_4_name
+    note_3 = Note.new(note_3_name, {:instrument=>1, :start=>0.0, :duration=>4.0, :amplitude=>1000, :pitch=>8.01000, :func_table=>1})
+    note_4 = Note.new(note_4_name, {:instrument=>1, :start=>0.0, :duration=>4.0, :amplitude=>1000, :pitch=>8.01000, :func_table=>1})    
     expected_2 = [note_3, note_4]
     score_2_name = "score 2"
     score_2 = Score.new(score_2_name)
@@ -287,7 +289,7 @@ class Player_Test < Test::Unit::TestCase
 
     player = Player.new("Test Player")
     note_1_name = "note 1"
-    note_1 = Note.new note_1_name
+    note_1 = Note.new(note_1_name, {:instrument=>1, :start=>0.0, :duration=>4.0, :amplitude=>1000, :pitch=>8.01000, :func_table=>1})
     note_1.start(0.0)
     hook_1_name = "hook 1"
     expected = lambda {|note| note.start(note.start + 1.0)}
@@ -303,7 +305,7 @@ class Player_Test < Test::Unit::TestCase
 
     player = Player.new("Test Player")
     note_1_name = "note 1"
-    note_1 = Note.new note_1_name
+    note_1 = Note.new(note_1_name, {:instrument=>1, :start=>0.0, :duration=>4.0, :amplitude=>1000, :pitch=>8.01000, :func_table=>1})
     note_1.start(0.0)
     hook_1_name = "hook 1"
     expected = lambda {|note| note.start(note.start + 1.0)}
@@ -322,7 +324,7 @@ class Player_Test < Test::Unit::TestCase
 
     player = Player.new("Test Player")
     note_1_name = "note 1"
-    note_1 = Note.new note_1_name
+    note_1 = Note.new(note_1_name, {:instrument=>1, :start=>0.0, :duration=>4.0, :amplitude=>1000, :pitch=>8.01000, :func_table=>1})
     note_1.start(0.0)
     hook_1_name = "hook 1"
     expected = lambda {|note| note.start(note.start + 1.0)}
@@ -338,7 +340,7 @@ class Player_Test < Test::Unit::TestCase
 
     player = Player.new("Test Player")
     note_1_name = "note 1"
-    note_1 = Note.new note_1_name
+    note_1 = Note.new(note_1_name, {:instrument=>1, :start=>0.0, :duration=>4.0, :amplitude=>1000, :pitch=>8.01000, :func_table=>1})
     note_1.start(0.0)
     hook_1_name = "hook 1"
     expected = lambda {|note| note.start(note.start + 1.0)}
@@ -358,7 +360,7 @@ class Player_Test < Test::Unit::TestCase
 
     player = Player.new("Test Player")
     note_1_name = "note 1"
-    note_1 = Note.new note_1_name
+    note_1 = Note.new(note_1_name, {:instrument=>1, :start=>0.0, :duration=>4.0, :amplitude=>1000, :pitch=>8.01000, :func_table=>1})
     note_1.start(0.0)
     hook_1_name = "hook 1"
     expected = lambda {|note| note.start(note.start + 1.0)}
@@ -374,7 +376,7 @@ class Player_Test < Test::Unit::TestCase
 
     player = Player.new("Test Player")
     note_1_name = "note 1"
-    note_1 = Note.new note_1_name
+    note_1 = Note.new(note_1_name, {:instrument=>1, :start=>0.0, :duration=>4.0, :amplitude=>1000, :pitch=>8.01000, :func_table=>1})
     note_1.start(0.0)
     hook_1_name = "hook 1"
     expected = lambda {|note| note.start(note.start + 1.0)}

@@ -1,8 +1,10 @@
-$LOAD_PATH << "..\\lib"
+require 'test_global'
+$LOAD_PATH << psub("../lib")
+
 require 'meter'
 require 'test/unit'
 require 'rubygems'
-require 'ruby-debug' ; Debugger.start
+# require 'ruby-debug' ; Debugger.start
 
 module Aleatoric
 

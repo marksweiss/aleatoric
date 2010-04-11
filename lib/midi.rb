@@ -1,5 +1,3 @@
-include Aleatoric 
-
 require 'rubygems'
 
 if include_win? or include_mac?

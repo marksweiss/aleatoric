@@ -236,6 +236,8 @@ Note.output_format $FORMAT
 
 
 # Handles keyword "note," assigns attrs in block to a new Note
+# Automatically sets note.start(@cur_start) if the note doesn't define its own
+#  start attr.  This allows chaining of notes to start one after another (super nice)
 def note(name=nil, &args_blk)    
   # Set flag for method_missing() so it traps methods and adds to this Note
   @processing_note = true
@@ -247,9 +249,6 @@ def note(name=nil, &args_blk)
   yield
   
   # If running note block didn't add a start attribute, then set it here to @cur_start
-  # This is the same behavior as if the Composer script used keyword NEXT like this:
-  #   note
-  #     start NEXT  
   @cur_note.start(@cur_start) if @cur_note.start == nil
   
   # Notes must always be created in the context of a containing Phrase or Section
@@ -264,7 +263,7 @@ def note(name=nil, &args_blk)
   # We're done with this Note, unset method_missing() flag
   @processing_note = false
   
-  # Each note can adjust @cur_start, which supports start NEXT
+  # Each note can adjust @cur_start
   # Sort of lame we have to list-ify it, but the same method takes a list for 'copy_measure'
   adjust_cur_start([@cur_note])  
   # Return the note, useful for testing purposes only. Allows independent testing of function

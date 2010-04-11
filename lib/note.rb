@@ -30,9 +30,9 @@ class Note
     # For debugging, so can print these out as comments in a score
     @player_id = nil; @ensemble_id = nil; @score_id = nil
     @note_attrs = {}
-    @ordered_keys = [:instrument, :start, :duration, :amplitude, :pitch]
+    @ordered_keys = [:instrument, :start, :duration, :amplitude, :pitch]    
     attrs ||= {}
-    attrs.each {|name, val| self.method_missing(name, val)}
+    attrs.each {|name, val| self.method_missing(name, val)}    
     @to_s_with_debug_info = false
   end
 

@@ -1,8 +1,14 @@
-$LOAD_PATH << "..\\lib"
+require 'test_global'
+$LOAD_PATH << psub("../lib")
+
+# Hack to 'forward declare' Aleatoric module to which is included in midi.rb
+#  Without this the require 'midi' line fails
+module Aleatoric; end
 require 'midi'
+
 require 'test/unit'
 require 'rubygems'
-require 'ruby-debug' ; Debugger.start
+# require 'ruby-debug' ; Debugger.start
 
 # Super-elegant solution for temporarily getting access to private methods to test stolen from here:
 #  http://blog.jayfields.com/2007/11/ruby-testing-private-methods.html

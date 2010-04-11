@@ -1,10 +1,12 @@
-$LOAD_PATH << "..\\lib"
+require 'test_global'
+$LOAD_PATH << psub("../lib")
+
 require 'composer_lang'
 
 require 'test/unit'
 
 require 'rubygems'
-require 'ruby-debug' ; Debugger.start
+# require 'ruby-debug' ; Debugger.start
 
 # Super-elegant solution for temporarily getting access to private methods to test stolen from here:
 #  http://blog.jayfields.com/2007/11/ruby-testing-private-methods.html
@@ -40,40 +42,6 @@ end
 module Aleatoric
 
 class ComposerAST_Test < Test::Unit::TestCase
-  # def setup
-  # end
-  # def teardown
-  # end
-    
-#  def test__append_completion
-#    puts "test__append_completion ENTERED"   
-#    ComposerAST.publicize_methods do
-    
-#    script = ''
-#    lang = ComposerAST.new
-    
-#    kw = 'note'; expr = 'note'
-#    assert(lang.append_completion(kw, expr) == "note do\n")
-#    kw = 'note'; expr = 'note "Note 1"'
-#    assert(lang.append_completion(kw, expr) == "note \"Note 1\" do\n")
-#    kw = 'phrase'; expr = 'phrase "Phrase 1"'
-#    assert(lang.append_completion(kw, expr) == "phrase \"Phrase 1\" do\n")
-#    kw = 'section'; expr = 'section "Section 1"'
-#    assert(lang.append_completion(kw, expr) == "section \"Section 1\" do\n")
-#    kw = 'repeat'; expr = 'repeat 20'
-#    assert(lang.append_completion(kw, expr) == "repeat 20 do |index|\n")
-#    kw = 'write'; expr = 'write "In C.sco"'
-#    assert(lang.append_completion(kw, expr) == "write \"In C.sco\" do\n")
-#    kw = 'render'; expr = 'render "In C.wav"'
-#    assert(lang.append_completion(kw, expr) == "render \"In C.wav\" do\n")
-#    kw = 'format'; expr = 'format csound'
-#    assert(lang.append_completion(kw, expr) == "format csound\n")
-#    kw = ''; expr = 'some other random line'
-#    assert(lang.append_completion(kw, expr) == "some other random line\n")
-    
-#    end
-#    puts "test__append_completion COMPLETED"
-#  end
 
   def test__kw?
     puts "test__kw? ENTERED"   

@@ -24,7 +24,7 @@ class Player
   attr_accessor :preplay_hooks_ordered_names, :postplay_hooks_ordered_names, :improvising_hooks_ordered_names
   attr_accessor :preplay_hooks, :postplay_hooks, :improvising_hooks
   attr_accessor :state, :is_playing, :is_improvising, :out_notes
-  attr_reader   :current_start
+  attr_accessor :current_start # Made this read/write becasue reset by player_test.rb
   # TEMP DEBUG
   attr_reader :total_loops
   
@@ -275,17 +275,20 @@ class Player
     cur_score.notes.each do |note|       
       new_note = note.dup
       new_note.instrument(self.instrument) if self.instrument
-      new_note.channel(self.channel) if self.channel      
+      new_note.channel(self.channel) if self.channel            
       # NOTE: This is a very important business rule on this line, namely that Player silently pushes
       #  the start time of notes ahead of their literal value.  Modified this because it broke a test
       #  which pointed out the subtle issue that it should really only do this if the new note is before
       #  the current Player start time. So added the if check.
       if @auto_next_start and new_note.start < @current_start
-        new_note.start(new_note.start + self.current_start)
+        # if the new note start is < current_start, treat it as an offset from current_start
+        new_note.start(new_note.start + @current_start)
       end      
+      # and move the offset forward past the end of the current note
+      @current_start += new_note.duration        
+
       ret << new_note
-      @out_notes << new_note      
-      @current_start += new_note.duration      
+      @out_notes << new_note            
     end
             
     # Now run postplay hooks. 

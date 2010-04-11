@@ -1,16 +1,9 @@
-if RUBY_PLATFORM.include?('mswin')
-  LIB = "..\\lib\\"
-  LOAD = "..\\lib"
-elsif RUBY_PLATFORM.include?('darwin')
-  LIB = "../lib/"
-  LOAD = "../lib"
-else # *nix not osx
-  LIB = "../lib/"
-  LOAD = "../lib"  
-end
+require 'test_global'
 
+LIB = psub("../lib/")
+LOAD = psub("../lib")
 $LOAD_PATH << LIB
-puts $LOAD_PATH
+
 require 'composer_lang'
 require 'composer'
 
@@ -18,7 +11,14 @@ require 'set'
 require 'thread'
 
 require 'rubygems'
-require 'ruby-debug' ; Debugger.start
+# TEMP DEBUG
+# require 'ruby-debug' ; Debugger.start
+
+##
+# Set globals normally set by command line args when not running tests
+##
+$csound_score_include_file_name = 'oscil_sine_ftables_1.txt'
+
 
 include Aleatoric
 
@@ -346,7 +346,7 @@ end
 dump_last_section
 }
   tester, results = test_runner(test_name, throw_on_failure, script)
-  actual = results  
+  actual = results    
   expected0 = 'i 1 0.00000 0.50000 1000 7.01000 1 ; 1'
   expected1 = 'i 1 1.00000 1.00000 1100 7.02000 1 ; 2'
   tester.assert(expected0 == actual[0])
@@ -663,7 +663,7 @@ write "composer_test_results.txt"
   measures
 }
   tester, results = test_runner(test_name, throw_on_failure, script, lite_syntax)
-  actual = results  
+  actual = results    
   expected0 = 'i 1 0.00000 0.50000 1000 7.01000 1 ; 1'
   expected1 = 'i 1 1.00000 1.00000 1100 7.02000 1 ; 2'
   expected2 = 'i 1 2.00000 0.50000 1000 7.01000 1 ; 1'
@@ -736,7 +736,7 @@ write "composer_test_results.txt"
   measures
 }
   tester, results = test_runner(test_name, throw_on_failure, script, lite_syntax)
-  actual = results
+  actual = results    
   expected0 = 'i 1 0.00000 2.00000 1000 7.01000 1 ; 1'
   expected1 = 'i 1 2.00000 2.00000 1100 7.02000 1 ; 2'
   expected2 = 'i 1 0.00000 2.00000 1000 7.01000 1 ; 1'
@@ -1792,7 +1792,7 @@ write "composer_test_results.txt"
   players "Player 1"
 }
   tester, results = test_runner(test_name, throw_on_failure, script, lite_syntax)
-  actual = results  
+  actual = results    
   expected0 = 'i 1 0.00000 4.00000 1000 8.01000 1 ;'  
   tester.assert(expected0 == actual[2])
 
@@ -1830,8 +1830,7 @@ write "composer_test_results.txt"
   players "Player 1", "Player 2"
 }
   tester, results = test_runner(test_name, throw_on_failure, script, lite_syntax)
-  actual = results
-  
+  actual = results  
   expected0 = 'i 1 0.00000 4.00000 1000 8.01000 1 ;'
   expected1 = 'i 1 0.00000 4.00000 1000 8.02000 1 ;'
   tester.assert(expected0 == actual[2])
@@ -1949,6 +1948,71 @@ write "composer_test_results.txt"
   puts tester.to_s  
 end
 
+def test__ensemble_instrument_channel_midi_render
+  throw_on_failure = true
+  lite_syntax = true
+  test_name = "test__ensemble_instrument_channel_midi_render"
+  script = 
+%Q{
+# TESTING PURPOSES ONLY
+reset_script_state
+# test__ensemble_instrument_channel_midi_render
+
+format midi
+
+player "Player 1"
+  instrument 1
+  channel 1
+player "Player 2"  
+  instrument 2
+  channel 2
+
+ensemble "In C Orchestra"
+  players "Player 1", "Player 2"  
+
+  phrase "Intro Phrase"
+  
+    note "1"
+      time       0.0
+      duration    1.0
+      velocity    100
+      pitch       64 
+
+    note "2"
+      start       1.0
+      duration    1.0
+      amplitude   100
+      pitch       65 
+    
+    note "3"
+      start       2.0
+      duration    1.0
+      volume      100
+      pitch       66 
+
+play
+  ensembles "In C Orchestra"
+  
+write "composer_test_results.txt"
+  ensembles "In C Orchestra"
+}
+  tester, results = test_runner(test_name, throw_on_failure, script, lite_syntax)
+  actual = results     
+  expected0 = 'instrument 1  start 0.00000  duration 1.00000  amplitude 100  pitch 64  channel 1 ; 1'
+  expected1 = 'instrument 1  start 1.00000  duration 1.00000  amplitude 100  pitch 65  channel 1 ; 2'
+  expected2 = 'instrument 1  start 2.00000  duration 1.00000  amplitude 100  pitch 66  channel 1 ; 3'
+  expected3 = 'instrument 2  start 0.00000  duration 1.00000  amplitude 100  pitch 64  channel 2 ; 1'
+  expected4 = 'instrument 2  start 1.00000  duration 1.00000  amplitude 100  pitch 65  channel 2 ; 2'
+  expected5 = 'instrument 2  start 2.00000  duration 1.00000  amplitude 100  pitch 66  channel 2 ; 3'
+  tester.assert(expected0 == actual[0])
+  tester.assert(expected1 == actual[1])
+  tester.assert(expected2 == actual[2])
+  tester.assert(expected3 == actual[3])
+  tester.assert(expected4 == actual[4])
+  tester.assert(expected5 == actual[5])
+  puts tester.to_s  
+end
+
 def test__phrase_midi_format_consts
   throw_on_failure = true
   lite_syntax = true
@@ -1995,10 +2059,9 @@ write "composer_test_results.txt"
 }
   tester, results = test_runner(test_name, throw_on_failure, script, lite_syntax)
   actual = results
- 
-  expected0 = 'instrument 1  start 0.00000  duration 1.00000  amplitude 100  pitch 11  channel 1 ; 1'
-  expected1 = 'instrument 2  start 1.00000  duration 1.00000  amplitude 100  pitch 60  channel 1 ; 2'
-  expected2 = 'instrument 3  start 2.00000  duration 1.00000  amplitude 100  pitch 83  channel 1 ; 3'
+  expected0 = 'instrument 0  start 0.00000  duration 1.00000  amplitude 100  pitch 11  channel 1 ; 1'
+  expected1 = 'instrument 1  start 1.00000  duration 1.00000  amplitude 100  pitch 60  channel 1 ; 2'
+  expected2 = 'instrument 2  start 2.00000  duration 1.00000  amplitude 100  pitch 83  channel 1 ; 3'
   
   tester.assert(expected0 == actual[0])
   tester.assert(expected1 == actual[1])
@@ -2113,6 +2176,61 @@ write "composer_test_results.txt"
   puts tester.to_s  
 end
 
+def test__player_instrument_channel
+  throw_on_failure = false
+  test_name = "test__player_instrument_channel"
+  lite_syntax = true
+  script = 
+%Q{
+# TESTING PURPOSES ONLY
+reset_script_state
+# test__player_instrument_channel
+
+format midi
+
+player "Player 1"
+  instrument 1, channel=0
+player "Player 2"
+  instrument 2, channel=1
+
+ensemble "In C Orchestra"
+  players "Player 1", "Player 2"  
+  
+  phrase "Phrase 1"
+    note "1"
+      start       1.0 
+      duration    0.5
+      volume      100
+      pitch       60
+      
+    note "2"
+      start       2.0 
+      duration    1.0
+      volume     110
+      pitch       61
+
+play
+  players "Player 1", "Player 2" 
+  
+write "composer_test_results.txt"
+  players "Player 1", "Player 2"
+}
+  tester, results = test_runner(test_name, throw_on_failure, script, lite_syntax)
+  actual = results      
+  expected0 = 'instrument 1  start 1.00000  duration 0.50000  amplitude 100  pitch 60  channel 0 ; 1'
+  expected1 = 'instrument 1  start 2.00000  duration 1.00000  amplitude 110  pitch 61  channel 0 ; 2'
+  expected2 = 'instrument 2  start 1.00000  duration 0.50000  amplitude 100  pitch 60  channel 1 ; 1'
+  expected3 = 'instrument 2  start 2.00000  duration 1.00000  amplitude 110  pitch 61  channel 1 ; 2'
+  # NOTE: MIDI tests don't have '#include' line like CSound tests, so comp starts at line 0, not line 2
+  tester.assert(expected0 == actual[0])
+  tester.assert(expected1 == actual[1])
+  tester.assert(expected2 == actual[2])
+  tester.assert(expected3 == actual[3])
+  puts tester.to_s  
+end
+
+# TODO Fix documentation to indicate the omitting start has NEXT behavior
+#  but that NEXT kw is not supported
 def test__no_start_auto_next
   throw_on_failure = false
   test_name = "test__no_start_auto_next"
@@ -2154,8 +2272,7 @@ write "composer_test_results.txt"
   players "Player 1", "Player 2"
 }
   tester, results = test_runner(test_name, throw_on_failure, script, lite_syntax)
-  actual = results
-  
+  actual = results 
   expected0 = 'i 1 1.00000 0.50000 1000 7.01000 1 ; 1'
   expected1 = 'i 1 1.50000 1.00000 1100 7.02000 1 ; 2'
   expected2 = 'i 2 1.00000 0.50000 1000 7.01000 1 ; 1'
@@ -2170,7 +2287,7 @@ end
 ##################### /TESTS ########################
 
 # Call each test in here
-def run_tests(flags='all')
+def run_tests(flags='^run_all')
   # TODO - shore this up someday
   # Right now just a way to run just the tests in the else block below
   # Should eventually be able to take a list of tests or 'all' or something like that
@@ -2219,6 +2336,7 @@ def run_tests(flags='all')
       test__render_lite_syntax_default_write ; num_tests += 1
       test__phrase_midi_lite_syntax ; num_tests += 1
       test__phrase_midi_format_top ; num_tests += 1
+      test__ensemble_instrument_channel_midi_render ; num_tests += 1
       test__phrase_midi_format_consts ; num_tests += 1
       test__phrase_csound_format_consts ; num_tests += 1
       test__player_instrument ; num_tests += 1
@@ -2235,8 +2353,12 @@ def run_tests(flags='all')
     begin    
       
       # *** run_only TESTS GO HERE ***
+      test__no_start_auto_next
       test__instruction_ensemble_state
       test__instruction_players_state
+      test__ensemble_instrument_channel_midi_render      
+      test__improvise2_player
+      test__improvise_player
       # *** run_only TESTS GO HERE ***
     
     rescue AleatoricTestException => e      

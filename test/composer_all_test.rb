@@ -1,4 +1,6 @@
-$LOAD_PATH << "..\\lib"
+require 'test_global'
+$LOAD_PATH << psub("../lib")
+
 require 'composer'
 require 'composer_lang_test'
 require 'meter_test'
@@ -10,4 +12,4 @@ require 'set'
 require 'thread'
 
 require 'rubygems'
-require 'ruby-debug' ; Debugger.start
+# require 'ruby-debug' ; Debugger.start
