@@ -71,8 +71,14 @@ class MidiManager
   end
   
   def instrument(channel, instrument, delta_time=0)
+    # Don't do anything if we got a nil arg for channel
+    # Client can set channel and instrument in any order, so may get a call
+    #  here where instrument has been set but channel hasn't yet been set.
+    # See #channel() and #instrument() in composer.rb
+    return if channel.nil?
+
     if include_win? or include_mac?
-    self.channel(channel) if channel_nil?(channel)    
+    self.channel(channel) if channel_nil?(channel)        
     @channel_tracks[channel].events << ProgramChange.new(channel, instrument, delta_time)
     @channel_instruments[channel] = instrument
     end
@@ -89,7 +95,7 @@ class MidiManager
   def add_note(channel, note, velocity, delta_time)   
     if include_win? or include_mac?
     channel(channel) if channel_nil?(channel)
-    note_length = @seq.length_to_delta(seconds_to_beats(delta_time))    
+    note_length = @seq.length_to_delta(seconds_to_beats(delta_time))        
     @channel_tracks[channel].events << NoteOnEvent.new(channel, note, velocity, 0)
     @channel_tracks[channel].events << NoteOffEvent.new(channel, note, velocity, note_length)
     end
