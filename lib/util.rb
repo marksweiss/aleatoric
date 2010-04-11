@@ -79,7 +79,7 @@ end
 # Of course, clients should understand the function to use it, which means they could/should figure this out
 #  but this is cleaner
 def swing?(base_val, num_steps)
-  base_val == 0.0 and num_steps == 0
+  base_val != 1.0 and num_steps != 0
 end
 
 # Another utility function so clients can abstract away how swing() works
