@@ -15,7 +15,7 @@ Composer provides a complete separation between the commands that define musical
  
 To summarize, these are the two most important goals of Composer: to present a minimally simple, easy and intuitive language for creating musical scores, and to allow complete separation between a composer's aleatoric directives and the code required to make them real.
  
-Beyond these specific goals, Aleatoric suggests something more powerful: that we can have computer languages for specifying artistic events (notes in a score) and arbitrary aesthetic guidelines (performance directions like "play louder if the moon is full") in a software system that produces art.
+Beyond these lofty goals, Aleatoric suggests something more powerful: that we can have computer languages for specifying artistic events (notes in a score) and arbitrary aesthetic guidelines (performance directions like "play louder if the moon is full") in a software system that produces art.
  
  
 -----------------------------
