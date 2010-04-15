@@ -26,3 +26,8 @@ OR
 - Whichever view of Finder folders you prefer, open the "aleatoric" folder and double click on the compressed folder you just downloaded, named something like "marksweiss-aleatoric-b1bf39d.zip" (the "b1bf39d" part of the name might be a little different).
 - This opens the compressed folder, you will see a folder named with the same name (for example, "marksweiss-aleatoric-b1bf39d.zip").  Double click this folder open.
 - You will see a series of folders and files.  Folders include "compositions", "doc", "lib", "test" and files include "README", "ROADMAP" and a few named "aleatoric_install_win.txt", "aleatoric_install_mac.txt" and "aleatoric_install_linux.txt" and so on. Press the Command and Shift keys and hold them down while clicking on the first and last files or folders listed to hightlight all of them.  Drag all the folders and files into the "aleatoric" folder.
+
+6. Install CSound (Optional - If you want to use CSound for rendering scores to sound files)
+
+- For OSX versions 10.5.x and above, open a web browser to http://sourceforge.net/projects/csound/files/csound5/csound5.11/csound5.11-OSX10.5-Intel.dmg/download
+- Run the installer when prompted.  Some browsers will prompt you to save.  In this case save the file and then navigate to it in Windows Explorer and double click the file (named something like "csound5.11-OSX10.5-Intel.dmg") to run the installer. NOTE: Do NOT change any settings from the defaults when running this installation.

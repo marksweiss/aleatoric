@@ -48,3 +48,10 @@ On Windows XP:
 - This opens the compressed folder, you will see another folder named with the same name (for example, "marksweiss-aleatoric-b1bf39d.zip") but without the zipper on the folder.  Double click this folder open
 - You will see a series of folders and files.  Folders include "compositions", "doc", "lib", "test" and files include "README", "ROADMAP" and a few named "aleatoric_install_win.txt", "aleatoric_install_mac.txt" and "aleatoric_install_linux.txt" and so on. Press the Shift key and hold it down while clicking on every file and folder you see.  Then, keeping the Shift key pressed, click and drag all the folders and files into the "C:\aleatoric" folder in the main Windows Explorer window. 
 
+
+6. Install CSound (Optional - If you want to use CSound for rendering scores to sound files)
+
+- Open a web browser to http://sourceforge.net/projects/csound/files/csound5/csound5.11/Csound5.11.1-gnu-win32-d.exe/download
+- Run the installer when prompted.  Some browsers will prompt you to save.  In this case save the file and then navigate to it in Windows Explorer and double click the file (named something like "Csound5.11.1-gnu-win32-d.exe") to run the installer. NOTE: Do NOT change any settings from the defaults when running this installation.
+
+

@@ -22,7 +22,13 @@ def psub(path)
 end
 
 module Aleatoric
-# include Aleatoric
+
+# Set the path to CSound. Installer for Mac sets path correctly but Windows does not and you have to add it to PATH yourself (of course).  Rather than add this reasonably arcane and technical step to install instructions we just assume default CSound install path (which hopefully doesn't ever change) and set a global here
+if include_win?
+  $CSOUND_PATH = %q{C:\Program Files\Csound\bin}
+elsif include_mac?
+  $CSOUND_PATH = 'csound'
+end
 
 # Yes, a hack, these two methods are used to redirect error to a dummy file
 #  so warnings don't show up anywhere while script is executed. Used to suppress warnings

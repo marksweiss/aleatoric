@@ -6,7 +6,7 @@ module Aleatoric
 
 class Renderer
   include Singleton
-    
+      
   def method_missing(name, val)
     def_accessor(name, val)    
     self.send(name.to_sym, val)
@@ -31,10 +31,10 @@ class Renderer
     case render_format.to_sym
     when :csound
       # TODO From config, base path, should be a setting used all over project
-      if RUBY_PLATFORM.include?('mswin')
-      system("consound -m0 -d -g -s -W -o#{out_file_name} #{self.orchestra} #{score_file_name}")
+      if include_win? # RUBY_PLATFORM.include?('mswin')
+        system("#{$CSOUND_PATH} -m0 -d -g -s -W -o#{out_file_name} #{self.orchestra} #{score_file_name}")
       else
-      system("csound -m7 -d -g -s -A -o#{out_file_name} #{self.orchestra} #{score_file_name}")        
+        system("#{$CSOUND_PATH} -m7 -d -g -s -A -o#{out_file_name} #{self.orchestra} #{score_file_name}")        
       end
     when :midi
       # no-op
