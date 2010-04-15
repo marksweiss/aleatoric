@@ -1,9 +1,0 @@
-cd /projects/aleatoric/compositions
-mkdir $1
-cd $1
-mkdir code
-mkdir code_param
-mkdir code_test
-mkdir render_out
-mkdir render_param
-mkdir resources
