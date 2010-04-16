@@ -48,18 +48,12 @@ Documentation and Examples
 For a complete overview of the Composer language, for both musical composers and programmers, see the language documentation and examples here: http://wiki.github.com/marksweiss/aleatoric/composer-1-introduction
 
 For programmers implementing ensembles to play scores, there is a well-documented library of of the Aleatoric API.  There is also a non-trivial reference project, a realization of Terry Riley's "In C," which includes:
-- a score:<br/>
-(http://github.com/marksweiss/aleatoric/blob/master/compositions/Terry_Riley-In_C/in_c.altc)<br/> 
-- an example software ensemble that performs it:<br/> (http://github.com/marksweiss/aleatoric/blob/master/compositions/Terry_Riley-In_C/In_C_midi_user_instruction.rb)<br/>
-- two example performances:<br/> (http://github.com/marksweiss/aleatoric/blob/master/compositions/Terry_Riley-In_C/In_C__perf_1.mid, http://github.com/marksweiss/aleatoric/blob/master/compositions/Terry_Riley-In_C/In_C__perf_2.mid),  
-
-Documentation generated from the Aleatoric API is here:
-http://github.com/marksweiss/aleatoric/tree/master/doc
-=======
-
-Documentation generated from the Aleatoric API is here:
-http://github.com/marksweiss/aleatoric/tree/master/doc
-=======
+-- a score
+http://github.com/marksweiss/aleatoric/blob/master/compositions/Terry_Riley-In_C/in_c.altc
+-- an example software ensemble that performs it
+http://github.com/marksweiss/aleatoric/blob/master/compositions/Terry_Riley-In_C/In_C_midi_user_instruction.rb
+-- two example performances
+http://github.com/marksweiss/aleatoric/blob/master/compositions/Terry_Riley-In_C/In_C__perf_1.mid http://github.com/marksweiss/aleatoric/blob/master/compositions/Terry_Riley-In_C/In_C__perf_2.mid  
 
 Documentation generated from the Aleatoric API is here:
 http://github.com/marksweiss/aleatoric/tree/master/doc
