@@ -2,13 +2,15 @@
 Introduction
 -----------------------------
  
-Aleatoric is a library for composing aleatoric and electronic music.  Composers use Aleatoric's musical score language, called Composer.  Composer is a simple language for specifying musical notes, organizing notes into phrases or measures, specifying software ensembles of performers intended to play the notes, and adding written instructions for those performers to follow.  Composer is a language specifically designed for musical composers to write aleatoric musical scores.
+Aleatoric is a library for composing aleatoric and electronic music.  Composers use Aleatoric's musical score language, called Composer.  Composer is a simple and clear language for specifying musical notes, organizing notes into phrases or measures, specifying software ensembles of performers intended to play the notes, and adding written instructions for those performers to follow.  The goal of Composer is to read very naturally and intuitively to a composer, and to provide tools specifically for aleatoric musical scores.
+
+The building blocks of a musical score in Composer are notes, phrases or measures, players (performers), ensembles, general performance instructions and improvisation instructions.  There are also instructions to render the performance into a sound file.  Advanced users can use loop commands to repeat a part of a score, and can even define custom programming functions.
  
-Composer provides a complete separation between the commands that define musical events and additional performance instructions.  Aleatoric itself thus includes two separate elements.  Composers use the Composer language to write scores.  The software code that "performs" the score and generates a performance, a rendered sound file, is written in the Ruby programming language, using the framework provided by Aleatoric.  
+Aleatoric provides a complete separation between the commands that define musical events and the code created to realize a performance of those events.  Composers use the Composer language to write scores.  The code that performs the score and generates a sound file is written in the Ruby programming language, using the framework provided by Aleatoric.  Musical composers can thus write a score with notes and instructions and never have to concern themself (or look at or understand) any of the performance code.  And the collaborator writing the performance code need only understand the instructions in the score, which are written as standard sentences, to create a system that fulfills them.
 
-A key goal of Aleatoric is to keep these two artifacts separate (borrowing an idea from Behavior Driver Software testing, see http://github.com/aslakhellesoy/cucumber/tree/master as an example) -- mirroring the relationship between real-world aleatoric composers and the performers who interpret and realize their scores.  In this case the musical composer writes a score, and includes instructions for players.  A collaborator (who may be the composer if they are also programmers) separately writes the code that follows those instructions.  The programmer interprets the instructions to create a software program that performs the piece.  
+In fact a key goal of Aleatoric is to keep these two artifacts separate (borrowing an idea from Behavior Driver Software testing, see http://github.com/aslakhellesoy/cucumber/tree/master as an example), and to thus mirror the relationship between real-world aleatoric composers and the performers who interpret and perform their scores.  
 
-When both are done, Aleatoric combine the musical score and the program that performs it to create the final sound file performance.  Each time you instruct Aleatoric to do this is a new performance generating a new sound file.
+When score and performance code are complete, Aleatoric combines them to create the final sound file performance.  Of course, you can create as many performances as you want.
 
 -----------------------------
 A Simple Example
@@ -38,8 +40,6 @@ Here is a simple example of a Composer score:
 This score defines two notes as part of a phrase "Intro Phrase," then renders them to an audio file.  Note the consistent and simple syntax of the language.  Indentation is optional, but should be used to show structure.  Here we see that each 'note' is part of the 'phrase,' and each line indented under each note defines an attribute of the note.
 
 In this example, rendering is done using the cross-platform electronic music composition software CSound.  At this time, Aleatoric supports rendering to either MIDI or CSound, and runs on Windows and Mac.
-
-The building blocks of a musical score in Composer are notes, phrases or measures, players (performers), ensembles, general performance instructions and improvisation instructions.  There are also instructions to render the performance into a sound file.  Advanced users can use loops (instructions to repeat a certain part of the score more than once) and define custom programming functions. 
  
 -----------------------------
 Documentation and Examples
@@ -47,7 +47,7 @@ Documentation and Examples
  
 For a complete overview of the Composer language, for both musical composers and programmers, see the language documentation and examples here: http://wiki.github.com/marksweiss/aleatoric/composer-1-introduction
 
-For programmers implementing ensembles to play scores, there is a well-documented library of of the Aleatoric API.  There is also a non-trivial reference project, a realization of Terry Riley's "In C," which includes:
+For programmers implementing ensembles to perform scores, there is the documented Aleatoric Ensemble API.  There is also a non-trivial reference project, a realization of Terry Riley's "In C," which includes:
 -- a score
 http://github.com/marksweiss/aleatoric/blob/master/compositions/Terry_Riley-In_C/in_c.altc
 -- an example software ensemble that performs it
@@ -55,7 +55,5 @@ http://github.com/marksweiss/aleatoric/blob/master/compositions/Terry_Riley-In_C
 -- two example performances
 http://github.com/marksweiss/aleatoric/blob/master/compositions/Terry_Riley-In_C/In_C__perf_1.mid http://github.com/marksweiss/aleatoric/blob/master/compositions/Terry_Riley-In_C/In_C__perf_2.mid  
 
-Documentation generated from the Aleatoric API is here:
+Also, documentation generated from the Aleatoric API code is here (in progress):
 http://github.com/marksweiss/aleatoric/tree/master/doc
-
-4-15-2010
