@@ -1,23 +1,16 @@
------------------------
-Aleatoric README
-Mark Weiss
-v 0.6.0
-last updated: 8/16/2008
------------------------
- 
+
 -----------------------------
 Introduction
 -----------------------------
  
-Aleatoric is a library for composing aleatoric and electronic music.  Composers use Aleatoric's Composer language, a very simple and focused language for specifying musical notes, organizing notes into groups, and creating additional written directives for "performers" of the score to follow.  Composer is a domain-specific-language, or DSL, which really just means that writing the language requires only what is needed for the task of creating traditional or aleatoric compositions (which typically define both musical events and additional written performance instructions).
+Aleatoric is a library for composing aleatoric and electronic music.  Composers use Aleatoric's musical score language, called Composer.  Composer is a simple language for specifying musical notes, organizing notes into phrases or measures, specifying software ensembles of performers intended to play the notes, and adding written instructions for those performers to follow.  Composer is a language specifically designed for musical composers to write aleatoric musical scores.
  
-Composer provides a complete separation between the commands that define musical events and additional performance instructions, and the code that ends up generating the resulting sound file that represents a "performance" of the composition.  In particular, the language borrows an idea from the world of software testing (a prime inspiration is here, http://github.com/aslakhellesoy/cucumber/tree/master) to allow the "domain expert," who in this case is the musically inclined composer, to simply describe performance directions in sentences.  Meanwhile, the program that actually implements the actions described is hidden from the composer, visible only to the programmer responsible for writing it.  Of course, in some cases, one person fills the role of both composer and programmer, but that emphatically need not be the case.
- 
-To summarize, these are the two most important goals of Composer: to present a minimally simple, easy and intuitive language for creating musical scores, and to allow complete separation between a composer's aleatoric directives and the code required to make them real.
- 
-Beyond these lofty goals, Aleatoric suggests something more powerful: that we can have computer languages for specifying artistic events (notes in a score) and arbitrary aesthetic guidelines (performance directions like "play louder if the moon is full") in a software system that produces art.
- 
- 
+Composer provides a complete separation between the commands that define musical events and additional performance instructions.  Aleatoric itself thus includes two separate elements.  Composers use the Composer language to write scores.  The software code that "performs" the score and generates a performance, a rendered sound file, is written in the Ruby programming language, using the framework provided by Aleatoric.  
+
+A key goal of Aleatoric is to keep these two artifacts separate (borrowing an idea from Behavior Driver Software testing, see http://github.com/aslakhellesoy/cucumber/tree/master as an example) -- mirroring the relationship between real-world aleatoric composers and the performers who interpret and realize their scores.  In this case the musical composer writes a score, and includes instructions for players.  A collaborator (who may be the composer if they are also programmers) separately writes the code that follows those instructions.  The programmer interprets the instructions to create a software program that performs the piece.  
+
+When both are done, Aleatoric combine the musical score and the program that performs it to create the final sound file performance.  Each time you instruct Aleatoric to do this is a new performance generating a new sound file.
+
 -----------------------------
 A Simple Example
 -----------------------------
@@ -43,158 +36,25 @@ Here is a simple example of a Composer score:
     format    csound
     orchestra  "my_csound_orchestra.orc"
  
-This score defines two notes as part of a phrase "Intro Phrase," then renders them to an audio file.  The note properties and rendering are done using the cross-platform electronic music composition software CSound. (MIDI support in Aleatoric is on the road map for the next release of the library.)
- 
-Note the consistent and simple syntax of the language.  Indentation is optional, but should be used to show structure.  Here we see that each 'note' is part of the 'phrase,' and each line indented under each note defines an attribute of the note.  
- 
-All statements occupy their own single line.  They start with either a noun like 'phrase' or a verb like 'render' at the start of the line, and then one or more values that further describe that noun or verb.  So 'phrase' is followed by its name "Intro Phrase," and 'amplitude' (how loud the note is) is followed by a number that sets the value for that attribute of the note.  
- 
-You only need to be aware of two elements of punctuation: double quotes around the names you give things, such as "Intro Phrase," and commas separating each value in a list if there is more than one value. For example:
- 
-  render "my_composition.wav"
-    phrases   "Intro Phrase", "Movement One"
-  
-For a complete overview of the Composer language, for both composers and programmers, see the language documentation and examples here: http://wiki.github.com/marksweiss/aleatoric
- 
- 
------------------------------
-Musical Score Concepts
------------------------------
- 
-The fundamental unit you define in a Composer score is the 'note.'  Notes have various attributes defined in the block below the note depending on whether the format being used for the output is CSound or MIDI.  In the current examples here and in the full documentation, note properties are those required to define a note in a CSound score -- instrument, amplitude, start time, duration and pitch.  A MIDI score would have slightly different note attributes and specify 'midi' as the value for 'format,' but would otherwise be identical.
- 
-Composer provides several elements for grouping notes together.  A 'phrase' is simply a named group of notes.  So, if you want to define 50 notes, and then render those 50 notes, you put them in a phrase and then use the phrase name in the 'phrases' list provided to the 'render' command:
- 
-  render "my_composition.wav"
-    phrases   "Intro Phrase", "Movement One"
-  
-Here "Intro Phrase" and "Movement One" could each have had any number of notes that you wouldn't want to list by name to include in the resulting sound file.
- 
-A 'section' in turn includes one or more 'phrase' blocks, again with the goal of providing grouping for convenience.  You can similarly refer to sections by name in a 'sections' statement and that section will include all phrases within its original 'section' and all the notes in all of those phrases.
- 
-Another way to group notes is in a 'measure,' which is analogous to a measure in a musical score.  Composer supports a concept of 'meter' in measures, with meters specifying beats per measure and the duration of each beat.  Notes can be quantized, or forced align with the meter.
- 
-The only other concept you need to understand to use Composer as a tool for defining musical scores is the 'render' command, which names the file that is the result of transforming the score into either a CSound- or MIDI-produced sound file.  You must include the name of the file you want to produce and a 'format' attribute specifying CSound or MIDI output.  
- 
-In order to have any notes actually appear, you also need to give render one or more 'notes' or 'phrases' or 'sections' attributes, each of which has one or more values in a list of names of previously defined 'note' or 'phrase' or 'section' blocks.  For example:
- 
-  phrase "Intro Phrase"
-    note "1"
-      instrument  1 
-      start       0.0 
-      duration    0.5
-      amplitude   1000
-      pitch       7.01
-    note "2"
-      instrument  1
-      start       1.0 
-      duration    1.0
-      amplitude   1100
-      pitch       7.02
- 
-  render "my_composition.wav"
-    phrases   "Intro Phrase"
-    format    csound
- 
-(Note this pattern, which is used consistently for all major score elements -- the singular form (such as 'phrase') defines the score element, and the plural form (such as 'phrases') refers to a list of one or more of the elements previously defined.)
- 
- 
------------------------------
-Performance Score Concepts
------------------------------
- 
-As the previous section shows, you can use Composer simply to describe musical events in a score and turn that description into an actual musical file that plays on your computer.  But the language also supports aleatoric features.
+This score defines two notes as part of a phrase "Intro Phrase," then renders them to an audio file.  Note the consistent and simple syntax of the language.  Indentation is optional, but should be used to show structure.  Here we see that each 'note' is part of the 'phrase,' and each line indented under each note defines an attribute of the note.
 
-First, beyond the statements for defining musical events directly, there are statements supporting the notions of players who play a score, and players in an ensemble playing a score together.
+In this example, rendering is done using the cross-platform electronic music composition software CSound.  At this time, Aleatoric supports rendering to either MIDI or CSound, and runs on Windows and Mac.
+
+The building blocks of a musical score in Composer are notes, phrases or measures, players (performers), ensembles, general performance instructions and improvisation instructions.  There are also instructions to render the performance into a sound file.  Advanced users can use loops (instructions to repeat a certain part of the score more than once) and define custom programming functions. 
  
-A 'player' is assigned a name when defined (again, so that later 'players' commands can refer to that player) and also assigned notes in either 'section' or 'phrase' or 'note' blocks below the player.  Players are then instructed in the score to 'play' and the results of this performance are rendered into the final result:
+-----------------------------
+Documentation and Examples
+-----------------------------
  
-  player "Player 1"  
-    phrase "Phrase 1"
-      note "1"
-        instrument  1 
-        start       1.0 
-        duration    0.5
-        amplitude   1000
-        pitch       7.01
-      note "2"
-        instrument  2 
-        start       2.0 
-        duration    1.0
-        amplitude   1100
-        pitch       7.02
- 
-  play
-    players "Player 1", "Player 2" 
-  
-  render "my_composition.wav"
-    players "Player 1", "Player 2"      
-    format    csound  
-      
-In this simplest form, the result is no different then if the notes had simply been defined directly.  But, crucially, Composer also supports arbitrary directions that the composer intends players to follow.  These are defined using the 'instruction' statement:
- 
-  instruction "Fortissimo"
-    description "Player should play each note twice as loud as the notated volume of the note."
-    players     "Player 1"
- 
-An instruction is named, and has a 'description' which is just one or more sentences that describe the composer's intentions.  So, in this way an instruction can fulfill any aleatoric compositional goal.  Fulfilling the second goal of the language stated above, a Composer score simply includes the description while the code that enacts the instruction is written by a programmer and placed in a different file.  The composer never has to see or think about that code -- they just write their instruction in their score.  It is up to the composer to listen to the resulting performance by the program and decide whether, for example, the code for "Fortissimo" is modifying the performance as  intended.  If not, the score need not change, but the code for the instruction must be modified and the performance is rendered again for further review.  Aleatoric provides a standard way for programmers to implement instructions and include them in the  final performance.
- 
-If players have been assigned an instruction, then the instruction affects their performance when they play.  For example, here "Player 1" will play "Fortissimo" but "Player 2" will not.
- 
-  instruction "Fortissimo"
-    description "Player should play each note twice as loud as the notated volume of the note."
-    players     "Player 1"
- 
-  play
-    players "Player 1", "Player 2" 
- 
-Players can also be organized into ensembles using the 'ensemble' statement.  Like 'phrases' and 'sections' that group notes, 'ensemble' groups one or more players that can be referenced by the name of the ensemble.  As you might expect, if an ensemble is named in an 'ensembles' list in a 'play' block, then all players in that ensemble will play:
- 
-  ensemble "Ensemble 100"
-    players "Player 1", "Player 2"  
-    
-    phrase "Phrase 1"
-      note "1"
-        instrument  1 
-        start       1.0 
-        duration    0.5
-        amplitude   1000
-        pitch       7.01
-        func_table  1
-        
-      note "2"
-        instrument  2 
-        start       2.0 
-        duration    1.0
-        amplitude   1100
-        pitch       7.02
-        func_table  1
- 
-  play
-    ensembles "Ensemble 100"
- 
-More interestingly, instructions can also be assigned to ensembles as well as individual players.  This supports performance directions that are intended for an entire ensemble to follow.  For example, Terry Riley's composition "In C" includes this instruction in the score, "As an ensemble, it is very desirable to play very softly as well as very loudly and to try to diminuendo and crescendo together."  Clearly this requires an instruction that is aware of what all the players in the ensemble are playing.
- 
-  instruction "Ensemble Diminuendo and Crescendo"
-    description "As an ensemble, it is very desirable to play very softly as well as very loudly and to try to diminuendo and crescendo together."
-    ensembles "In C Orchestra"
- 
-Finally, Composer supports the notion of 'improvisation' directions in the score and an 'improvise' statement instructing players to improvise notes based on that direction.
- 
-  improvisation "Rock out extremely hard"
-    description "Never stop rockin', ever, seriously.  No, really, I mean never, ever."
-    players "Player 1"
-    
-  improvise 
-    players "Player 1"
- 
-Again, the implementation of the code that the software players run to generate their improvised notes is created by a programmer following the intent of the improvisation's 'description' and remains hidden from the composer of the score.
+For a complete overview of the Composer language, for both musical composers and programmers, see the language documentation and examples here: http://wiki.github.com/marksweiss/aleatoric/composer-1-introduction
+
+For programmers implementing ensembles to play scores, there is a well-documented library of of the Aleatoric API.  There is also a non-trivial reference project, a realization of Terry Riley's "In C," which includes:
+- a score:<br/>
+(http://github.com/marksweiss/aleatoric/blob/master/compositions/Terry_Riley-In_C/in_c.altc)<br/> 
+- an example software ensemble that performs it:<br/> (http://github.com/marksweiss/aleatoric/blob/master/compositions/Terry_Riley-In_C/In_C_midi_user_instruction.rb)<br/>
+- two example performances:<br/> (http://github.com/marksweiss/aleatoric/blob/master/compositions/Terry_Riley-In_C/In_C__perf_1.mid, http://github.com/marksweiss/aleatoric/blob/master/compositions/Terry_Riley-In_C/In_C__perf_2.mid),  
+
+Documentation generated from the Aleatoric API is here:
+http://github.com/marksweiss/aleatoric/tree/master/doc
 
 
-------------------------------------
-Technical and Theoretical Background
-------------------------------------
- 
-This project started with an attempt to render Terry Riley's seminal "In C" in software (code and final rendered output are here: /compositions/Terry_Riley-In_C).  In working on this piece, it struck me how such aleatoric compositions align very well with a computational model.  For "In C," for example, Riley composed 53 short musical phrases which the members of the ensemble work through sequentially.  In addition the score includes a series of instructions from the composer to the players.  The instructions are guidelines and leave room for the players to make their own choices, reacting to characteristics of a phrase, where they are in the sequence, and most of all to what they are hearing the rest of the ensemble play.  Aleatoric compositions often follow this approach, providing some musical material (input) and some instructions (a prescription that leaves room for interpretation, reaction and improvisation in the hands of the performers).  So one can think of the ensemble's performance as an instance of a computation that processes input (the notes) directed by an algorithm (the aleatoric rules) to produce an output (a musical performance, in our case rendered by software and saved as a sound file).
- 
-However, in this first attempt , I became frustrated by the idea that all of the code could be used to perform only this one composition, especially given how much work it was to interpret, encode and tweak the composition's rules into software.  Aleatoric is the response to this motivation, a general library for creating aleatoric compositions and software ensembles to perform them.
