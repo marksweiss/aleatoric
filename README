@@ -52,8 +52,13 @@ For programmers implementing ensembles to play scores, there is a well-documente
 (http://github.com/marksweiss/aleatoric/blob/master/compositions/Terry_Riley-In_C/in_c.altc)<br/> 
 - an example software ensemble that performs it:<br/> (http://github.com/marksweiss/aleatoric/blob/master/compositions/Terry_Riley-In_C/In_C_midi_user_instruction.rb)<br/>
 - two example performances:<br/> (http://github.com/marksweiss/aleatoric/blob/master/compositions/Terry_Riley-In_C/In_C__perf_1.mid, http://github.com/marksweiss/aleatoric/blob/master/compositions/Terry_Riley-In_C/In_C__perf_2.mid),  
+<<<<<<< HEAD:README
 
 Documentation generated from the Aleatoric API is here:
 http://github.com/marksweiss/aleatoric/tree/master/doc
+=======
+>>>>>>> cc710f4164f955064679cad5af86814d836388c8:README
 
+Documentation generated from the Aleatoric API is here:
+http://github.com/marksweiss/aleatoric/tree/master/doc
 
