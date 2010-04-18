@@ -1,0 +1,73 @@
+_*Composer Reference and Tutorial*_
+
+*Introduction and Examples*<br/><br/>
+
+You use the Composer language to define musical scores.  Scores have two distinct concerns, defining musical events and, optionally, defining players and ensembles to play notes and act on additional performance directions.
+
+You can simply define notes and tell Aleatoric to render them, in which case you are using Composer much like traditional musical notation.  If your intention is to both define musical events and provide guidance to the imaginary software performers of those notes, you can do that by defining a @player@ or many and an @ensemble@ and giving them an @instruction@ or many about performance (or, really anything you want) or defining one or more of an @improvisation@.  Also, without doing any programming, you can use the @repeat@ statement to repeat any section of the score as many times as you want.
+
+Let's start with two simple but complete scripts.
+
+  @# A simple Composer score to define two notes and render them into a sound file@</br>
+</br>
+  @phrase "Intro Phrase"@</br>
+  &nbsp;&nbsp;@note "1"@</br>
+  &nbsp;&nbsp;&nbsp;&nbsp;@instrument  1@</br>
+  &nbsp;&nbsp;&nbsp;&nbsp;@start       0.0@</br>
+  &nbsp;&nbsp;&nbsp;&nbsp;@duration    0.5@</br>
+  &nbsp;&nbsp;&nbsp;&nbsp;@amplitude   1000@</br>
+  &nbsp;&nbsp;&nbsp;&nbsp;@pitch       7.01@</br>
+  &nbsp;&nbsp;&nbsp;&nbsp;@func_table  1@</br>    
+  &nbsp;&nbsp;@note "2"@</br>
+  &nbsp;&nbsp;&nbsp;&nbsp;@instrument  1@</br>
+  &nbsp;&nbsp;&nbsp;&nbsp;@start       1.0@</br> 
+  &nbsp;&nbsp;&nbsp;&nbsp;@duration    1.0@</br>
+  &nbsp;&nbsp;&nbsp;&nbsp;@amplitude   1100@</br>
+  &nbsp;&nbsp;&nbsp;&nbsp;@pitch       7.02@</br>
+  &nbsp;&nbsp;&nbsp;&nbsp;@func_table  1@</br>
+  </br>
+  @render "composer_test.wav"@</br>
+  &nbsp;&nbsp;@phrases   "Intro Phrase"@</br>
+  &nbsp;&nbsp;@format    csound@</br>
+  &nbsp;&nbsp;@orchestra "my_orchestra.orc"@</br>
+  </br>
+  @##################################@</br>
+  </br>
+  @# John Cage - 4'33''@</br>
+  @# A famous aleatoric composition, with an original score that has no musical notes, only performance directives@</br>
+  @# NOTE: This isn't based on an actual original score, but is just shown in a brief and ad-hoc form for illustration@</br>
+  </br>
+  @player "David Tudor"@</br>
+  &nbsp;&nbsp;@phrase "4'33 - Three Movements"@</br>    
+  &nbsp;&nbsp;&nbsp;&nbsp;@note "First Movement"@</br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@start 0.0@</br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@duration 30.0@</br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@amplitude 0@</br>
+  &nbsp;&nbsp;&nbsp;&nbsp;@note "Second Movement"@</br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@start 30.0@</br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@duration 143.0@</br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@amplitude 0@</br>
+  &nbsp;&nbsp;&nbsp;&nbsp;@note "Third Movement"@</br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@start 173.0@</br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@duration 100.0@</br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@amplitude 0@</br>      
+</br>
+  @instruction "Opening Performance Instruction"@</br>
+  &nbsp;&nbsp;@description "The performer is to present himself to the audience in a position normally associated with performing music, for example, walking on stage and then sitting down at a piano, as if to play.  The performer should not play the instrument."@</br>
+  &nbsp;&nbsp;@players "David Tudor"@</br>
+</br>
+  @instruction "Performance Instruction"@</br>
+  &nbsp;&nbsp;@description "The performer should make some indication of each note having completed at the time that that note ends.  For example, the performer might partially open and re-close the keyboard lid if they are sitting at a piano."@</br>
+  &nbsp;&nbsp;@players "David Tudor"@</br>
+    </br>
+  @play@</br>
+  &nbsp;&nbsp;@players "David Tudor"@</br>
+      </br>
+  @render "4'33''.wav"@</br>
+  &nbsp;&nbsp;@players "David Tudor"@</br>
+  &nbsp;&nbsp;@format    csound@</br>
+  &nbsp;&nbsp;@orchestra "dummy.orc"@</br>
+    </br>
+  @##################################@</br> 
+</br>
+</br>

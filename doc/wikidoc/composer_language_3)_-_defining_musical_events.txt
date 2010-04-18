@@ -1,0 +1,114 @@
+_*Composer Reference and Tutorial*_
+
+*Defining Musical Events*<br/><br/>
+
+*Statement*: @note@
+
+Much like in a notated score, in a Composer score you declare each @note@, and define its essential attributes.  These typically include when the note starts, how long it lasts, how loud it is, and what pitch it is.  Other attributes may be required depending on whether you are using CSound or MIDI to render the output.
+
+Composer assumes a standard base set of valid note attributes, but allows the user to set any others they wish.  Composer assumes that if you are using CSound, you are familiar with its conventions and know what attributes to set.  MIDI is supported, and you can use the Composer names for the essential MIDI note attributes or their conventional MIDI names.  This tutorial and the sample scores provided are examples of correctly defined Notes in both systems.
+
+The five attributes Composer recognizes for every note are:
+* @instrument@
+* @start@ (can also use MIDI name @time@ if desired)
+* @duration@
+* @volume@ (can also use CSound standard name @amplitude@ or MIDI name @velocity@)
+* @pitch@
+* @channel@ (MIDI only)
+
+_CSound Only:
+Composer allows you to define additional attributes for any note for CSound output only.  These will be automatically added to the note and output by the note, for CSound output.  Composer assumes you have knowledge of the CSound instrument playing the note, and that it will correctly handle the attribute you have defined in the position you have defined it._
+
+The core attributes of any note are: @duration@, @amplitude@, and @pitch@.  
+
+You can specify @start@, but you do not need to.  If you do not the note will be set to start immediately after the previous note in the score ends, or if the note is played by a player it will start after the end of the last note played by that player.  This makes it convenient to chain notes in a series of phrases or measures and simply assume they will be played in sequence, just as in a traditional score.
+
+You can also specify an @instrument@ for each note.  If you do not, you must assign an instrument to a @player@ who plays the @note@.  In this case, every note played by the player will be played with that instrument.
+
+The first line of a note block is the statement @note@, optionally followed by a name enclosed in "" for the note.  Because it is common to define many notes without needing to reference them in particular, note name is optional.  Any attributes of the note follow on the next lines, starting with the line immediately after the @note@ line.  By convention, attributes are indented two spaces, but that isn't necessary and is only convention to make scores more readable.
+
+Here are some examples:
+
+@# All core note attributes@ 
+&nbsp;&nbsp;@note "1"@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;@instrument  1@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;@start       0.0@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;@duration    0.5@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;@amplitude   1000@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;@pitch       7.01@</br>
+
+@# Just the essential core note attributes.  instrument must be assigned to a player and this note must be@
+@# in a block for that player.  Also, the note start will automatically be set to immediately follow the previous note.@ 
+&nbsp;&nbsp;@note "1"@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;@duration    0.5@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;@amplitude   1000@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;@pitch       7.01@</br>
+
+Composer also supports some additional convenient "constants":http://wiki.github.com/marksweiss/aleatoric/composer-z-appendix-csound-and-midi-constants for core note attributes, for both CSound and MIDI.  If you set the @format@ of the score to @csound@, then constants are available for all notes in the Western scale from @C1@ to @B8@.  If you set the @format@ to @midi@, then constants are available from @Cneg1@ to @G9@ (following the rather odd MIDI convention, of an octave range from -1 to 9).  
+
+Also, all General MIDI instruments and Percussion instruments are aliased with convenient constants, such as @Acoustic_Grand_Piano@.  Note that Composer enforces the rule that only MIDI constants are available if the format is MIDI, and only CSound constants are available if the format is CSound.
+
+*Statement*: @phrase@
+
+A @phrase@ is a named block which groups one or more notes.  This is essentially all a @phrase@ is used for, to logically group notes and then refer to them later in list of phrase names following a @phrases@ statement (more on this below).  
+
+A @phrase@ block can also appear within a @player@ or @ensemble@.  In the first case, the player is assigned all notes in the phrase, in the order the notes appear in the phrase.  In the second case, all players in the ensemble are assigned all notes in the phrase, again in phrase order.  
+
+Some examples:
+
+@# A simple phrase with two notes@
+@phrase "Intro Phrase"@</br>
+&nbsp;&nbsp;@note "1"@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;@duration    0.5@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;@amplitude   1000@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;@pitch       7.01@</br>
+&nbsp;&nbsp;@note "2"@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;@duration    1.5@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;@amplitude   2000@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;@pitch       7.02@</br>
+
+@# A simple phrase with two notes, assigned to a player@
+@player "Groove-meister"@</br>
+&nbsp;&nbsp;@phrase "Intro Phrase"@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;@note "1"@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@duration    0.5@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@amplitude   1000@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@pitch       7.01@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;@note "2"@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@duration    1.5@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@amplitude   2000@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@pitch       7.02@</br>
+
+*Statement*: @section@
+
+A @section@ is a named block which groups one or more phrasess.  This is essentially all a @section@ is used for, to logically group phrases of notes and then refer to them later in list of phrase names following a @sections@ statement.  
+
+A @section@ block can also appear within a @player@ or @ensemble@.  In the first case, the player is assigned all notes from all phrases in the section, in section order and then in phrase order within each section (all notes from the first phrase, in order, followed by all from the second phrase, and so on).  In the second case, all players in the ensemble are assigned all notes from all phrases sections in the phrase, in the same order.  
+
+Some examples:
+
+@# A simple section with one phrase@
+@section "Intro Section"@</br>
+&nbsp;&nbsp;@phrase "Intro Phrase"@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;@note "1"@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@duration    0.5@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@amplitude   1000@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@pitch       7.01@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;@note "2"@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@duration    1.5@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@amplitude   2000@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@pitch       7.02@</br>
+
+@# A simple section with two phrases, assigned to a player@
+@player "Groove-meister"@</br>
+&nbsp;&nbsp;@section "Opening Section"@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;@phrase "Intro Phrase"@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@note "1"@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@duration    0.5@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@amplitude   1000@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@pitch       7.01@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;@phrase "First Phrase"@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@note "100"@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@duration    1.5@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@amplitude   500@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@pitch       9.04@</br>

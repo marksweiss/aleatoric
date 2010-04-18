@@ -1,0 +1,69 @@
+_*Composer Reference and Tutorial*_
+
+*Punctuation*<br/><br/>
+
+*Comments*
+
+_Comments_ are lines or parts of lines of text in your Composer score that will be ignored by Aleatoric and not contribute to the performance in any way.  They are supported to allow you to put useful notes to yourself in the score.
+
+You create comments by starting a line with the '#' character.
+
+@# A simple Composer score to define two notes and render them into a sound file@</br>
+@phrase "Intro Phrase"@</br>
+&nbsp;&nbsp;@note "1"@</br>
+&nbsp;&nbsp; ...
+&nbsp;&nbsp; ...
+
+You can also start a comment anywhere in the middle of a line, and the rest of the line including the '#' character will be treated as a comment.  In either case, everything from the '#' character to the end of that line is a comment.  Comments never carry over to the next line.
+
+@phrase "x6adhjah27"  # Hmm... perhaps this needs a more informative name@</br>
+&nbsp;&nbsp;@note "1"@</br>
+&nbsp;&nbsp; ...</br>
+&nbsp;&nbsp; ...</br>
+
+*Names*
+
+In Composer you create musical things, such as notes, phrases, measures, players and ensembles.  For your convenience, to give meaning to your score, and so you can refer to these things in various places in the score, you give these things _names_.  The way you do this is to enclose the word or words of the name in double quotes.  This tells Aleatoric that these words in your score are your own name and not statements that it needs to act on.
+
+Strictly speaking names do not need to be unique.  However, if you repeat a name for each type of musical thing (@note@, @phrase@, @section@, @measure@, @player@, @ensemble@, @instruction@, @improvisation@) you can create in Composer, such as naming a @note@ "1" in one place and another note later with the same name, unexpected things can happen.  Generally you can assume the last thing defined will supercede earlier things -- but _you should not count on this behavior and should instead carefully create names so they don't repeat for any of these things_.
+
+Here is an example.
+
+@phrase "x6adhjah27"@</br>
+&nbsp;&nbsp;@note "1"@</br>
+&nbsp;&nbsp; ...</br>
+&nbsp;&nbsp; ..</br>
+
+Here the author of the score has named a phrase _x6adhjah27_ and a note _1_.  Aleatoric will interpret the score as follows:</br>
+* @phrase@ is a statement indicating the start of a phrase of notes
+* the word in quotes next to @phrase@ is the name of that phrase
+* @note@ is a statement indicating the start of a note that is part of the current phrase
+* the word in quotes next to @note@ (if there is one) is the name of that note
+
+*Lists*
+
+In some cases in Composer scores you need to list more than one item that a statement acts on.  Such as:
+</br>
+@sections "Section 1", "Section 2"@</br>
+</br>
+Notice that you separate the names in a list, if there are more than one, with a comma.  All statements that act on a list can also act on a list of just one item, in which case no comma is needed.
+</br>
+@sections "Section 1"@</br>
+</br>
+
+*Functions (Advanced Topic)*
+
+Advanced users can extend Composer by defining their own functions and using these in scores.  Functions are an advanced topic, which we will just touch on here.  A function has two different parts, the place where you create the function, providing its name and a full definition, and the place you call function, invoking it and expecting it to "run" and "give back" a value.  (If this description is insultingly simple because you are a more technical reader, apologies.  If in turn it makes no sense because you are not, return here later when these concepts are more familiar).
+
+In any case, we discuss functions here because they require the fourth and final punctuation mark in the Composer language, the colon.  Function declarations, which name and define a function, and function invocations both require a colon.  An example:
+
+@# Declare the function, function name is followed immediately by a colon@</br>
+@loop_step_up: start, step, index@</br>
+&nbsp;&nbsp;@start + (step * index)@</br>
+...</br>
+...</br>
+
+@# Call the function, function name is followed immediately by a colon@
+@note "rise 1"@</br>
+&nbsp;&nbsp;@start loop_step_up: 0.0, 1, 2@</br>
+</br>
