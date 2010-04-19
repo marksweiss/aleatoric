@@ -1,6 +1,6 @@
 _*Composer Reference and Tutorial*_
 
-TODO INCLUDE defining REST notes here
+TODO include defining REST notes here
 
 *Working With Notes*<br/><br/>
 

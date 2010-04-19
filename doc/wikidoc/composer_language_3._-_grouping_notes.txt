@@ -220,6 +220,4 @@ You use @copy_measure@ to create copies of a measure with a single statement, wi
 @# Make a copy of Measure 1, and name the copy Measure 2
 @copy_measure "Measure 1", "Measure 2"@</br>
 
-_Note that this is the first time in the documentation for Composer where we have seen a list of values that a statement acts on.  Notice that each item in the list is separated with a comma._  We will see this same syntax in the plural form statements, @phrases@, @sections@, @measures@, @players@ and @ensembles@.  All take lists of names, separated by commas.
-
 Notes in a @copy_measure@ measure are automatically given start times immediately following the previous note in the score.  So the first note in the first measure in the list of measures will immediately follow the last note declared in the score before the @copy_measure@ statement.  The second note in the first measure in the @copy_measure@ list follows the first note, and so on.

@@ -1,0 +1,17 @@
+_*Composer Reference and Tutorial*_
+
+*Instructing Performers and Ensembles*<br/><br/>
+
+@player@
+
+@ensemble@
+
+@instruction@
+
+@improvisation@
+
+@play@
+
+@improvise@
+
+@players@ and @ensembles@
