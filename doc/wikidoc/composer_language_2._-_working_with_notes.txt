@@ -68,6 +68,15 @@ If you set duration values using these abbreviations, the actual duration of the
 &nbsp;&nbsp;@duration WHL  # This note will last four seconds@<br/>
 &nbsp;&nbsp;@volume 100@<br/>
 
+_Creating Musical Rests_
+
+Sometimes you want to create musical events of a given duration that make no sound, that is, musical rests.  In Composer you do this by defining a note with a @volume@ attribute with the value of 0.  You can also use the value @REST@ for such a note, to make it more clear when you read the score that it is a rest.
+
+@note "Whole Rest"@<br/>
+&nbsp;&nbsp;@instrument 1@<br/>
+&nbsp;&nbsp;@duration WHL  # This note will last four seconds@<br/>
+&nbsp;&nbsp;@volume REST@<br/>
+
 @note@ *Attributes and Behavior Specific to MIDI*
 
 If you have worked with MIDI at all, you are likely familiar with the list of standard General MIDI instruments.  In Composer, all General MIDI instruments and MIDI percussion instruments can be referred to using these familiar names, such as @MIDI_Acoustic_Grand_Piano@.  Note that Composer only allows you to use these MIDI constants if the format of the score is MIDI.
