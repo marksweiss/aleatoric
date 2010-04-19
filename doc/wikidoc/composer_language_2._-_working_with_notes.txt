@@ -1,7 +1,5 @@
 _*Composer Reference and Tutorial*_
 
-TODO include defining REST notes here
-
 *Working With Notes*<br/><br/>
 
 *Statement*: @note@
@@ -59,13 +57,21 @@ However, Composer also lets you use abbreviations for note durations commonly us
 * @THRTYSCND@ - a thirty-second note
 * @SXTYFRTH@ - a sixty-fourth note
 
-If you set duration values using these abbreviations, the actual duration of the note is determined by the value you give for @whole note length@, which you can set once at the top of your score to any positive number you would like, either a whole number or decimal.  If you do not set it, Composer assigns a value of 2 seconds itself, meaning whole notes are two seconds long, half notes one second, quarter notes a half second, and so on.  An example:
+If you set duration values using these abbreviations, the actual duration of the note is determined by the value you give for @whole note length@, which you can set once at the top of your score to any positive number you would like, either a whole number or decimal.  If you do not set it, Composer assigns a value of 4 seconds itself, meaning whole notes are 4 seconds long, half notes 2 seconds, quarter notes a second, and so on.
 
-@whole note length 4  # A whole note is 4 seconds long@
+Note that if you specify either a whole or decimal value for duration, i.e. a number and not one of the predefined durations above, then @whole note length@ _has no effect_ on the length of notes.
+
+An example:
+
+@whole note length 2  # A whole note is now 2 seconds long@
 
 @note "short note"@<br/>
 &nbsp;&nbsp;@instrument 1@<br/>
-&nbsp;&nbsp;@duration WHL  # This note will last four seconds@<br/>
+&nbsp;&nbsp;@duration WHL  # This note will last 2 seconds@<br/>
+&nbsp;&nbsp;@volume 100@<br/>
+@note "Another"@<br/>
+&nbsp;&nbsp;@instrument 1@<br/>
+&nbsp;&nbsp;@duration 1.5  # This note will last 1.5 seconds@<br/>
 &nbsp;&nbsp;@volume 100@<br/>
 
 _Creating Musical Rests_
@@ -74,7 +80,7 @@ Sometimes you want to create musical events of a given duration that make no sou
 
 @note "Whole Rest"@<br/>
 &nbsp;&nbsp;@instrument 1@<br/>
-&nbsp;&nbsp;@duration WHL  # This note will last four seconds@<br/>
+&nbsp;&nbsp;@duration WHL@<br/>
 &nbsp;&nbsp;@volume REST@<br/>
 
 @note@ *Attributes and Behavior Specific to MIDI*
