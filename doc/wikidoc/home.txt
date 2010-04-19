@@ -1,4 +1,4 @@
-*Introduction*
+*Overview*
  
 Aleatoric is a tool for musical composers and programmers collaborate to create aleatoric musical scores and software ensembles of performers to perform them.  Performances result in a rendered sound file.  As in real-world aleatoric music, composers define musical events and provide performance directions, and performers interpret the directions, perform the score and thus realize the composition.
 
@@ -15,7 +15,7 @@ When score and performance code are complete, Aleatoric combines them to create 
 
 *A Simple Example*
  
-Here is a simple example of a Composer score:
+Here is a simple but complete example of a Composer score:
  
 &nbsp;&nbsp;@phrase "Intro Phrase"@
 &nbsp;&nbsp;&nbsp;&nbsp;@note "1"@

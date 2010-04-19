@@ -1,6 +1,6 @@
 _*Composer Reference and Tutorial*_
 
-*Introduction and Examples*<br/><br/>
+*Introduction*<br/><br/>
 
 You use the Composer language to define musical scores.  Scores have two distinct concerns, defining musical events and, optionally, defining players and ensembles to play notes and act on additional performance directions.
 

@@ -1,0 +1,225 @@
+_*Composer Reference and Tutorial*_
+
+*Grouping Notes*<br/><br/>
+
+_Introduction_
+
+There are three ways to group notes in a Composer score.  A @phrase@ is a block containing one or more notes, and a @section@ is a blockl containing one or more phrases, each of which in turn contains its notes.  So these are simply mechanisms to create named groups of notes.  Measures are like phrases but they support a basic notion of musical meter and also quantizing playing of notes in a measure so they sound on the beats of the measure.
+
+_Why Group Notes?_
+
+Grouping notes into named phrases, sections or measures, and referring to them directly to play them is a crucial idiom in writing Composer scores.  This is the core idiom for writing a score that simply defines notes without ensembles and players -- so for simply writing musical scores to render them into sound files.  The idea is to write out sequences of notes once, group them together under one label, and then conveniently use that label.
+
+An example:
+
+@# First we create the phrase, name it and put notes in it ...@<br/>
+@phrase "Phrase 1"@<br/>
+&nbsp;&nbsp;@note "1"@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@instrument  1@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@start       1.0@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@duration    0.5@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@amplitude   100@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@pitch       C4@<br/>
+<br/>
+&nbsp;&nbsp;@note "2"@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@instrument  2@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@start       2.0@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@duration    1.0@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@amplitude   110@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@pitch       D4@<br/>
+<br/>
+@# ... then we tell Aleatoric to include the notes from this phrase@<br/>
+@#  in the final sound file, again by listing it's name in the phrases list@<br/>
+@render "my_composition.mid"@<br/>
+&nbsp;&nbsp;@phrases "Phrase 1"@<br/>
+&nbsp;&nbsp;@format    midi@<br/>
+
+*Statement*: @phrase@
+
+A @phrase@ is a named block which groups one or more notes.  This is essentially all a @phrase@ is used for, to logically group notes and then refer to them later in list of phrase names following a @phrases@ statement (more on this below).  
+
+A @phrase@ block can also appear within a @player@ or @ensemble@.  In the first case, the player is assigned all notes in the phrase, in the order the notes appear in the phrase.  In the second case, all players in the ensemble are assigned all notes in the phrase, again in phrase order.  
+
+Some examples:
+
+@# A simple phrase with two notes@
+@phrase "Intro Phrase"@</br>
+&nbsp;&nbsp;@note "1"@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;@duration    0.5@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;@amplitude   1000@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;@pitch       7.01@</br>
+&nbsp;&nbsp;@note "2"@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;@duration    1.5@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;@amplitude   2000@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;@pitch       7.02@</br>
+
+@# A simple phrase with two notes, assigned to a player@
+@player "Groove-meister"@</br>
+&nbsp;&nbsp;@phrase "Intro Phrase"@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;@note "1"@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@duration    0.5@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@amplitude   1000@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@pitch       7.01@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;@note "2"@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@duration    1.5@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@amplitude   2000@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@pitch       7.02@</br>
+
+*Statement*: @section@
+
+A @section@ is a named block which groups one or more phrasess.  This is essentially all a @section@ is used for, to logically group phrases of notes and then refer to them later in list of phrase names following a @sections@ statement.  
+
+A @section@ block can also appear within a @player@ or @ensemble@.  In the first case, the player is assigned all notes from all phrases in the section, in section order and then in phrase order within each section (all notes from the first phrase, in order, followed by all from the second phrase, and so on).  In the second case, all players in the ensemble are assigned all notes from all phrases sections in the phrase, in the same order.  
+
+Some examples:
+
+@# A simple section with one phrase@
+@section "Intro Section"@</br>
+&nbsp;&nbsp;@phrase "Intro Phrase"@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;@note "1"@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@duration    0.5@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@amplitude   1000@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@pitch       7.01@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;@note "2"@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@duration    1.5@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@amplitude   2000@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@pitch       7.02@</br>
+
+@# A simple section with two phrases, assigned to a player@
+@player "Groove-meister"@</br>
+&nbsp;&nbsp;@section "Opening Section"@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;@phrase "Intro Phrase"@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@note "1"@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@duration    0.5@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@amplitude   1000@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@pitch       7.01@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;@phrase "First Phrase"@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@note "100"@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@duration    1.5@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@amplitude   500@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@pitch       9.04@</br>
+
+*Statement*: @measure@
+
+In its simplest usage, a @measure@ acts just like a phrase, a named grouping of notes that appear in the block beneath the @measure@.  Similar to phrases and sections, you include measures in your rendered output of the Composer score by referring to them in a @measures@ list.
+
+Here is an example:
+
+@# A simple measure with two notes@
+@measure "Intro Measure"@</br>
+&nbsp;&nbsp;@note "1"@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;@duration    0.5@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;@amplitude   1000@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;@pitch       7.01@</br>
+&nbsp;&nbsp;@note "2"@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;@duration    1.5@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;@amplitude   2000@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;@pitch       7.02@</br>
+
+But measures are interesting and useful because they support some additional features, the setting of a @meter@ for the measure and a @quantize@ function to map note start times to the meter as closely as possible.  There is also a @copy_measure@ statement available as a convenience to allow you to repeat measures easily in more than one place in your score.
+
+*statement*: @meter@
+*statement*: @quantize@
+*statement*: @on@ @off@
+
+The @meter@ and @quantize@ statements work together, to define a meter for all measures following the statement, and to signal whether or not notes in those measures will be quantized, or have their start times and durations adjusted, to match as closely as possible the beat intervals of the measure.  An example makes this more clear.
+
+@# An example of using meter and quantize to affect notes in measures@
+@meter 4,4@</br>
+&nbsp;&nbsp;@quantize on@</br>
+</br>
+@# This tests the case of not needing to quantize. Two HALF notes at correct start times that@</br>
+@#  take up exactly the correct length of the measure@</br>
+@measure "Measure 1"@</br>
+</br>
+&nbsp;&nbsp;@note "1"@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;@instrument  1@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;@start       0.0@</br> 
+&nbsp;&nbsp;&nbsp;&nbsp;@duration    HALF@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;@amplitude   1000@</br>
+&nbsp;&nbsp;@note "2"@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;@instrument  1@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;@start       HALF@</br> 
+&nbsp;&nbsp;&nbsp;&nbsp;@duration    HALF@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;@amplitude   1100@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;@pitch       7.02@</br>
+</br>
+@# This tests quantize@</br>
+@# Each note is first mapped to QRTR, but that is only half the beat length of the meter@</br>
+@#  so then each is increased to reach the total necessary duration, and each maintains the same@</br>
+@#  percentage of the total duration, so then each is moved from QRTR to HLF, since the meter@</br>
+@#  is 4/4, which is 4 beats of QRTR notes, or one WHL note. Note this adjusts start time of second@</br>
+@#  note correctly also@</br>
+@measure "Measure 2"@</br>
+</br>
+&nbsp;&nbsp;@note "1"@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;@instrument  1@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;@start       0.0@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;@duration    QRTR@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;@amplitude   1000@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;@pitch       7.01@</br>
+</br>
+&nbsp;&nbsp;@note "2"@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;@instrument  1@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;@start       QRTR@</br> 
+&nbsp;&nbsp;&nbsp;&nbsp;@duration    QRTR@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;@amplitude   1100@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;@pitch       7.02@</br>
+
+@quantize@ is used with the additional statements @on@ or @off@, which appear to the right of @quantize@ on the same line separated by one or more spaces.  These two modifiers "turn quantizing on" if it was previously set to @off@ and "turn it off" if it was previously set to @off@ and "turn it off" if it was previously set to @on@.  All @measure@s following the last @quantize@ will have quantizing on or off depending, and this will hold until the next quantize statement.
+
+An example.
+
+@meter 4,4@</br>
+&nbsp;&nbsp;@quantize on@</br>
+</br>
+@# This measure will be quantized to 4/4@</br>
+@measure "Measure 1"@</br>
+</br>
+&nbsp;&nbsp;@note "1"@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;@instrument  1@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;@start       0.0@</br> 
+&nbsp;&nbsp;&nbsp;&nbsp;@duration    HLF@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;@amplitude   1000@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;@pitch       7.01@</br>
+</br>
+@meter 4,4@</br>
+&nbsp;&nbsp;@quantize off@</br>
+</br>
+@# This measure will NOT be quantized@</br>
+@measure "Measure 1"@</br>
+</br>
+&nbsp;&nbsp;@note "1"@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;@instrument  1@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;@start       0.0@</br> 
+&nbsp;&nbsp;&nbsp;&nbsp;@duration    HLF@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;@amplitude   1000@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;@pitch       7.01@</br>
+</br>
+
+*statement*: @copy_measure@
+
+You use @copy_measure@ to create copies of a measure with a single statement, without having to repeat the notes of the measure.  You tell @copy_measure@ which measure to copy, and also what to name the copy.  The first item in the list of two items that @copy_measure@ acts on is the measure to copy, the second is the name of the copied measure.   Here is an example.
+
+@measure "Measure 1"@</br>
+</br>
+&nbsp;&nbsp;@note "1"@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;@instrument  1@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;@start       0.0@</br> 
+&nbsp;&nbsp;&nbsp;&nbsp;@duration    HLF@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;@amplitude   1000@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;@pitch       7.01@</br>
+</br>
+&nbsp;&nbsp;@note "2"@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;@instrument  1@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;@start       HLF@</br> 
+&nbsp;&nbsp;&nbsp;&nbsp;@duration    HLF@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;@amplitude   1100@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;@pitch       7.02@</br>
+
+@# Make a copy of Measure 1, and name the copy Measure 2
+@copy_measure "Measure 1", "Measure 2"@</br>
+
+_Note that this is the first time in the documentation for Composer where we have seen a list of values that a statement acts on.  Notice that each item in the list is separated with a comma._  We will see this same syntax in the plural form statements, @phrases@, @sections@, @measures@, @players@ and @ensembles@.  All take lists of names, separated by commas.
+
+Notes in a @copy_measure@ measure are automatically given start times immediately following the previous note in the score.  So the first note in the first measure in the list of measures will immediately follow the last note declared in the score before the @copy_measure@ statement.  The second note in the first measure in the @copy_measure@ list follows the first note, and so on.

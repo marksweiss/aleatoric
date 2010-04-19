@@ -21,26 +21,39 @@ A Simple Example
  
 Here is a simple example of a Composer score:
  
-  phrase "Intro Phrase"
-    note "1"
-      instrument  1 
-      start       0.0 
-      duration    0.5
-      amplitude   1000
-      pitch       7.01
-    note "2"
-      instrument  1
-      start       1.0 
-      duration    1.0
-      amplitude   1100
-      pitch       7.02
+  player "Player 1"
+	  phrase "Intro Phrase"
+	    note "1"
+	      instrument  1 
+	      start       0.0 
+	      duration    0.5
+	      amplitude   1000
+	      pitch       7.01
+	    note "2"
+	      instrument  1
+	      start       1.0 
+	      duration    1.0
+	      amplitude   1100
+	      pitch       7.02
+
+  instruction "How to play it"
+    description "Play these notes repeatedely and unsteadily, at whatever tempo you desire."
+		players "Player 1"
+  
+  repeat until "It's time to stop"
+		play
+			players "Player 1"
  
   render "my_composition.wav"
     phrases   "Intro Phrase"
     format    csound
     orchestra  "my_csound_orchestra.orc"
  
-This score defines two notes as part of a phrase "Intro Phrase," then renders them to an audio file.  Note the consistent and simple syntax of the language.  Indentation is optional, but should be used to show structure.  Here we see that each 'note' is part of the 'phrase,' and each line indented under each note defines an attribute of the note.
+This score defines two notes as part of a phrase "Intro Phrase." The resulting performance renders them to an audio file.  
+
+This example also shows the core performance features of Composer.  "Player 1" is assigned "Intro Phrase" and is in the list of players under play, so this player plays this phrase.  The instruction command describes how "Player 1" should play, and the repeat until command tells the player when to stop.  These two commands will control the perforamnce using separate code written by the programmer who is collaborating with the musical composer.
+
+Note also the consistent and simple syntax of the language.  Indentation is optional, but should be used to show structure.  For example, we see that each 'note' is part of the 'phrase,' and each line indented under each note defines an attribute of the note.  
 
 In this example, rendering is done using the cross-platform electronic music composition software CSound.  At this time, Aleatoric supports rendering to either MIDI or CSound, and runs on Windows and Mac.
  

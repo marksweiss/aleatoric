@@ -1,0 +1,81 @@
+_*Composer Reference and Tutorial*_
+
+*A Brief Aside on Proper Punctuation*<br/><br/>
+
+The first few sections of documentation on the Composer language focus on working with notes, since that is the core of any musical score, and that is the area where there is the most detail to absorb.  This is a brief aside covering the very few punctuation marks and conventions you need to use to make your Composer scores work correctly.  If you are reading the documentation sections in order, you have already seen comments and names surrounded by the double-quote mark (") in previous examples -- hopefully the examples read intuitively enough that you didn't even think twice about the additional punctuation.
+
+To make use of its core functionality, Composer requires that you use only three punctuation marks.  They are described below.
+
+*Comments*
+
+_Comments_ are lines or parts of lines of text in your Composer score that will be ignored by Aleatoric and not contribute to the performance in any way.  They are completely optional -- you can decide to never use them in any scores you write.  However, they can be very useful to add annotations that act as reminders when you return to a score you haven't looked at in a while, and also they can add additional explanation that might help programmers collaborating with you on a score or other future readers of your score understand it that much better.
+
+You create comments by starting a line with the '#' character.
+
+@# A simple Composer score to define two notes and render them into a sound file@</br>
+@phrase "Intro Phrase"@</br>
+&nbsp;&nbsp;@note "1"@</br>
+&nbsp;&nbsp; ...
+&nbsp;&nbsp; ...
+
+You can also start a comment anywhere in the middle of a line, and the rest of the line including the '#' character will be treated as a comment.  In either case, everything from the '#' character to the end of that line is a comment.  Comments never carry over to the next line.
+
+@phrase "x6adhjah27"  # Hmm... perhaps this needs a more informative name@</br>
+&nbsp;&nbsp;@note "1"@</br>
+&nbsp;&nbsp; ...</br>
+&nbsp;&nbsp; ...</br>
+
+*Names*
+
+In Composer you create musical things, such as notes, phrases, measures, players and ensembles.  For your convenience, to give meaning to your score, and so you can refer to these things in various places in the score, you give these things _names_.  The way you do this is to enclose the word or words of the name in double quotes.  This tells Aleatoric that these words in your score are your own name and not statements that it needs to act on.
+
+_NOTE: In order for Aleatoric to process your Composer score correctly, each name in your score should be unique._.
+
+Here is an example.
+
+@phrase "x6adhjah27"@</br>
+&nbsp;&nbsp;@note "1"@</br>
+&nbsp;&nbsp; ...</br>
+&nbsp;&nbsp; ..</br>
+
+Here the author of the score has named a phrase "x6adhjah27" and a note "1".  Aleatoric will interpret the score as follows:</br>
+* @phrase@ is a statement indicating the start of a phrase of notes
+* the word in quotes next to @phrase@ is the name of that phrase
+* @note@ is a statement indicating the start of a note that is part of the current phrase
+* the word in quotes next to @note@ (if there is one) is the name of that note
+
+*Lists*
+
+In some cases in Composer scores you need to list more than one item as the value assigned to a statement.  In this case you must separate each item in the list with a comma.  By far the most common use of lists of values is when using the commands to play and render notes, @notes@, @phrases@, @sections@ and @measures@ (discussed here in "Playing Notes":TODO), and also the similar commands to instruct @players@ and @ensembles@ to play and render the notes assigned to them.  An example:
+
+@# First we create the phrase, name it and put notes in it ...@<br/>
+@phrase "Phrase 1"@<br/>
+&nbsp;&nbsp;@note "1-1"@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@instrument  1@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@start       1.0@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@duration    0.5@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@amplitude   1000@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@pitch       7.01@<br/>
+<br/>
+@phrase "Phrase 2"@<br/>
+&nbsp;&nbsp;@note "2-1"@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@instrument  2@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@start       2.0@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@duration    1.0@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@amplitude   1100@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@pitch       7.02@<br/>
+<br/>
+@# ... then we refer to it here by name as one or more phrases@<br/>
+@#  to be played by Aleatoric when performing the score ...@<br/>
+@play@<br/>
+&nbsp;&nbsp;@phrases "Phrase 1", "Phrase 2"@<br/>
+<br/>
+@# ... and finally we tell Aleatoric to include the notes from this phrase@<br/>
+@#  in the final sound file, again by listing it's name in the phrases list@<br/>
+@render "my_composition.mid"@<br/>
+&nbsp;&nbsp;@phrases "Phrase 1", "Phrase 2"@<br/>
+&nbsp;&nbsp;@format    midi@<br/>
+
+A less common example discussed in the "Working With Notes":TODO is the assigment of @instrument@ and @channel@ values for MIDI instruments: @instrument MIDI_Glockenspiel, channel=0@
+
+Another less common example also discussed in the "Working With Notes":TODO is the assigment of the two values to the @meter@ statement. Here is how to assign a measure a meter of 4/4 in Composer: @meter 4,4@

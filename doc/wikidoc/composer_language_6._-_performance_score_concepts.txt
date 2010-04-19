@@ -1,5 +1,7 @@
 _*Composer Reference and Tutorial*_
 
+TODO This needs to include @play@
+
 *Performance Score Concepts*<br/><br/>
 
 *Players and Instructions*

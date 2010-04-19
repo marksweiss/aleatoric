@@ -1,0 +1,114 @@
+_*Composer Reference and Tutorial*_
+
+TODO INCLUDE defining REST notes here
+
+*Working With Notes*<br/><br/>
+
+*Statement*: @note@
+
+Much like in a notated score, in a Composer score you declare each @note@, and define its essential attributes.  These typically include when the note starts, how long it lasts, how loud it is, and what pitch it is.  Other attributes may be required depending on whether you are using CSound or MIDI to render the output.
+
+Composer assumes a standard base set of valid note attributes, but allows the user to set any others they wish.  Composer assumes that if you are using CSound, you are familiar with its conventions and know what attributes to set.  MIDI is supported, and you can use the Composer names for the essential MIDI note attributes or their conventional MIDI names.  This tutorial and the sample scores provided are examples of correctly defined Notes in both systems.
+
+_note Attributes_
+
+The attributes Composer recognizes for every note are:
+* @instrument@
+* @start@ (can also use MIDI name @time@ if desired)
+* @duration@
+* @volume@ (can also use CSound name @amplitude@ or MIDI name @velocity@)
+* @pitch@
+
+The core attributes of any note are: @duration@, @amplitude@, and @pitch@.  These must be defined for every @note@.
+
+_The Special Behavior of the note start Attribute_
+
+You can specify @start@, but you do not need to.  If you do not one of two things happens, depending on the score.  If the score simply defines notes in order, the note will be set to start immediately after the previous note in the score ends. If instead the note is assigned to a player then it will start immediately after the end of the last note played by that player.  In either case, this lets you compose a series of notes across measures or phrases and assume they will sound in sequence, just as in a traditional score.
+
+You can also specify an @instrument@ for each note.  However, this can be tedious in a score which includes players -- it may be more natural to assign each player an instrument as in a real-world ensemble.  So you can choose to not assign an instrument attribute to each note and instead assign an instrument just once to a @player@. In that case the player will use that instrument to play each note.
+
+_Assigning pitch Values_
+
+Composer currently supports rendering performances to both MIDI and CSound.  However each of these systems uses different names and values for musical pitches.  To make things convenient and consistent, Composer allows you to use standard names for Western 12-tone scale pitch values, for either musical format.  The only difference is in the range of octaves supported.   For CSound, constants are available for notes from @C1@ to @B8@.  For MIDI, constants are available from @Cneg1@ to @G9@ (following the rather odd MIDI convention, which defines valid values for pitch in octave ranges numbered from -1 to 9).
+
+Pitch constants available for you to use are "here":http://wiki.github.com/marksweiss/aleatoric/composer-z-appendix-csound-and-midi-constants
+
+_Assigning duration Values_
+
+In Composer scores, you can define the value for a note's @duration@ one of two ways.  For both MIDI and CSound formats, you can provide a whole or decimal number.  The unit is assumed to be seconds.  If you provide a decimal number, then the number _must_ have at least one digit after the decimal point.  So, to create a note that lasts a minute, for example, you could write:
+
+@note "one-minute note"@<br/>
+&nbsp;&nbsp;@instrument 1@<br/>
+&nbsp;&nbsp;@duration 60  # 60 seconds is one minute@<br/>
+&nbsp;&nbsp;@volume 100@<br/>
+
+Or you could define a note that was 1.5 seconds long like this:
+
+@note "short note"@<br/>
+&nbsp;&nbsp;@instrument 1@<br/>
+&nbsp;&nbsp;@duration 1.5@<br/>
+&nbsp;&nbsp;@volume 100@<br/>
+
+However, Composer also lets you use abbreviations for note durations commonly used in Western musical notation:
+
+* @WHL@ - a whole note
+* @HLF@ - a half note
+* @QRTR@ - a quarter note
+* @EITH@ - an eighth note
+* @SXTNTH@ - a sixteenth note
+* @THRTYSCND@ - a thirty-second note
+* @SXTYFRTH@ - a sixty-fourth note
+
+If you set duration values using these abbreviations, the actual duration of the note is determined by the value you give for @whole note length@, which you can set once at the top of your score to any positive number you would like, either a whole number or decimal.  If you do not set it, Composer assigns a value of 2 seconds itself, meaning whole notes are two seconds long, half notes one second, quarter notes a half second, and so on.  An example:
+
+@whole note length 4  # A whole note is 4 seconds long@
+
+@note "short note"@<br/>
+&nbsp;&nbsp;@instrument 1@<br/>
+&nbsp;&nbsp;@duration WHL  # This note will last four seconds@<br/>
+&nbsp;&nbsp;@volume 100@<br/>
+
+@note@ *Attributes and Behavior Specific to MIDI*
+
+If you have worked with MIDI at all, you are likely familiar with the list of standard General MIDI instruments.  In Composer, all General MIDI instruments and MIDI percussion instruments can be referred to using these familiar names, such as @MIDI_Acoustic_Grand_Piano@.  Note that Composer only allows you to use these MIDI constants if the format of the score is MIDI.
+
+_MIDI_ @instrument@ _and_ @channel@ _Defintiions_
+
+There is one other aspect of defining instruments specific to MIDI.  MIDI instruments need to assigned to a MIDI @channel@.  In Composer, for MIDI scores, you must include the instrument number and the channel as values in a list when you define the instrument.
+
+Here is an example:
+&nbsp;&nbsp;@instrument MIDI_Glockenspiel, channel=0@<br/>
+
+@note@ *Attributes and Behavior Specific to CSound*
+
+If the format of your score is CSound, then Composer allows you to define additional attributes for any note.  Composer assumes you have knowledge of the CSound instrument playing the note, and that it will correctly handle the attribute you have defined in the parameter position you have defined for it, with the value you have given it.  Composer passes this value on to the CSound instrument.
+
+Here is an example:
+&nbsp;&nbsp;@note "1"@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;@instrument  1@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;@start       0.0@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;@duration    0.5@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;@amplitude   1000@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;@pitch       7.01@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;@reverb      1.5   # This is an additional note attribute@</br>
+
+@note@ *Examples*
+
+The first line of a note block is the statement @note@, optionally followed by a name enclosed in "" for the note.  Because it is common to define many notes without needing to reference them in particular, note name is optional.  Any attributes of the note follow on the next lines, starting with the line immediately after the @note@ line.  By convention, attributes are indented two spaces, but that isn't necessary and is only convention to make scores more readable.
+
+Here are some examples:
+
+@# All core note attributes@ 
+&nbsp;&nbsp;@note "1"@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;@instrument  1@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;@start       0.0@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;@duration    0.5@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;@amplitude   1000@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;@pitch       7.01@</br>
+
+@# Just the essential core note attributes.  instrument must be assigned to a player and this note must be@
+@# in a block for that player.  Also, the note start will automatically be set to immediately follow the previous note.@ 
+&nbsp;&nbsp;@note "1"@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;@duration    0.5@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;@amplitude   1000@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;@pitch       7.01@</br>

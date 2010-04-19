@@ -1,0 +1,193 @@
+_*Composer Reference and Tutorial*_
+
+*Rendering Notes*<br/><br/>
+
+"Working With Notes":TODO discussed how to create musical notes in a score, and the variou Composer language feautres available to conveniently assign attributes to each note.  Then the next section of this documentation "Playing Notes":TODO described how to group notes using @phrase@, @section@ and @measure@ statements.  Here you were introduced to the @phrases@ statement as an example of how you can tell Aleatoric to play the notes you have previously defined and grouped in your score.
+
+This section covers all the similar statements you can use to instruct Aleatoric to play your notes and include them in the file produced by rendering your score.
+
+_Two Kinds of Composer Scores: Just Notes and Notes With Performance Instructions_
+
+There are two main styles of Composer scores.  
+
+Complex scores define players or ensembles of players, assign them notes to play, and direct their performance using the @instruction@ and/or @improvisation@ statements.  These scores are truly aleatoric, and supporting them well is the core goal of Aleatoric and its Composer language.  They are covered "here":TODO.
+
+But you can also use Aleatoric to write simpler Composer scores that define notes and/or groups of notes, indicate which notes should be played, indicate which notes should be included in the final rendered sound file, and indicate the format and name to use for the final rendered sound file.
+
+To do this you need to use the @render@ instruction in your score, and you need to tell @render@ what notes to include using @notes@, @phrases@, @sections@ or @measures@.
+
+*Statement*: @render@
+
+@render@ tells Aleatoric three things in a MIDI score, and four things in a CSound score.  In scores of either format, you use @render@ to indicate:
+* which notes to include -- using @notes@, @phrases@, @sections@ or @measures@ statements which are discussed immediately below
+* the name Aleatoric should give the sound file it produces from the notes in your score
+* the format of the sound file, either @midi@ or @csound@.
+
+Here is an example:
+
+@phrase "Phrase 1"@<br/>
+&nbsp;&nbsp;@note "1-1"@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@instrument  1@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@start       1.0@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@duration    0.5@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@amplitude   100@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@pitch       C4@<br/>
+<br/>
+@phrase "Phrase 2"@<br/>
+&nbsp;&nbsp;@note "2-1"@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@instrument  2@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@start       2.0@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@duration    1.0@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@amplitude   110@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@pitch       D4@<br/>
+<br/>
+@# The first line of the "render" statement includes the name of the sound file to be produced@
+@# The second line here uses "phrases" to include all the notes in all phrases in the list of phrase names@
+@# The third line tells Aleatoric to render this Composer score as MIDI file@
+@render "my_composition.mid"@<br/>
+&nbsp;&nbsp;@phrases "Phrase 1", "Phrase 2"@<br/>
+&nbsp;&nbsp;@format    midi@<br/>
+
+*Statement*: @format@
+
+As just covered in the section above on @render@, @format@ defines what sound file format Aleatoric will produce from your score.  The legal values are either @csound@ or @midi@, _written in all lower-case letters_ exactly as shown here.  You can include the @format@ statement as an attribute of the @render@ statement, appearing below it (optionally) indented without any blank lines in between the two statements.  
+
+Two examples:
+
+@render "my_composition.mid"@<br/>
+&nbsp;&nbsp;@phrases "Phrase 1", "Phrase 2"@<br/>
+&nbsp;&nbsp;@format    midi@<br/>
+
+@render "4'33''.wav"@</br>
+&nbsp;&nbsp;@players "David Tudor"@</br>
+&nbsp;&nbsp;@format    csound@</br>
+&nbsp;&nbsp;@orchestra "dummy.orc"@</br>
+
+You can also choose to put a @format@ statement standing alone at the top of your score.  If you do this, then @render@ will use the format you set there.  This can be convenient for very long scores because it lets you see the format of the score near the top of the file.  If you don't do this in a long score, then you need to scroll all the way to the bottom of the score to check its format, since the @render@ statement is generally the last statement in a score.
+
+@# Define the format at the top of the score and "render" statements following it will use this format@
+@format    midi@<br/>
+
+@phrase "Phrase 1"@<br/>
+&nbsp;&nbsp;@note "1-1"@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@instrument  1@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@start       1.0@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@duration    0.5@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@amplitude   100@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@pitch       C4@<br/>
+<br/>
+@phrase "Phrase 2"@<br/>
+&nbsp;&nbsp;@note "2-1"@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@instrument  2@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@start       2.0@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@duration    1.0@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@amplitude   110@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@pitch       D4@<br/>
+<br/>
+@# There is no need to include a format attribute for "render" here; it knows to render as MIDI@
+@render "my_composition.mid"@<br/>
+&nbsp;&nbsp;@phrases "Phrase 1", "Phrase 2"@<br/>
+
+*Statement*: @notes@
+
+Use to tell @render@ and @play@ (covered "here":TODO) to include the named notes.
+
+One important quirk about using @notes@ is that Composer doesn't require that you name notes when you define them.  However, this means you cannot include those notes in a list of notes which are the value of a @notes@ statement, because, of course, you can't refer to a note by name that doesn't _have_ a name.  So, if you want to use @notes@, then you should name the notes in your score.
+
+@# Two notes, define by themselves rather than as part of a phrase or measure@
+@# Because we want to use "notes" in our "render" statement, we name the notes@
+@note "1-1"@<br/>
+&nbsp;&nbsp;@instrument  1@<br/>
+&nbsp;&nbsp;@start       1.0@<br/>
+&nbsp;&nbsp;@duration    0.5@<br/>
+&nbsp;&nbsp;@amplitude   100@<br/>
+&nbsp;&nbsp;@pitch       C4@<br/>
+<br/>
+@note "2-1"@<br/>
+&nbsp;&nbsp;@instrument  2@<br/>
+&nbsp;&nbsp;@start       2.0@<br/>
+&nbsp;&nbsp;@duration    1.0@<br/>
+&nbsp;&nbsp;@amplitude   110@<br/>
+&nbsp;&nbsp;@pitch       D4@<br/>
+<br/>
+@# Tell "render" to play the named notes@
+@render "my_composition.mid"@<br/>
+&nbsp;&nbsp;@notes   "1-1", "2-1"@<br/>
+&nbsp;&nbsp;@format  midi@
+
+*Statement*: @phrases@
+
+Use to tell @render@ and @play@ (covered "here":TODO) to include the notes from the named phrases.
+
+@phrase "Phrase 1"@<br/>
+&nbsp;&nbsp;@note "1-1"@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@instrument  1@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@start       1.0@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@duration    0.5@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@amplitude   100@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@pitch       C4@<br/>
+<br/>
+@phrase "Phrase 2"@<br/>
+&nbsp;&nbsp;@note "2-1"@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@instrument  2@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@start       2.0@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@duration    1.0@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@amplitude   110@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@pitch       D4@<br/>
+<br/>
+@# Tell "render" to include all notes from each named phrase in the "phrases" list@
+@render "my_composition.mid"@<br/>
+&nbsp;&nbsp;@phrases "Phrase 1", "Phrase 2"@<br/>
+&nbsp;&nbsp;@format  midi@
+
+*Statement*: @sections@
+
+Use to tell @render@ and @play@ (covered "here":TODO) to include the notes from the phrases which are included in the named sections.
+
+@section "Intro Section"@<br/>
+
+&nbsp;&nbsp;@phrase "Phrase 1"@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@note "1-1"@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@instrument  1@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@start       1.0@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@duration    0.5@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@amplitude   100@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@pitch       C4@<br/>
+<br/>
+&nbsp;&nbsp;@phrase "Phrase 2"@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@note "2-1"@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@instrument  2@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@start       2.0@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@duration    1.0@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@amplitude   110@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@pitch       D4@<br/>
+<br/>
+@# Tell "render" to include all the phrases in all the sections in the "sections" list@
+@render "my_composition.mid"@<br/>
+&nbsp;&nbsp;@sections "Intro Section"@<br/>
+&nbsp;&nbsp;@format  midi@
+
+*Statement*: @measures@
+
+Use to tell @render@ and @play@ (covered "here":TODO) to include the notes from the named measures.
+
+@measure "Measure 1"@<br/>
+&nbsp;&nbsp;@note "1-1"@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@instrument  1@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@start       1.0@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@duration    0.5@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@amplitude   100@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@pitch       C4@<br/>
+<br/>
+@measure "Measure 2"@<br/>
+&nbsp;&nbsp;@note "2-1"@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@instrument  2@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@start       2.0@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@duration    1.0@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@amplitude   110@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@pitch       D4@<br/>
+<br/>
+@# Tell "render" to include all notes from each named measure in the "measures" list@
+@render "my_composition.mid"@<br/>
+&nbsp;&nbsp;@measures "Measure 1", "Measure 2"@<br/>
+&nbsp;&nbsp;@format  midi@
