@@ -25,11 +25,49 @@ You can specify @start@, but you do not need to.  If you do not one of two thing
 
 You can also specify an @instrument@ for each note.  However, this can be tedious in a score which includes players -- it may be more natural to assign each player an instrument as in a real-world ensemble.  So you can choose to not assign an instrument attribute to each note and instead assign an instrument just once to a @player@. In that case the player will use that instrument to play each note.
 
-*Assigning pitch Values*
+*Assigning start Values*
 
-Composer currently supports rendering performances to both MIDI and CSound.  However each of these systems uses different names and values for musical pitches.  To make things convenient and consistent, Composer allows you to use standard names for Western 12-tone scale pitch values, for either musical format.  The only difference is in the range of octaves supported.   For CSound, constants are available for notes from @C1@ to @B8@.  For MIDI, constants are available from @Cneg1@ to @G9@ (following the rather odd MIDI convention, which defines valid values for pitch in octave ranges numbered from -1 to 9).
+In Composer scores, you can define the value for a note's @start@ one of two ways.  For both MIDI and CSound formats, you can provide a whole or decimal number.  The unit is assumed to be seconds.  If you provide a decimal number, then the number _must_ have at least one digit after the decimal point.  So, to create a note that lasts a minute, for example, you could write:
 
-Pitch constants available for you to use are "here":http://wiki.github.com/marksweiss/aleatoric/composer-z-appendix-csound-and-midi-constants
+@note "start after one-minute note"@<br/>
+&nbsp;&nbsp;@instrument 1@<br/>
+&nbsp;&nbsp;@start 60  		# 60 seconds is one minute@<br/>
+&nbsp;&nbsp;@duration WHOLE@<br/>
+&nbsp;&nbsp;@volume 100@<br/>
+
+Or you could define a note that was 1.5 seconds long like this:
+
+@note "start soon note"@<br/>
+&nbsp;&nbsp;@instrument 1@<br/>
+&nbsp;&nbsp;@start 1.5@<br/>
+&nbsp;&nbsp;@duration WHOLE@<br/>
+&nbsp;&nbsp;@volume 100@<br/>
+
+However, Composer also lets you use abbreviations for note durations commonly used in Western musical notation.  
+
+* @WHL@ or @WHOLE@ - a whole note
+* @HLF@ or @HALF@ - a half note
+* @QRTR@ or @QUARTER@ - a quarter note
+* @EITH@ or @EIGHTH@ - an eighth note
+* @SXTNTH@ or @SIXTEENTH@ - a sixteenth note
+* @THRTYSCND@ or @THIRTYSECOND@ - a thirty-second note
+* @SXTYFRTH@ or @SIXTYFOURTH@ - a sixty-fourth note
+
+When using these to set the @start@ attribute of a @note@, the idea is that the note should immediately after a note of that duration ends.  So a note with start time @WHOLE@ starts at time 4 seconds, if the tempo of the composition is set to the default value for @tempo@ (see section below on @tempo@).
+
+An example:
+
+@measure "Measure 1"@
+@note "Note 1"@<br/>
+&nbsp;&nbsp;@instrument 1@<br/>
+&nbsp;&nbsp;@start 1.0  # starts after one second@<br/>
+&nbsp;&nbsp;@duration WHOLE@<br/>
+&nbsp;&nbsp;@volume 100@<br/>
+@note "Note 1"@<br/>
+&nbsp;&nbsp;@instrument 1@<br/>
+&nbsp;&nbsp;@start HALF  # starts after the duration of a HALF note@<br/>
+&nbsp;&nbsp;@duration WHOLE@<br/>
+&nbsp;&nbsp;@volume 100@<br/>
 
 *Assigning duration Values*
 
@@ -70,24 +108,34 @@ An example:
 
 *Statement*: @tempo@
 
-If you set duration values using these abbreviations, the actual duration of the note is determined by the value you give for @tempo@, which you can set or change as you like anywhere in your score, as long as the tempo statement is on its own line.  @tempo@ takes a value which is a whole number indicating the tempo beats per minute (i.e. - @tempo 60@ means a quarter note is 1 second, a whole note is 4 seconds, and there 60 quarter note beats per minute).  
+If you set duration values using the duration abbreviations (WHOLE, HALF, etc.), the actual duration of the note is determined by the value you give for @tempo@, which you can set or change as you like anywhere in your score, as long as the tempo statement is on its own line.  @tempo@ takes a value which is a whole or decimal number indicating the tempo beats per minute (i.e. - @tempo 60@ means a quarter note is 1 second, a whole note is 4 seconds, and there 60 quarter note beats per minute).  
 
-If you do not set a tempo, Composer assigns a value of 60 itself.  This means that the tempo you set will change the speed of notes played in relation to this default value.  So, for example, if set tempo to 30, note durations will be set to twice their default value, so, for example, a quarter note will have a duration of 2 secons.
+If you do not set a tempo, Composer assigns a value of 60 itself.  This means that the tempo you set will change the speed of notes played in relation to this default value.  So, for example, if set tempo to 30, note durations will be set to twice their default value, so, for example, a quarter note will have a duration of 2 seconds.
 
-Note that if you specify either a whole or decimal value for duration, i.e. a number and not one of the predefined durations above, then @tempo@ _has no effect_ on the length of notes.
+Note that if you specify either a whole or decimal value for duration, i.e. a number and not one of the predefined durations, then @tempo@ _has no effect_ on the length of notes.  This is because you have given an exact value for a duration, so Aleatoric honors that when processing the score.
 
 An example:
 
 @tempo 30  # bpm is 30 quarter notes per minute, a quarter note is 2 seconds long@
 
+@note "long note"@<br/>
+&nbsp;&nbsp;@instrument 1@<br/>
+&nbsp;&nbsp;@duration WHL  # This note will last 8 seconds, default is 4@<br/>
+&nbsp;&nbsp;@volume 100@<br/>
 @note "short note"@<br/>
 &nbsp;&nbsp;@instrument 1@<br/>
-&nbsp;&nbsp;@duration WHL  # This note will last 4 seconds@<br/>
+&nbsp;&nbsp;@duration QRTR  # This note will last 2 seconds, default is 1@<br/>
 &nbsp;&nbsp;@volume 100@<br/>
 @note "Another"@<br/>
 &nbsp;&nbsp;@instrument 1@<br/>
-&nbsp;&nbsp;@duration 1.5  # This note will last 1.5 seconds@<br/>
+&nbsp;&nbsp;@duration 1.5  # This note will last 1.5 seconds, whatever the tempo@<br/>
 &nbsp;&nbsp;@volume 100@<br/>
+
+*Assigning pitch Values*
+
+Composer currently supports rendering performances to both MIDI and CSound.  However each of these systems uses different names and values for musical pitches.  To make things convenient and consistent, Composer allows you to use standard names for Western 12-tone scale pitch values, for either musical format.  The only difference is in the range of octaves supported.   For CSound, constants are available for notes from @C1@ to @B8@.  For MIDI, constants are available from @Cneg1@ to @G9@ (following the rather odd MIDI convention, which defines valid values for pitch in octave ranges numbered from -1 to 9).
+
+Pitch constants available for you to use are "here":http://wiki.github.com/marksweiss/aleatoric/composer-z-appendix-csound-and-midi-constants
 
 *Creating Musical Rests*
 
