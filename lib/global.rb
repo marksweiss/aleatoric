@@ -50,20 +50,25 @@ $LAST_FORMAT = $FORMAT
 # TODO Add all of these consts and put them in a '' conf somewhere
 REST = 0
 
-# Change dur_factor to change global tempo, this changes duration of all notes
-#  defined using these global constants
-# TODO make dur_factor configurable and rename to indicate it controls global tempo
-#  and expose it in Composer language to composition scripts so user can set, and so we can set it
-#  in testing so that tests that rely on actual tempo (of kw 'meter') don't break
-DUR_FACTOR = 1.0 # 0.4 for 'In_C'
+# Default tempo is 60 bpm
+$DEFAULT_TEMPO = 60.0
+$DUR_FACTOR = 1.0
+
 # Default durations in seconds
-WHL = 4.0 * DUR_FACTOR
-HLF = 2.0 * DUR_FACTOR
-QRTR = 1.0 * DUR_FACTOR
-EITH = 0.5 * DUR_FACTOR
-SXTNTH = 0.25 * DUR_FACTOR
-THRTYSCND = 0.125 * DUR_FACTOR
-SXTYFRTH = 0.0625 * DUR_FACTOR
+WHL = 4.0
+WHOLE = WHL
+HLF = 2.0
+HALF = HLF
+QRTR = 1.0
+QUARTER = QRTR
+EITH = 0.5
+EIGHTH = EITH
+SXTNTH = 0.25
+SIXTEENTH = SXTNTH
+THRTYSCND = 0.125
+THIRTYSECOND = THRTYSCND
+SXTYFRTH = 0.0625
+SIXTYFOURTH = SXTYFRTH
 
 # Remove MIDI consts only used by MIDI to avoid using them with CSound format
 #  and silently passing bogus values to CSound that might not cause errors but

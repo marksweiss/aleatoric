@@ -41,6 +41,7 @@ class ComposerAST
     'render' => " do\n",
     'format' => "\n",
     'def' => "\n",
+    'tempo' => "\n",
     'measure' => " do\n",
     'copy_measure' => " do\n",
     'meter' => " do\n",
@@ -66,6 +67,7 @@ class ComposerAST
     'render' => "end\n",
     'format' => "",
     'def' => "end\n",
+    'tempo' => "",
     'measure' => "end\n",
     'copy_measure' => "end\n",
     'meter' => "end\n",
@@ -81,10 +83,20 @@ class ComposerAST
     'improvise' => "end\n" 
   }
  
-  # NOTE: ANY TOP_LEVEL KW **MUST** BE ADDED TO LIST OF CHILDREN OF ROOT
-  #  ***THIS IS EASY TO FORGET.*** SYMPTOM IS TEST.ALTC DOESN'T RENDER BLOCK FOR KW
   @@kw_children = {
-    'root' => ['note', 'phrase', 'section', 'repeat', 'repeat_until', 'write', 'render', 'format', 'def', 'measure', 'copy_measure', 'meter', 'ensemble', 'player', 'play', 'instruction', 'improvise', 'improvisation'],
+
+    # NOTE: ANY TOP_LEVEL KW **MUST** BE ADDED TO LIST OF CHILDREN OF ROOT
+    #  *** THIS IS EASY TO FORGET. *** 
+    #  *** SYMPTOM IS TEST.ALTC DOESN'T RENDER BLOCK FOR KW ***
+    'root' => ['note', 'phrase', 'section', 
+               'repeat', 'repeat_until', 
+               'write', 'render', 'format', 
+               'def', 
+               'tempo', 'measure', 'copy_measure', 'meter', 
+               'ensemble', 'player', 'play', 
+               'instruction', 'improvise', 'improvisation'],
+    # NOTE: ANY TOP_LEVEL KW **MUST** BE ADDED TO LIST OF CHILDREN OF ROOT IMMEDIATELY ABOVE
+    
     'note' => [],
     'phrase' => ['note', 'repeat', 'repeat_until'],
     'section' => ['phrase', 'measure', 'copy_measure'],
@@ -94,6 +106,7 @@ class ComposerAST
     'render' => ['format', 'players', 'ensembles'],
     'format' => [],
     'def' => [],
+    'tempo' => [],
     'measure' => ['note'],
     'copy_measure' => [],
     'meter' => ['quantize'],
@@ -118,6 +131,7 @@ class ComposerAST
     'render' => ['root'],
     'format' => ['root', 'write', 'render'],
     'def' => ['root'],
+    'tempo' => ['root'],
     'measure' => ['root', 'section', 'repeat', 'ensemble', 'player'],
     'copy_measure' => ['root', 'section', 'ensemble', 'player'],
     'meter' => ['root'],
@@ -142,6 +156,7 @@ class ComposerAST
     'render' => 	lambda {|x| x != nil and x[0] != nil and (x[0].kind_of? String and x[0].length > 0)},       # 1st arg required, valid type
     'write' => 		lambda {|x| x != nil and x[0] != nil and (x[0].kind_of? String and x[0].length > 0)},       # 1st arg required, valid type
     'format' => 	lambda {|x| x != nil and x[0] != nil and (x[0].to_s == 'csound' or x[0].to_s == 'midi')},   # 1st arg required, valid value
+    'tempo' => 	lambda {|x| x != nil and x[0] != nil and (x[0].kind_of? Integer or x[0].kind_of? Float)},   # 1st arg required, valid value
     'measure' => 	lambda {|x| x == nil or x[0] == nil or x[0].kind_of? String},     # 1st arg optional, valid type
     'copy_measure' => lambda {|x| x != nil and x.length == 2 and x[0] != nil and x[1] != nil and x[0].kind_of? String and x[1].kind_of? String},   # 1st and second arg required, valid types    
     'meter' =>    lambda {|x| x != nil and x.length == 2 and x[0] != nil and x[1] != nil and x[0].kind_of? Fixnum and x[1].kind_of? Fixnum},       # 1st and second arg required, valid types    
@@ -194,6 +209,11 @@ class ComposerAST
 	#  current running start time dynamically when script is being evaluated
   @@var_map = {'NEXT' => '@cur_start'}
   @@assignment_states = [:declaring, :invoking]
+  # Another hack, this one used to identify lines with duration constants and add an argument to them
+  #  which is then evaluated at interpretation time in compser.rb start() and duration() handlers
+  @@note_durations = ['WHL', 'WHOLE', 'HLF', 'HALF', 'QRTR', 'QUARTER', 
+                      'EITH', 'EIGHTH', 'SIXTEENTH', 'SXTNTH', 'THRTYSCND', 
+                      'THIRTYSECOND', 'SXTYFRTH', 'SIXTHFOURTH']
 
   # NOTE: A hack to support testing. This must be first line in test scripts but it breaks the
   #  assignment preprocessing which assumes all assignment statements start the file.
@@ -223,6 +243,11 @@ class ComposerAST
     tkns = tokenize script_lines
 		tkns = preprocess_assignment tkns
     tkns = preprocess_func tkns
+    # This next one must always be called last because it appends to the end of the
+    #  line two new tokens. So, if the line has a function call and one or the args
+    #  is a duration constant (e.g. WHL, HLF) then that function call will get changed
+    #  to have an extra arg at the end of its args, and break
+    tkns = preprocess_start_duration tkns
     preprocess_expressions(tkns, src_file_name)
     # Returns the tokens put back into list of strings, one string per script line, then all those lines joined
     to_s
@@ -329,6 +354,29 @@ class ComposerAST
   def validate_skip_line(tkn_line)
     tkn_line == nil or tkn_line.length == 0 or tkn_line[0] == '"' or tkn_line[0] == "'" or tkn_line[0] == "#" or ((@@debug_stmts & tkn_line).length > 0)  
   end
+
+  def preprocess_start_duration(tkns)    
+    tkns_out = []
+    tkns.each do |tkn_line|
+      # Test each line for being note start or duration attribute      
+      if tkn_line[0] == 'start' or tkn_line[0] == 'duration'
+        len = tkn_line.length
+        # Test remaining tokens for being a duration constant, e.g. 'WHL', 'HLF'
+        tkn_line[1..len-1].each do |tkn|
+          if @@note_durations.include? tkn
+            # If matched, append second arg to line to indicate to composer.rb
+            #  handler for start and duration that it should apply global tempo
+            #  to first arg at time of evaluation
+            tkn_line.push(", ")
+            tkn_line.push("true") # duration(arg, is_duration_set_using_const=true)
+            break
+          end
+        end
+      end
+      tkns_out << tkn_line  
+    end
+    tkns_out
+  end
     
   def preprocess_assignment(tkns)
     state = :declaring    
@@ -374,10 +422,10 @@ class ComposerAST
   
   # Warning: this is a hack. Further proof that eventually this needs a real parser. 
   # Scanning instead of really building AST.  Only allowing nested functions as last args in parent expression
-  def preprocess_func_helper(tkn_line)
-    
+  def preprocess_func_helper(tkn_line)   
     # Empty expr or expr is a string, or it has no colons then it's not a func dec or func call
     return tkn_line if validate_skip_line tkn_line
+
     num_tkns = tkn_line.size
     func_cnt = 0
     tkn_line_out = []

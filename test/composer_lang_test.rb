@@ -6,7 +6,7 @@ require 'composer_lang'
 require 'test/unit'
 
 require 'rubygems'
-# require 'ruby-debug' ; Debugger.start
+require 'ruby-debug' ; Debugger.start
 
 # Super-elegant solution for temporarily getting access to private methods to test stolen from here:
 #  http://blog.jayfields.com/2007/11/ruby-testing-private-methods.html
@@ -81,6 +81,10 @@ class ComposerAST_Test < Test::Unit::TestCase
     expr = 'def'    
     actual1, actual2 = lang.kw?(expr)
     assert(actual1 == true && actual2 == 'def')    
+
+    expr = 'tempo'    
+    actual1, actual2 = lang.kw?(expr)
+    assert(actual1 == true && actual2 == 'tempo')    
     
     expr = 'NOT_A_KEYWORD'    
     actual1, actual2 = lang.kw?(expr)
@@ -195,6 +199,10 @@ class ComposerAST_Test < Test::Unit::TestCase
     kw = 'def'; expr = ['def', 'start_f(factor, idx)']    
     actual = lang.valid_kw_arg?(kw, expr)    
     assert(actual == true)    
+
+    kw = 'tempo'; expr = ['def', '60']    
+    actual = lang.valid_kw_arg?(kw, expr)    
+    assert(actual == true)    
        
     end
     puts "test__valid_kw_arg? COMPLETED"
@@ -226,6 +234,7 @@ class ComposerAST_Test < Test::Unit::TestCase
     assert(lang.valid_child_kw?('root', 'write'))
     assert(lang.valid_child_kw?('root', 'render'))
     assert(lang.valid_child_kw?('root', 'format'))
+    assert(lang.valid_child_kw?('root', 'tempo'))
 		
 		# parent == 'note'
     assert(! lang.valid_child_kw?('note', 'note'))
@@ -364,6 +373,41 @@ class ComposerAST_Test < Test::Unit::TestCase
     end
     puts "test__preprocess_func_helper COMPLETED"  
   end 
+
+  def test__preprocess_start_duration
+    puts "test__preprocess_start_duration ENTERED"   
+    ComposerAST.publicize_methods do
+		
+    lang = ComposerAST.new
+
+    actual = lang.preprocess_start_duration(lang.tokenize("start EITH\n"))            
+    expected = ['start', 'EITH', ', ', 'true']        
+    assert(actual[0] == expected)
+
+    actual = lang.preprocess_start_duration(lang.tokenize("duration HLF\n"))        
+    expected = ['duration', 'HLF', ', ', 'true']    
+    assert(actual[0] == expected)
+    
+    actual = lang.preprocess_start_duration(lang.tokenize("duration WHL + HLF\n"))        
+    expected = ['duration', 'WHL', '+', 'HLF', ', ', 'true']    
+    assert(actual[0] == expected)
+
+    actual = lang.preprocess_start_duration(lang.tokenize("start WHL + HLF\n"))        
+    expected = ['start', 'WHL', '+', 'HLF', ', ', 'true']    
+    assert(actual[0] == expected)
+    
+    actual = lang.preprocess_start_duration([lang.preprocess_func_helper(lang.tokenize('duration foo: HLF')[0])])
+    expected = ['duration', 'foo(', 'HLF', ')', ', ', 'true']          
+    assert(actual[0] == expected)  
+    
+    actual = lang.preprocess_start_duration([lang.preprocess_func_helper(lang.tokenize('start foo: EITH + HLF')[0])])
+    expected = ['start', 'foo(', 'EITH', '+', 'HLF', ')', ', ', 'true']  
+    assert(actual[0] == expected)      
+        
+    end
+    puts "test__preprocess_start_duration COMPLETED"  
+  end 
+
 
   def test__preprocess_block_with_comment
     puts "test__preprocess_block_with_comment ENTERED"   

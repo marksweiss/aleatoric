@@ -307,18 +307,31 @@ def program_change(arg)
   @cur_note.instrument arg
 end
 
-def start(arg)
+def start(arg, is_duration_set_using_const=false)
+  arg *= $DUR_FACTOR if is_duration_set_using_const
   @cur_note.start arg
 end
-def time(arg)
+def time(arg, is_duration_set_using_const=false)
   # We respect the wishes of the script and assume that a midi-only property
   # means the script wants all Notes to be in MIDI format
   Note.set_output_format_midi
-  @cur_note.start arg
+  arg *= $DUR_FACTOR if is_duration_set_using_const
+  @cur_note.start arg 
 end
 
-def duration(arg)
+# $DUR_FACTOR is 1.0 by default, in global.rb
+# So if set here it changes tempo, which is applied to all notes
+#  set using duration constants, e.g. WHL, HLF, also in global.rb
+def duration(arg, is_duration_set_using_const=false)
+  arg *= $DUR_FACTOR if is_duration_set_using_const
   @cur_note.duration arg
+end
+
+# $DUR_FACTOR is 1.0 by default, in global.rb
+# So if set here it changes tempo, which is applied to all notes
+#  set using duration constants, e.g. WHL, HLF, also in global.rb
+def tempo(new_tempo_bpm)
+  $DUR_FACTOR = $DEFAULT_TEMPO / new_tempo_bpm.to_f  
 end
 
 def amplitude(arg)
@@ -958,6 +971,8 @@ def reset_script_state
   @processing_renderer = false
   
   @midi_mgr = ::MidiManager.new
+  
+  $DUR_FACTOR = 1.0
 
 end
 # /FOR UNIT TESTING

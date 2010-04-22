@@ -736,13 +736,166 @@ write "composer_test_results.txt"
   measures
 }
   tester, results = test_runner(test_name, throw_on_failure, script, lite_syntax)
-  actual = results    
+  actual = results
   expected0 = 'i 1 0.00000 2.00000 1000 7.01000 1 ; 1'
   expected1 = 'i 1 2.00000 2.00000 1100 7.02000 1 ; 2'
   expected2 = 'i 1 0.00000 2.00000 1000 7.01000 1 ; 1'
   expected3 = 'i 1 2.00000 2.00000 1100 7.02000 1 ; 2'
   tester.assert(expected0 == actual[2])
   tester.assert(expected1 == actual[3])
+  puts tester.to_s  
+end
+
+def test__tempo
+  throw_on_failure = false
+  lite_syntax = true
+  test_name = "test__tempo"
+  script = 
+%Q{
+# TESTING PURPOSES ONLY
+reset_script_state
+# test__tempo
+
+# Define a simple function to test tempo handling complex
+#  expression for duration
+times_two: x
+  2.0 * x
+
+# Tempo is specified in bpm, i.e. 60 == 60 quarter notes/min
+#  or a quarter note is 1 sec. or a whole note is 4 secs.
+# Default tempo is 60, so if this isn't set above holds
+# If it is set, AND durations are specified using duration constants
+#  such as WHL, HLF, etc.  The reason for this is that if the score specifies
+#  exact tempos in seconds, not just "relative" lengths such as WHL etc. then
+#  those exact tempos should be honored
+tempo 30
+
+# Test expression rather than simple 2-token line
+measure "Measure 1"
+  note "1"
+    instrument  1 
+    start       0.0 
+    duration    WHL+HLF  
+    amplitude   1000
+    pitch       7.01
+    func_table  1
+
+  note "2"
+    instrument  1 
+    start       EITH
+    duration    times_two: HLF 
+    amplitude   1100
+    pitch       7.02
+    func_table  1
+
+  note "3"
+    instrument  1 
+    start       0.0 
+    duration    QRTR
+    amplitude   1200
+    pitch       7.03
+    func_table  1
+
+# You can reset tempo whenever you want. Now it's twice as fast as default
+tempo 120
+
+# Test expression rather than simple 2-token line
+measure "Measure 2"
+  note "4"
+    instrument  1 
+    start       0.0 
+    duration    WHL+HLF  
+    amplitude   1000
+    pitch       7.01
+    func_table  1
+
+  note "5"
+    instrument  1 
+    start       QRTR + QRTR 
+    duration    HLF
+    amplitude   1100
+    pitch       7.02
+    func_table  1
+
+  note "6"
+    instrument  1 
+    start       0.0 
+    duration    QRTR
+    amplitude   1200
+    pitch       7.03
+    func_table  1
+
+write "composer_test_results.txt"
+  format    csound
+  measures   "Measure 1", "Measure 2"
+}
+  tester, results = test_runner(test_name, throw_on_failure, script, lite_syntax)
+  actual = results        
+  expected0 = 'i 1 0.00000 12.00000 1000 7.01000 1 ; 1'
+  expected1 = 'i 1 1.00000 8.00000 1100 7.02000 1 ; 2'
+  expected2 = 'i 1 0.00000 2.00000 1200 7.03000 1 ; 3'
+  expected3 = 'i 1 12.00000 3.00000 1000 7.01000 1 ; 4'
+  expected4 = 'i 1 13.00000 1.00000 1100 7.02000 1 ; 5'
+  expected5 = 'i 1 12.00000 0.50000 1200 7.03000 1 ; 6'
+  tester.assert(expected0 == actual[2])
+  tester.assert(expected1 == actual[3])
+  tester.assert(expected2 == actual[4])
+  tester.assert(expected3 == actual[5])
+  tester.assert(expected4 == actual[6])
+  tester.assert(expected5 == actual[7])
+  puts tester.to_s  
+end
+
+def test__tempo_default
+  throw_on_failure = false
+  lite_syntax = true
+  test_name = "test__tempo_default"
+  script = 
+%Q{
+# TESTING PURPOSES ONLY
+reset_script_state
+# test__tempo
+
+# Don't set tempo and default is 60 bpm, quarter note == 1 sec
+# tempo 30
+
+measure "Measure 1"
+  note "1"
+    instrument  1 
+    start       0.0 
+    duration    WHL
+    amplitude   1000
+    pitch       7.01
+    func_table  1
+
+  note "2"
+    instrument  1 
+    start       1.0 
+    duration    HLF
+    amplitude   1100
+    pitch       7.02
+    func_table  1
+
+  note "3"
+    instrument  1 
+    start       0.0 
+    duration    QRTR
+    amplitude   1200
+    pitch       7.03
+    func_table  1
+
+write "composer_test_results.txt"
+  format    csound
+  measures   "Measure 1"
+}
+  tester, results = test_runner(test_name, throw_on_failure, script, lite_syntax)
+  actual = results        
+  expected0 = 'i 1 0.00000 4.00000 1000 7.01000 1 ; 1'
+  expected1 = 'i 1 1.00000 2.00000 1100 7.02000 1 ; 2'
+  expected2 = 'i 1 0.00000 1.00000 1200 7.03000 1 ; 3'
+  tester.assert(expected0 == actual[2])
+  tester.assert(expected1 == actual[3])
+  tester.assert(expected2 == actual[4])
   puts tester.to_s  
 end
 
@@ -2324,6 +2477,8 @@ def run_tests(flags='^run_all')
       test__next ; num_tests += 1
       test__render_lite_syntax ; num_tests += 1
       test__meter_lite_syntax ; num_tests += 1
+      test__tempo ; num_tests += 1
+      test__tempo_default ; num_tests += 1
       test__ensemble ; num_tests += 1
       test__ensemble_phrase_play_players ; num_tests += 1
       test__ensemble_phrase_play_ensembles ; num_tests += 1
@@ -2353,12 +2508,6 @@ def run_tests(flags='^run_all')
     begin    
       
       # *** run_only TESTS GO HERE ***
-      test__no_start_auto_next
-      test__instruction_ensemble_state
-      test__instruction_players_state
-      test__ensemble_instrument_channel_midi_render      
-      test__improvise2_player
-      test__improvise_player
       # *** run_only TESTS GO HERE ***
     
     rescue AleatoricTestException => e      
