@@ -40,7 +40,7 @@ PLAYER_SETTINGS = {
   "adj_phase_count_threshold" => 1,
   "adj_phase_prob_increase_factor" => 1.0,
   # The length of the rest Note (in seconds) inserted if a Player is adjusting its phase  
-  "phase_adj_dur" => SXTYFRTH * DUR_FACTOR * 0.25,
+  "phase_adj_dur" => SXTYFRTH * 0.1,
   
   # Prob that a Player will seek unison on any given iteration.  The idea is that
   #  to seek unison the Ensemble and all the Players must seek unison  

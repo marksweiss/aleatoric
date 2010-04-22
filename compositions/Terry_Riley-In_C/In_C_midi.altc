@@ -25,6 +25,8 @@ legato_duration: dur
 # Declare format for rendering to a sound file. CSound and MIDI supported.
 format midi
 
+# Set tempo for the piece in bpm
+tempo 150
 
 # TODO BUG IN CRESCENDO IN USER INSTRUCTION
 # It increments once per player but it should increment once per ENSEMBLE loop
