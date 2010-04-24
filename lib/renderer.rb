@@ -31,9 +31,9 @@ class Renderer
   
     # Set the path to CSound. Installer for Mac sets path correctly but Windows does not and you have to add 
     #  it to PATH yourself (of course).  Rather than add this reasonably arcane and technical step to install 
-    #  instructions we just assume default CSound install path (which hopefully doesn't ever change) and set a global here
+    #  instructions we just assume default CSound install path (which hopefully doesn't ever change) and set a global here    
     if include_win?
-      csound_path = %q{C:\Program Files\Csound\bin}
+      csound_path = %q{C:\Program Files\Csound\bin\csound}
     elsif include_mac?
       csound_path = 'csound'
     else

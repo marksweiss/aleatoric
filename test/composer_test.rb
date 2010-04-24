@@ -12,7 +12,7 @@ require 'thread'
 
 require 'rubygems'
 # TEMP DEBUG
-# require 'ruby-debug' ; Debugger.start
+require 'ruby-debug' ; Debugger.start
 
 ##
 # Set globals normally set by command line args when not running tests
