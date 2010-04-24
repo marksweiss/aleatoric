@@ -1,0 +1,154 @@
+_*Composer Reference and Tutorial*_
+
+*Performance Score Concepts*<br/><br/>
+
+*Introduction*
+
+Working with Instructions, Players and Ensembles is the heart of what makes Aleatoric a unique and usefu tool for both musical composers and programmers collaborating with them.  It's also the place where musical scores written in Composer and code that creates player to perform those scores connect.  Aleatoric lets musical composers write out the notes of their composition, indicate how many performers should play it and what instruments they should use, and also lets them include performance instructions using the @instruction@ and @improvisation@ statements. These statements let the composer use whatever prose they want to communicate their intent as to how performers should interpret and perform the score.  It is the programmer collaborator's job to fulfill the guidance given in these instructions.
+
+This section provides an overview of the typical structure of a Composer score with performance instructions, and discusses some typical techniques you might use in such scores.  The section "working with ensembles, players and performance insructions":http://wiki.github.com/marksweiss/aleatoric/working-with-ensembles-players-and-performance-insructions provides detailed documentation on each statement discussed here:
+* @player@
+* @ensemble@
+* @instruction@
+* @improvisation@
+* @play@
+* @improvise@
+* @players@
+* @ensembles@
+
+*Declaring Ensembles and Players and Giving them Notes to Play*
+
+One of the main techniques and conveniences in Composer scores is that you can assign groups of notes, either measures, phrases or sections (or all of them), to either ensembles or players.  If you assign them to an ensemble, all the players in the ensemble will have those notes to play.  
+
+But what does it mean to say the players "have those notes to play?"  The idea is that you use the @ensemble@ or @player@ statements, assign notes using @note@, @measure@, @phrase@ or @section@, and the use the @play@ statement to instruct the players to play the notes assigned to them.  When @play@ is used in the simplest way, each player plays each note assigned to it once, in the order the notes are assigned to it in the score.
+
+_A Simple Example_
+
+@# Declare three Players who will perform the piece@<br/>
+@player "Player 1"@<br/>
+&nbsp;&nbsp;@instrument 1@<br/>
+@player "Player 2"@<br/>
+&nbsp;&nbsp;@instrument 1@<br/>
+@player "Player 3"@<br/>
+@&nbsp;&nbsp;@instrument 1@<br/>
+@# Declare Ensemble, assign Players to Ensemble, and define Phrases@<br/>
+@#  of notes within the Ensemble block, thereby assigning all Phrases@<br/>
+@#  to all Players in the Ensemble@<br/>
+@ensemble "Ensemble Magnifique"@<br/>
+&nbsp;&nbsp;@players "Player 1", "Player 2", "Player 3"@<br/>
+<br/>
+&nbsp;&nbsp;@phrase "1"@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@note@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@start EIGHTH@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@duration EIGHTH@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@volume 100@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@pitch C4@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@note@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@start EIGHTH + QUARTER@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@duration EIGHTH@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@volume 100@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@pitch E4@<br/>
+<br/>
+@play@<br/>
+&nbsp;&nbsp;@ensembles "Ensemble Magnifique"@<br/>
+
+In this example, each player will play phrase 1 once.  The notes will be added to the final rendered sound file in the order the players appear in the score, but they will all actually start at the same time. So the first note played by each player will start an eighth note's length after the start, and the next will start a quarter note's length later.  The ensemble will play six notes altogether.  All notes will end at the end of the latest note, which is the second note.  In this case the notes will end after a half-note's length (@start@ of @EIGHTH@ plus @QUARTER@, with a @duration@ of an @EIGHTH@).
+
+_An Example of Players Playing Different Notes_
+
+From this first example, you might think that it would be nice to assign each player different notes.  This of course is a very common technique in essentially all music, having players play different notes on different instruments.  To do this you assign notes to players and not to an ensemble.
+
+@# Declare three Players who will perform the piece@<br/>
+@# Assign to each a different instrument and different notes to play@<br/>
+@player "Player 1"@<br/>
+@&nbsp;&nbsp;@instrument 1@<br/>
+
+@&nbsp;&nbsp;@phrase "1"@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@note@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@start EIGHTH@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@duration EIGHTH@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@volume 100@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@pitch C4@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@note@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@start EIGHTH + QUARTER@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@duration EIGHTH@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@volume 100@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@pitch E4@<br/>
+<br/>
+@player "Player 2"@<br/>
+&nbsp;&nbsp;@instrument 2@<br/>
+<br/>
+@&nbsp;&nbsp;@phrase "2"@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@note@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@start 0@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@duration HALF@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@volume 70@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@pitch C2@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@note@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@start HALF@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@duration QRTR@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@volume 75@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@pitch G2@<br/>
+<br/>
+@player "Player 3"@<br/>
+@&nbsp;&nbsp;@instrument 3@<br/>
+<br/>
+@# Assign phrases to each player@<br/>
+@&nbsp;&nbsp;@phrase "3"@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@note@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@start EIGHTH@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@duration EIGHTH@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@volume 100@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@pitch C6@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@note@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@start EIGHTH + QUARTER@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@duration EIGHTH@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@volume 100@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@pitch E6@<br/>
+<br/>
+@play@<br/>
+&nbsp;&nbsp;@players "Player 1", "Player 2", "Player 3"@<br/>
+
+In this example, each player will play their assigned phrase once.  The notes will be added to the final rendered sound file in the order the players appear in the score, and start at the time assigned as the value of the @start@ attribute of the @note@. The players will play six notes altogether, but this time each plays different notes. Also, we don't need to declare an @ensemble@ and assign players to it because we aren't assigning any notes or adding other elements (such as performance insructions, covered next) to an entire ensemble.  So this time instead of an @ensembles@ list assigned to @play@ we have a @players@ list, and its value is a list of the names of all three players, "Player 1," "Player 2," and "Player 3."
+
+_An Example of Players Repeating Notes_
+
+This example appears similar, but it is actually a central technique in a Composer score.  By using the @repeat@ command, creating ostinatos.  @repeat@ takes one value, a whole number that tells Aleatoric how many times to repeat.  So, combining @repeat@ and @play@ you can instruct players to play their notes any number of times.  Modifying the first example, we have:
+
+@# Declare three Players who will perform the piece@<br/>
+@player "Player 1"@<br/>
+&nbsp;&nbsp;@instrument 1@<br/>
+@player "Player 2"@<br/>
+&nbsp;&nbsp;@instrument 1@<br/>
+@player "Player 3"@<br/>
+@&nbsp;&nbsp;@instrument 1@<br/>
+@# Declare Ensemble, assign Players to Ensemble, and define Phrases@<br/>
+@#  of notes within the Ensemble block, thereby assigning all Phrases@<br/>
+@#  to all Players in the Ensemble@<br/>
+@ensemble "Ensemble Magnifique"@<br/>
+&nbsp;&nbsp;@players "Player 1", "Player 2", "Player 3"@<br/>
+<br/>
+&nbsp;&nbsp;@phrase "1"@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@note@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@start EIGHTH@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@duration EIGHTH@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@volume 100@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@pitch C4@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@note@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@start EIGHTH + QUARTER@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@duration EIGHTH@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@volume 100@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@pitch E4@<br/>
+<br/>
+@repeat 10@
+&nbsp;&nbsp;@play@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@ensembles "Ensemble Magnifique"@<br/>
+
+In this example, each player will play phrase 10 times.  The notes will be added to the final rendered sound file in the order the players appear in the score, but they will all actually start at the same time, because the notes are assigned to the ensemble and so to each player.  Aleatoric will automatically start each phrase played by each player after the end of the last note it played in the previous phrase.  So, in this case, what you intuitively expect to happen does happen -- each player plays the phrase ten times "in a row," that is, consecutively.
+
+*Using Performance Instructions to Control Players*
+
+To direct players in more interesting ways we want to introduce a performance instruction, @repeat_until@.  
+
+
+
