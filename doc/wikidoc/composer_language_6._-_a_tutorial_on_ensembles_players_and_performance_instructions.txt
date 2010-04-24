@@ -1,6 +1,6 @@
 _*Composer Reference and Tutorial*_
 
-*A Tutorial on Ensembles, Players and Performance Instructions*<br/><br/>
+*A Tuorial on Ensembles, Players and Performance Instructions*<br/><br/>
 
 *Introduction*
 
@@ -148,7 +148,92 @@ In this example, each player will play phrase 10 times.  The notes will be added
 
 *Using Performance Instructions to Control Players*
 
-To direct players in more interesting ways we want to introduce a performance instruction, @repeat_until@.  
+_Performance Instructions to Direct Repetition_
 
+To direct players in more interesting ways we want to introduce a performance instruction, @repeat_until@.  This time, instead of telling players to repeat a fixed number of times, you include an instruction, the words of which are entirely up to you.  However, now that the score includes a performance instruction, it won't perform and create a rendered sound file unless a programmer creates a separate file with the code to implement the instruction.  (Implementing performance instruction code and instruction Aleatoric to combine score files with performance instruction files are covered in more detail "here":TODO.)
 
+@# Declare three Players who will perform the piece@<br/>
+@player "Player 1"@<br/>
+&nbsp;&nbsp;@instrument 1@<br/>
+@player "Player 2"@<br/>
+&nbsp;&nbsp;@instrument 1@<br/>
+@player "Player 3"@<br/>
+@&nbsp;&nbsp;@instrument 1@<br/>
+@# Declare Ensemble, assign Players to Ensemble, and define Phrases@<br/>
+@#  of notes within the Ensemble block, thereby assigning all Phrases@<br/>
+@#  to all Players in the Ensemble@<br/>
+@ensemble "Ensemble Magnifique"@<br/>
+&nbsp;&nbsp;@players "Player 1", "Player 2", "Player 3"@<br/>
+<br/>
+&nbsp;&nbsp;@phrase "1"@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@note@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@start EIGHTH@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@duration EIGHTH@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@volume 100@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@pitch C4@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@note@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@start EIGHTH + QUARTER@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@duration EIGHTH@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@volume 100@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@pitch E4@<br/>
+<br/>
+@repeat until "all players in the ensemble are bored or sleepy"@
+&nbsp;&nbsp;@play@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@ensembles "Ensemble Magnifique"@<br/>
 
+Notice that this instruction implies that the ensemble will repeat its phrases for some time, but it's not exactly specified how many times they will repeat. It's up to the composer and programmer to create an instruction for this @repeat until@ that produces results they are both happy with.  Perhaps the programmer will introduce an element of chance into the code for the instruction, a common element in aleatoric composition.  They might decide everyone gets tired after 100 repetitions.  Or they might base the rules in the code that govern when players stop on more complex or esoteric rules.  As in real-world aleatoric scores, the score provides a general specification of composer intent, but leaves interpretation of that intent to realize the final performance largely up to the performers.  In Aleatoric, that means the programmer designing the code to control the players is the intepreter of the composer's intent in the score.
+
+_General Performance Instructions_
+
+Sometimes a composer may want a score to include a more general instruction to its performers.  Here is an excerpt from a performance instruction in Terry Riley's "In C":http://en.wikipedia.org/wiki/In_C. "Patterns are to be played consecutively with each performer having the freedom to determine how many times he or she will repeat each pattern before moving on to the next."  Notice how this is subtly differen than the previous instruction.  To be true to the spirit of Riley's intent, we may need to have each player act independently of the others.  We can't simply have all of them repeat and then stop together, as would happen if we used @repeat until@.  Of course, instructions can be arbitrarily complex, or, well, arbitrarily arbitrary.  As the composer, ou can express anything you want in an instruction, whimsical, outrageous, obvious etc.  It's up to you and the programmer collaborator to have a shared understanding of what the instruction means, and to agree to some process for approving the final rendered sound files produced by Aleatoric so that the final performance meets the goals of the composer and her score.
+
+You can associate instructions with either players or ensembles.  When your score includes a @play@ command, each time play is called (once in a simple use of @play@, on each repetition if @repeat@ or @repeat_until@ is used with @play@), then Aleatoric runs the code for each @instruction@.  This may change the behavior of the players and change what they play, how they play or whether they play.
+
+@player "Player 1"@<br/>
+&nbsp;&nbsp;@instrument 1@<br/>
+@player "Player 2"@<br/>
+&nbsp;&nbsp;@instrument 1@<br/>
+@player "Player 3"@<br/>
+@&nbsp;&nbsp;@instrument 1@<br/>
+<br/>
+@ensemble "Ensemble Magnifique"@<br/>
+&nbsp;&nbsp;@players "Player 1", "Player 2", "Player 3"@<br/>
+<br/>
+&nbsp;&nbsp;@phrase "1"@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@note@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@start EIGHTH@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@duration EIGHTH@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@volume 100@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@pitch C4@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@note@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@start EIGHTH + QUARTER@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@duration EIGHTH@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@volume 100@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@pitch E4@<br/>
+<br/>
+@instruction "Play as though your life depended on it"@
+&nbsp;&nbsp;description "This important instruction should control the behavior most strongly of all players"
+@play@<br/>
+&nbsp;&nbsp;@ensembles "Ensemble Magnifique"@<br/>
+
+_Improvisation_
+
+Composers may also instruct players and ensembles to improvise.  In this case, the programmer colloborator must implement code that generates entirely new notes according to the instruction stated in the @improvisation@ statement.  Similar to the combination of @instruction@ and @play@, all improvisations assigned to all players will occur each time the @improvise@ statement is encountered in the musical score.  Even if notes are assigned to a player, these will not play when the player is performing for @improvise@ -- @improvise@ must produce new notes each time it happens, mimicing real-world improvisation.
+
+@player "Player 1"@<br/>
+&nbsp;&nbsp;@instrument 1@<br/>
+@player "Player 2"@<br/>
+&nbsp;&nbsp;@instrument 2@<br/>
+@player "Player 3"@<br/>
+@&nbsp;&nbsp;@instrument 5@<br/>
+<br/>
+@ensemble "Ensemble Magnifique"@<br/>
+&nbsp;&nbsp;@players "Player 1", "Player 2", "Player 3"@<br/>
+<br/>
+@improvisation "Play as though your life depended on it"@
+&nbsp;&nbsp;description "Whatever notes the player improvises, they had better sound desperate."
+@repeat until "nobody is left standing"@<br/>
+&nbsp;&nbsp;@improvise@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@ensembles "Ensemble Magnifique"@<br/>
+
+Here the composer has combined @improvise@ and @repeat until@.  The example is intentionally silly but also, hopefully, evocative of how much simple power the Composer language offers to let a composer describe intent in a score.  The score insructs performers to improvise in a way that communicates either a facetious or actual fear for their life based on what they improvise.  There is lots of room for the musical composer and the programmer collaborator to experiment and have fun with this idea, which is expressed in just a few lines of score.
