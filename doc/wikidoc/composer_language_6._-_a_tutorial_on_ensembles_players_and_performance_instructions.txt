@@ -4,7 +4,7 @@ _*Composer Reference and Tutorial*_
 
 *Introduction*
 
-Working with Instructions, Players and Ensembles is the heart of what makes Aleatoric a unique and usefu tool for both musical composers and programmers collaborating with them.  It's also the place where musical scores written in Composer and code that creates player to perform those scores connect.  Aleatoric lets musical composers write out the notes of their composition, indicate how many performers should play it and what instruments they should use, and also lets them include performance instructions using the @instruction@ and @improvisation@ statements. These statements let the composer use whatever prose they want to communicate their intent as to how performers should interpret and perform the score.  It is the programmer collaborator's job to fulfill the guidance given in these instructions.
+Working with Instructions, Players and Ensembles is the heart of what makes Aleatoric a unique and usefu tool for both musical composers and programmers collaborating with them.  It's also the place where musical scores written in Composer and code that creates players to perform those scores connect.  Aleatoric lets musical composers write out the notes of their composition, indicate how many performers should play it and what instruments they should use, and also lets them include performance instructions using the @instruction@ and @improvisation@ statements. These statements let the composer use whatever prose they want to communicate their intent as to how performers should interpret and perform the score.  It is the programmer collaborator's job to fulfill the guidance given in these instructions.
 
 This section provides an overview of the typical structure of a Composer score with performance instructions, and discusses some typical techniques you might use in such scores.  The section "working with ensembles, players and performance insructions":http://wiki.github.com/marksweiss/aleatoric/working-with-ensembles-players-and-performance-insructions provides detailed documentation on each statement discussed here:
 * @player@
@@ -30,7 +30,8 @@ _A Simple Example_
 @player "Player 2"@<br/>
 &nbsp;&nbsp;@instrument 1@<br/>
 @player "Player 3"@<br/>
-@&nbsp;&nbsp;@instrument 1@<br/>
+&nbsp;&nbsp;@instrument 1@<br/>
+<br/>
 @# Declare Ensemble, assign Players to Ensemble, and define Phrases@<br/>
 @#  of notes within the Ensemble block, thereby assigning all Phrases@<br/>
 @#  to all Players in the Ensemble@<br/>
@@ -52,18 +53,18 @@ _A Simple Example_
 @play@<br/>
 &nbsp;&nbsp;@ensembles "Ensemble Magnifique"@<br/>
 
-In this example, each player will play phrase 1 once.  The notes will be added to the final rendered sound file in the order the players appear in the score, but they will all actually start at the same time. So the first note played by each player will start an eighth note's length after the start, and the next will start a quarter note's length later.  The ensemble will play six notes altogether.  All notes will end at the end of the latest note, which is the second note.  In this case the notes will end after a half-note's length (@start@ of @EIGHTH@ plus @QUARTER@, with a @duration@ of an @EIGHTH@).
+In this example, each player will play phrase "1" once.  The notes will be added to the final rendered sound file in the order the players appear in the score, but they will all actually start at the same time. So the first note played by each player will start an eighth note's length after the start, and the next will start a quarter note's length later.  The ensemble will play six notes altogether.  All notes will end at the end of the latest note, which is the second note.  In this case the notes will end after a half-note's length (@start@ of @EIGHTH@ plus @QUARTER@, with a @duration@ of an @EIGHTH@).
 
 _An Example of Players Playing Different Notes_
 
-From this first example, you might think that it would be nice to assign each player different notes.  This of course is a very common technique in essentially all music, having players play different notes on different instruments.  To do this you assign notes to players and not to an ensemble.
+From this first example, you might think that it would be nice to assign each player different notes.  To do this you assign notes to players and not to an ensemble.
 
 @# Declare three Players who will perform the piece@<br/>
 @# Assign to each a different instrument and different notes to play@<br/>
 @player "Player 1"@<br/>
-@&nbsp;&nbsp;@instrument 1@<br/>
-
-@&nbsp;&nbsp;@phrase "1"@<br/>
+&nbsp;&nbsp;@instrument 1@<br/>
+<br/>
+&nbsp;&nbsp;@phrase "1"@<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;@note@<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@start EIGHTH@<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@duration EIGHTH@<br/>
@@ -78,7 +79,7 @@ From this first example, you might think that it would be nice to assign each pl
 @player "Player 2"@<br/>
 &nbsp;&nbsp;@instrument 2@<br/>
 <br/>
-@&nbsp;&nbsp;@phrase "2"@<br/>
+&nbsp;&nbsp;@phrase "2"@<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;@note@<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@start 0@<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@duration HALF@<br/>
@@ -91,10 +92,10 @@ From this first example, you might think that it would be nice to assign each pl
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@pitch G2@<br/>
 <br/>
 @player "Player 3"@<br/>
-@&nbsp;&nbsp;@instrument 3@<br/>
+&nbsp;&nbsp;@instrument 3@<br/>
 <br/>
 @# Assign phrases to each player@<br/>
-@&nbsp;&nbsp;@phrase "3"@<br/>
+&nbsp;&nbsp;@phrase "3"@<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;@note@<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@start EIGHTH@<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@duration EIGHTH@<br/>
@@ -113,7 +114,7 @@ In this example, each player will play their assigned phrase once.  The notes wi
 
 _An Example of Players Repeating Notes_
 
-This example appears similar, but it is actually a central technique in a Composer score.  By using the @repeat@ command, creating ostinatos.  @repeat@ takes one value, a whole number that tells Aleatoric how many times to repeat.  So, combining @repeat@ and @play@ you can instruct players to play their notes any number of times.  Modifying the first example, we have:
+This example appears similar, but it is actually a central technique in a Composer score.  By using the @repeat@ command, you can create ostinatos.  @repeat@ takes one value, a whole number that tells Aleatoric how many times to repeat.  So, combining @repeat@ and @play@ you can instruct players to play their notes any number of times.  Modifying the first example, we have:
 
 @# Declare three Players who will perform the piece@<br/>
 @player "Player 1"@<br/>
@@ -121,7 +122,8 @@ This example appears similar, but it is actually a central technique in a Compos
 @player "Player 2"@<br/>
 &nbsp;&nbsp;@instrument 1@<br/>
 @player "Player 3"@<br/>
-@&nbsp;&nbsp;@instrument 1@<br/>
+&nbsp;&nbsp;@instrument 1@<br/>
+<br/>
 @# Declare Ensemble, assign Players to Ensemble, and define Phrases@<br/>
 @#  of notes within the Ensemble block, thereby assigning all Phrases@<br/>
 @#  to all Players in the Ensemble@<br/>
@@ -144,13 +146,13 @@ This example appears similar, but it is actually a central technique in a Compos
 &nbsp;&nbsp;@play@<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;@ensembles "Ensemble Magnifique"@<br/>
 
-In this example, each player will play phrase 10 times.  The notes will be added to the final rendered sound file in the order the players appear in the score, but they will all actually start at the same time, because the notes are assigned to the ensemble and so to each player.  Aleatoric will automatically start each phrase played by each player after the end of the last note it played in the previous phrase.  So, in this case, what you intuitively expect to happen does happen -- each player plays the phrase ten times "in a row," that is, consecutively.
+In this example, each player will play phrase 10 times.  The notes will be added to the final rendered sound file in the order the players appear in the score, but they will all actually start at the same time, because the notes are assigned to the ensemble and so to each player.  Aleatoric will automatically start each phrase played by each player after the end of the last note it played in the previous phrase.  So, in this case, what you intuitively expect to happen does happen -- each player plays the phrase in unison ten times "in a row," that is, consecutively.
 
 *Using Performance Instructions to Control Players*
 
 _Performance Instructions to Direct Repetition_
 
-To direct players in more interesting ways we want to introduce a performance instruction, @repeat_until@.  This time, instead of telling players to repeat a fixed number of times, you include an instruction, the words of which are entirely up to you.  However, now that the score includes a performance instruction, it won't perform and create a rendered sound file unless a programmer creates a separate file with the code to implement the instruction.  (Implementing performance instruction code and instruction Aleatoric to combine score files with performance instruction files are covered in more detail "here":TODO.)
+To direct players in more interesting ways we want to introduce a performance instruction, @repeat_until@.  This time, instead of telling players to repeat a fixed number of times, you include an instruction, the words of which are entirely up to you.  However, _now that the score includes a performance instruction, it won't perform and create a rendered sound file unless a programmer creates a separate file with the code to implement the instruction._  (Implementing performance instruction code and instruction Aleatoric to combine score files with performance instruction files are covered in more detail "here":TODO.)
 
 @# Declare three Players who will perform the piece@<br/>
 @player "Player 1"@<br/>
@@ -158,7 +160,8 @@ To direct players in more interesting ways we want to introduce a performance in
 @player "Player 2"@<br/>
 &nbsp;&nbsp;@instrument 1@<br/>
 @player "Player 3"@<br/>
-@&nbsp;&nbsp;@instrument 1@<br/>
+&nbsp;&nbsp;@instrument 1@<br/>
+<br/>
 @# Declare Ensemble, assign Players to Ensemble, and define Phrases@<br/>
 @#  of notes within the Ensemble block, thereby assigning all Phrases@<br/>
 @#  to all Players in the Ensemble@<br/>
@@ -185,7 +188,7 @@ Notice that this instruction implies that the ensemble will repeat its phrases f
 
 _General Performance Instructions_
 
-Sometimes a composer may want a score to include a more general instruction to its performers.  Here is an excerpt from a performance instruction in Terry Riley's "In C":http://en.wikipedia.org/wiki/In_C. "Patterns are to be played consecutively with each performer having the freedom to determine how many times he or she will repeat each pattern before moving on to the next."  Notice how this is subtly differen than the previous instruction.  To be true to the spirit of Riley's intent, we may need to have each player act independently of the others.  We can't simply have all of them repeat and then stop together, as would happen if we used @repeat until@.  Of course, instructions can be arbitrarily complex, or, well, arbitrarily arbitrary.  As the composer, ou can express anything you want in an instruction, whimsical, outrageous, obvious etc.  It's up to you and the programmer collaborator to have a shared understanding of what the instruction means, and to agree to some process for approving the final rendered sound files produced by Aleatoric so that the final performance meets the goals of the composer and her score.
+Sometimes a composer may want a score to include a more general instruction to its performers.  Here is an excerpt from a performance instruction in Terry Riley's "In C": "Patterns are to be played consecutively with each performer having the freedom to determine how many times he or she will repeat each pattern before moving on to the next."  Notice how this is subtly different than the previous instruction.  To be true to the spirit of Riley's intent, we may need to have each player act independently of the others.  We can't simply have all of them repeat and then stop together, as would happen if we used @repeat until@.  Of course, instructions can be arbitrarily complex, or, well, arbitrarily arbitrary.  As the composer, ou can express anything you want in an instruction, whimsical, outrageous, obvious etc.  It's up to you and the programmer collaborator to have a shared understanding of what the instruction means, and to agree to some process for approving the final rendered sound files produced by Aleatoric so that the final performance meets the goals of the musical composer's score.
 
 You can associate instructions with either players or ensembles.  When your score includes a @play@ command, each time play is called (once in a simple use of @play@, on each repetition if @repeat@ or @repeat_until@ is used with @play@), then Aleatoric runs the code for each @instruction@.  This may change the behavior of the players and change what they play, how they play or whether they play.
 
@@ -194,7 +197,7 @@ You can associate instructions with either players or ensembles.  When your scor
 @player "Player 2"@<br/>
 &nbsp;&nbsp;@instrument 1@<br/>
 @player "Player 3"@<br/>
-@&nbsp;&nbsp;@instrument 1@<br/>
+&nbsp;&nbsp;@instrument 1@<br/>
 <br/>
 @ensemble "Ensemble Magnifique"@<br/>
 &nbsp;&nbsp;@players "Player 1", "Player 2", "Player 3"@<br/>
@@ -212,7 +215,7 @@ You can associate instructions with either players or ensembles.  When your scor
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@pitch E4@<br/>
 <br/>
 @instruction "Play as though your life depended on it"@
-&nbsp;&nbsp;description "This important instruction should control the behavior most strongly of all players"
+&nbsp;&nbsp;@description "This important instruction should control the behavior most strongly of all players"@
 @play@<br/>
 &nbsp;&nbsp;@ensembles "Ensemble Magnifique"@<br/>
 
@@ -225,13 +228,13 @@ Composers may also instruct players and ensembles to improvise.  In this case, t
 @player "Player 2"@<br/>
 &nbsp;&nbsp;@instrument 2@<br/>
 @player "Player 3"@<br/>
-@&nbsp;&nbsp;@instrument 5@<br/>
+&nbsp;&nbsp;@instrument 5@<br/>
 <br/>
 @ensemble "Ensemble Magnifique"@<br/>
 &nbsp;&nbsp;@players "Player 1", "Player 2", "Player 3"@<br/>
 <br/>
 @improvisation "Play as though your life depended on it"@
-&nbsp;&nbsp;description "Whatever notes the player improvises, they had better sound desperate."
+&nbsp;&nbsp;@description "Whatever notes the player improvises, they had better sound desperate."@
 @repeat until "nobody is left standing"@<br/>
 &nbsp;&nbsp;@improvise@<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;@ensembles "Ensemble Magnifique"@<br/>
