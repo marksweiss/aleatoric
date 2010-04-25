@@ -1,7 +1,5 @@
 # TODO and ROADMAP
 
-- Document Composer language for composers and programmers, on project Wiki
-- Add MIDI format support for rendering scores to MIDI files
-- Port "In C" to use the library, to provide a non-trivial example of implementing aleatoric directions using the programmers' API
-- Minor simplifications, feature requests and bug fixes suggested by users
-- Complete and as simple as possible installation and configuration packages for Windows, Mac and Linux
+* Document Aleatoric programmer's API for implementing performance instructions
+* MIDI import -- open an existing MIDI file, load all notes and conver to Composer measures and notes, outputting that as text. This lets users easily build new compositions from existing MIDI files.  This lets user use an existing MIDI editor to define notes (much less annoying then writing them in a text file as they must now) and then save the .mid file and import it into Aleatoric.  Nice.
+* Real installers for Mac, Windows and Linux, supporting configuration and installing all dependencies as well as the source
