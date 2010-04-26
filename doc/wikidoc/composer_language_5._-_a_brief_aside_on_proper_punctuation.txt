@@ -2,7 +2,7 @@ _*Composer Reference and Tutorial*_
 
 *A Brief Aside on Proper Punctuation*<br/><br/>
 
-The first few sections of documentation on the Composer language focus on working with notes, since that is the core of any musical score, and that is the area where there is the most detail to absorb.  This is a brief aside covering the very few punctuation marks and conventions you need to use to make your Composer scores work correctly.  If you are reading the documentation sections in order, you have already seen comments and names surrounded by the double-quote mark (") in previous examples -- hopefully the examples read intuitively enough that you didn't even think twice about the additional punctuation.
+The first few sections of documentation on the Composer language focus on working with notes, since that is the core of any musical score, and that is the area where there is the most detail to absorb.  This is a brief aside covering the very few punctuation marks and conventions you need to use to make your Composer scores work correctly.  If you are reading the documentation sections in order, you have already seen comments and also names within double-quote marks ("my name") in previous examples -- hopefully the examples read intuitively enough that you didn't even think twice about the additional punctuation.
 
 To make use of its core functionality, Composer requires that you use only three punctuation marks.  They are described below.
 

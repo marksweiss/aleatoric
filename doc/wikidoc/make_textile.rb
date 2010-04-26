@@ -15,40 +15,23 @@ end
 
 
 lines = 
-'# First we create an ensemble, and put players and a phrase into it
-#  The phrase is associated with the ensemble, so each player in the
-#  ensemble will play it.
-ensemble "In C Orchestra"
-  players "Player 1", "Player 2"  
-  
-  phrase "Phrase 1"
-    note "1"
-      instrument  1 
-      start       1.0 
-      duration    0.5
-      amplitude   1000
-      pitch       7.01
+'phrase "C => EFlat, EFlat => C"
+  repeat _num_steps
+    note "rise 1"
+      instrument  1      
+      start       loop_step_u: _start1, _nt_dur1 + _rest_dur1, index - 1
+      duration    _nt_dur1
+      amplitude   modulate_i: _base_amp
+      pitch       loop_step_u: C3, _pitch_step1, index
       func_table  1
-      
-    note "2"
-      instrument  2 
-      start       2.0 
-      duration    1.0
-      amplitude   1100
-      pitch       7.02
-      func_table  1
-
-
-# ... then we refer to it here by name as one or more phrases
-#  to be played by Aleatoric when performing the score ...
-play
-  phrases "Phrase 1"
-
-# ... and finally we tell Aleatoric to include the notes from this phrase 
-#  in the final sound file, again by listing it\'s name in the phrases list
-render "my_composition.mid"
-  phrases "Phrase 1"	
-  format    midi'
+    
+    note "fall 1"
+      instrument  1
+      start       loop_step_u: _start2, _nt_dur1 + _rest_dur1, index - 1
+      duration    _nt_dur1
+      amplitude   modulate_i: _base_amp
+      pitch       loop_step_d: E3F, _pitch_step1, index
+      func_table  1'
  
 lines.each do |line|
   puts(make_textile(line))

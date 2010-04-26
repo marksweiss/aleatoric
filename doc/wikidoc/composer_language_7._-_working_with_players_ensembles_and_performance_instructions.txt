@@ -1,0 +1,329 @@
+_*Composer Reference and Tutorial*_
+
+TODO @repeat_until@
+
+*Working With Players, Ensembles and Performance Instructions*<br/><br/>
+
+*Statement*: @player@
+*Statement*: @play@
+*Statement*: @players@
+ 
+A @player@ is a named performer in a Composer score that can be assigned notes to play and (optionally) an instrument to play them, and then, further on in the score, instructed to play the notes.
+
+To define players, you use the @player@ statement, which must include the player's name on the same line.  
+
+@player "Player 1"@</br>
+
+Players can be assigned notes in either @section@, @phrase@, @measure@, @copy_measure_@ or @note@ blocks below the player (For more on these statements see "here":http://wiki.github.com/marksweiss/aleatoric/composer-language-2-working-with-notes).
+
+@player "Player 1"@</br>
+&nbsp;&nbsp;@phrase "Phrase 1"@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;@note "1"@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@instrument  1@</br> 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@start       1.0@</br> 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@duration    0.5@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@amplitude   1000@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@pitch       7.01@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;@note "2"@
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@instrument  2@</br> 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@start       2.0@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@duration    1.0@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@amplitude   1100@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@pitch       7.02@</br>
+
+If you declare a player in a score but don't assign the player notes, they will not perform any notes -- and so won't produce any notes rendered into the file produced by the performance.  
+
+For a player to play notes assigned to it, the score must include the @play@ instruction followed in the lines below that (before any blank lines) by the @players@ statement with its value a list of players who are being instructed to play.  The player's name must also be in the list with a @players@ statement associated with a @render@ statement.
+
+Here is a complete example:
+
+@player "Player 1"@</br>
+&nbsp;&nbsp;@phrase "Phrase 1"@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;@note "1"@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@instrument  1@</br> 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@start       1.0@</br> 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@duration    0.5@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@amplitude   1000@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@pitch       7.01@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;@note "2"@
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@instrument  2@</br> 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@start       2.0@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@duration    1.0@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@amplitude   1100@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@pitch       7.02@</br>
+</br> 
+&nbsp;&nbsp;@play@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;@players "Player 1"@</br> 
+</br>  
+&nbsp;&nbsp;@render "my_composition.wav"@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;@players "Player 1"@</br>      
+&nbsp;&nbsp;&nbsp;&nbsp;@format    csound@</br>  
+
+_Assigning an instrument to a player_
+
+The other statement that can appear below a @player@ statement to associate something with the player is @instrument@.  If a player is assigned an instrument, then all notes played by that player will use that instrument.
+
+@player "Player 1"@</br>
+@# Assign player an instrument it will use to play all of its notes@<br/>
+&nbsp;&nbsp;@instrument 1@<br/>
+<br/>
+&nbsp;&nbsp;@phrase "Phrase 1"@</br>
+<br/>
+&nbsp;&nbsp;@# Because player was assigned an instrument@<br/>
+&nbsp;&nbsp;@#   don't need to assign one to each note@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@note "1"@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@start       1.0@</br> 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@duration    0.5@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@amplitude   1000@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@pitch       7.01@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;@note "2"@
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@start       2.0@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@duration    1.0@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@amplitude   1100@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@pitch       7.02@</br>
+</br> 
+&nbsp;&nbsp;@play@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;@players "Player 1"@</br> 
+</br>  
+&nbsp;&nbsp;@render "my_composition.wav"@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;@players "Player 1"@</br>      
+&nbsp;&nbsp;&nbsp;&nbsp;@format    csound@</br>
+
+_Controlling What Notes a player plays_
+
+A player will only play notes that have been associated with it in a score in lines preceding the line with the @play@ statement.  This is because Aleatoric executes all the lines in your Composer score in the order you write them.  
+
+In the common case, this isn't an issue because you can structure your score as it is done in the complete example immediately above:
+* first declare players
+* then assign notes to players
+* then @play@
+* then @render@
+
+However, a Composer score can include any number of @play@ statements, so the musical composer can take advantage of this to assign different notes to a player at different points in the score.  For example, you might want to first assign a player some phrases, and then give them more phrases to play at a later point.  Or, you might combine multiple assignments of notes and multiple @play@ statements with @instruction@ statements (see below on this page for more about @instruction@) to direct players to play some notes at one point and some others at another point.
+
+Here is a simple example of this open-ended technique:
+
+@player "Player 1"@</br>
+@# Assign player an instrument it will use to play all of its notes@<br/>
+&nbsp;&nbsp;@instrument 1@<br/>
+<br/>
+&nbsp;&nbsp;@phrase "Phrase 1"@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;@note "1"@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@start       1.0@</br> 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@duration    0.5@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@amplitude   1000@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@pitch       7.01@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;@note "2"@
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@start       2.0@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@duration    1.0@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@amplitude   1100@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@pitch       7.02@</br>
+</br>
+@# At this point the player will play the two notes in "Phrase 1" once@<br/>
+&nbsp;&nbsp;@play@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;@players "Player 1"@</br> 
+</br>  
+@# Now assign another phrase to the player@<br/>
+@player "Player 1"@</br>
+&nbsp;&nbsp;@phrase "Phrase 2"@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;@note "3"@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@start       5.0@</br> 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@duration    0.5@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@amplitude   1000@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@pitch       7.03@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;@note "4"@
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@start       8.0@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@duration    2.0@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@amplitude   1100@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@pitch       7.04@</br>
+</br>
+@# This time "Player 1" plays "Phrase 1" again and then "Phrase 2", once each@<br/>
+&nbsp;&nbsp;@play@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;@players "Player 1"@</br> 
+</br>
+@# Render the six notes "Player 1" played into final sound file@<br/> 
+@#   of the performance@<br/>
+&nbsp;&nbsp;@render "my_composition.wav"@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;@players "Player 1"@</br>      
+&nbsp;&nbsp;&nbsp;&nbsp;@format    csound@</br>
+
+_player, players and play Summary_
+
+To have a player play notes in a performance of a Composer score, you must: 
+* first assign the player notes
+* then include the player's name in the @players@ list associated with a @play@ statement
+* then include the player's name in the @players@ list associated with a @render@ statement
+
+Also, remember that @play@ will instruct a player any notes that have been assigned to them in previous lines of the score.  The player won't play notes assigned to them below the @play@ statement in the score.
+
+*Statement*: @ensemble@
+*Statement*: @ensembles@
+
+Much like the @measure@ and @phrase@ statements group a series of one or more @note@ statements, so they can conveniently be referred to by the name of the phrase, or the @section@ statement groups one or more @phrase@ statements, Composer scores group players into an @ensemble@.  You assign players to an ensemble by listing them as values in a @players@ list associated with the ensemble.
+
+You assign notes to an ensemble just as you do to a player, using @phrase@, @measure@, @section@ or @note@ statements.  However, all notes associated with an ensemble are automatically associated with _all_ players in the ensemble.
+
+To add a new player to the examples from above, and have both players play the same notes, you use an @ensemble@ to group the players, and you use an @ensembles@ list rather than a @players@ list associated with the @play@ and @render@ statements.
+
+@# Declare two players@<br/>
+@player "Player 1"@</br>
+&nbsp;&nbsp;@instrument 1@<br/>
+@player "Player 2"@</br>
+&nbsp;&nbsp;@instrument 5@<br/>
+<br/>
+@ensemble "Ensemble 1"@<br/>
+@# Assign players to the ensemble@<br/>
+&nbsp;&nbsp;@players "Player 1", "Player 2"@<br/>
+<br/>
+@# Assign a phrase to the ensemble.  Both players will play these notes.@<br/>
+&nbsp;&nbsp;@phrase "Phrase 1"@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;@note "1"@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@start       1.0@</br> 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@duration    0.5@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@amplitude   1000@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@pitch       7.01@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;@note "2"@
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@start       2.0@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@duration    1.0@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@amplitude   1100@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@pitch       7.02@</br>
+</br>
+@# 'ensembles' list means 'play' tells all players in ensemble to play@<br/>
+&nbsp;&nbsp;@play@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;@ensembles "Ensemble 1"@</br> 
+</br>
+@# 'ensembles' list means 'render' renders all @<br/>
+@#   notes played by all players in ensemble@<br/>
+&nbsp;&nbsp;@render "my_composition.wav"@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;@ensembles "Ensemble 1"@</br>      
+&nbsp;&nbsp;&nbsp;&nbsp;@format    csound@</br>
+
+
+*Statement*: @instruction@
+
+An @instruction@ is a performance instruction that the musical composer of a score in the Composer language uses to direct the players or ensembles defined in the score.  The intent of instructions are to mirror the additional prose instructions often found in real-world aleatoric scores.  
+
+In Aleatoric, instructions are the core of the shared understanding between the musical composer writing the score and their programmer collaborator.  Using instructions, the musical composer communicates intent about how the composition should be interpreted and performed.  The programmer then writes software that determines the performance of the piece. (For more, see "A Tutorial on Ensembles, Players and Performance Instructions":http://wiki.github.com/marksweiss/aleatoric/composer-language-6-a-tutorial-on-ensembles-players-and-performance-instructions-2).  The effect of the instruction depends entirely on how it is created by the programmer.
+
+An @instruction@ must be named (with any text you desire).  This is the name that the programmer collaborator will use to create code that directs the players and/or ensembles in your score to follow the instruction.  An instruction also has @description@ attribute associated with it.  This can be useful in many cases because you can put several additional sentences (any text is allowed) that provide additional clarification or guidance.  Even if you don't want to include a description, you still must include the "" quotes with no characters between them.
+
+Each time Aleatoric encounters a @play@ statement in a score, it considers all instructions that have been associated with all players playing the score.  Instructions can be created that will be executed before or after a player plays.  As the composer, you can indicate in your @instruction@ name or @description@ that you would like the instruction to be considered before or after play.  If you don't, the programmer creating the code that defines the behavior of the instruction will simply choose a before- or after-play instruction.
+
+Instructions can be assigned to players or ensembles, depending on whether there is a @players@ list or @ensembles@ list (or both) associated with the instruction.  As with other statements, if the instruction is associated with an ensemble it will be associated with all players in that ensemble.
+
+Here is the previous example, now with a player instruction and ensemble instruction added.
+
+@# Declare two players@<br/>
+@player "Player 1"@</br>
+&nbsp;&nbsp;@instrument 1@<br/>
+@player "Player 2"@</br>
+&nbsp;&nbsp;@instrument 5@<br/>
+<br/>
+@ensemble "Ensemble 1"@<br/>
+@# Assign players to the ensemble@<br/>
+&nbsp;&nbsp;@players "Player 1", "Player 2"@<br/>
+<br/>
+@# Assign a phrase to the ensemble.  Both players will play these notes.@<br/>
+&nbsp;&nbsp;@phrase "Phrase 1"@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;@note "1"@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@start       1.0@</br> 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@duration    0.5@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@amplitude   1000@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@pitch       7.01@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;@note "2"@
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@start       2.0@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@duration    1.0@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@amplitude   1100@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@pitch       7.02@</br>
+</br>
+@# Instruct the first player only@<br/>
+@instruction "Defer to the other player by playing softly and slightly later"@<br/>
+&nbsp;&nbsp;@description "The idea is to create a slight 'shadow' or 'echo' effect"@<br/>
+&nbsp;&nbsp;@players "Player 1"@<br/>
+</br>
+@# Instruct the ensemble, i.e. both players@<br/>
+@instruction "Possibly switch instruments"@<br/>
+&nbsp;&nbsp;@description "There is a chance that the players in the ensemble will switch instruments, but only a chance."@<br/>
+&nbsp;&nbsp;@ensembles "Ensemble 1"@<br/>
+</br>
+@# Now the ensemble plays.  The ensemble instruction applies to both players@<br/>
+@#   but the first instruction applies only to "Player 1"@<br/>
+&nbsp;&nbsp;@play@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;@ensembles "Ensemble 1"@</br> 
+</br>
+@# 'ensembles' list means 'render' renders all @<br/>
+@#   notes played by all players in ensemble@<br/>
+&nbsp;&nbsp;@render "my_composition.wav"@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;@ensembles "Ensemble 1"@</br>      
+&nbsp;&nbsp;&nbsp;&nbsp;@format    csound@</br>
+
+*Statement*: @improvisation@
+*Statement*: @improvise@
+
+Composer supports the notion of @improvisation@ directions in the score and an @improvise@ statement instructing players to improvise notes based on that direction.  Like the @instruction@ statement, the musical composer uses @improvisation@ to describe how the players defined in the score should play.  
+
+The programmer collaborator creates the code that will generate the notes of the improvisation, interpreting the intent of the composer.  So, like instructions, improvisation statements form a shared understanding between the composer and the programmer. (For more, see "A Tutorial on Ensembles, Players and Performance Instructions":http://wiki.github.com/marksweiss/aleatoric/composer-language-6-a-tutorial-on-ensembles-players-and-performance-instructions-2).
+
+An @improvisation@ must be named (with any text you desire).  This is the name that the programmer collaborator will use to create code that directs the players and/or ensembles in your score to follow the instruction.  An improvisation also has @description@ attribute associated with it.  This can be useful in many cases because you can put several additional sentences (any text is allowed) that provide additional clarification or guidance.  Even if you don't want to include a description, you still must include the "" quotes with no characters between them.
+
+Improvisations can be assigned to players or ensembles, depending on whether there is a @players@ list or @ensembles@ list (or both) associated with the @improvisation@ statement.  Each time Aleatoric encounters an @improvise@ statement in a score, it considers all improvisations that have been associated with all players playing the score.  Just as with @play@, @improvise@ can have a @players@ or @ensembles@ list (or both) associated with it. Aleatoric will direct these players or ensembles to perform each improvisation already assigned to them, in the order they were assigned, when it encounters the @improvise@ statement.
+
+Here is an example:
+ 
+@# Declare two players@<br/>
+@player "Player 1"@</br>
+&nbsp;&nbsp;@instrument 1@<br/>
+@player "Player 2"@</br>
+&nbsp;&nbsp;@instrument 5@<br/>
+<br/>
+@ensemble "Ensemble 1"@<br/>
+@# Assign players to the ensemble@<br/>
+&nbsp;&nbsp;@players "Player 1", "Player 2"@<br/>
+<br/>
+@# Assign a phrase to the ensemble.  Both players will play these notes.@<br/>
+&nbsp;&nbsp;@phrase "Phrase 1"@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;@note "1"@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@start       1.0@</br> 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@duration    0.5@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@amplitude   1000@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@pitch       7.01@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;@note "2"@
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@start       2.0@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@duration    1.0@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@amplitude   1100@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@pitch       7.02@</br>
+</br>
+@# Define an improvisation and assign it to just one player@<br/>
+@improvisation "Rock out extremely hard"@</br>
+&nbsp;&nbsp;@description "Never stop rockin', ever, seriously.  No, really, I mean never, ever."@</br>
+&nbsp;&nbsp;@players "Player 1"@</br>
+<br/>
+@# Define an improvisation and assign it to just one player@<br/>
+@improvisation "Rock softly, but carry a big stick"@</br>
+&nbsp;&nbsp;@description "You can actually stop rockin'.  It's OK."@</br>
+&nbsp;&nbsp;@players "Player 2"@</br>
+<br/>
+@# Define an improvisation and assign it to the ensemble.  Notice that this@<br/>
+@#   improvisation only makes sense if considered for the entire ensemble@<br/>
+@improvisation "Who rocks the hardest?"@</br>
+&nbsp;&nbsp;@description "This is a high-stakes competition between all the members of the ensemble, to see who really knows how to rock out."@</br>
+&nbsp;&nbsp;@ensembles "Ensemble 1"@</br>
+<br/>
+@# Now call 'improvise' and include both a 'players' and 'ensembles' list.@<br/>
+@# Each player will improvise their assigned improvisation.  And they may also@<br/>
+@#   each be affected by the ensemble improvisation, depending on what the@<br/>
+@#   behavior was implemented by the programmer who created it@<br/>
+@improvise@</br> 
+&nbsp;&nbsp;@players   "Player 1", "Player 2"@</br>
+&nbsp;&nbsp;@ensembles "Ensemble 1"@</br>
+<br/>
+@# Now the ensemble plays.  The ensemble instruction applies to both players@<br/>
+@#   but the first instruction applies only to "Player 1"@<br/>
+&nbsp;&nbsp;@play@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;@ensembles "Ensemble 1"@</br> 
+</br>
+@# 'ensembles' list means 'render' renders all @<br/>
+@#   notes played by all players in ensemble@<br/>
+&nbsp;&nbsp;@render "my_composition.wav"@</br>
+&nbsp;&nbsp;&nbsp;&nbsp;@ensembles "Ensemble 1"@</br>      
+&nbsp;&nbsp;&nbsp;&nbsp;@format    csound@</br>

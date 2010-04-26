@@ -1,0 +1,464 @@
+_*Composer Reference and Tutorial*_
+
+*Advanced Programming Features*<br/><br/>
+
+Composer is intended to be a simple and intuitive language for musical composers to define scores comprised of musical and aleatoric events.  So the features in this section are considered advanced features that you do not need to use to take advantage of what makes Composer useful and unique.  
+
+However, some users may be comfortable with both musical and these basic programming concepts, and these advanced features do offer a great deal of additional power to the Composer user, so they are included as part of the language and documented here.  
+
+In addition, some users may start out using the core features of Composer and then begin to wonder how they can "do more."  Gaining comfort with variables, functions and loops will offer a great deal of additional power from a modest amount of additional learning.
+
+*Custom Variables*
+
+_Declaring Variables_
+
+In Aleatoric, you can declare a variable, a name associated with a value, once and then refer to the name at other places in the score.  When Aleatoric performs the score, the value associated with the variable name is used.
+
+Variables must be defined and assigned their value at the very top of the score, one on each line, before any other statements in the score.  
+
+Variable names must be legal Ruby function names.  It is conventional to start variable names with an underscore to make them easier to identify elsewhere in the score, but it is optional to do so.  To keep things simple and avoid edge cases with naming functions, follow Composer conventions:
+* start all function names with an underscore character
+* remaining characters should be lower-case letters or digits or the underscore
+* use underscore characters to separate words in the function name
+
+@_default_volume = 70@</br>
+@_tonic_pitch = C4@</br>
+@_detune_up_factor = 1.01@</br>
+@_detune_down_factor = 0.99@</br>
+
+_Using Variables_
+
+To use variables in a score simply put their name anywhere where you would place a value.  The most common use is to replace the value assigned to a note attribute.
+
+@# Define a variable for default volume and assign it a value@
+@_default_volume = 70@</br>
+<br/>
+@# Use the variable instead of a value for each note's volume@<br/>
+@# The notes' volume will be the value assigned to '_default_volume'@<br/>
+@phrase "1"@<br/>
+&nbsp;&nbsp;@note@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@start EIGHTH@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@duration EIGHTH@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@volume _default_volume@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@pitch C4@<br/>
+&nbsp;&nbsp;@note@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@start EIGHTH + QUARTER@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@duration EIGHTH@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@volume  _default_volume@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@pitch E4@<br/>
+<br/>
+@play@<br/>
+&nbsp;&nbsp;@phrases "1"@<br/>
+
+*Custom Functions*
+
+_Background: What are Functions and When Should I Use Them?_
+
+Advanced users can extend Composer by defining their own functions and using these in scores.  Composer users with just a bit of programming experience will probably already have an understanding of why that could be useful.  This section is aimed at those users who don't have programming experience but are curious and looking to develop that intuition as to how to use functions in their scores.
+
+The idea of a function is simple: you send a value in, and the function sends a value out.  We say that a function is 'called', and 'passed' 0 or more 'arguments,' and that it 'returns' a value.  
+
+So the simplest function simply returns the value passed to it.
+
+@identity_function: arg@<br/>
+&nbsp;&nbsp;@return arg@<br/>
+
+Perhaps the first useful thing functions can do for you is tie up an operation in one place, so you don't have to change it in many places.
+
+For example, let's say you want to experiment with different volumes for the notes in a 10-note phrase.  You could keep editing the volume for all 10 notes by hand, on 10 different lines of the score, and then ask Aleatoric to render the score, and listen to it.  But this would be painful.  Instead, you could use a function call for the volume of each note, writing that into the 10 lines once.  Then, you simply change the function definition to return a different volume and render the score again.
+
+@set_volume:@</br>
+&nbsp;&nbsp;@return 70   # 70 is a pretty quiet note in MIDI, try this first@</br>
+<br/>
+@# Use a function call instead of a value for each note's volume@<br/>
+@phrase "1"@<br/>
+&nbsp;&nbsp;@note@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@start EIGHTH@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@duration EIGHTH@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@volume set_volume:@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@pitch C4@<br/>
+&nbsp;&nbsp;@note@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@start EIGHTH + QUARTER@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@duration EIGHTH@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@volume set_volume:@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@pitch E4@<br/>
+<br/>
+@# More notes here ...@
+...<br/>
+...<br/>
+<br/>
+@play@<br/>
+&nbsp;&nbsp;@phrases "1"@<br/>
+
+Now, to try again at a different volume, we only change the function body of "set_volume".
+
+@set_volume:@</br>
+&nbsp;&nbsp;@return 110   # 110 is moderately loud in MIDI@</br>
+<br/>
+@# Use a function call instead of a value for each note's volume@<br/>
+@#   so all these notes will now play with a different volume@<br/>
+@phrase "1"@<br/>
+&nbsp;&nbsp;@note@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@start EIGHTH@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@duration EIGHTH@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@volume set_volume:@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@pitch C4@<br/>
+&nbsp;&nbsp;@note@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@start EIGHTH + QUARTER@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@duration EIGHTH@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@volume set_volume:@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@pitch E4@<br/>
+<br/>
+@# More notes here ...@
+...<br/>
+...<br/>
+<br/>
+@play@<br/>
+&nbsp;&nbsp;@phrases "1"@<br/>
+
+The second core use of functions is to take one or more note attribute value as inputs and modify them in some way to return a different value.  Maybe you want to try detuning the pitch of notes a bit, modifying their volume by a constant amount (for example, making each note twice as loud), or modifying a note attribute by a random factor. (This last use is discussed in more detail below in the section on stochastic composition techniques.)  To do any of these things, you set the note attribute value to a function call taking a value, rather than just the value itself.
+
+Here is an example of detuning up the pitch of notes in a CSound score by 1% of the pitch value.
+
+@# Multiply the pitch value passed to the function by 1.01, i.e. detune up by 1%@
+@detune: pitch@</br>
+&nbsp;&nbsp;@return pitch * 1.01@</br>
+<br/>
+@# Use a function call to 'detune' with a value argument as the value for pitch@<br/>
+@phrase "1"@<br/>
+&nbsp;&nbsp;@note@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@start EIGHTH@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@duration EIGHTH@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@volume 1000@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@pitch detune: C4@<br/>
+&nbsp;&nbsp;@note@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@start EIGHTH + QUARTER@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@duration EIGHTH@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@volume 1000@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@pitch detune: E4@<br/>
+<br/>
+@play@<br/>
+&nbsp;&nbsp;@phrases "1"@<br/>
+
+We can make things even more interesting by modifying this example so that "detune" takes two arguments, one for the pitch and one for the amount to detune the pitch by.  Now the score can call "detune" in different places and in each place detune notes by a different amount.
+
+@# Multiply the pitch value passed in by the detune_factor passed in@
+@detune: pitch, detune_factor@</br>
+&nbsp;&nbsp;@return pitch * detune_factor@</br>
+<br/>
+@# Use a function call to 'detune' with a value argument as the value for pitch@<br/>
+@# The first note will be detuned up by 1%, the second down by 1%@<br/>
+@phrase "1"@<br/>
+&nbsp;&nbsp;@note@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@start EIGHTH@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@duration EIGHTH@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@volume 1000@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@pitch detune: C4, 1.01@<br/>
+&nbsp;&nbsp;@note@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@start EIGHTH + QUARTER@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@duration EIGHTH@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@volume 1000@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@pitch detune: E4, 0.99@<br/>
+<br/>
+@play@<br/>
+&nbsp;&nbsp;@phrases "1"@<br/>
+
+So far we haven't done anything with functions we couldn't do with a variable.  But as mentioned functions can include nearly any logic you want.  
+
+For example, returning to the example of a 10-note sequence, imagine that each time the piece plays you want each note to have a randomly assigned volume.  To do this you declare a function that takes the volume as an argument, multiplies that volume by a random number, and returns the result.  In a MIDI score, for example, if you passed the function 127 (the maximum legal volume for a note) and the function multiplied that by a random number between 0 and 1, then the function would conveniently return a value between 0 and 127.  
+
+Notice that the function is called separately for each note, returning a different random value each time.  So this is a a first example of how functions can be more powerful and flexible than variables.
+
+Here is what this looks like in Composer:
+
+@# Multiply the pitch value passed in by the detune_factor passed in@<br/>
+@# 'rand' is a built-in Ruby function (see more in the next section)@<br/>
+@randomly_adjust_volume: volume@</br>
+&nbsp;&nbsp;@return volume * rand@</br>
+<br/>
+@# Use the function call to for each note in the phrase@<br/>
+@phrase "1"@<br/>
+&nbsp;&nbsp;@note@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@start EIGHTH@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@duration EIGHTH@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@volume randomly_adjust_volume: 1000@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@pitch C4@<br/>
+&nbsp;&nbsp;@note@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@start EIGHTH + QUARTER@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@duration EIGHTH@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@volume randomly_adjust_volume: 1000@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@pitch E4@<br/>
+<br/>
+@# More notes here ...@
+...<br/>
+...<br/>
+<br/>
+@play@<br/>
+&nbsp;&nbsp;@phrases "1"@<br/>
+
+These examples are meant only to start to suggest the power of functions and help you gain an intuition for how to use them.  They can do essentially anything you want, and the only way to gain comfort with using them is to experiment yourself.
+
+_Declaring Functions_
+
+To create a function you first include a function declaration for it in the score.  Functions must be declared at the top of the score, immediately below any custom variables (see the preceding section on variables for more).  
+
+The declaration states the name of the function, followed without any spaces in between by a colon.  After the colon on the same line is a list of _arguments_ to the function.  If there is just one argument it simply appears after the colon.  If there is more than one argument, they must be separated by commas, as with all other values which are lists in Composer.  Note that a function doesn't have to take any arguments, in which case the declaration is just the function name and the colon.
+
+As in any programming language, the arguments to the function can be referred to by name in the body of the function and initially have the values passed by the particular call to the function (see below for more on calling a function from elsewhere in the score).
+
+After the first line declaring the function name and arguments, there are one or more lines form the function body.  The function body is the series of statements that define the behavior of the function.  The purpose of the function is to return a value when called, so you should use the @return@ statement to indicate the line of the function body that returns that value.  Although the @return@ may in some cases be optional, it will never be incorrect to include it, so Composer convention is to always include it to clearly show the intent of the function and avoid confusing errors.
+
+Function body lines are typically indented, following Composer convention.  The first blank line marks the end of the function body.  Functions can be as long as you want.  They must be written in the Ruby programming language, and any legal Ruby statements will be legal in Composer custom functions.
+
+Function names must be legal Ruby function names.  To keep things simple and avoid errors with naming functions, follow Composer conventions:
+* start all function names with a lower-case letter
+* remaining characters should be lower-case letters or digits or the underscore
+* use underscore characters to separate words in the function name
+
+Some short examples: 
+
+@# Declare the function. The name is followed by a colon and the arguments@<br/>
+@# Then define the function body.  Any legal Ruby statements will work.@<br/>
+@twice_as_loud: volume@</br>
+&nbsp;&nbsp;@return volume * 2@</br>
+</br>
+@# There was a blank line so this is not part of the function@<br/>
+<br/>
+@# Use the Ruby built-in function to change the volume by a random factor@<br/>
+@# rand returns a decimal number between 0 and 1, so this returns@<br/>
+@#   a volume somewhere in between 0 and the value of the argument@<br/>
+@# For example, if the volume passed in the argument is 100,@
+@#   and rand returns 0.5, then the function will return 50@<br/>
+@randomly_adjust_volume: volume@</br>
+&nbsp;&nbsp;@return volume * rand   # rand is a built-in Ruby function@</br>
+</br>
+@# There was a blank line so this is not part of the function@<br/>
+
+_Calling Functions_
+
+Of course, functions are only interesting because you can use them in your Composer score after declaring them.  This is called "calling" the function.  To call a function, you repeat the function name and the colon following the name.  Instead of the argument _names_ following the function name, as in the declaration, you put a value for each of the function arguments.  
+
+If there is one argument you supply one value after the colon; if there is more than argument you supply a value for each argument, separated by commas. If the function takes no arguments, then to call it you simply put the name and the colon where you want to call it in the score.
+
+You can call functions anywhere in a score where you would supply a value to a statement.  The most common use is to replace the value assigned to a note attribute.
+
+An example:
+
+@# Use the Ruby built-in function to change the argument by a random factor@<br/>
+@# Notice that we use it to modify volume and duration@<br/>
+@randomly_adjust: arg@</br>
+&nbsp;&nbsp;@return arg * rand   # rand is a built-in Ruby function@</br>
+<br/>
+@# Declare Players who will perform the piece@<br/>
+@player "Player 1"@<br/>
+&nbsp;&nbsp;@instrument 1@<br/>
+@player "Player 2"@<br/>
+&nbsp;&nbsp;@instrument 1@<br/>
+<br/>
+@# Declare Ensemble, assign Players to Ensemble, and define Phrases@<br/>
+@ensemble "Ensemble Magnifique"@<br/>
+&nbsp;&nbsp;@players "Player 1", "Player 2"@<br/>
+<br/>
+@# Duration and volume note attributes use the function call to set their value@<br/>
+@# Value will be value passed in multiplied by rand: 'return arg * rand'@<br/>
+&nbsp;&nbsp;@phrase "1"@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@note@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@start EIGHTH@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@duration randomly_adjust: EIGHTH@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@volume randomly_adjust: 100@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@pitch C4@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@note@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@start EIGHTH + QUARTER@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@duration randomly_adjust: EIGHTH@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@volume randomly_adjust: 100@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@pitch E4@<br/>
+<br/>
+@play@<br/>
+&nbsp;&nbsp;@ensembles "Ensemble Magnifique"@<br/>
+
+*Loops Using* @repeat@
+
+Composer also supports looping, or causing the same statement to repeat some number of times.
+
+The simple case of looping a set number of times by assigning the @repeat@ statement a whole number value is covered "here":http://wiki.github.com/marksweiss/aleatoric/composer-language-6-a-tutorial-on-ensembles-players-and-performance-instructions-2 in the section "An Example of Players Repeating Notes".  The score includes a @repeat@ statement with a whole number value associated with it.  
+
+@note@, @measure@, @play@ and @improvise@ can be repeated by placing them in the block below a repeat statement.
+
+When used with @note@ and @measure@, @repeat@ simply saves some typing, causing the notes or measures below it to appear in the score as many times as the value of the repeat.
+
+@# The note below the repeat statement is now in the score 10 times@
+@#  so "Player 1" will actually play it 10 times, not once
+@player "Player 1"@<br/>
+&nbsp;&nbsp;@repeat 10@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;note "repeated note"<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@start EIGHTH@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@duration EIGHTH@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@volume 100@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@pitch C4@<br/>
+
+Using @repeat@ with @play@ and @improvise@ is more interesting.  In this case, all players or ensembles in the @players@ or @ensembles@ lists for the @play@ or @improvise@ command will repeat all notes, performance instructions and improvisations assigned to them as many time as the repeat value.  When combined with performance instructions that can modify what a player plays each time the loop repeats, this provides a useful tool for having an ensemble perform according to aleatoric instructions.  (For more information, see the next section and also "this":http://wiki.github.com/marksweiss/aleatoric/composer-language-6-a-tutorial-on-ensembles-players-and-performance-instructions-2, particularly sections "An Example of Players Repeating Notes" and "Performance Instructions to Direct Repetition".)
+
+@# Declare Players who will perform the piece@<br/>
+@player "Player 1"@<br/>
+&nbsp;&nbsp;@instrument 1@<br/>
+@player "Player 2"@<br/>
+&nbsp;&nbsp;@instrument 1@<br/>
+<br/>
+@# Declare Ensemble, assign Players to Ensemble, and Phrase to Ensemble@<br/>
+@ensemble "Ensemble Magnifique"@<br/>
+&nbsp;&nbsp;@players "Player 1", "Player 2"@<br/>
+<br/>
+&nbsp;&nbsp;@phrase "1"@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@note@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@start EIGHTH@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@duration EIGHTH@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@volume 100@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@pitch C4@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@note@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@start EIGHTH + QUARTER@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@duration EIGHTH@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@volume 100@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@pitch E4@<br/>
+<br/>
+@# Now the ensemble will repeat phrase "1" 10 times@<br/>
+@repeat 10@
+&nbsp;&nbsp;@play@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@ensembles "Ensemble Magnifique"@
+
+You can also combine variables and functions with @repeat@ to produce even more interesting effects.  For example, you can have the same ensemble as in the previous example loop a random number of times:
+
+@# Use the Ruby built-in function to change the argument by a random factor@<br/>
+@randomly_adjust: arg@</br>
+&nbsp;&nbsp;@return arg * rand   # rand is a built-in Ruby function@</br>
+<br/>
+@# Declare Players who will perform the piece@<br/>
+@player "Player 1"@<br/>
+&nbsp;&nbsp;@instrument 1@<br/>
+@player "Player 2"@<br/>
+&nbsp;&nbsp;@instrument 1@<br/>
+<br/>
+@# Declare Ensemble, assign Players to Ensemble, and Phrase to Ensemble@<br/>
+@ensemble "Ensemble Magnifique"@<br/>
+&nbsp;&nbsp;@players "Player 1", "Player 2"@<br/>
+<br/>
+&nbsp;&nbsp;@phrase "1"@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@note@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@start EIGHTH@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@duration EIGHTH@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@volume 100@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@pitch C4@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@note@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@start EIGHTH + QUARTER@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@duration EIGHTH@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@volume 100@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@pitch E4@<br/>
+<br/>
+@# Ensemble will repeat phrase "1" a random number of times between 0 and 10@<br/>
+@repeat randomly_adjust: 10@
+&nbsp;&nbsp;@play@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@ensembles "Ensemble Magnifique"@
+
+*Loops Using* @repeat@ *and* @index@
+
+The @repeat@ statement exposes the additional statement @index@, which can be referred to anywhere in the repeat block. @index@ stores the current number of times the loop has repeated.  So in a @repeat 10@ loop @index@ has the value 1 on the first pass through the loop and 10 on the last. 
+
+Loops start at 1 in Composer because the core technique that @index@ supports is looping over note values and multiplying something by index to assign a value to a note attribute.  A value of 0 is rarely interesting as value of a note attribute, so the loops start with the value of 1.
+
+@# The first note increases start time and amplitude by applying a constant@<br/>
+@#   value by 'index', which goes up by 1 each of the 10 times the loop executes@
+@phrase "C => EFlat, EFlat => C"@<br/>
+&nbsp;&nbsp;@repeat 10@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@note "rise 1"@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@instrument  1@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@start index * 0.1@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@duration index * EIGHTH@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@amplitude index * 10@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@pitch C4@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@func_table  1@<br/>
+<br/>
+@# The second note decreases start time and amplitude by applying a constant@<br/>
+@#   value by 'index', which goes up by 1 each of the 10 times the loop executes@
+&nbsp;&nbsp;&nbsp;&nbsp;@note "fall 1"@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@instrument  1@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@start 1.0 - (index * 0.1)@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@duration index * EIGHTH@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@amplitude 100 - (index * 10)@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@pitch C4@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@func_table  1@<br/>
+
+You can also combine @index@ with functions to perform the most flexible and powerful instructions that Composer supports in scores.  This is the subject of the next section.
+
+_Stochastic Composition: Combining Loops and Functions_
+
+By combining functions, repeat loop indexes, and variables, you can pursue compositional techniques based on algorithms or stochastic techniques.  In programming, an algorithm is defined as a series of defined and understood steps that a program can take.  Stochastic processes use randomness and probability to simulate the behavior of a real-world system.
+
+These are complex topics, well beyond the scope of this tutorial, and largely beyond the understanding of the author.
+
+However, a reasonable example suggests the possibilities.  Let's say you want to define two players, and have them sometimes play a harmony complementing the note the other is playing.
+
+You could do the following:
+* define a variable which is the probability that each player will play a harmony
+* define a variable for the regular note each player will play
+* define a variable for the harmony note each player will play
+* define a function to test whether each player will play a regular or harmony note
+* use a @repeat@ loop to have each player play many times
+
+@_num_loops = 1000@
+@# Probability that each player will play a harmony@<br/>
+@_probability_1_plays_harmony = 0.25@<br/>
+@_probability_2_plays_harmony = 0.5@<br/>
+<br/>
+@# Notes each player plays@<br/>
+@_player_1_root = C4<br/>
+@_player_2_root = C5@<br/>
+@_player_1_harmony = E5<br/>
+@_player_2_harmony = E4@<br/>
+<br/>
+@# Functions to test whether each player will play a regular or harmony note@
+@player_1_note:@<br/>
+&nbsp;&nbsp;@x = rand@<br/>
+&nbsp;&nbsp;@if x < _probability_1_plays_harmony@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@return _player_1_harmony@<br/>
+&nbsp;&nbsp;@else@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@return _player_1_root@<br/>
+<br/>
+@player_2_note:@<br/>
+&nbsp;&nbsp;@x = rand@<br/>
+&nbsp;&nbsp;@if x < _probability_2_plays_harmony@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@return _player_2_harmony@<br/>
+&nbsp;&nbsp;@else@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@return _player_2_root@<br/>
+<br/>
+@# Player's note has pitch assigned to the function returning root or harmony@
+@player "Player 1"@<br/>
+&nbsp;&nbsp;@phrase "1"@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@note@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@start EIGHTH@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@duration EIGHTH@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@volume 100@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@pitch player_1_note:@<br/>
+<br/>
+@player "Player 2"@<br/>
+&nbsp;&nbsp;@phrase "2"@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@note@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@start EIGHTH@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@duration EIGHTH@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@volume 100@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@pitch player_2_note:@<br/>
+<br/>
+@# use a 'repeat' loop to have each player play many times@
+@repeat _num_loops@<br/>
+&nbsp;&nbsp;@play@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@players "Player 1", "Player 2"@<br/>
+
+Over the course of these repetitions, the number of times each player will play their regular note and their harmony note will approach the ratio expected based on the value for the variable defining the probability they will play a harmony note.  For example, if the variable is @probability_plays_harmony = 0.25@ then over many repetitions the player will play about 1/4 harmony notes and 3/4 regular notes.
+
+This is a very basic stochastic compositional idea, using randomness, threshold values and repetition to define behavior that will hew close to expectations over many repetitions but never be exactly the same.
+
+_"In C" Realization as an Example of Stochastic Techniques_
+
+The "example composition included with Aleatoric":http://github.com/marksweiss/aleatoric/tree/master/compositions/Terry_Riley-In_C/, a realization of Terry Riley's "In C," makes heavy use of this basically simple technique.  Functions define the behavior of the performance instructions in the score by testing a random number against threshold values.  There are many threshold values to control the many aspects of behavior Riley describes in the score.
+
+The ensemble repeats its @play@ instruction thousands of times, slowly advancing through the notes they are assigned in the score, changing and embellishing what they play according to the behavior of the performance instruction functions.  The result is that each performance is different, but all are recognizably guided by the same thresholds of behavior, and all are recognizably a performance of the composer's original score.
+
+A Composer user serious about learning stochastic techniques should study the "score file":http://github.com/marksweiss/aleatoric/blob/master/compositions/Terry_Riley-In_C/In_C_midi.altc and "user instruction":http://github.com/marksweiss/aleatoric/blob/master/compositions/Terry_Riley-In_C/In_C_midi_user_instruction.rb file for this score.
