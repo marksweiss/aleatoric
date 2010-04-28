@@ -1,0 +1,980 @@
+<br/>
+
+
+<br/>*Measure*<br/>
+<br/>
+@measure "Measure 1"@<br/>
+<br/>
+&nbsp;&nbsp;@note "1"@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@instrument  1@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@start       0.0@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@duration    0.5@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@amplitude   1000@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@pitch       7.01@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@func_table  1@<br/>
+<br/>
+&nbsp;&nbsp;@note "2"@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@instrument  1@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@start       1.0@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@duration    1.0@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@amplitude   1100@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@pitch       7.02@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@func_table  1@<br/>
+<br/>
+@measure "Measure 2"@<br/>
+<br/>
+&nbsp;&nbsp;@note "3"@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@instrument  1@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@start       0.0@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@duration    0.5@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@amplitude   1200@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@pitch       7.03@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@func_table  1@<br/>
+<br/>
+&nbsp;&nbsp;@note "4"@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@instrument  1@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@start       1.0@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@duration    1.0@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@amplitude   1300@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@pitch       7.04@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@func_table  1@<br/>
+<br/>
+@render "composer_test_results.wav"@<br/>
+&nbsp;&nbsp;@format    csound@<br/>
+&nbsp;&nbsp;@measures   "Measure 1", "Measure 2"@<br/>
+&nbsp;&nbsp;@orchestra "my_orc.orc"@<br/>
+<br/>
+
+
+<br/>*Copy Measure*<br/>
+<br/>
+@measure "Measure 1"@<br/>
+<br/>
+&nbsp;&nbsp;@note "1"@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@instrument  1@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@start       0.0@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@duration    0.5@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@amplitude   1000@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@pitch       7.01@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@func_table  1@<br/>
+<br/>
+&nbsp;&nbsp;@note "2"@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@instrument  1@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@start       1.0@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@duration    1.0@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@amplitude   1100@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@pitch       7.02@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@func_table  1@<br/>
+<br/>
+@# NOTE: copy_measure automatically adjusts start times of new measure to be in NEXT position@<br/>
+@#  after end of last note in measure being copied, intended for sequence of notes@<br/>
+@copy_measure "Measure 1", "Measure 2"@<br/>
+<br/>
+@render "composer_test_results.wav"@<br/>
+&nbsp;&nbsp;@format    csound@<br/>
+&nbsp;&nbsp;@measures@<br/>
+&nbsp;&nbsp;@orchestra "my_orc.orc"@<br/>
+<br/>
+
+
+<br/>*Tempo*<br/>
+<br/>
+@# Define a simple function to test tempo handling complex@<br/>
+@#  expression for duration@<br/>
+@times_two: x@<br/>
+&nbsp;&nbsp;@2.0 * x@<br/>
+<br/>
+@# Tempo is specified in bpm, i.e. 60 == 60 quarter notes/min@<br/>
+@#  or a quarter note is 1 sec. or a whole note is 4 secs.@<br/>
+@# Default tempo is 60, so if this isn't set above holds@<br/>
+@# If it is set, AND durations are specified using duration constants@<br/>
+@#  such as WHL, HLF, etc.  The reason for this is that if the score specifies@<br/>
+@#  exact tempos in seconds, not just "relative" lengths such as WHL etc. then@<br/>
+@#  those exact tempos should be honored@<br/>
+@tempo 30@<br/>
+<br/>
+@# Test expression rather than simple 2-token line@<br/>
+@measure "Measure 1"@<br/>
+&nbsp;&nbsp;@note "1"@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@instrument  1@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@start       0.0@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@duration    WHL+HLF@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@amplitude   1000@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@pitch       7.01@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@func_table  1@<br/>
+<br/>
+&nbsp;&nbsp;@note "2"@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@instrument  1@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@start       EITH@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@duration    times_two: HLF@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@amplitude   1100@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@pitch       7.02@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@func_table  1@<br/>
+<br/>
+&nbsp;&nbsp;@note "3"@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@instrument  1@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@start       0.0@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@duration    QRTR@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@amplitude   1200@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@pitch       7.03@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@func_table  1@<br/>
+<br/>
+@# You can reset tempo whenever you want. Now it's twice as fast as default@<br/>
+@tempo 120@<br/>
+<br/>
+@# Test expression rather than simple 2-token line@<br/>
+@measure "Measure 2"@<br/>
+&nbsp;&nbsp;@note "4"@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@instrument  1@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@start       0.0@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@duration    WHL+HLF@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@amplitude   1000@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@pitch       7.01@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@func_table  1@<br/>
+<br/>
+&nbsp;&nbsp;@note "5"@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@instrument  1@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@start       QRTR + QRTR@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@duration    HLF@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@amplitude   1100@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@pitch       7.02@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@func_table  1@<br/>
+<br/>
+&nbsp;&nbsp;@note "6"@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@instrument  1@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@start       0.0@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@duration    QRTR@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@amplitude   1200@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@pitch       7.03@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@func_table  1@<br/>
+<br/>
+@render "composer_test_results.wav"@<br/>
+&nbsp;&nbsp;@format    csound@<br/>
+&nbsp;&nbsp;@measures   "Measure 1", "Measure 2"@<br/>
+&nbsp;&nbsp;@orchestra "my_orc.orc"@<br/>
+<br/>
+
+
+<br/>*Tempo Default*<br/>
+<br/>
+@# Don't set tempo and default is 60 bpm, quarter note == 1 sec@<br/>
+@# tempo 30@<br/>
+<br/>
+@measure "Measure 1"@<br/>
+&nbsp;&nbsp;@note "1"@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@instrument  1@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@start       0.0@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@duration    WHL@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@amplitude   1000@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@pitch       7.01@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@func_table  1@<br/>
+<br/>
+&nbsp;&nbsp;@note "2"@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@instrument  1@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@start       1.0@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@duration    HLF@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@amplitude   1100@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@pitch       7.02@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@func_table  1@<br/>
+<br/>
+&nbsp;&nbsp;@note "3"@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@instrument  1@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@start       0.0@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@duration    QRTR@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@amplitude   1200@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@pitch       7.03@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@func_table  1@<br/>
+<br/>
+@render "composer_test_results.wav"@<br/>
+&nbsp;&nbsp;@format    csound@<br/>
+&nbsp;&nbsp;@measures   "Measure 1"@<br/>
+&nbsp;&nbsp;@orchestra "my_orc.orc"@<br/>
+<br/>
+
+
+<br/>*Section*<br/>
+<br/>
+@section "Intro Section"@<br/>
+<br/>
+@phrase "Intro Phrase"@<br/>
+<br/>
+&nbsp;&nbsp;@note "3"@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@instrument  3@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@start       0.0@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@duration    0.5@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@amplitude   1000@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@pitch       7.03@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@func_table  1@<br/>
+<br/>
+&nbsp;&nbsp;@note "4"@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@instrument  4@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@start       1.0@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@duration    1.0@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@amplitude   1100@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@pitch       7.04@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@func_table  1@<br/>
+<br/>
+@render "composer_test_results.wav"@<br/>
+&nbsp;&nbsp;@format    csound@<br/>
+&nbsp;&nbsp;@sections   "Intro Section"@<br/>
+&nbsp;&nbsp;@orchestra "my_orc.orc"@<br/>
+<br/>
+
+
+<br/>*Sections Phrases*<br/>
+<br/>
+@section "Intro Section"@<br/>
+&nbsp;&nbsp;@phrase "Intro Phrase"@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@note "5"@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@instrument  1@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@start       0.0@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@duration    0.5@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@amplitude   1000@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@pitch       7.01@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@func_table  1@<br/>
+<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@note "6"@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@instrument  1@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@start       1.0@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@duration    1.0@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@amplitude   1100@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@pitch       7.02@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@func_table  1@<br/>
+<br/>
+&nbsp;&nbsp;@phrase "Coda"@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@note "7"@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@instrument  1@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@start       0.0@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@duration    0.5@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@amplitude   1000@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@pitch       7.01@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@func_table  1@<br/>
+<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@note "8"@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@instrument  1@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@start       1.0@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@duration    1.0@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@amplitude   1100@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@pitch       7.02@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@func_table  1@<br/>
+<br/>
+@render "composer_test_results.wav"@<br/>
+&nbsp;&nbsp;@format    csound@<br/>
+&nbsp;&nbsp;@sections  "Intro Section"@<br/>
+&nbsp;&nbsp;@orchestra "my_orc.orc"@<br/>
+<br/>
+
+
+<br/>*Repeat Index*<br/>
+<br/>
+@phrase "Loop"@<br/>
+&nbsp;&nbsp;@repeat 2@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@note "1"@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@instrument 1@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@start       1.0 * index@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@duration    0.2@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@amplitude   1000 + (100 * index)@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@pitch       7.02@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@func_table  1@<br/>
+<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@note "2"@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@instrument 1@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@start       1.0 * index@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@duration    0.2@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@amplitude   1000 + (100 * index)@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@pitch       7.02@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@func_table  1@<br/>
+<br/>
+@render "composer_test_results.wav"@<br/>
+&nbsp;&nbsp;@format    csound@<br/>
+&nbsp;&nbsp;@phrases   "Loop"@<br/>
+&nbsp;&nbsp;@orchestra "my_orc.orc"@<br/>
+<br/>
+
+
+<br/>*Render*<br/>
+<br/>
+@phrase "Intro Phrase"@<br/>
+<br/>
+&nbsp;&nbsp;@note "1"@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@instrument  1@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@start       0.0@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@duration    0.5@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@amplitude   1000@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@pitch       7.01@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@func_table  1@<br/>
+<br/>
+&nbsp;&nbsp;@note "2"@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@instrument  1@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@start       1.0@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@duration    1.0@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@amplitude   1100@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@pitch       7.02@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@func_table  1@<br/>
+<br/>
+@render "composer_test_results.wav"@<br/>
+&nbsp;&nbsp;@format    csound@<br/>
+&nbsp;&nbsp;@phrases   "Intro Phrase"@<br/>
+&nbsp;&nbsp;@orchestra  "markov_opt_1.orc"@<br/>
+<br/>
+
+
+<br/>*Render Lite Syntax De*<br/>
+<br/>
+@phrase "Intro Phrase"@<br/>
+<br/>
+&nbsp;&nbsp;@note "1"@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@instrument  1@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@start       0.0@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@duration    0.5@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@amplitude   1000@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@pitch       7.01@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@func_table  1@<br/>
+<br/>
+&nbsp;&nbsp;@note "2"@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@instrument  1@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@start       1.0@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@duration    1.0@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@amplitude   1100@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@pitch       7.02@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@func_table  1@<br/>
+<br/>
+@render "composer_test.wav"@<br/>
+&nbsp;&nbsp;@phrases   "Intro Phrase"@<br/>
+&nbsp;&nbsp;@format    csound@<br/>
+&nbsp;&nbsp;@orchestra  "markov_opt_1.orc"@<br/>
+<br/>
+
+
+<br/>*Assignment*<br/>
+<br/>
+@note_name_3 = "3"@<br/>
+@note_name_4 = "4"@<br/>
+@instr_num_3 = 3@<br/>
+@instr_num_4 = 4@<br/>
+@pitch_3 = 7.03@<br/>
+@pitch_4 = 7.04@<br/>
+<br/>
+@section "Intro Section"@<br/>
+&nbsp;&nbsp;@phrase "Intro Phrase"@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@note note_name_3@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@instrument  instr_num_3@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@start       0.0@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@duration    0.5@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@amplitude   1000@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@pitch       pitch_3@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@func_table  1@<br/>
+<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@note note_name_4@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@instrument  instr_num_4@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@start       1.0@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@duration    1.0@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@amplitude   1100@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@pitch       pitch_4@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@func_table  1@<br/>
+<br/>
+@render "composer_test_results.wav"@<br/>
+&nbsp;&nbsp;@format    csound@<br/>
+&nbsp;&nbsp;@sections   "Intro Section"@<br/>
+&nbsp;&nbsp;@orchestra "my_orc.orc"@<br/>
+<br/>
+
+
+<br/>*Assignment Comment*<br/>
+<br/>
+@note_name_3 = "3"  # comment blah blah@<br/>
+@note_name_4 = "4"@<br/>
+@instr_num_3 = 3      # comment blah blah@<br/>
+@instr_num_4 = 4 # comment blah blah@<br/>
+@pitch_3 = 7.03@<br/>
+@pitch_4 = 7.04@<br/>
+<br/>
+&nbsp;@# comment blah blah@<br/>
+@section "Intro Section"   # comment blah blah@<br/>
+&nbsp;&nbsp;@phrase "Intro Phrase"     # comment blah blah@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@note note_name_3    # comment blah blah@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@instrument  instr_num_3    # comment blah blah@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@start       0.0@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@duration    0.5@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@amplitude   1000@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@pitch       pitch_3@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@func_table  1@<br/>
+@# comment blah blah@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@note note_name_4@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@instrument  instr_num_4@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@start       1.0@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@duration    1.0@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@amplitude   1100@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@pitch       pitch_4@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@func_table  1@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@# comment blah blah@<br/>
+@render "composer_test_results.wav"@<br/>
+&nbsp;&nbsp;@# comment blah blah@<br/>
+&nbsp;&nbsp;@format    csound@<br/>
+&nbsp;&nbsp;@sections   "Intro Section"@<br/>
+&nbsp;&nbsp;@orchestra "my_orc.orc"@<br/>
+<br/>
+
+
+<br/>*Assignment 2*<br/>
+<br/>
+@note_name_3 = "3"@<br/>
+<br/>
+@phrase "Intro Phrase"@<br/>
+<br/>
+&nbsp;&nbsp;@note note_name_3@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@instrument  1@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@start       0.0@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@duration    0.5@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@amplitude   1000@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@pitch       7.01@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@func_table  1@<br/>
+<br/>
+@render "composer_test_results.wav"@<br/>
+&nbsp;&nbsp;@format    csound@<br/>
+&nbsp;&nbsp;@phrases   "Intro Phrase"@<br/>
+&nbsp;&nbsp;@orchestra "my_orc.orc"@<br/>
+<br/>
+
+
+<br/>*Repeat Assignment*<br/>
+<br/>
+@loop_len = 2@<br/>
+<br/>
+@phrase "Loop"@<br/>
+&nbsp;&nbsp;@repeat loop_len@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@note@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@instrument  1@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@start       1.0 * index@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@duration    0.2@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@amplitude   1000 + (100 * index)@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@pitch       7.02@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@func_table  1@<br/>
+<br/>
+@render "composer_test_results.wav"@<br/>
+&nbsp;&nbsp;@format    csound@<br/>
+&nbsp;&nbsp;@phrases   "Loop"@<br/>
+&nbsp;&nbsp;@orchestra "my_orc.orc"@<br/>
+<br/>
+
+
+<br/>*Repeat Until*<br/>
+<br/>
+@player "Player 1"@<br/>
+<br/>
+@phrase "Loop"@<br/>
+&nbsp;&nbsp;@repeat until "I want to stop"@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@note@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@instrument  1@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@start       1.0 * index@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@duration    0.2@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@amplitude   1000 + (100 * index)@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@pitch       7.02@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@func_table  1@<br/>
+<br/>
+@instruction "Exit Loop"@<br/>
+&nbsp;&nbsp;@description "call repeat_until_stop('I want to stop')"@<br/>
+&nbsp;&nbsp;@players     "Player 1"@<br/>
+<br/>
+@play@<br/>
+&nbsp;&nbsp;@players "Player 1"@<br/>
+<br/>
+@render "composer_test_results.wav"@<br/>
+&nbsp;&nbsp;@format    csound@<br/>
+&nbsp;&nbsp;@phrases   "Loop"@<br/>
+&nbsp;&nbsp;@orchestra "my_orc.orc"@<br/>
+<br/>
+
+
+<br/>*Func*<br/>
+<br/>
+@start_f: factor, idx@<br/>
+&nbsp;&nbsp;@factor * idx@<br/>
+<br/>
+@amp_f: base, factor, idx@<br/>
+&nbsp;&nbsp;@base + (factor * idx)@<br/>
+<br/>
+@phrase "Loop"@<br/>
+&nbsp;&nbsp;@repeat 2@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@note@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@instrument 1@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@start       start_f: 1.0, index@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@duration    0.2@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@amplitude   amp_f: 1000, 100, index@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@pitch       7.02@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@func_table  1@<br/>
+<br/>
+@render "composer_test_results.wav"@<br/>
+&nbsp;&nbsp;@format    csound@<br/>
+&nbsp;&nbsp;@phrases   "Loop"@<br/>
+&nbsp;&nbsp;@orchestra "my_orc.orc"@<br/>
+<br/>
+
+
+<br/>*Next*<br/>
+<br/>
+@measure "Loop"@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@note@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@instrument 1@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@start       0.0@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@duration    1.0@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@amplitude   1000@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@pitch       7.01@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@func_table  1@<br/>
+<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@note@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@instrument 1@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@start       NEXT@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@duration    1.0@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@amplitude   1100@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@pitch       7.02@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@func_table  1@<br/>
+<br/>
+@render "composer_test_results.wav"@<br/>
+&nbsp;&nbsp;@format    csound@<br/>
+&nbsp;&nbsp;@measures   "Loop"@<br/>
+&nbsp;&nbsp;@orchestra "my_orc.orc"@<br/>
+<br/>
+
+
+<br/>*Ensemble Phrase Play Players*<br/>
+<br/>
+@ensemble "In C Orchestra"@<br/>
+&nbsp;&nbsp;@players "Player 1", "Player 2"@<br/>
+<br/>
+&nbsp;&nbsp;@phrase "Phrase 1"@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@note "1"@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@instrument  1@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@start       1.0@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@duration    0.5@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@amplitude   1000@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@pitch       7.01@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@func_table  1@<br/>
+<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@note "2"@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@instrument  2@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@start       2.0@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@duration    1.0@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@amplitude   1100@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@pitch       7.02@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@func_table  1@<br/>
+<br/>
+@play@<br/>
+&nbsp;&nbsp;@players "Player 1", "Player 2"@<br/>
+<br/>
+@render "composer_test_results.wav"@<br/>
+&nbsp;&nbsp;@format    csound@<br/>
+&nbsp;&nbsp;@players "Player 1", "Player 2"@<br/>
+&nbsp;&nbsp;@# ensembles "In C Orchestra"@<br/>
+&nbsp;&nbsp;@orchestra "my_orc.orc"@<br/>
+<br/>
+
+
+<br/>*Instruction Players*<br/>
+<br/>
+@ensemble "In C Orchestra"@<br/>
+&nbsp;&nbsp;@players "Player 1", "Player 2"@<br/>
+<br/>
+&nbsp;&nbsp;@phrase "Phrase 1"@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@note "1"@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@instrument  1@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@start       1.0@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@duration    0.5@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@amplitude   1000@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@pitch       7.01@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@func_table  1@<br/>
+<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@note "2"@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@instrument  2@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@start       2.0@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@duration    1.0@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@amplitude   1100@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@pitch       7.02@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@func_table  1@<br/>
+<br/>
+@# Just tell one player in the ensemble to follow this instruction@<br/>
+@# impl. in test_user_instruction.rb@<br/>
+@instruction "Fortissimo"@<br/>
+&nbsp;&nbsp;@description "Player should play each note twice as loud as the notated volume of the note."@<br/>
+&nbsp;&nbsp;@players     "Player 1"@<br/>
+<br/>
+@# Just tell one player in the ensemble to follow this instruction@<br/>
+@# impl. in test_user_instruction.rb@<br/>
+@instruction "Pianissimo"@<br/>
+&nbsp;&nbsp;@description "Player should play each note half as loud as the notated volume of the note."@<br/>
+&nbsp;&nbsp;@players     "Player 2"@<br/>
+<br/>
+@# Tell all players in the ensemble to play@<br/>
+@play@<br/>
+&nbsp;&nbsp;@ensembles "In C Orchestra"@<br/>
+<br/>
+@# Output notes from all players in the ensemble, generated by 'play' statement@<br/>
+@render "composer_test_results.wav"@<br/>
+&nbsp;&nbsp;@format    csound@<br/>
+&nbsp;&nbsp;@ensembles "In C Orchestra"@<br/>
+&nbsp;&nbsp;@orchestra "my_orc.orc"@<br/>
+<br/>
+
+
+<br/>*Instruction Players Ensembles*<br/>
+<br/>
+@ensemble "In C Orchestra"@<br/>
+&nbsp;&nbsp;@players "Player 1", "Player 2"@<br/>
+<br/>
+@player "Player 1"@<br/>
+&nbsp;&nbsp;@phrase "Phrase 1"@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@note "1"@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@instrument  1@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@start       1.0@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@duration    0.5@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@amplitude   1000@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@pitch       7.01@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@func_table  1@<br/>
+<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@note "2"@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@instrument  2@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@start       2.0@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@duration    1.0@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@amplitude   1100@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@pitch       7.02@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@func_table  1@<br/>
+<br/>
+@player "Player 2"@<br/>
+&nbsp;&nbsp;@phrase "Phrase 1"@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@note "3"@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@instrument  3@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@start       3.0@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@duration    1.5@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@amplitude   1200@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@pitch       7.03@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@func_table  1@<br/>
+<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@note "4"@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@instrument  4@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@start       4.0@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@duration    2.0@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@amplitude   1300@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@pitch       7.04@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@func_table  1@<br/>
+<br/>
+@# Just tell one player in the ensemble to follow this instruction@<br/>
+@# impl. in test_user_instruction.rb@<br/>
+@instruction "Fortissimo"@<br/>
+&nbsp;&nbsp;@description "Player should play each note twice as loud as the notated volume of the note."@<br/>
+&nbsp;&nbsp;@players     "Player 1"@<br/>
+<br/>
+@# Just tell one player in the ensemble to follow this instruction@<br/>
+@# impl. in test_user_instruction.rb@<br/>
+@instruction "Pianissimo"@<br/>
+&nbsp;&nbsp;@description "Player should play each note half as loud as the notated volume of the note."@<br/>
+&nbsp;&nbsp;@players     "Player 2"@<br/>
+<br/>
+@# impl. in test_user_instruction.rb@<br/>
+@instruction "Each Player Appends Another Player's First Note"@<br/>
+&nbsp;&nbsp;@description "Each member of the ensemble should repeat the first note played by another member of the ensemble as their last note."@<br/>
+&nbsp;&nbsp;@ensembles   "In C Orchestra"@<br/>
+<br/>
+@# Tell all players in the ensemble to play@<br/>
+@play@<br/>
+&nbsp;&nbsp;@ensembles "In C Orchestra"@<br/>
+<br/>
+@# Output notes from all players in the ensemble, generated by 'play' statement@<br/>
+@render "composer_test_results.wav"@<br/>
+&nbsp;&nbsp;@format    csound@<br/>
+&nbsp;&nbsp;@ensembles "In C Orchestra"@<br/>
+&nbsp;&nbsp;@orchestra "my_orc.orc"@<br/>
+<br/>
+
+
+<br/>*Phrase Midi*<br/>
+<br/>
+@phrase "Intro Phrase"@<br/>
+<br/>
+&nbsp;&nbsp;@# Using aliased MIDI property names for note. Note 'channel' is midi-only@<br/>
+&nbsp;&nbsp;@note "1"@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@instrument  1@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@time       0.0@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@duration    1.0@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@velocity    100@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@pitch       64@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@channel     1@<br/>
+<br/>
+&nbsp;&nbsp;@# Using csound and "Aleatoric normal" property names for a note. Note 'channel' is midi-only@<br/>
+&nbsp;&nbsp;@note "2"@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@instrument  1@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@start       1.0@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@duration    1.0@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@amplitude   100@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@pitch       65@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@channel     1@<br/>
+<br/>
+&nbsp;&nbsp;@# Using csound and "Aleatoric normal" property names for a note, but switch to use 'volume' for 'velocity.' Note 'channel' is midi-only@<br/>
+&nbsp;&nbsp;@note "3"@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@instrument  1@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@start       2.0@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@duration    1.0@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@volume      100@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@pitch       66@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@channel     1@<br/>
+<br/>
+@render "composer_test_results.mid"@<br/>
+&nbsp;&nbsp;@format    midi@<br/>
+&nbsp;&nbsp;@phrases   "Intro Phrase"@<br/>
+<br/>
+
+
+<br/>*Phrase Midi Format Top*<br/>
+<br/>
+@format midi@<br/>
+<br/>
+@phrase "Intro Phrase"@<br/>
+<br/>
+&nbsp;&nbsp;@# Using aliased MIDI property names for note. Note 'channel' is midi-only@<br/>
+&nbsp;&nbsp;@note "1"@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@instrument  1@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@time       0.0@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@duration    1.0@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@velocity    100@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@pitch       64@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@channel     1@<br/>
+<br/>
+&nbsp;&nbsp;@# Using csound and "Aleatoric normal" property names for a note. Note 'channel' is midi-only@<br/>
+&nbsp;&nbsp;@note "2"@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@instrument  1@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@start       1.0@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@duration    1.0@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@amplitude   100@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@pitch       65@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@channel     1@<br/>
+<br/>
+&nbsp;&nbsp;@# Using csound and "Aleatoric normal" property names for a note, but switch to use 'volume' for 'velocity.' Note 'channel' is midi-only@<br/>
+&nbsp;&nbsp;@note "3"@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@instrument  1@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@start       2.0@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@duration    1.0@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@volume      100@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@pitch       66@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@channel     1@<br/>
+<br/>
+@render "composer_test_results.mid"@<br/>
+&nbsp;&nbsp;@phrases   "Intro Phrase"@<br/>
+<br/>
+
+
+<br/>*Ensemble Instrument Channel Midi Render*<br/>
+<br/>
+@format midi@<br/>
+<br/>
+@player "Player 1"@<br/>
+&nbsp;&nbsp;@instrument 1@<br/>
+&nbsp;&nbsp;@channel 1@<br/>
+@player "Player 2"@<br/>
+&nbsp;&nbsp;@instrument 2@<br/>
+&nbsp;&nbsp;@channel 2@<br/>
+<br/>
+@ensemble "In C Orchestra"@<br/>
+&nbsp;&nbsp;@players "Player 1", "Player 2"@<br/>
+<br/>
+&nbsp;&nbsp;@phrase "Intro Phrase"@<br/>
+<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@note "1"@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@time       0.0@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@duration    1.0@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@velocity    100@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@pitch       64@<br/>
+<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@note "2"@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@start       1.0@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@duration    1.0@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@amplitude   100@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@pitch       65@<br/>
+<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@note "3"@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@start       2.0@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@duration    1.0@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@volume      100@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@pitch       66@<br/>
+<br/>
+@play@<br/>
+&nbsp;&nbsp;@ensembles "In C Orchestra"@<br/>
+<br/>
+@render "composer_test_results.mid"@<br/>
+&nbsp;&nbsp;@ensembles "In C Orchestra"@<br/>
+<br/>
+
+
+<br/>*Phrase Midi Format Consts*<br/>
+<br/>
+@format midi@<br/>
+<br/>
+@phrase "Intro Phrase"@<br/>
+<br/>
+&nbsp;&nbsp;@# Using aliased MIDI property names for note. Note 'channel' is midi-only@<br/>
+&nbsp;&nbsp;@note "1"@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@instrument  MIDI_Acoustic_Grand_Piano@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@time       0.0@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@duration    1.0@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@velocity    100@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@pitch       Bneg1@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@channel     1@<br/>
+<br/>
+&nbsp;&nbsp;@# Using csound and "Aleatoric normal" property names for a note. Note 'channel' is midi-only@<br/>
+&nbsp;&nbsp;@note "2"@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@instrument  MIDI_Bright_Acoustic_Piano@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@start       1.0@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@duration    1.0@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@amplitude   100@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@pitch       C4@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@channel     1@<br/>
+<br/>
+&nbsp;&nbsp;@# Using csound and "Aleatoric normal" property names for a note, but switch to use 'volume' for 'velocity.' Note 'channel' is midi-only@<br/>
+&nbsp;&nbsp;@note "3"@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@instrument  MIDI_Electric_Grand_Piano@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@start       2.0@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@duration    1.0@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@volume      100@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@pitch       B5@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@channel     1@<br/>
+<br/>
+@render "composer_test_results.mid"@<br/>
+&nbsp;&nbsp;@phrases "Intro Phrase"@<br/>
+<br/>
+
+
+<br/>*Phrase Csound Format Consts*<br/>
+<br/>
+@format csound@<br/>
+<br/>
+@phrase "Intro Phrase"@<br/>
+<br/>
+&nbsp;&nbsp;@note "1"@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@instrument  1@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@start       0.0@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@duration    1.0@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@amplitude   100@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@pitch       C4@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@func_table  1@<br/>
+<br/>
+&nbsp;&nbsp;@note "2"@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@instrument  2@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@start       1.0@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@duration    1.0@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@amplitude   100@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@pitch       C5@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@func_table  1@<br/>
+<br/>
+&nbsp;&nbsp;@note "3"@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@instrument  3@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@start       2.0@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@duration    1.0@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@amplitude   100@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@pitch       C6@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@func_table  1@<br/>
+<br/>
+@render "composer_test_results.wav"@<br/>
+&nbsp;&nbsp;@phrases "Intro Phrase"@<br/>
+&nbsp;&nbsp;@orchestra "my_orc.orc"@<br/>
+<br/>
+
+
+<br/>*Player Instrument*<br/>
+<br/>
+@format csound@<br/>
+<br/>
+@player "Player 1"@<br/>
+&nbsp;&nbsp;@instrument 1@<br/>
+@player "Player 2"@<br/>
+&nbsp;&nbsp;@instrument 2@<br/>
+<br/>
+@ensemble "In C Orchestra"@<br/>
+&nbsp;&nbsp;@players "Player 1", "Player 2"@<br/>
+<br/>
+&nbsp;&nbsp;@phrase "Phrase 1"@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@note "1"@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@start       1.0@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@duration    0.5@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@amplitude   1000@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@pitch       7.01@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@func_table  1@<br/>
+<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@note "2"@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@start       2.0@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@duration    1.0@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@amplitude   1100@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@pitch       7.02@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@func_table  1@<br/>
+<br/>
+@play@<br/>
+&nbsp;&nbsp;@players "Player 1", "Player 2"@<br/>
+<br/>
+@render "composer_test_results.wav"@<br/>
+&nbsp;&nbsp;@players "Player 1", "Player 2"@<br/>
+&nbsp;&nbsp;@orchestra "my_orc.orc"@<br/>
+<br/>
+
+
+<br/>*Player Instrument Channel*<br/>
+<br/>
+@format midi@<br/>
+<br/>
+@player "Player 1"@<br/>
+&nbsp;&nbsp;@instrument 1, channel=0@<br/>
+@player "Player 2"@<br/>
+&nbsp;&nbsp;@instrument 2, channel=1@<br/>
+<br/>
+@ensemble "In C Orchestra"@<br/>
+&nbsp;&nbsp;@players "Player 1", "Player 2"@<br/>
+<br/>
+&nbsp;&nbsp;@phrase "Phrase 1"@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@note "1"@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@start       1.0@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@duration    0.5@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@volume      100@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@pitch       60@<br/>
+<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@note "2"@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@start       2.0@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@duration    1.0@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@volume     110@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@pitch       61@<br/>
+<br/>
+@play@<br/>
+&nbsp;&nbsp;@players "Player 1", "Player 2"@<br/>
+<br/>
+@render "composer_test_results.mid"@<br/>
+&nbsp;&nbsp;@players "Player 1", "Player 2"@<br/>
+<br/>
+
+
+<br/>*No Start Auto Next*<br/>
+<br/>
+@format csound@<br/>
+<br/>
+@player "Player 1"@<br/>
+&nbsp;&nbsp;@instrument 1@<br/>
+@player "Player 2"@<br/>
+&nbsp;&nbsp;@instrument 2@<br/>
+<br/>
+@ensemble "In C Orchestra"@<br/>
+&nbsp;&nbsp;@players "Player 1", "Player 2"@<br/>
+<br/>
+&nbsp;&nbsp;@phrase "Phrase 1"@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@note "1"@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@start       1.0@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@duration    0.5@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@amplitude   1000@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@pitch       7.01@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@func_table  1@<br/>
+<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@note "2"@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@duration    1.0@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@amplitude   1100@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@pitch       7.02@<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@func_table  1@<br/>
+<br/>
+@play@<br/>
+&nbsp;&nbsp;@players "Player 1", "Player 2"@<br/>
+<br/>
+@render "composer_test_results.wav"@<br/>
+&nbsp;&nbsp;@players "Player 1", "Player 2"@<br/>
+&nbsp;&nbsp;@orchestra "my_orc.orc"@<br/>
