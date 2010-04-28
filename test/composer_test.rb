@@ -854,7 +854,7 @@ def test__tempo_default
 %Q{
 # TESTING PURPOSES ONLY
 reset_script_state
-# test__tempo
+# test__tempo_default
 
 # Don't set tempo and default is 60 bpm, quarter note == 1 sec
 # tempo 30
