@@ -1,0 +1,25 @@
+_*Aleatoric Programming Framework*_
+
+*Introduction*<br/><br/>
+
+The Aleatoric platform for creating, performing and rendering compositions in software has two major components.  Musical composers use the "Composer language":http://wiki.github.com/marksweiss/aleatoric/composer-language-1-introduction to create musical scores.  The can also declare "players and ensembles":http://wiki.github.com/marksweiss/aleatoric/composer-language-7-working-with-ensembles-players-and-performance-instructions to perform them, and to provide additional performance instructions for the players to follow.
+
+If the score only includes musical events and does not include players, ensembles or performance instructions, then Aleatoric simply "renders":http://wiki.github.com/marksweiss/aleatoric/composer-language-4-rendering-notes the notes into a sound file.
+
+If, however, the score includes these elements, then Aleatoric "performs" the score by running code associated with the performance instructions.  This code translates the written performance instructions expressed by the composer into instructions to each software @player@ to @play@ certain notes, add notes to what they play, change what they play, start and stop playing, and so on.  
+
+To the musical composer, this approach means they need only describe their intent in natural language in their score.  This is a crucial advantage for aleatoric musical compositions, which often rely on extra-musical concepts, conceptual instructions or instructions which are intentionally open to performer interpretation.  In real-world aleatoric composition, the composer describes their intent and performers interpret that intent to create the performance; in Aleatoric, the composer describes their intent, and the programmer writes code to control software players to create the performance.  _The Aleatoric programmer's goal is to write a program that turns a statement of artistic intent into an artistic performance._
+
+To achieve this elusive goal you use a minimally sufficient handful of classes, methods and API calls.  Classes represent a @player@ and an @ensemble@, let you control what notes they play, and offer a simple, flexible API to test and set any additional attributes you need.  API calls register callbacks as the implementations of performance instructions.  Callbacks expose the player or ensemble they control and the notes they can play, but are otherwise unrestricted.  All Aleatoric code is standard Ruby.
+
+Each instruction can be mapped to callbacks that fire before and after each player and ensemble plays.  So, in scores that include @repeat@ or @repeat until@ loops, this lends itself naturally to the following flow of execution:
+
+&nbsp;&nbsp;@test player pre-play state ->@ 
+&nbsp;&nbsp;@modify notes player will play based on current state ->@
+&nbsp;&nbsp;@player plays ->@
+&nbsp;&nbsp;@test player post-play state ->@
+&nbsp;&nbsp;&nbsp;@repeat ...@
+
+As the program loops, an evolving musical performance unfolds, controlled by the logic defined in the performance instruction implementation.
+
+The remainder of the Aleatoric programming framework documentation covers the @player@ and @ensemble@ classes in detail, how to register callback to implement Composer @instruction@ and @improvisation@ statements, the @score@ class defining a sequence of musical notes and when you need to use it, and the @note@ class itself.  There are also examples and a tutorial walking through the creation of a complete implementation of a score.
