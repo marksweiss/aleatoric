@@ -1,0 +1,98 @@
+_*Aleatoric Programming Framework*_
+
+*Associating Code With a Score*<br/><br/>
+
+_Running Aleatoric to Perform a Score_
+
+To run Aleatoric and instruct it to perform a Composer score and render a sound file of the performance, you use the following command line:
+
+&nbsp;&nbsp;@aleatoric/lib$>ruby aleatoric.rb --score_name [PATH TO COMPOSITION]/[COMPOSITION].altc --format [midi|csound]@
+
+for example:
+&nbsp;&nbsp;@aleatoric/lib$>ruby aleatoric.rb --score_name compositions/In_C/In_C_mid.altc --format midi@
+
+By convention, Aleatoric scores end with the extension @.altc@.  Notice the command doesn't include an argument to any accompanying file for the code implementing the performance instructions defined in the score.  
+
+This is because Aleatoric gives you two ways to associate a code file with a composition.  You can place all your code in the file @aleatoric/lib/user_instruction.rb@, in between the comments there indicating where code should be placed.  This may be fine to quickly get started or test code, but it fails as soon as one install of Aleatoric must support more than one composition.
+
+@##########################################################@
+@# PLACE YOUR MAPPINGS AND INSTRUCTION IMPLEMENTATIONS HERE@
+
+@# /PLACE YOUR MAPPINGS AND INSTRUCTION IMPLEMENTATIONS HERE@
+@##########################################################@
+
+A better solution is to create a file called @[COMPOSITION_NAME]_user_instruction.rb@ and register its path at the top of @aleatoric/lib/user_instruction.rb@.  This lets Aleatoric discover a separate code file for each Composer score.  When you run the command line above, Aleatoric uses this naming convention and the registered path to find and run your code file with the score file.
+
+For example, suppose you are collaborating on a composition entitled "Alaskan Idiot." The directory layout might look like this:
+
+@aleatoric/compositions/Sarah_Palin-Alaskan_Idiot/Alaskan_Idiot.altc@
+@aleatoric/compositions/Sarah_Palin-Alaskan_Idiot/Alaskan_Idiot_user_instruction.rb@
+
+And to register the association of code file with Composer score file, you add the path to the directory with the score and code file to the top of @aleatoric/lib/user_instruction.rb@:
+
+@$LOAD_PATH << psub("../compositions/Sarah_Palin-Alaskan_Idiot")@
+
+($LOAD_PATH is a Ruby global that it uses to discover modules.  @psub@ is an Aleatoric convenience function that handles Mac/Unix-style or Windows-style slashes in paths no matter how you write them.)
+
+_Registering Callbacks That Implement Performance Instructions_
+
+So now Aleatoric can find your code module.  The next thing to understand is how to tell the system what functions implement each performance instruction in the *.altc Composer score.
+
+To do this you use function calls that map the name of the function implementing an instruction to that instruction's name in the score.  Note that because the goal of this system is to let the musical composer provide an arbitrarily descriptive name, the name argument may be a long string.  But this doesn't matter -- you just need to register the callback and the name you use has to match the score name exactly.
+
+So, in @Alaskan_Idiot.altc@ we have the @instruction@ statement:
+
+@instruction "Which magazines and newspapers do you read?"@
+&nbsp;&nbsp;@description "All of 'em, any of 'em that have been in front of me over all these years."@
+&nbsp;&nbsp;@players "Sarah Palin"@
+
+In the corresponding @Alaskan_Idiot_user_instruction.rb@ file we register a function  name mapped to to the score @instruction@ name "Which magazines and newspapers do you read?"  The @description@ isn't used in the user_instruction.rb file -- it's simply in the score to provide additional guidance.
+
+@set_player_preplay_instruction("Which magazines and newspapers do you read?", &generate_idiotic_answer_1)@
+
+_A Brief Overview of a Callback Implementation_
+
+So what is @&generate_idiotic_answer_1@ above?  It's an argument that binds to a lambda block assigned to a variable, in this case @generate_idiotic_answer_1@.  A lambda is essentially an anonymous function in a Ruby block that can be assigned to a variable.  So the lambda block defines the implementation of this callback function.  (If you aren't familiar with this feature of Ruby, just think of the lambda block as a function defined with slightly different syntax.)
+
+Here is an example of the lambda block defining @generate_idiotic_answer_1@ and the Aleatoric API call to register the lambda as a callback for the instruction.
+
+@1 generate_idiotic_answer_1 = lambda do |container, score|@
+&nbsp;&nbsp;@2 sarah_pailin = container@
+&nbsp;&nbsp;@3 flurry_of_harsh_random_notes = random_note_generator.get_notes()@
+&nbsp;&nbsp;@4 current_player.set_output_notes(flurry_of_harsh_random_notes)@
+&nbsp;&nbsp;@5 score@
+@6 end@
+@7 set_player_preplay_instruction("Which magazines and newspapers do you read?", &generate_idiotic_answer_1)@
+
+The first line declares the start of the function block which opens with the @do@ keyword and ends on line 6 with @end@.  Line 1 assigns the lambda to the variable @generate_idiotic_answer_1@ and also defines the two arguments the block receives, @container@ and @score@.  
+
+All player preplay hooks receive these two arguments.  The first is called @container@ by convention and is a reference to the @player@ object for a player named in the score and associated with this @instruction@.  So here, @container@ refers the player object created for the player "Sarah Palin":
+
+@instruction "Which magazines and newspapers do you read?"@
+&nbsp;&nbsp;@description "All of 'em, any of 'em that have been in front of me over all these years."@
+&nbsp;&nbsp;@players "Sarah Palin"@
+
+Lines 2-4 implement the logic of this callback, retrieving some notes from an existing module-scope object @random_note_generator@ and calling the @#set_output_notes()@ method exposed by the @player@ class to set the notes that the player will play.
+
+Line 5 returns the @score@ received by the block.  Player preplay callbacks must receive a @score@ and return a @score@, so this line must be here, even though in this case we directly set the notes the player will play on line 4.
+
+Line 7 registers the callback with Aleatoric and maps it to the name for the instruction in the associated Composer score.
+
+Altogether, there are five callback register functions.
+* player preplay instructions run before a player plays
+* player postplay instructions run after a player plays
+* ensemble preplay instructions run after an ensemble plays
+* ensemble postplay instructions run after an ensemble plays
+* improvisation instructions generate the notes the player plays
+
+And there are five associated callback registration functions:
+
+@set_player_preplay_instruction(instruction_name, &instr_blk)@
+@set_player_postplay_instruction(instruction_name, &instr_blk)@  
+@set_ensemble_preplay_instruction(instruction_name, &instr_blk)@
+@set_ensemble_postplay_instruction(instruction_name, &instr_blk)@
+@set_improvisation(instruction_name, &instr_blk)@
+
+In each case @&instr_blk@ refers to the lambda callback block for that @instruction_name@.  
+
+The play callback functions are covered in detail "here":TODO, including a discussion of when to use kind of callback to fulfill the intent described in the score, the parameters and return values for each type of callback, and best practices.
