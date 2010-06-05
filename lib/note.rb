@@ -25,7 +25,7 @@ class Note
 
   @@format = nil
 
-  def initialize(name=nil, attrs=nil)
+  def initialize(name=nil, attrs=nil)    
     @name = name
     # For debugging, so can print these out as comments in a score
     @player_id = nil; @ensemble_id = nil; @score_id = nil
@@ -204,9 +204,32 @@ class Note
       ret
     end    
   end
+  
+  # Output as Composer script
+  def to_s_composer
+    ret = "\nnote"
+    
+    # TEMP DEBUG
+    puts @name
+    
+    ret.concat(""" #{@name}""") if @name
+    ret.concat"\n"
+    @ordered_keys.each do |key|
+      next if @note_attrs[key].nil?
+      val = @note_attrs[key].to_s.strip
+      ret.concat("  #{key.to_s.strip}")
+      # TODO: This is an abominable check for a float
+      if val.include? '.'
+        ret.concat(sprintf(" %.5f", val) + "\n")
+      else
+        ret.concat(" #{val}\n")
+      end	 
+    end
+    ret    
+  end
 
   # Creates accessors for newly created attributes of the object
-  def method_missing(name, val)     
+  def method_missing(name, val)         
     @note_attrs[name] = val
     @ordered_keys << name unless @ordered_keys.include? name
     def_accessor name

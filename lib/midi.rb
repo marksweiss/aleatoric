@@ -126,14 +126,14 @@ class MidiManager
       seq.read(file)
     end
         
+    note_num = 0
     # Get the tracks from the loaded file
     tracks = seq.collect
     # Get the (note) events from the each track
     tracks.each do |track|
-      channel = track.channels_used      
-      events = track.collect
-      note_num = 0
-      instrument = nil; start = nil; duration = nil; volume = nil; pitch = nil      
+
+      events = track.collect      
+      channel = nil; instrument = nil; start = nil; duration = nil; volume = nil; pitch = nil      
       events.each do |event|
         instrument = event.program if event.program_change? and not instrument
         channel = event.channel if event.channel? and event.note_on?
@@ -143,11 +143,13 @@ class MidiManager
         pitch = event.note if event.respond_to? :note and event.note_on? and not pitch
 
         if event.note_off?
-          if instrument.nil? or start.nil? or duration.nil? or volume.nil? or pitch.nil?
+          if channel.nil? or instrument.nil? or start.nil? or duration.nil? or volume.nil? or pitch.nil?
             raise AleatoricFailedMidiLoadException, "Load of file #{file_name} failed on note # #{note_num}"
-          end        
+          end 
+                           
           ret_notes << Note.new("#{note_num}", {:instrument=>instrument, :channel=>channel, :start=>start, :duration=>duration, :volume=>volume, :pitch=>pitch}) 
-          instrument = nil; start = nil; duration = nil; volume = nil; pitch = nil
+
+          channel = nil; instrument = nil; start = nil; duration = nil; volume = nil; pitch = nil
           note_num += 1
         end  
       end      

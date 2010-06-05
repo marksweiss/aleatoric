@@ -149,6 +149,11 @@ class MidiManager_Test < Test::Unit::TestCase
     assert(note_2.volume == 100)
     assert(note_2.start == 4.0)
     assert(note_2 .duration == 4.0)
+    
+    # TEMP DEBUG
+    puts note_1.to_s_composer
+    puts note_2.to_s_composer
+    
         
     puts "test__load COMPLETED"  
   end
