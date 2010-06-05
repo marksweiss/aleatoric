@@ -130,27 +130,20 @@ class MidiManager_Test < Test::Unit::TestCase
     # Now load the file we just created and saved and test we get the
     #  same notes back in memory and we convert them from MIDI back to Composer notes
     # Returns Hash with keys as measures and notes as list of notes in that measure
-    measure_list, measure_notes = midi.load('midi_test.mid')    
-    assert(measure_list.length == 1)
+    load_notes = midi.load('midi_test.mid')    
+    assert(load_notes.length == 2)
 
-    measure = measure_list[0]
-    notes = measure_notes[measure]
-    note_1 = notes[0]
-    note_2 = notes[1]
-
-    # TODO
-    # Why does start not start at 0.0?
-    # Why are instrment and channel assignments not honored?
-    #  - these are assigned to channel 1 and 3!
+    note_1 = load_notes[0]
+    note_2 = load_notes[1]
     
-    # assert(note_1.channel == 0)
+    assert(note_1.channel == 0)
     assert(note_1.instrument == 1)
     assert(note_1.pitch == 64)    
     assert(note_1.volume == 100)
     assert(note_1.start == 4.0)
     assert(note_1.duration == 4.0)
 
-    #assert(note_2.channel == 0)
+    assert(note_2.channel == 1)
     assert(note_2.instrument == 20)
     assert(note_2.pitch == 65)    
     assert(note_2.volume == 100)
