@@ -668,8 +668,7 @@ class ComposerAST
     # Post-order append node to output
     s_out = node.to_s
     @@op_values.each do |op|
-      s_out.gsub!(' ' + op, op) if op != '"'
-      s_out.gsub!(op + ' ', op) if op != '"'
+      s_out.gsub!(' ' + op + ' ', op) if op != '"'
     end
     
     out_lines << s_out if s_out != 'root'

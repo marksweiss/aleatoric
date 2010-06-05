@@ -5,7 +5,7 @@ Aleatoric is a tool for musical composers and programmers collaborate to create 
 The most important design goals of Aleaotoric are:
  * To provide musical composers with a simple, natural and intuitive language to define musical events and performance instructions
  * To provide programmers with an intuitive, simple, powerful and extendable framework for creating software performers to realize the score
- * To allow each to collaborate with the other using a separate language they are comfortable with, needing only to understand and agree upon the meaning of the score's performance instructions, which can be named and described using any words or sentences the composer chooses. (This borrows an idea from Behavior Driver Software testing, see "cucumber":http://github.com/aslakhellesoy/cucumber/tree/master as an example if you are interested.) 
+ * To allow each to collaborate with the other using a separate language they are comfortable with, needing only to understand and agree upon the meaning of the score's performance instructions, which can be named and described using any words or sentences the composer chooses. (This borrows an idea from Behavior Driven Software testing, see "cucumber":http://github.com/aslakhellesoy/cucumber/tree/master as an example if you are interested.) 
 
 Composers use Aleatoric's musical score language, called Composer.  Composer is a simple and clear language for specifying musical notes, organizing notes into phrases or measures, specifying software ensembles of performers, and adding written instructions for those performers to follow.  There are also instructions to render the performance into a sound file.
  

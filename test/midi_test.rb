@@ -93,8 +93,8 @@ class MidiManager_Test < Test::Unit::TestCase
     puts "test__add_note COMPLETED"
   end
   
-  def test__midi_save
-    puts "test__midi_save ENTERED"
+  def test__save
+    puts "test__save ENTERED"
 
     midi = MidiManager.new
     assert(midi != nil)
@@ -104,13 +104,60 @@ class MidiManager_Test < Test::Unit::TestCase
     midi.add_note(channel=0, note=64, velocity=100, delta_time=4.0)
     midi.instrument(channel=1, instrument=20)
     midi.add_note(channel=1, note=65, velocity=100, delta_time=4.0)
-    # midi_notes = midi.channel_notes(0)
-    # midi_notes = midi.channel_notes(1)
     midi.save('midi_test.mid')
 
     assert(File.size('midi_test.mid') > 0)
 
-    puts "test__midi_save COMPLETED"  
+    puts "test__save COMPLETED"  
+  end
+  
+  def test__load
+    puts "test__load ENTERED"
+
+    midi = MidiManager.new
+    assert(midi != nil)
+    
+    # Reuse same steps as for midi_save() test
+    # note here == pitch in MIDI lingo, 64 == C4
+    midi.instrument(channel=0, instrument=1)
+    midi.add_note(channel=0, note=64, velocity=100, delta_time=4.0)
+    midi.instrument(channel=1, instrument=20)
+    midi.add_note(channel=1, note=65, velocity=100, delta_time=4.0)
+    midi.save('midi_test.mid')
+
+    assert(File.size('midi_test.mid') > 0)
+
+    # Now load the file we just created and saved and test we get the
+    #  same notes back in memory and we convert them from MIDI back to Composer notes
+    # Returns Hash with keys as measures and notes as list of notes in that measure
+    measure_list, measure_notes = midi.load('midi_test.mid')    
+    assert(measure_list.length == 1)
+
+    measure = measure_list[0]
+    notes = measure_notes[measure]
+    note_1 = notes[0]
+    note_2 = notes[1]
+
+    # TODO
+    # Why does start not start at 0.0?
+    # Why are instrment and channel assignments not honored?
+    #  - these are assigned to channel 1 and 3!
+    
+    # assert(note_1.channel == 0)
+    assert(note_1.instrument == 1)
+    assert(note_1.pitch == 64)    
+    assert(note_1.volume == 100)
+    assert(note_1.start == 4.0)
+    assert(note_1.duration == 4.0)
+
+    #assert(note_2.channel == 0)
+    assert(note_2.instrument == 20)
+    assert(note_2.pitch == 65)    
+    assert(note_2.volume == 100)
+    assert(note_2.start == 4.0)
+    assert(note_2 .duration == 4.0)
+        
+    puts "test__load COMPLETED"  
   end
   
 end
