@@ -1,5 +1,6 @@
 # TODO Rewrite as a real parser using Treetop: http://treetop.rubyforge.org/
 require 'global'
+require 'midi'
 
 module Aleatoric
  
@@ -227,28 +228,82 @@ class ComposerAST
     @parent = @@root
   end
   
-  def mandatory_preprocess_script(script_lines)
-    tkn_lines = tokenize script_lines
-    out_lines = []
+  def mandatory_preprocess_script(script_lines)  
+    tkn_lines = tokenize script_lines    
+    tkn_lines = preprocess_compound_keywords tkn_lines
+    tkn_lines = preprocess_expand_macro_keywords tkn_lines
+    out_lines = tkn_lines.collect {|tkn_line| tkn_line.join(' ')}
+    out_lines
+  end
+  
+  def preprocess_compound_keywords(tkn_lines)
+    # Patch compound keywords
+    # 'repeat until' -> 'repeat_until'
     tkn_lines.each do |tkn_line|
       if tkn_line.length >= 2 and (tkn_line[0] == 'repeat' and tkn_line[1] == 'until')
         tkn_line = ['repeat_until'] + tkn_line[2..tkn_line.length]
       end
-      out_lines += [tkn_line.join(' ')]
     end
-    out_lines
+    tkn_lines
+  end
+  
+  def preprocess_expand_macro_keywords(tkn_lines)
+    # Process commands that import additional lines into the script through expansion
+    # 'import' -> calls class MidiMgr to:
+    #  - load a MIDI file
+    #  - extract its notes
+    #  - turn them into script lines
+    #  - insert script lines here    
+    skip = false
+    ret_lines = []
+    bound = tkn_lines.length - 1    
+    0.upto(bound) do |j|
+      tkn_line = tkn_lines[j]      
+      if tkn_line.length > 1 and tkn_line[0] == 'import'
+        midi_file_name = tkn_line[1]
+        if (not midi_file_name.kind_of? String or 
+           not string_token? midi_file_name) and
+           not midi_file_name_length > 3
+          raise ComposerASTException, "Illegal argument #{midi_file_name} for 'import' file name argument"
+        end
+        # TODO Should use standard function to strip quotes from string tokens
+        midi_file_name = midi_file_name[1..midi_file_name.length-2]
+        # Next line must be 'format' child kw of 'import', even though only midi supported right now
+        if bound == j
+          raise ComposerASTException, "No 'format' attribute for 'import' of filename #{midi_file_name}"
+        end
+        # TODO This should use kw?() and valid_child_kw() and valid_kw_arg()
+        nxt_line = tkn_lines[j + 1]
+        if nxt_line.length != 2 and nxt_line[0] != 'format' and nxt_line[1] != 'midi'
+          raise ComposerASTException, "No or invalid 'format' attribute for 'import' of filename #{midi_file_name}. 'import' must have 'format' attribute and format argumet of 'midi'"
+        end
+        
+        # Set flag to skip line after this match line, which is 'format' attr of 'import'
+        # Weak in that it's a bug waitintg to happen -- only supports single next line
+        skip = true
+        # Retrieve script lines from imported midi file and add to output at this position
+        # Get string for each note, collect them together joined on newline, then filter lines that are 'empty' (just newlines)
+        import_lines = (MidiManager.new.load(midi_file_name).collect {|note| note.to_s_composer}).join("\n").select {|line| line.length > 1}
+        ret_lines += tokenize(import_lines)
+      else
+        ret_lines << tkn_line if not skip    
+        skip = false
+      end      
+    end
+    
+    ret_lines  
   end
  
   def optional_preprocess_script(script_lines, src_file_name)
-    tkns = tokenize script_lines
-		tkns = preprocess_assignment tkns
-    tkns = preprocess_func tkns
+    tkn_lines = tokenize script_lines
+		tkn_lines = preprocess_assignment tkn_lines
+    tkn_lines = preprocess_func tkn_lines
     # This next one must always be called last because it appends to the end of the
     #  line two new tokens. So, if the line has a function call and one or the args
     #  is a duration constant (e.g. WHL, HLF) then that function call will get changed
     #  to have an extra arg at the end of its args, and break
-    tkns = preprocess_start_duration tkns
-    preprocess_expressions(tkns, src_file_name)
+    tkn_lines = preprocess_start_duration tkn_lines
+    preprocess_expressions(tkn_lines, src_file_name)
     # Returns the tokens put back into list of strings, one string per script line, then all those lines joined
     to_s
   end
@@ -271,21 +326,23 @@ class ComposerAST
   # HELPERS
   private
   
-  def tokenize(script_lines, op_list=nil)      
+  def tokenize(script_lines, op_list=nil)     
     tkns = []    
     op_list ||= @@op_values
       # For each operator token, replace it with the token plus ws on each side of it
       # This lets us split the line and make sure all delimiting characters become their own token
       #  along with all 'words'.  Build up a list (one entry per line), of lists (each line a list of tkns)
       script_lines.each do |expr|
+        next if expr.length == 0
         op_list.each do |op|        
-          expr.gsub!(op, ' ' + op + ' ')
+          expr.gsub!(op, ' ' + op)
+          expr.gsub!(op, op + ' ')
         end
         # NOTE: This strips trailing '\n' which we will restore at the end of all line preprocessing
         expr_tkns = expr.split(' ').collect{|tkn| tkn.strip}         
         expr_tkns = tokenize_join_str expr_tkns                
         tkns << expr_tkns
-      end
+      end    
     tkns    
   end
     
@@ -378,11 +435,11 @@ class ComposerAST
     tkns_out
   end
     
-  def preprocess_assignment(tkns)
+  def preprocess_assignment(tkn_lines)
     state = :declaring    
     tkns_out = []
     
-    tkns.each do |tkn_line|     
+    tkn_lines.each do |tkn_line|     
     # Skip comment lines, empty lines, special debug statemenets
       if not validate_skip_line tkn_line
         # Read all vars as a block at the start of the script, only support for vars right now        
@@ -412,9 +469,9 @@ class ComposerAST
     tkns_out
   end
 
-  def preprocess_func(tkns)  
+  def preprocess_func(tkn_lines)  
     tkns_out = []
-    tkns.each do |tkn_line|
+    tkn_lines.each do |tkn_line|
       tkns_out << preprocess_func_helper(tkn_line)
 		end
 		tkns_out  
@@ -462,17 +519,10 @@ class ComposerAST
     
     tkn_line_out
   end
-
-	def scrub_keywords(tkns, src_file_name)
-	  
-    tkns.each do |tkn_line|
-      
-    end	
-	end
 	
-	def preprocess_expressions(tkns, src_file_name)
+	def preprocess_expressions(tkn_lines, src_file_name)
 	  line_no = 0
-    tkns.each do |tkn_line|
+    tkn_lines.each do |tkn_line|
       begin
         line_no += 1
         preprocess_expression(tkn_line, src_file_name, line_no)

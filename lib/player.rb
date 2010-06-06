@@ -247,8 +247,8 @@ class Player
     
     # TEMP DEBUG
     # puts "#{self.name}  #{@scores_idx}"
-    @total_loops = 0 if @total_loops.nil?
-    @total_loops += 1
+    #@total_loops = 0 if @total_loops.nil?
+    #@total_loops += 1
     # puts "#{self.name}  #{@total_loops}"
         
     ret = []

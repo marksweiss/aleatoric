@@ -205,15 +205,13 @@ class Note
     end    
   end
   
+  # TODO Get rid of code duplication with to_s
   # Output as Composer script
   def to_s_composer
-    ret = "\nnote"
-    
-    # TEMP DEBUG
-    puts @name
-    
+    ret = "\nnote"    
     ret.concat(""" #{@name}""") if @name
     ret.concat"\n"
+    
     @ordered_keys.each do |key|
       next if @note_attrs[key].nil?
       val = @note_attrs[key].to_s.strip

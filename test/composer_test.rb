@@ -2440,12 +2440,12 @@ end
 ##################### /TESTS ########################
 
 # Call each test in here
-def run_tests(flags='^run_all')
+def run_tests(flags='run_all')
   # TODO - shore this up someday
   # Right now just a way to run just the tests in the else block below
   # Should eventually be able to take a list of tests or 'all' or something like that
   run_only = false
-  run_only = true if flags[0] == "^run_only"
+  run_only = true if flags[0] == 'run_only'
     
   num_tests = 0
   if not run_only

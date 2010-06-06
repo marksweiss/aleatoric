@@ -118,11 +118,11 @@ class MidiManager
   
   def load(file_name)
     ret_notes = []
-    
+        
     # Create a new, empty sequence.
     seq = MIDI::Sequence.new    
     # Read the contents of a MIDI file into the sequence.
-    File.open(file_name, 'rb') do | file |
+    File.open(file_name, 'rb') do |file|
       seq.read(file)
     end
         
