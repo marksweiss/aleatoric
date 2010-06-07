@@ -55,7 +55,8 @@ class ComposerAST
     'play' => "do\n",
     'instruction' => "do\n",
     'improvisation' => "do\n",  
-    'improvise' => "do\n"  
+    'improvise' => "do\n",
+    'import' => "\n"
   }
   
   @@kw_block_close_completions= {
@@ -81,7 +82,8 @@ class ComposerAST
     'play' => "end\n",
     'instruction' => "end\n",
     'improvisation' => "end\n",
-    'improvise' => "end\n" 
+    'improvise' => "end\n",
+    'import' => "" 
   }
  
   @@kw_children = {
@@ -99,7 +101,7 @@ class ComposerAST
     # NOTE: ANY TOP_LEVEL KW **MUST** BE ADDED TO LIST OF CHILDREN OF ROOT IMMEDIATELY ABOVE
     
     'note' => [],
-    'phrase' => ['note', 'repeat', 'repeat_until'],
+    'phrase' => ['note', 'repeat', 'repeat_until', 'import'],
     'section' => ['phrase', 'measure', 'copy_measure'],
     'repeat' => ['note', 'measure', 'play', 'improvise'],
     'repeat_until' => ['note', 'measure', 'play', 'improvise'],
@@ -119,7 +121,8 @@ class ComposerAST
     'play' => ['players', 'ensembles'],
     'instruction' => ['players', 'ensembles'],
     'improvisation' => ['players'],
-    'improvise' => ['players']
+    'improvise' => ['players'],
+    'import' => []
   }
   @@kw_parents = {
     'root' => [],
@@ -144,7 +147,8 @@ class ComposerAST
     'play' => ['root', 'repeat', 'repeat_until'],
     'instruction' => ['root'],    
     'improvisation' => ['root'],
-    'improvise' => ['root', 'repeat']
+    'improvise' => ['root', 'repeat'],
+    'import' => ['phrase']
   }
   @@kw = @@kw_children.keys
  
@@ -154,19 +158,20 @@ class ComposerAST
     'section' => 	lambda {|x| x == nil or x[0] == nil or x[0].kind_of? String},     # 1st arg optional, valid type
     'repeat' => 	lambda {|x| x != nil and x[0] != nil },# and eval(x[0].to_s).kind_of? Fixnum},  # 1st arg required, valid type
     'repeat_until' => lambda {|x| x != nil and x[0] != nil and (x[0].kind_of? String and x[0].length > 0)},       # 1st arg optional, valid type
-    'render' => 	lambda {|x| x != nil and x[0] != nil and (x[0].kind_of? String and x[0].length > 0)},       # 1st arg required, valid type
-    'write' => 		lambda {|x| x != nil and x[0] != nil and (x[0].kind_of? String and x[0].length > 0)},       # 1st arg required, valid type
-    'format' => 	lambda {|x| x != nil and x[0] != nil and (x[0].to_s == 'csound' or x[0].to_s == 'midi')},   # 1st arg required, valid value
-    'tempo' => 	lambda {|x| x != nil and x[0] != nil and (x[0].kind_of? Integer or x[0].kind_of? Float)},   # 1st arg required, valid value
+    'render' => 	lambda {|x| x != nil and x[0] != nil and (x[0].kind_of? String and x[0].length > 0)},           # 1st arg required, valid type
+    'write' => 		lambda {|x| x != nil and x[0] != nil and (x[0].kind_of? String and x[0].length > 0)},           # 1st arg required, valid type
+    'format' => 	lambda {|x| x != nil and x[0] != nil and (x[0].to_s == 'csound' or x[0].to_s == 'midi')},       # 1st arg required, valid value
+    'tempo' => 	lambda {|x| x != nil and x[0] != nil and (x[0].kind_of? Integer or x[0].kind_of? Float)},         # 1st arg required, valid value
     'measure' => 	lambda {|x| x == nil or x[0] == nil or x[0].kind_of? String},     # 1st arg optional, valid type
     'copy_measure' => lambda {|x| x != nil and x.length == 2 and x[0] != nil and x[1] != nil and x[0].kind_of? String and x[1].kind_of? String},   # 1st and second arg required, valid types    
     'meter' =>    lambda {|x| x != nil and x.length == 2 and x[0] != nil and x[1] != nil and x[0].kind_of? Fixnum and x[1].kind_of? Fixnum},       # 1st and second arg required, valid types    
     'quantize' => lambda {|x| x != nil and x[0] != nil and (x[0].to_s == 'on' or x[0].to_s == 'off')},
-    'ensemble' => lambda {|x| x != nil and x[0] != nil and (x[0].kind_of? String and x[0].length > 0)},       # 1st arg required, valid type    
-    'players' =>  lambda {|x| x != nil and x[0] != nil and (x[0].kind_of? String and x[0].length > 0)},       # 1st arg required, valid type    
-    'ensembles' =>     lambda {|x| x != nil and x[0] != nil and (x[0].kind_of? String and x[0].length > 0)},  # 1st arg required, valid type    
-    'instruction' =>   lambda {|x| x != nil and x[0] != nil and x[0].kind_of? String},                       	# 1st arg required, valid type
-    'improvisation' => lambda {|x| x != nil and x[0] != nil and x[0].kind_of? String}                       	# 1st arg required, valid type
+    'ensemble' => lambda {|x| x != nil and x[0] != nil and (x[0].kind_of? String and x[0].length > 0)},           # 1st arg required, valid type    
+    'players' =>  lambda {|x| x != nil and x[0] != nil and (x[0].kind_of? String and x[0].length > 0)},           # 1st arg required, valid type    
+    'ensembles' =>     lambda {|x| x != nil and x[0] != nil and (x[0].kind_of? String and x[0].length > 0)},      # 1st arg required, valid type    
+    'instruction' =>   lambda {|x| x != nil and x[0] != nil and x[0].kind_of? String},                       	    # 1st arg required, valid type
+    'improvisation' => lambda {|x| x != nil and x[0] != nil and x[0].kind_of? String},                       	    # 1st arg required, valid type
+    'import' => lambda {|x| x != nil and x[0] != nil and x[0].kind_of? String}                       	            # 1st arg required, valid type
   }
   
   @@grammar_rules = {
@@ -231,7 +236,6 @@ class ComposerAST
   def mandatory_preprocess_script(script_lines)  
     tkn_lines = tokenize script_lines    
     tkn_lines = preprocess_compound_keywords tkn_lines
-    tkn_lines = preprocess_expand_macro_keywords tkn_lines
     out_lines = tkn_lines.collect {|tkn_line| tkn_line.join(' ')}
     out_lines
   end
@@ -245,53 +249,6 @@ class ComposerAST
       end
     end
     tkn_lines
-  end
-  
-  def preprocess_expand_macro_keywords(tkn_lines)
-    # Process commands that import additional lines into the script through expansion
-    # 'import' -> calls class MidiMgr to:
-    #  - load a MIDI file
-    #  - extract its notes
-    #  - turn them into script lines
-    #  - insert script lines here    
-    skip = false
-    ret_lines = []
-    bound = tkn_lines.length - 1    
-    0.upto(bound) do |j|
-      tkn_line = tkn_lines[j]      
-      if tkn_line.length > 1 and tkn_line[0] == 'import'
-        midi_file_name = tkn_line[1]
-        if (not midi_file_name.kind_of? String or 
-           not string_token? midi_file_name) and
-           not midi_file_name_length > 3
-          raise ComposerASTException, "Illegal argument #{midi_file_name} for 'import' file name argument"
-        end
-        # TODO Should use standard function to strip quotes from string tokens
-        midi_file_name = midi_file_name[1..midi_file_name.length-2]
-        # Next line must be 'format' child kw of 'import', even though only midi supported right now
-        if bound == j
-          raise ComposerASTException, "No 'format' attribute for 'import' of filename #{midi_file_name}"
-        end
-        # TODO This should use kw?() and valid_child_kw() and valid_kw_arg()
-        nxt_line = tkn_lines[j + 1]
-        if nxt_line.length != 2 and nxt_line[0] != 'format' and nxt_line[1] != 'midi'
-          raise ComposerASTException, "No or invalid 'format' attribute for 'import' of filename #{midi_file_name}. 'import' must have 'format' attribute and format argumet of 'midi'"
-        end
-        
-        # Set flag to skip line after this match line, which is 'format' attr of 'import'
-        # Weak in that it's a bug waitintg to happen -- only supports single next line
-        skip = true
-        # Retrieve script lines from imported midi file and add to output at this position
-        # Get string for each note, collect them together joined on newline, then filter lines that are 'empty' (just newlines)
-        import_lines = (MidiManager.new.load(midi_file_name).collect {|note| note.to_s_composer}).join("\n").select {|line| line.length > 1}
-        ret_lines += tokenize(import_lines)
-      else
-        ret_lines << tkn_line if not skip    
-        skip = false
-      end      
-    end
-    
-    ret_lines  
   end
  
   def optional_preprocess_script(script_lines, src_file_name)

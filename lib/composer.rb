@@ -271,6 +271,32 @@ def note(name=nil, &args_blk)
   @cur_note
 end
 
+def import(name)
+  # Call MidiMgr to get the notes in sequence from the named MIDI file
+  import_notes = @midi_mgr.load name
+  return if import_notes.length == 0
+  # Import notes could have start or not and it still doesn't make sense to have them
+  #  occur out of sequence with what already has been recorded in this score
+  #  so just offset them from current cur_start  
+  init_import_start = import_notes[0].start
+  init_cur_start = @cur_start
+  # So it is just as if script encountered a whole series of 'note' stmts
+  # So make all adjustsments as above in note(), but for each note imported
+  # But if note does have start, ignore it and make it start at cur_start
+  import_notes.each do |note|
+    delta = note.start - init_import_start
+    delta = 0.0 if delta < 0.0
+    note.start(init_cur_start + delta) 
+    @notes << note 
+    @notes_by_name[name] = note unless note.name == nil
+    adjust_cur_start([note])
+  end
+  
+  # TODO LOG OUT NOTES LOADED SO CAN ALSO USE THIS AS TOOL TO 'CONVERT' TO COMPOSER
+  #  AND WORK WITH NOTES IN TEXT FILE
+      
+end
+
 def channel(channel, instrument=nil)
   # Allocate a MIDI channel for the channel number if there isn't one already
   @midi_mgr.channel channel if $FORMAT == :midi 

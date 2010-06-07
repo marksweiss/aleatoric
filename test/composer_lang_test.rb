@@ -420,24 +420,7 @@ class ComposerAST_Test < Test::Unit::TestCase
         
     end
     puts "test__preprocess_block_with_comment COMPLETED"  
-  end  
-
-  def test__preprocess_expand_macro_keywords
-    puts "test__preprocess_expand_macro_keywords ENTERED"   
-    ComposerAST.publicize_methods do
-		
-    lang = ComposerAST.new
-    # NOTE: DO NOT just pass first line from tokenize, this is special case of processing multiple lines
-    actual = lang.preprocess_expand_macro_keywords(lang.tokenize("import \"composer_lang_ut.mid\"\n  format midi"))    
-    expected = [
-      ["note", "0"], ["instrument", "1"], ["start", "4.00000"], ["duration", "4.00000"], ["pitch", "64"], ["volume", "100"], ["channel", "0"], 
-      ["note", "1"], ["instrument", "20"], ["start", "4.00000"], ["duration", "4.00000"], ["pitch", "65"], ["volume", "100"], ["channel", "1"]]    
-    assert(actual == expected)
-    
-    end
-    puts "test__preprocess_expand_macro_keywords COMPLETED"  
-  end 
-  
+  end
 end   
 
 end

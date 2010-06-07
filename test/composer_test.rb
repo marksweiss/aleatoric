@@ -2437,6 +2437,33 @@ write "composer_test_results.txt"
   puts tester.to_s  
 end
 
+def test__import_phrase
+  throw_on_failure = false
+  test_name = "test__import_phrase"
+  lite_syntax = true
+  script = 
+%Q{
+# TESTING PURPOSES ONLY
+reset_script_state
+# test__import_phrase
+
+format midi
+
+phrase "Phrase 1"
+  import "composer_lang_ut.mid"
+
+write "composer_test_results.txt"
+  phrases "Phrase 1"
+}
+  tester, results = test_runner(test_name, throw_on_failure, script, lite_syntax)
+  actual = results  
+  expected0 = 'instrument 1  start 0.00000  duration 4.00000  amplitude 100  pitch 64  channel 0 ; 0'
+  expected1 = 'instrument 20  start 0.00000  duration 4.00000  amplitude 100  pitch 65  channel 1 ; 1'
+  tester.assert(expected0 == actual[0])
+  tester.assert(expected1 == actual[1])
+  puts tester.to_s
+end
+
 ##################### /TESTS ########################
 
 # Call each test in here
@@ -2496,6 +2523,7 @@ def run_tests(flags='run_all')
       test__phrase_csound_format_consts ; num_tests += 1
       test__player_instrument ; num_tests += 1
       test__no_start_auto_next ; num_tests += 1
+      test__import_phrase ; num_tests += 1
       
     rescue AleatoricTestException => e
       puts e.to_s

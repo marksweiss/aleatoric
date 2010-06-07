@@ -204,27 +204,6 @@ class Note
       ret
     end    
   end
-  
-  # TODO Get rid of code duplication with to_s
-  # Output as Composer script
-  def to_s_composer
-    ret = "\nnote"    
-    ret.concat(""" #{@name}""") if @name
-    ret.concat"\n"
-    
-    @ordered_keys.each do |key|
-      next if @note_attrs[key].nil?
-      val = @note_attrs[key].to_s.strip
-      ret.concat("  #{key.to_s.strip}")
-      # TODO: This is an abominable check for a float
-      if val.include? '.'
-        ret.concat(sprintf(" %.5f", val) + "\n")
-      else
-        ret.concat(" #{val}\n")
-      end	 
-    end
-    ret    
-  end
 
   # Creates accessors for newly created attributes of the object
   def method_missing(name, val)         

@@ -147,7 +147,7 @@ class MidiManager
             raise AleatoricFailedMidiLoadException, "Load of file #{file_name} failed on note # #{note_num}"
           end 
                            
-          ret_notes << Note.new("#{note_num}", {:instrument=>instrument, :channel=>channel, :start=>start, :duration=>duration, :volume=>volume, :pitch=>pitch}) 
+          ret_notes << Note.new("#{note_num}", {:instrument=>instrument, :channel=>channel, :start=>start, :duration=>duration, :amplitude=>volume, :pitch=>pitch}) 
 
           channel = nil; instrument = nil; start = nil; duration = nil; volume = nil; pitch = nil
           note_num += 1
