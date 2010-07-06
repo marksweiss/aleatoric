@@ -2464,6 +2464,45 @@ write "composer_test_results.txt"
   puts tester.to_s
 end
 
+def test__import_root_map_players
+  throw_on_failure = false
+  test_name = "test__import_phrase"
+  lite_syntax = true
+  script = 
+%Q{
+# TESTING PURPOSES ONLY
+reset_script_state
+# test__import_phrase
+
+format midi
+
+player "Player 1"
+player "Player 2"
+
+# Loads the midi file, gets all notes from each channel, assigns the notes and the instrument
+#  and channel to the player in the same ordinal position as the midi track.
+# capture measures also gets all the measure boundaries and makes each a separate phrase which is
+#  assigned to the player in sequence
+import "composer_lang_ut.mid"
+  capture measures
+  players "Player 1", "Player 2"
+
+play
+  players "Player 1", "Player 2" 
+
+write "composer_test_results.txt"
+  players "Player 1", "Player 2"
+}
+  tester, results = test_runner(test_name, throw_on_failure, script, lite_syntax)
+  actual = results  
+  expected0 = 'instrument 1  start 0.00000  duration 4.00000  amplitude 100  pitch 64  channel 0 ; 0'
+  expected1 = 'instrument 20  start 0.00000  duration 4.00000  amplitude 100  pitch 65  channel 1 ; 1'
+  tester.assert(expected0 == actual[0])
+  tester.assert(expected1 == actual[1])
+  puts tester.to_s
+end
+
+
 ##################### /TESTS ########################
 
 # Call each test in here
@@ -2536,6 +2575,7 @@ def run_tests(flags='run_all')
     begin    
       
       # *** run_only TESTS GO HERE ***
+      test__import_root_map_players
       # *** run_only TESTS GO HERE ***
     
     rescue AleatoricTestException => e      
