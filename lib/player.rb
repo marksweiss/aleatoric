@@ -26,7 +26,7 @@ class Player
   attr_accessor :state, :is_playing, :is_improvising, :out_notes
   attr_accessor :current_start # Made this read/write becasue reset by player_test.rb
   # TEMP DEBUG
-  attr_reader :total_loops
+  # attr_reader :total_loops
   
   @@NO_INDEX = -1
   def Player.no_index
@@ -247,8 +247,8 @@ class Player
     
     # TEMP DEBUG
     # puts "#{self.name}  #{@scores_idx}"
-    #@total_loops = 0 if @total_loops.nil?
-    #@total_loops += 1
+    # @total_loops = 0 if @total_loops.nil?
+    # @total_loops += 1
     # puts "#{self.name}  #{@total_loops}"
         
     ret = []
@@ -256,7 +256,7 @@ class Player
     # NOTE: Default is to NOT change the state of score but to make a copy for each play call.
     #  Client can call    
     cur_score = @scores[name] if name != nil
-    cur_score = current_score if name == nil
+    cur_score = self.current_score() if name == nil    
     cur_score = cur_score.dup
                 
     # NOTE: hooks can have whatever side effects they want, based on the access they have through

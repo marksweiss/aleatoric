@@ -231,6 +231,9 @@ CSOUND_SCORE_EXT = '.sco'
 @renderer = Renderer.instance
 @processing_renderer = false
 
+@notes_by_channel = {}
+@capture_measures = false
+
 Note.output_format $FORMAT
 @midi_mgr = ::MidiManager.new
 
@@ -271,30 +274,75 @@ def note(name=nil, &args_blk)
   @cur_note
 end
 
-def import(name)
-  # Call MidiMgr to get the notes in sequence from the named MIDI file
+def import(name, &args_blk)
+  @processing_import = true
+  
   import_notes = @midi_mgr.load name
   return if import_notes.length == 0
-  # Import notes could have start or not and it still doesn't make sense to have them
-  #  occur out of sequence with what already has been recorded in this score
-  #  so just offset them from current cur_start  
-  init_import_start = import_notes[0].start
-  init_cur_start = @cur_start
-  # So it is just as if script encountered a whole series of 'note' stmts
-  # So make all adjustsments as above in note(), but for each note imported
-  # But if note does have start, ignore it and make it start at cur_start
-  import_notes.each do |note|
-    delta = note.start - init_import_start
-    delta = 0.0 if delta < 0.0
-    note.start(init_cur_start + delta) 
-    @notes << note 
-    @notes_by_name[name] = note unless note.name == nil
-    adjust_cur_start([note])
+
+  # import can be used in two ways, if its child of phrase then its just assigning notes to that phrase
+  if @processing_phrase
+    # Call MidiMgr to get the notes in sequence from the named MIDI file
+    # Import notes could have start or not and it still doesn't make sense to have them
+    #  occur out of sequence with what already has been recorded in this score
+    #  so just offset them from current cur_start  
+    init_import_start = import_notes[0].start
+    init_cur_start = @cur_start
+    # So it is just as if script encountered a whole series of 'note' stmts
+    # So make all adjustsments as above in note(), but for each note imported
+    # But if note does have start, ignore it and make it start at cur_start
+    import_notes.each do |note|
+      delta = note.start - init_import_start
+      delta = 0.0 if delta < 0.0
+      note.start(init_cur_start + delta) 
+      @notes << note 
+      @notes_by_name[name] = note unless note.name == nil
+      adjust_cur_start([note])
+    end
+  # import can also be used as child of root, and then its loading channels, instruments, notes
+  #  and measures (if capture measure is part of the import block) into players listed in 
+  #  players statement in the import block
+  else
+    @capture_measures = false
+    # The hack worsens ... this is first case in this "nested block based" language
+    #  implementation where we can't just yield the block because each line is not independent
+    #  of the others.  So we need to "look ahead" on the block and find out whether it
+    #  contains 'capture measures' line because that creates state that must be set before
+    #  the 'players' line in the block is evaluated.  So, two choices ... require that the block
+    #  be written with 'capture measures' or lookahead here, make 'capture' handler a no-op
+    #  and use the @capure_measures flag in the 'players' block.
+    # We want to support this ...
+    # import "myfile.mid" do
+    #   capture measuers
+    #   players "Player 1", "Player 2"                                                                                                                                                                                                                      mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+    # and this ...
+    # We want to support this ...
+    # import "myfile.mid" do
+    #   players "Player 1", "Player 2"                                                                                                                                                                                                                      mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+    #   capture measuers
+    # but players() handler needs to know about capture_measures
+
+    # Notes already each have channel and instrument info, group by channel so players will be
+    #  assigned notes in single phrase or a phrase for each measure only for the notes in their channel
+    @notes_by_channel = {}
+    import_notes.each do |note|
+      if not @notes_by_channel.include? note.instrument
+        @notes_by_channel[note.instrument] = [note]
+      else
+        @notes_by_channel[note.instrument] << note
+      end
+    end
+    
+    yield
+    
+    @capture_measures = false
   end
   
-  # TODO LOG OUT NOTES LOADED SO CAN ALSO USE THIS AS TOOL TO 'CONVERT' TO COMPOSER
-  #  AND WORK WITH NOTES IN TEXT FILE
-      
+  @processing_import = false
+end
+
+def capture_measures
+  @capture_measures = true  
 end
 
 def channel(channel, instrument=nil)
@@ -654,6 +702,38 @@ def players(*names)
       end
     end
   end
+  
+  if @processing_import
+    # Simple case is that we are processing import block with players list and
+    #  not turning measures into separate phrases.  In that case, sequence of notes for each channel
+    #  is appended as a single phrase to the phrases for each player that is assigned that channel
+    if @capture_measures
+      # TODO Capture measure information and add a phrase for each measure
+      @notes_by_channel.keys.each do |channel| 
+        names.each do |name|
+          name = name.strip
+          player = @players_by_name[name]
+          if player.channel == channel
+            score = Score.new
+            score << @notes_by_channel[channel]
+            player.add_score(score.name, score)            
+          end
+        end
+      end      
+    else # if ! @capture_measures
+      @notes_by_channel.keys.each do |channel| 
+        names.each do |name|
+          name = name.strip
+          player = @players_by_name[name]
+          if player.channel == channel
+            score = Score.new
+            score << @notes_by_channel[channel]
+            player.add_score(score.name, score)            
+          end
+        end
+      end      
+    end    
+  end
 end
 
 def instruction(name)
@@ -694,20 +774,27 @@ def phrases(*names)
 end
 
 def measures(*names)
-  if names != nil and names.length > 0
-    names.each do |name| 
-      name = name.strip
-      measure = @measures_by_name[name]    
-      measure.notes.each do |note|
-        @score_notes << note.dup
+  # This keyword can also appear as an argument to kw 'capture' which is a child of 'import'
+  #  and in that case we want this handler not to fire
+  # import 'my_file.mid'
+  #   capture measures
+  #   players "Player 1", "Player 2"
+  if not @processing_import
+    if names != nil and names.length > 0
+      names.each do |name| 
+        name = name.strip
+        measure = @measures_by_name[name]    
+        measure.notes.each do |note|
+          @score_notes << note.dup
+        end
       end
-    end
-  else
-  
-    # TODO replace with @measures_by_name[name].keys.each and get rid of @measures
-    @measures.length.times do |j|
-      @measures[j].notes.each do |note|
-        @score_notes << note.dup
+    else
+
+      # TODO replace with @measures_by_name[name].keys.each and get rid of @measures
+      @measures.length.times do |j|
+        @measures[j].notes.each do |note|
+          @score_notes << note.dup
+        end
       end
     end
   end

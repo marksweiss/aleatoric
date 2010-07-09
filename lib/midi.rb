@@ -116,6 +116,8 @@ class MidiManager
     end
   end
   
+  
+  # TODO SUPPORT FOR FIGURING OUT THE MEASURE OF EACH NOTE AND RETURNING NOTES GROUPED BY MEASURE
   def load(file_name)
     ret_notes = []
         

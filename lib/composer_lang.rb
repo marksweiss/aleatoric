@@ -56,7 +56,7 @@ class ComposerAST
     'instruction' => "do\n",
     'improvisation' => "do\n",  
     'improvise' => "do\n",
-    'import' => "\n"
+    'import' => "do\n"
   }
   
   @@kw_block_close_completions= {
@@ -83,7 +83,7 @@ class ComposerAST
     'instruction' => "end\n",
     'improvisation' => "end\n",
     'improvise' => "end\n",
-    'import' => "" 
+    'import' => "end\n" 
   }
  
   @@kw_children = {
@@ -97,7 +97,8 @@ class ComposerAST
                'def', 
                'tempo', 'measure', 'copy_measure', 'meter', 
                'ensemble', 'player', 'play', 
-               'instruction', 'improvise', 'improvisation'],
+               'instruction', 'improvise', 'improvisation',
+               'import'],
     # NOTE: ANY TOP_LEVEL KW **MUST** BE ADDED TO LIST OF CHILDREN OF ROOT IMMEDIATELY ABOVE
     
     'note' => [],
@@ -122,7 +123,7 @@ class ComposerAST
     'instruction' => ['players', 'ensembles'],
     'improvisation' => ['players'],
     'improvise' => ['players'],
-    'import' => []
+    'import' => ['capture', 'players']
   }
   @@kw_parents = {
     'root' => [],
@@ -143,12 +144,13 @@ class ComposerAST
     'ensemble' => ['root'],
     'ensembles' => ['instruction', 'play', 'write', 'render'],
     'player' => ['root', 'ensemble'],
-    'players' => ['ensemble', 'play', 'write', 'render', 'improvise'],
+    'players' => ['ensemble', 'play', 'write', 'render', 'improvise', 'import'],
     'play' => ['root', 'repeat', 'repeat_until'],
     'instruction' => ['root'],    
     'improvisation' => ['root'],
     'improvise' => ['root', 'repeat'],
-    'import' => ['phrase']
+    'import' => ['phrase', 'root'],
+    'capture' => ['import']
   }
   @@kw = @@kw_children.keys
  
@@ -171,7 +173,8 @@ class ComposerAST
     'ensembles' =>     lambda {|x| x != nil and x[0] != nil and (x[0].kind_of? String and x[0].length > 0)},      # 1st arg required, valid type    
     'instruction' =>   lambda {|x| x != nil and x[0] != nil and x[0].kind_of? String},                       	    # 1st arg required, valid type
     'improvisation' => lambda {|x| x != nil and x[0] != nil and x[0].kind_of? String},                       	    # 1st arg required, valid type
-    'import' => lambda {|x| x != nil and x[0] != nil and x[0].kind_of? String}                       	            # 1st arg required, valid type
+    'import' => lambda {|x| x != nil and x[0] != nil and x[0].kind_of? String},                       	            # 1st arg required, valid type
+    'capture' => lambda {|x| x != nil and x[0] != nil and x[0].kind_of? String and x[0].to_s == 'measures'}                       	            # 1st arg required, valid type
   }
   
   @@grammar_rules = {
@@ -203,7 +206,10 @@ class ComposerAST
     'improvise' => lambda do |node|
       child_kws = node.children.collect {|child| child.kw} 
       child_kws.include? 'players'
-    end  # 'improvise' has 'players' child    
+    end,  # 'improvise' has 'players' child    
+    'capture' => lambda do |node|
+       node.parent.kw == 'import'
+    end,  # 'capture' has 'import' parent    
   }
   
   @@operators = {:delim => [',', ';', "\n", '"'], 
@@ -243,11 +249,17 @@ class ComposerAST
   def preprocess_compound_keywords(tkn_lines)
     # Patch compound keywords
     # 'repeat until' -> 'repeat_until'
-    tkn_lines.each do |tkn_line|
+    # 'capture measures' -> 'capture_measures'
+    tkn_lines.collect! do |tkn_line|
       if tkn_line.length >= 2 and (tkn_line[0] == 'repeat' and tkn_line[1] == 'until')
-        tkn_line = ['repeat_until'] + tkn_line[2..tkn_line.length]
+        tkn_line = ['repeat_until'] + tkn_line[2..tkn_line.length]      
+      elsif tkn_line.length >= 2 and (tkn_line[0] == 'capture' and tkn_line[1] == 'measures')
+        tkn_line = ['capture_measures'] + tkn_line[2..tkn_line.length]
+      else
+        tkn_line = tkn_line
       end
     end
+
     tkn_lines
   end
  

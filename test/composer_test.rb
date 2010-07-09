@@ -69,11 +69,6 @@ class AleatoricTest
 
 end
 
-def preprocess_script(script)
-  File.open("test_preprocess.altc", "w") {|f| script.each {|line| f << line}}
-  ComposerAST.new.preprocess_script("test_preprocess.altc").to_s
-end
-
 @write_mutex = Mutex.new
 def write_test_script(script, lite_syntax=false)
   # TODO Include this in composition.rb preprocessing of load() call
@@ -1309,14 +1304,14 @@ phrase "Loop"
   repeat until "I want to stop"
     note
       instrument  1
-      start       1.0 * index
+      start       1.0 * 1.0
       duration    0.2
-      amplitude   1000 + (100 * index) 
+      amplitude   1000 + (100 * 1) 
       pitch       7.02
       func_table  1
 
 instruction "Exit Loop"
-  description "call repeat_until_stop('I want to stop')"
+  description "call repeat_until ('I want to stop')"
   players     "Player 1"
 
 play
@@ -2477,7 +2472,9 @@ reset_script_state
 format midi
 
 player "Player 1"
+  channel 1
 player "Player 2"
+  channel 20
 
 # Loads the midi file, gets all notes from each channel, assigns the notes and the instrument
 #  and channel to the player in the same ordinal position as the midi track.
@@ -2494,9 +2491,9 @@ write "composer_test_results.txt"
   players "Player 1", "Player 2"
 }
   tester, results = test_runner(test_name, throw_on_failure, script, lite_syntax)
-  actual = results  
-  expected0 = 'instrument 1  start 0.00000  duration 4.00000  amplitude 100  pitch 64  channel 0 ; 0'
-  expected1 = 'instrument 20  start 0.00000  duration 4.00000  amplitude 100  pitch 65  channel 1 ; 1'
+  actual = results    
+  expected0 = 'instrument 1  start 4.00000  duration 4.00000  amplitude 100  pitch 64  channel 1 ; 0'
+  expected1 = 'instrument 20  start 4.00000  duration 4.00000  amplitude 100  pitch 65  channel 20 ; 1'
   tester.assert(expected0 == actual[0])
   tester.assert(expected1 == actual[1])
   puts tester.to_s
@@ -2506,12 +2503,12 @@ end
 ##################### /TESTS ########################
 
 # Call each test in here
-def run_tests(flags='run_all')
+def run_tests(flags='run_all')  
   # TODO - shore this up someday
   # Right now just a way to run just the tests in the else block below
   # Should eventually be able to take a list of tests or 'all' or something like that
   run_only = false
-  run_only = true if flags[0] == 'run_only'
+  run_only = true if flags[0].include? 'run_only' or flags[0].include? 'run_selected'
     
   num_tests = 0
   if not run_only
@@ -2538,6 +2535,7 @@ def run_tests(flags='run_all')
       test__assignment ; num_tests += 1
       test__assignment_comment ; num_tests += 1
       test__assignment_2 ; num_tests += 1
+      test__repeat_until; num_tests += 1
       test__repeat_assignment ; num_tests += 1
       test__func ; num_tests += 1
       test__next ; num_tests += 1
@@ -2563,6 +2561,7 @@ def run_tests(flags='run_all')
       test__player_instrument ; num_tests += 1
       test__no_start_auto_next ; num_tests += 1
       test__import_phrase ; num_tests += 1
+      test__import_root_map_players; num_tests += 1
       
     rescue AleatoricTestException => e
       puts e.to_s
@@ -2575,7 +2574,6 @@ def run_tests(flags='run_all')
     begin    
       
       # *** run_only TESTS GO HERE ***
-      test__import_root_map_players
       # *** run_only TESTS GO HERE ***
     
     rescue AleatoricTestException => e      

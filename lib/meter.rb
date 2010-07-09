@@ -12,7 +12,6 @@ class Meter
     @beats_per_measure = beats_per_measure
     @beat_length = beat_length
     @measure_dur = @beats_per_measure * @beat_length
-    self.
   end
   
   # Accessor to test or set whether this Meter is quantizing
@@ -65,7 +64,7 @@ class Meter
           note
         end
       end
-    end    
+    end
     new_notes
   end
   
