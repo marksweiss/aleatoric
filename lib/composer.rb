@@ -703,20 +703,43 @@ def players(*names)
     end
   end
   
-  if @processing_import
+  if @processing_import    
     # Simple case is that we are processing import block with players list and
     #  not turning measures into separate phrases.  In that case, sequence of notes for each channel
     #  is appended as a single phrase to the phrases for each player that is assigned that channel
     if @capture_measures
       # TODO Capture measure information and add a phrase for each measure
       @notes_by_channel.keys.each do |channel| 
+        # Group the notes for this channel by measure
+        notes = @notes_by_channel[channel]
+        all_measures_notes = []
+        cur_measure_notes = []
+        # Init to same lookahead first note measure value to avoid check on being first pass in loop
+        cur_measure = notes[0].measure if notes.length > 0
+        last_measure = notes[0].measure if notes.length > 0
+        notes.each do |note|
+          cur_measure = note.measure
+          if cur_measure == last_measure
+            cur_measure_notes.push note
+          else # if cur_measure != last_measure
+            all_measures_notes.push cur_measure_notes            
+            cur_measure_notes = []            
+          end
+          last_measure = cur_measure
+        end
+        # Catch single/last measure caes
+        all_measures_notes.push cur_measure_notes if cur_measure_notes.length > 0
+
         names.each do |name|
           name = name.strip
           player = @players_by_name[name]
           if player.channel == channel
-            score = Score.new
-            score << @notes_by_channel[channel]
-            player.add_score(score.name, score)            
+            # Add the notes for each measure as a separate phrase
+            all_measures_notes.each do |measure_notes|
+              score = Score.new
+              score << measure_notes
+              player.add_score(score.name, score)
+            end       
           end
         end
       end      

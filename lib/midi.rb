@@ -131,12 +131,26 @@ class MidiManager
     note_num = 0
     # Get the tracks from the loaded file
     tracks = seq.collect
-    # Get the (note) events from the each track
-    tracks.each do |track|
-
-      events = track.collect      
-      channel = nil; instrument = nil; start = nil; duration = nil; volume = nil; pitch = nil      
-      events.each do |event|
+    # Get the measures from the loaded file
+    seq_measures = seq.get_measures
+    # Get the (note) events from each track
+    tracks.each do |track|      
+      events = track.collect
+      channel = nil; instrument = nil; start = nil; duration = nil; volume = nil; pitch = nil
+      measure = nil
+      events.each do |event|        
+        # Get the measure information, have to parse it out of string from the midilib API
+        # Set it for this series of note events if we haven't set it yet
+        
+        event_measure = seq_measures.measure_for_event(event).to_s.strip
+        # If the MIDI::Measure object returned is nil, then to_s() is '', check for length
+        if event_measure.length > 0
+          # Format of measure_for_event(e):   'measure 1  0-1919  4/4   1.0 qs metronome' 
+          # So match first number and retrieve from regex global var capturing first match                    
+          event_measure =~ /\d+/          
+          measure = $&.to_i
+        end
+                
         instrument = event.program if event.program_change? and not instrument
         channel = event.channel if event.channel? and event.note_on?
         start = midi_ticks_to_seconds(event.time_from_start) if event.respond_to? :time_from_start and event.note_off? and not start
@@ -149,11 +163,15 @@ class MidiManager
             raise AleatoricFailedMidiLoadException, "Load of file #{file_name} failed on note # #{note_num}"
           end 
                            
-          ret_notes << Note.new("#{note_num}", {:instrument=>instrument, :channel=>channel, :start=>start, :duration=>duration, :amplitude=>volume, :pitch=>pitch}) 
-
+          # Construct new note from base properties
+          note = Note.new("#{note_num}", {:instrument=>instrument, :channel=>channel, :start=>start, :duration=>duration, :amplitude=>volume, :pitch=>pitch})
+          # Add measure value -- this is a note built-in attr that is used by kw 'import' but isn't part of note output to score        
+          note.measure = measure
+          
+          ret_notes << note          
           channel = nil; instrument = nil; start = nil; duration = nil; volume = nil; pitch = nil
           note_num += 1
-        end  
+        end
       end      
     end
     

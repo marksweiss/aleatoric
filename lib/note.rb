@@ -15,7 +15,7 @@ class AleatoricIllegalNoteFormatException < Exception; end
 # in the order they are added to the object.  Format is class-scope, meaning that 
 # all Notes in one execution of a Composer score are of the same format.
 class Note
-  attr_accessor :name
+  attr_accessor :name, :measure
   attr_reader :ordered_keys, :note_attrs
   # Default is to not include appended player_id, ensemble_id and score_id
   #  with note to_s output, but this can be turned on for logging it, which can help
@@ -133,6 +133,7 @@ class Note
   def dup
     ret = Note.new
     ret.name = self.name
+    ret.measure = self.measure
     ret.player_id = self.player_id      # For debugging
     ret.ensemble_id = self.ensemble_id  # For debugging
     ret.score_id = self.score_id        # For debugging

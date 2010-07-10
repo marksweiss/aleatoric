@@ -2461,13 +2461,13 @@ end
 
 def test__import_root_map_players
   throw_on_failure = false
-  test_name = "test__import_phrase"
+  test_name = "test__import_root_map_players"
   lite_syntax = true
   script = 
 %Q{
 # TESTING PURPOSES ONLY
 reset_script_state
-# test__import_phrase
+# test__import_root_map_players
 
 format midi
 
@@ -2484,18 +2484,51 @@ import "composer_lang_ut.mid"
   capture measures
   players "Player 1", "Player 2"
 
+# So this test should only show the note in Channel 1
 play
-  players "Player 1", "Player 2" 
+  players "Player 1" 
 
 write "composer_test_results.txt"
   players "Player 1", "Player 2"
 }
   tester, results = test_runner(test_name, throw_on_failure, script, lite_syntax)
-  actual = results    
+  actual = results        
   expected0 = 'instrument 1  start 4.00000  duration 4.00000  amplitude 100  pitch 64  channel 1 ; 0'
-  expected1 = 'instrument 20  start 4.00000  duration 4.00000  amplitude 100  pitch 65  channel 20 ; 1'
   tester.assert(expected0 == actual[0])
-  tester.assert(expected1 == actual[1])
+  puts tester.to_s
+
+script = 
+%Q{
+# TESTING PURPOSES ONLY
+reset_script_state
+# test__import_root_map_players
+
+format midi
+
+player "Player 1"
+  channel 1
+player "Player 2"
+  channel 20
+
+# Loads the midi file, gets all notes from each channel, assigns the notes and the instrument
+#  and channel to the player in the same ordinal position as the midi track.
+# capture measures also gets all the measure boundaries and makes each a separate phrase which is
+#  assigned to the player in sequence
+import "composer_lang_ut.mid"
+  capture measures
+  players "Player 1", "Player 2"
+
+# So this test should only show the note in Channel 20
+play
+  players "Player 2" 
+
+write "composer_test_results.txt"
+  players "Player 1", "Player 2"
+}
+  tester, results = test_runner(test_name, throw_on_failure, script, lite_syntax)
+  actual = results
+  expected1 = 'instrument 20  start 4.00000  duration 4.00000  amplitude 100  pitch 65  channel 20 ; 1'
+  tester.assert(expected1 == actual[0])
   puts tester.to_s
 end
 
@@ -2503,7 +2536,7 @@ end
 ##################### /TESTS ########################
 
 # Call each test in here
-def run_tests(flags='run_all')  
+def run_tests(flags='run_all')    
   # TODO - shore this up someday
   # Right now just a way to run just the tests in the else block below
   # Should eventually be able to take a list of tests or 'all' or something like that
@@ -2574,6 +2607,7 @@ def run_tests(flags='run_all')
     begin    
       
       # *** run_only TESTS GO HERE ***
+      test__import_root_map_players; num_tests += 1
       # *** run_only TESTS GO HERE ***
     
     rescue AleatoricTestException => e      
