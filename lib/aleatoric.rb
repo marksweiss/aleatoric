@@ -12,7 +12,6 @@ include Aleatoric
 #  breakpoint if true == false
 #  Debugger.tracing = false
 
-# TODO Real cmd line args handling.  This is lame
 def main
   options = {}
   optparse = OptionParser.new do |opts|
@@ -64,7 +63,6 @@ def main
     set_midi_consts
   end
   
-  # TODO Verbose flag
   # LOGGING
   puts "Format set to #{$ARG_FORMAT}"
   

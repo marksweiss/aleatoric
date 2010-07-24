@@ -180,8 +180,6 @@ end
 @notes_by_name = {}
 @processing_note = false
 
-# TODO - remove this - aliasing bug
-# @cur_phrase = nil
 @cur_phrases = []
 @phrases = []
 @phrases_by_name = {}
@@ -326,10 +324,10 @@ def import(name, &args_blk)
     #  assigned notes in single phrase or a phrase for each measure only for the notes in their channel
     @notes_by_channel = {}
     import_notes.each do |note|
-      if not @notes_by_channel.include? note.instrument
-        @notes_by_channel[note.instrument] = [note]
+      if not @notes_by_channel.include? note.channel
+        @notes_by_channel[note.channel] = [note]
       else
-        @notes_by_channel[note.instrument] << note
+        @notes_by_channel[note.channel] << note
       end
     end
     
@@ -354,7 +352,7 @@ def channel(channel, instrument=nil)
   if @processing_note
     @cur_note.channel channel
     @midi_mgr.instrument(@cur_note.channel, @cur_note.instrument) if $FORMAT == :midi and not @cur_note.instrument.nil?
-  elsif @processing_player       
+  elsif @processing_player  
     @cur_player.channel channel
     @cur_player.instrument instrument if not instrument.nil?
     @midi_mgr.instrument(channel, instrument) if $FORMAT == :midi and not instrument.nil?    
@@ -537,7 +535,6 @@ def player(name, &args_blk)
   
   @cur_sections.clear
   @cur_phrases.clear
-  # TODO Make this consistent with phrases, @cur_phrases
   @measures.clear
   
   yield
@@ -703,13 +700,12 @@ def players(*names)
     end
   end
   
-  if @processing_import    
+  if @processing_import        
     # Simple case is that we are processing import block with players list and
     #  not turning measures into separate phrases.  In that case, sequence of notes for each channel
     #  is appended as a single phrase to the phrases for each player that is assigned that channel
-    if @capture_measures
-      # TODO Capture measure information and add a phrase for each measure
-      @notes_by_channel.keys.each do |channel| 
+    if @capture_measures      
+      @notes_by_channel.keys.each do |channel|         
         # Group the notes for this channel by measure
         notes = @notes_by_channel[channel]
         all_measures_notes = []
@@ -729,15 +725,15 @@ def players(*names)
         end
         # Catch single/last measure caes
         all_measures_notes.push cur_measure_notes if cur_measure_notes.length > 0
-
+ 
         names.each do |name|
           name = name.strip
-          player = @players_by_name[name]
+          player = @players_by_name[name]          
           if player.channel == channel
             # Add the notes for each measure as a separate phrase
             all_measures_notes.each do |measure_notes|
               score = Score.new
-              score << measure_notes
+              score << measure_notes              
               player.add_score(score.name, score)
             end       
           end
@@ -813,7 +809,6 @@ def measures(*names)
       end
     else
 
-      # TODO replace with @measures_by_name[name].keys.each and get rid of @measures
       @measures.length.times do |j|
         @measures[j].notes.each do |note|
           @score_notes << note.dup
@@ -899,11 +894,16 @@ def repeat_until(name, &blk)
   # init_repeat_until registers the named repeat_until just on the first call
   # After that continue? and stop? predicates controlled by API calls
   #  from Instruction handlers or the repeat_until() handler -- i.e. by user code
+  # TODO Verbose logging
+  j = 0
   init_repeat_until name
   while repeat_until_is_looping? name
     call_repeat_until_stop_preplay_tests name
     yield
     call_repeat_until_stop_postplay_tests name
+    
+    j += 1
+    puts "Iteration #{j} in repeat_until()" if j % 100 ==  0
   end
 end
 
@@ -926,8 +926,6 @@ def format(fmt)
   end
 end
 
-# TODO Midi unit tests now broken if they rely on write() to create .mid file output
-#  That is now in render()
 def write(file_name, &args_blk)  
   @processing_score = true
   @score_out.file_name = file_name  
@@ -966,7 +964,8 @@ def render(out_file_name, &args_blk)
     out_file_name += '.mid' if out_file_name[out_file_name.length - 4..out_file_name.length - 1] != '.mid'        
     # NOTE: pass empty block to write() because called render block yield here already
     # But we want write() and render() to each have a yield since each can take blocks
-    write(out_file_name + DEFAULT_EXT){} if not @is_write_called    
+    # TO SUPPORT UNIT TESTS ONLY 
+    write(out_file_name + DEFAULT_EXT){} if not @is_write_called       
     # /TO SUPPORT UNIT TESTS ONLY    
     @score_out.notes.each do |note|      
       # NOTE: named args caused error on this call, no reason why, all args had values. Nice.
@@ -982,7 +981,6 @@ def render(out_file_name, &args_blk)
 end
 
 # FOR UNIT TESTING
-# TODO FIX TO SUPPORT WIN AND MAC
 def dump_notes
   # File.open("..\\test\\composer_test_results.txt", "w") do |f|
   File.open("../test/composer_test_results.txt", "w") do |f|

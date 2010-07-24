@@ -10,7 +10,7 @@ require 'midilib/consts'
 end
 
 
-# require 'ruby-debug' ; Debugger.start
+require 'ruby-debug' ; Debugger.start
 
 class AleatoricIllegalMidiOperationException < Exception; end
 class AleatoricFailedMidiLoadException < Exception; end
@@ -116,8 +116,6 @@ class MidiManager
     end
   end
   
-  
-  # TODO SUPPORT FOR FIGURING OUT THE MEASURE OF EACH NOTE AND RETURNING NOTES GROUPED BY MEASURE
   def load(file_name)
     ret_notes = []
         
@@ -135,42 +133,73 @@ class MidiManager
     seq_measures = seq.get_measures
     # Get the (note) events from each track
     tracks.each do |track|      
+      # Get all events from the track
       events = track.collect
+      # Init state of properties collected from each event
       channel = nil; instrument = nil; start = nil; duration = nil; volume = nil; pitch = nil
       measure = nil
+      # Iterate events and only extract props from MIDI events that have what we need
       events.each do |event|        
+        next if not (event.program_change? or event.note?)
+      
+        # TODO THIS CRAP GOES AWAY
         # Get the measure information, have to parse it out of string from the midilib API
         # Set it for this series of note events if we haven't set it yet
-        
-        event_measure = seq_measures.measure_for_event(event).to_s.strip
+        # event_measure = seq_measures.measure_for_event(event).to_s.strip
         # If the MIDI::Measure object returned is nil, then to_s() is '', check for length
-        if event_measure.length > 0
+        # if event_measure.length > 0
           # Format of measure_for_event(e):   'measure 1  0-1919  4/4   1.0 qs metronome' 
           # So match first number and retrieve from regex global var capturing first match                    
-          event_measure =~ /\d+/          
-          measure = $&.to_i
-        end
-                
-        instrument = event.program if event.program_change? and not instrument
-        channel = event.channel if event.channel? and event.note_on?
-        start = midi_ticks_to_seconds(event.time_from_start) if event.respond_to? :time_from_start and event.note_off? and not start
-        duration = midi_ticks_to_seconds(event.delta_time) if event.respond_to? :delta_time and event.note_off? and not duration
-        volume = event.velocity if event.respond_to? :velocity and event.note_on? and not volume
-        pitch = event.note if event.respond_to? :note and event.note_on? and not pitch
-
-        if event.note_off?
-          if channel.nil? or instrument.nil? or start.nil? or duration.nil? or volume.nil? or pitch.nil?
-            raise AleatoricFailedMidiLoadException, "Load of file #{file_name} failed on note # #{note_num}"
-          end 
-                           
-          # Construct new note from base properties
-          note = Note.new("#{note_num}", {:instrument=>instrument, :channel=>channel, :start=>start, :duration=>duration, :amplitude=>volume, :pitch=>pitch})
-          # Add measure value -- this is a note built-in attr that is used by kw 'import' but isn't part of note output to score        
-          note.measure = measure
+        #  event_measure =~ /\d+/          
+        #  measure = $&.to_i
+        # end
+        
+        # TEMP DEBUG
+        # breakpoint if event.program_change? and not event.program
+        
+        if event.program_change?       
+          # TEMP DEBUG
+          # breakpoint
           
-          ret_notes << note          
-          channel = nil; instrument = nil; start = nil; duration = nil; volume = nil; pitch = nil
-          note_num += 1
+          instrument = event.program
+
+          # TEMP DEBUG
+          # puts("instr #{instrument}")
+        end
+        
+        if event.note?  
+
+          # TEMP DEBUG
+          # puts "note " + event.channel.to_s
+        
+          channel = event.channel
+          start = midi_ticks_to_seconds(event.time_from_start)
+          duration = midi_ticks_to_seconds(event.delta_time)
+          volume = event.velocity
+          pitch = event.note
+          
+          if (measure = seq_measures.measure_for_event(event))
+            measure = measure.measure_number
+          end
+          
+          if channel.nil? or start.nil? or duration.nil? or volume.nil? or pitch.nil? # or instrument.nil? 
+            # TEMP DEBUG
+            # debug_log "Load of file #{file_name} failed on note # #{note_num}. channel #{channel}  instrument #{instrument}  start #{start}  duration #{duration}  volume #{volume}  pitch #{pitch}"            
+            raise AleatoricFailedMidiLoadException, "Load of file #{file_name} failed on note # #{note_num}"
+          else
+          
+            # TEMP DEBUG
+            # puts "note 2 " + instrument.to_s
+
+            # Construct new note from base properties
+            note = Note.new("#{note_num}", {:instrument=>instrument, :channel=>channel, :start=>start, :duration=>duration, :amplitude=>volume, :pitch=>pitch})
+            # Add measure value -- this is a note built-in attr that is used by kw 'import' but isn't part of note output to score        
+            note.measure = measure
+            ret_notes << note
+            # instrument = nil; 
+            channel = nil; start = nil; duration = nil; volume = nil; pitch = nil; measure = nil          
+            note_num += 1
+          end          
         end
       end      
     end

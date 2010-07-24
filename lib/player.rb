@@ -256,13 +256,13 @@ class Player
     # NOTE: Default is to NOT change the state of score but to make a copy for each play call.
     #  Client can call    
     cur_score = @scores[name] if name != nil
-    cur_score = self.current_score() if name == nil    
+    cur_score = self.current_score() if name == nil      
     cur_score = cur_score.dup
                 
     # NOTE: hooks can have whatever side effects they want, based on the access they have through
     #  the Player public API.  But barring that the promise the class makes in #play is like a 
     #  a functional map idea -- each hook is called, in order, and transforms the current state
-    #  of the current score and passes that to the next hook    
+    #  of the current score and passes that to the next hook        
     @preplay_hooks_ordered_names.each do |hook_name|
       cur_score = @preplay_hooks[hook_name].call(self, cur_score)    
     end
@@ -332,7 +332,7 @@ class Player
   # @param [String] a name of the hook to add
   # @param [block] the block that is the hook body
   # @return [self]  
-  def add_preplay_hook(name, &f)
+  def add_preplay_hook(name, &f)  
     @preplay_hooks_ordered_names << name
     @preplay_hooks[name] = f    
     self

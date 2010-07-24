@@ -116,8 +116,6 @@ measure "Measure 1"
 
 # NOTE: copy_measure automatically adjusts start times of new measure to be in NEXT position
 #  after end of last note in measure being copied, intended for sequence of notes
-# TODO: IS THIS USEFUL? MODERATELY, but only serves that one use case, NOT a really useful general
-#  cloning mechanism
 copy_measure "Measure 1", "Measure 2"
     
 write "composer_test_results.txt"

@@ -41,13 +41,9 @@ end
 
 
 # Default format set in script invocation command line or set to :csound if no format arg passed
-# TODO Make this support command-line argument or config for which is default
 $FORMAT = $ARG_FORMAT || :csound
 $LAST_FORMAT = $FORMAT
 
-# TODO implement this to load both csound and midi from a config and then fill in values from the first
-#  'format' statement it encounters
-# TODO Add all of these consts and put them in a '' conf somewhere
 REST = 0
 
 # Default tempo is 60 bpm

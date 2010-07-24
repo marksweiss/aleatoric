@@ -1,4 +1,3 @@
-# TODO Rewrite as a real parser using Treetop: http://treetop.rubyforge.org/
 require 'global'
 require 'midi'
 
@@ -482,7 +481,6 @@ class ComposerAST
       tkn_line_out << tkn
     end
     # Put closing parens on end of statement
-    # TODO This is lame because not a real tree, only supports nested function calls as last
     #  token in their subexpression
     func_cnt.times {tkn_line_out << ')'} if func_cnt > 0
     
