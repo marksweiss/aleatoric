@@ -32,19 +32,12 @@ class MidiManager
   def initialize(name=nil, bpm=nil)
     if include_win? or include_mac?
     # custom init steps
-    @name = name || 'Sequence Name'
+    @name = name || 'Track'
     @bpm = bpm || DEFAULT_BPM
     @channel_tracks = {}
     @channel_instruments = {}
-
     # midilib init steps
     @seq = MIDI::Sequence.new()
-    # Create a first track for the sequence. This holds tempo events and stuff like that.
-    track = MIDI::Track.new(@seq)
-    @seq.tracks << track
-    # TODO support Tempo in Composer
-    track.events << MIDI::Tempo.new(MIDI::Tempo.bpm_to_mpq(@bpm))
-    track.events << MIDI::MetaEvent.new(MIDI::META_SEQ_NAME, @name)
     # TODO ******** Linux MIDI support! ******** 
     else
     raise "ONLY WINDOWS AND MAC ARE SUPPORTED FOR MIDI RENDERING AT THIS TIME"    
@@ -60,7 +53,11 @@ class MidiManager
   def channel(channel)
     if include_win? or include_mac?
     if channel_nil?(channel)
+      # Construct a track (the midilib construct for a series of notes on a channel)
       track = Track.new(@seq)
+      # Set the track's tempo and name      
+      track.events << MIDI::Tempo.new(MIDI::Tempo.bpm_to_mpq(@bpm))
+      track.events << MIDI::MetaEvent.new(MIDI::META_SEQ_NAME, "#{@name} #{@seq.tracks.length + 1}")
       @seq.tracks << track
       @channel_tracks[channel] = track
     end
@@ -116,6 +113,11 @@ class MidiManager
     end
   end
   
+  # TODO MidiMgr unit test for this method
+  def tempo(bpm)
+    @bpm = bpm
+  end
+  
   def load(file_name)
     ret_notes = []
         
@@ -131,7 +133,8 @@ class MidiManager
     tracks = seq.collect
     # Get the measures from the loaded file
     seq_measures = seq.get_measures
-    # Get the (note) events from each track
+    # Flags to track whether we have set the instrument for each channel encountered
+    channels_assigned_instruments = []
     tracks.each do |track|      
       # Get all events from the track
       events = track.collect
@@ -153,44 +156,29 @@ class MidiManager
         #  event_measure =~ /\d+/          
         #  measure = $&.to_i
         # end
-        
-        # TEMP DEBUG
-        # breakpoint if event.program_change? and not event.program
-        
         if event.program_change?       
-          # TEMP DEBUG
-          # breakpoint
-          
           instrument = event.program
-
-          # TEMP DEBUG
-          # puts("instr #{instrument}")
         end
         
-        if event.note?  
-
-          # TEMP DEBUG
-          # puts "note " + event.channel.to_s
-        
+        if event.note?          
           channel = event.channel
           start = midi_ticks_to_seconds(event.time_from_start)
           duration = midi_ticks_to_seconds(event.delta_time)
           volume = event.velocity
-          pitch = event.note
-          
+          pitch = event.note         
           if (measure = seq_measures.measure_for_event(event))
             measure = measure.measure_number
           end
           
           if channel.nil? or start.nil? or duration.nil? or volume.nil? or pitch.nil? # or instrument.nil? 
-            # TEMP DEBUG
-            # debug_log "Load of file #{file_name} failed on note # #{note_num}. channel #{channel}  instrument #{instrument}  start #{start}  duration #{duration}  volume #{volume}  pitch #{pitch}"            
             raise AleatoricFailedMidiLoadException, "Load of file #{file_name} failed on note # #{note_num}"
           else
-          
-            # TEMP DEBUG
-            # puts "note 2 " + instrument.to_s
-
+            # If we get to here we have a note, it's channel and its instrument, i.e. the
+            #  instrument for that channel.  So set it in the underlying MIDI class if we haven't alreaduy
+            if not channels_assigned_instruments.include? channel
+              self.instrument(channel, instrument)
+              channels_assigned_instruments.push channel
+            end
             # Construct new note from base properties
             note = Note.new("#{note_num}", {:instrument=>instrument, :channel=>channel, :start=>start, :duration=>duration, :amplitude=>volume, :pitch=>pitch})
             # Add measure value -- this is a note built-in attr that is used by kw 'import' but isn't part of note output to score        
@@ -206,6 +194,7 @@ class MidiManager
     
     return ret_notes        
   end
+  alias load_notes_from_file load
     
   def save(file_name)    
     if include_win? or include_mac?

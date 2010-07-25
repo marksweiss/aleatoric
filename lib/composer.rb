@@ -275,7 +275,7 @@ end
 def import(name, &args_blk)
   @processing_import = true
   
-  import_notes = @midi_mgr.load name
+  import_notes = @midi_mgr.load_notes_from_file name
   return if import_notes.length == 0
 
   # import can be used in two ways, if its child of phrase then its just assigning notes to that phrase
@@ -320,8 +320,8 @@ def import(name, &args_blk)
     #   capture measuers
     # but players() handler needs to know about capture_measures
 
-    # Notes already each have channel and instrument info, group by channel so players will be
-    #  assigned notes in single phrase or a phrase for each measure only for the notes in their channel
+    # Notes already each have channel info, group by channel so players will be
+    #  assigned notes in phrase for each measure only for the notes in their channel
     @notes_by_channel = {}
     import_notes.each do |note|
       if not @notes_by_channel.include? note.channel
@@ -375,19 +375,21 @@ end
 def program_change(arg)
   # We respect the wishes of the script and assume that a midi-only property
   # means the script wants all Notes to be in MIDI format
-  Note.set_output_format_midi
+  # Note.set_output_format_midi
+  # TODO raise exception if $FORMAT not midi
   @cur_note.instrument arg
 end
 
 def start(arg, is_duration_set_using_const=false)
-  arg *= $DUR_FACTOR if is_duration_set_using_const
+  arg *= $DUR_FACTOR if is_duration_set_using_const and $FORMAT != :midi
   @cur_note.start arg
 end
 def time(arg, is_duration_set_using_const=false)
   # We respect the wishes of the script and assume that a midi-only property
   # means the script wants all Notes to be in MIDI format
-  Note.set_output_format_midi
-  arg *= $DUR_FACTOR if is_duration_set_using_const
+  # Note.set_output_format_midi
+  # TODO raise exception if $FORMAT not midi
+  arg *= $DUR_FACTOR if is_duration_set_using_const and $FORMAT != :midi
   @cur_note.start arg 
 end
 
@@ -395,7 +397,7 @@ end
 # So if set here it changes tempo, which is applied to all notes
 #  set using duration constants, e.g. WHL, HLF, also in global.rb
 def duration(arg, is_duration_set_using_const=false)
-  arg *= $DUR_FACTOR if is_duration_set_using_const
+  arg *= $DUR_FACTOR if is_duration_set_using_const and $FORMAT != :midi
   @cur_note.duration arg
 end
 
@@ -403,7 +405,13 @@ end
 # So if set here it changes tempo, which is applied to all notes
 #  set using duration constants, e.g. WHL, HLF, also in global.rb
 def tempo(new_tempo_bpm)
-  $DUR_FACTOR = $DEFAULT_TEMPO / new_tempo_bpm.to_f  
+  # If notes explicitly declared in score, adjust each one by tempo duration factor
+  if $FORMAT != :midi
+    $DUR_FACTOR = $DEFAULT_TEMPO / new_tempo_bpm.to_f
+  # If format is midi then adjust MidMgr tempo which will set tempo for each midi track
+  else
+    @midi_mgr.tempo new_tempo_bpm
+  end
 end
 
 def amplitude(arg)
@@ -730,6 +738,10 @@ def players(*names)
           name = name.strip
           player = @players_by_name[name]          
           if player.channel == channel
+            # Set player's instrument to instr for this (player's) channel
+            # Notes on same channel so get a note and its instr -- all notes assigned instrument
+            #  during processing of 'import' kw with 'capture measures' kw option
+            player.instrument(all_measures_notes[0][0].instrument)
             # Add the notes for each measure as a separate phrase
             all_measures_notes.each do |measure_notes|
               score = Score.new
@@ -751,7 +763,7 @@ def players(*names)
           end
         end
       end      
-    end    
+    end
   end
 end
 
@@ -901,9 +913,6 @@ def repeat_until(name, &blk)
     call_repeat_until_stop_preplay_tests name
     yield
     call_repeat_until_stop_postplay_tests name
-    
-    j += 1
-    puts "Iteration #{j} in repeat_until()" if j % 100 ==  0
   end
 end
 

@@ -122,7 +122,7 @@ class ComposerAST
     'instruction' => ['players', 'ensembles'],
     'improvisation' => ['players'],
     'improvise' => ['players'],
-    'import' => ['capture', 'players']
+    'import' => ['capture', 'players', 'tempo']
   }
   @@kw_parents = {
     'root' => [],
@@ -135,7 +135,7 @@ class ComposerAST
     'render' => ['root'],
     'format' => ['root', 'write', 'render'],
     'def' => ['root'],
-    'tempo' => ['root'],
+    'tempo' => ['root', 'import'],
     'measure' => ['root', 'section', 'repeat', 'ensemble', 'player'],
     'copy_measure' => ['root', 'section', 'ensemble', 'player'],
     'meter' => ['root'],
@@ -377,9 +377,14 @@ class ComposerAST
   end
   
   def validate_skip_line(tkn_line)
-    tkn_line == nil or tkn_line.length == 0 or tkn_line[0] == '"' or tkn_line[0] == "'" or tkn_line[0] == "#" or ((@@debug_stmts & tkn_line).length > 0)  
+    return true if tkn_line == nil or tkn_line.length == 0 or ((@@debug_stmts & tkn_line).length > 0)
+    return true if tkn_line[0].length == 0
+    frst_ch = tkn_line[0][0..0]
+    return true if frst_ch == '"' or frst_ch == "'" or frst_ch == '#'
+    return false
   end
-
+  alias skip_line? validate_skip_line
+  
   def preprocess_start_duration(tkns)    
     tkns_out = []
     tkns.each do |tkn_line|
@@ -406,13 +411,12 @@ class ComposerAST
   def preprocess_assignment(tkn_lines)
     state = :declaring    
     tkns_out = []
-    
     tkn_lines.each do |tkn_line|     
-    # Skip comment lines, empty lines, special debug statemenets
-      if not validate_skip_line tkn_line
-        # Read all vars as a block at the start of the script, only support for vars right now        
+      # Skip comment lines, empty lines, special debug statemenets
+      if not skip_line? tkn_line
+        # Read all vars as a block at the start of the script, only support for vars right now                
         if state == :declaring
-          if (tkn_line[0] == '"' || tkn_line[0] == "'" || tkn_line.length < 3 || tkn_line[1] != @@operators[:assignment][0])
+          if (tkn_line[0] == '"' || tkn_line[0] == "'" || tkn_line.length < 3 || !@@operators[:assignment].include?(tkn_line[1]))
             # First non-assignment statement, toggle state. This logic assumes all assignments
             #  at top of file, before anything else, so anything else stops binding names to vars            
             state = :invoking

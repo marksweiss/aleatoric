@@ -11,7 +11,7 @@ include Aleatoric
 # IMPLEMENTATION OF THIS user_instruction.rb
 
 # Used to restore volume if it has decrescendo'd to 0
-DEFAULT_VOLUME = 30
+DEFAULT_VOLUME = 20
 
 # *************************
 # Player State Management
@@ -21,10 +21,10 @@ PLAYER_SETTINGS = {
   
   # Player Phrase Advance
   # Player must play each phrase at least this long
-  "min_repeat_phrase_duration" => QRTR * (45.0 + rand(15).to_f),
+  "min_repeat_phrase_count" => 1, # WHL * 2.0, # QRTR * (45.0 + rand(15).to_f),
   # The most important factor governing advance of Players through phrases, this is simply
   #  the percentage prob that they advance on any given iteration  
-  "phrase_advance_prob" => 0.11, 
+  "phrase_advance_prob" => 0.3, # 0.11, 
   # Tunable parms for shifting playing of current phrase out of its current
   #  phase, and also to shift it more in alignment.  Shift simple pre-pends
   #  a rest Note to current phrase before writing it to Score.  Supports
@@ -41,6 +41,8 @@ PLAYER_SETTINGS = {
   "adj_phase_prob_increase_factor" => 1.0,
   # The length of the rest Note (in seconds) inserted if a Player is adjusting its phase  
   "phase_adj_dur" => SXTYFRTH * 0.1,
+  # Players are adjusted out of phase initially a tiny bit, to make it easier for midi file to play
+  "init_adj_phase_dur" => SXTYFRTH * 0.1,
   
   # Prob that a Player will seek unison on any given iteration.  The idea is that
   #  to seek unison the Ensemble and all the Players must seek unison  
@@ -130,14 +132,14 @@ ENSEMBLE_SETTINGS = {
   "decrescendo_max_amp_range" => DEFAULT_VOLUME,
   # Minimum number of iterations over which a de/crescendo will take to de/increase volume by crescendo amount
   # NOTE: Must be < max_crescendo_num_steps
-  "min_crescendo_num_steps" => 50,
+  "min_crescendo_num_steps" => 10, # 50,
   # Maximum number of iterations over which a de/crescendo will take to de/increase volume by crescendo amount
   # NOTE: Must be >= de/crescendo_max_amp_range
-  "max_crescendo_num_steps" => 70, 
+  "max_crescendo_num_steps" => 20, # 70, 
   
   # Parameters governing the Conclusion
   # This is the ratio of steps in the Conclusion to the total steps before the Conclusion  
-  "conclusion_steps_ratio" => 0.06,
+  "conclusion_steps_ratio" => 0.03, # 0.06,
   # This extends the duration of the repetition of the last phrase
   #  curing the final coda.  At the start of the coda each player
   #  has its start time pushed ahead to be closer to the maximum
@@ -151,6 +153,12 @@ ENSEMBLE_SETTINGS = {
   #  Instruction indicating ensemble should de/crescendo "several times"
   "max_number_concluding_crescendos" => 3
 }
+
+# Add this to store properties global to the score and need to be stored in module-scope vars
+#  because used by the instruction handlers
+SCORE_SETTINGS = {
+  "last_phrase_dur" => WHL
+}
 # *************************
 
 # *************************
@@ -160,8 +168,10 @@ class In_C_Player
   
   attr_reader :ensemble, :handle, 
               :num_phrases, :phrases_idx, :adj_phase_count, :at_rest, :cur_phrase_count,
-              :swing_range_max_factor, :swing_range_min_factor, :swing_factor_range, :has_advanced,
-              :max_phrase_count, :advanced_on_play_next, :advanced_on_play_next2, :advanced_on_play_next3 # TEMP DEBUG
+              :swing_range_max_factor, :swing_range_min_factor, :swing_factor_range, :has_advanced, 
+              # VERBOSE
+              :max_phrase_count, :total_loops, :advanced_on_play_next, 
+              :advanced_on_play_next2, :advanced_on_play_next3  # /VERBOSE
   attr_writer :cur_phrase_count
   
 
@@ -179,21 +189,29 @@ class In_C_Player
 	  @adj_phase_count = 0
     # Indicator that the Player is at rest
     @at_rest = false
-    @repeating_cur_phrase = false        
+    @repeating_cur_phrase = false 
+    
+    # VERBOSE
+    @max_phrase_count = 0
+    @total_loops = -1
+    @advanced_on_play_next = 0
+    @advanced_on_play_next2 = 0
+    @advanced_on_play_next3 = 0
+    # /VERBOSE
   end
     
   # Player Public API
   # This is what the Instruction handlers call to control each Player on each call to play() in the Composer score
   # Some methods public also so In_C_Ensemble can call them
   public
-
+  
   def phrases_index
     @phrases_idx
   end
-
+  
   # Used by Ensemble to test if all phrases have reached the last phrase
   def reached_last_phrase?
-    # TODO This should be ==, >= is a relic of a bug and trying to defend against it
+    # This should be ==, >= is a relic of a bug and trying to defend against it      
     @phrases_idx >= @num_phrases
   end
   
@@ -201,8 +219,12 @@ class In_C_Player
   # NOTE: Instruction 5 and Instruction 6 grouped with this. They can also advance the player to next phrase
   #  but since there is an Instruction that players must play all phrases must not advance twice in one play() iteration
   def play_next_phrase?  
-    @has_advanced = false
+    # VERBOSE
+    @total_loops += 1
+    # /VERBOSE
 
+    @has_advanced = false
+    
     # Must repeat each phrase for minimum duration, so skip all other checks
     #  for advancing duration if haven't done so for current phrase
     @repeating_cur_phrase = repeat_cur_phrase?
@@ -214,61 +236,51 @@ class In_C_Player
       @phrases_idx += 1
       @cur_phrase_count = 0
   
-      # TEMP DEBUG
-      @advanced_on_play_next = -1 if @advanced_on_play_next.nil?
+      # VERBOSE
       @advanced_on_play_next += 1 if @has_advanced
-      # TEMP DEBUG
-    
+      # /VERBOSE    
     end
     @has_advanced
   end
   
   # Instruction 5, grouped with Instruction 3
-  def play_next_phrase_too_far_behind?
-    # TEMP DEBUG
-    x = false
-    # TEMP DEBUG
-        
+  def play_next_phrase_too_far_behind?        
+    # VERBOSE
+    adv_here = false
+    # /VERBOSE
+    
     can_advance = ! @has_advanced && ! @repeating_cur_phrase && ! reached_last_phrase?
     if can_advance and phrases_idx_too_far_behind?
       @has_advanced = true
+      adv_here = true # VERBOSE
       @cur_phrase_count = 0
       @phrases_idx += 1
-
-      # TEMP DEBUG
-      x = true
-      # TEMP DEBUG
     end
   
-    # TEMP DEBUG
-    @advanced_on_play_next2 = -1 if @advanced_on_play_next2.nil?
-    @advanced_on_play_next2 += 1 if x
-    # TEMP DEBUG
+    # VERBOSE
+    @advanced_on_play_next2 += 1 if adv_here
+    # VERBOSE
 
     @has_advanced 
   end
   
   # Instruction 6, grouped with Instructions 5 and 6
   def play_next_phrase_seeking_unison?
-    # TEMP DEBUG
-    x = false
-    # TEMP DEBUG
-        
+    # VERBOSE
+    adv_here = false
+    # /VERBOSE
+
     can_advance = ! @has_advanced && ! @repeating_cur_phrase && ! reached_last_phrase? 
     if can_advance and seeking_unison? 
       @has_advanced = true        
+      adv_here = true # VERBOSE
       @cur_phrase_count = 0
       @phrases_idx += 1
-
-      # TEMP DEBUG
-      x = true
-      # TEMP DEBUG      
     end    
 
-    # TEMP DEBUG
-    @advanced_on_play_next3 = -1 if @advanced_on_play_next3.nil?
-    @advanced_on_play_next3 += 1 if x
-    # TEMP DEBUG
+    # VERBOSE
+    @advanced_on_play_next3 += 1 if adv_here
+    # /VERBOSE
     
     @has_advanced
   end
@@ -286,7 +298,6 @@ class In_C_Player
   	end
   end
 
-  # PREPLAY note.start(note.start - @phase_adj_dur), phrase.insert_note(0, CSnd::Note.rest(note, @phase_adj_dur, @pid))  
   def phase_adj
     adj_phase? ? @phase_adj_dur : 0.0      
   end
@@ -380,14 +391,19 @@ class In_C_Player
     durations = @@al_players[self.handle].current_phrase.notes.collect {|note| note.duration}
     cur_phrase_dur = durations.inject(0) {|sum, x| sum + x} 
     
-    # TEMP DEBUG
-    @max_phrase_count = 0 if @max_phrase_count.nil?
+    # VERBOSE
     @max_phrase_count = @cur_phrase_count if @cur_phrase_count > @max_phrase_count
-    #puts "phrase count #{@cur_phrase_count}"
-    #puts "phrase duration #{@cur_phrase_count * cur_phrase_dur}"
-    #puts "@min_repeat_phrase_duration #{@min_repeat_phrase_duration}"
-               
-    @cur_phrase_count * cur_phrase_dur < @min_repeat_phrase_duration
+    # /VERBOSE
+        
+    # NOTE: This approach based on duration of measure from "In C" version, which has no phrases
+    #  without any notes, i.e. with duration == 0.  But that isn't a useful general assumption
+    #  obviously -- we need to support empty phrases.  Also, duration approach is a bug for
+    #  empty phrases.  So switch to simple "# of times played" approach.  Note that this was
+    #  abandoned in "In C" because some phrases were so much longer than others, and so the long
+    #  ones dominated the performance and distorted it from the actual intent (or at least from
+    #  typical real-world performances)
+    # @cur_phrase_count * cur_phrase_dur < @min_repeat_phrase_duration
+    @cur_phrase_count < @min_repeat_phrase_count
   end
 
   def advance_phrases_idx?
@@ -687,6 +703,10 @@ end
 
 
 # *************************
+# Declare local Ensemble and Player objects of this user_instruction class
+# Module scope and used by all the instruction handlers, which are free
+#  lambdas at module scope
+
 # Register a callback that will be run the first time play() is called
 # This is exposed by the API and it passes arrays of all the main entities
 #  in Composer to the callback, namely Notes, Scores, Measures, Phrases, Sections, Players, Ensembles
@@ -708,10 +728,18 @@ in_c_init_play_handler = lambda do |notes, scores, measures, phrases, sections, 
     player.def_accessors
     # Reverse key mapping of Composer Player handle to this shadowing In_C_Player
     in_c_players[player_handles[j]] = player  
+    # Add a rest of duration times index so each Aleatoric player has an offset
+    # This sets each ones notes off from the others a bit to make MIDI more likely to play well
+    rest_note_dur = j * PLAYER_SETTINGS["init_adj_phase_dur"]
+    players[j].append_note_to_output(Note.initialize_rest(rest_note_dur))
   end
   @@in_c_ensemble.players = in_c_players  
 end
 set_play_init_handler("in_c_init_play_handler", &in_c_init_play_handler)
+
+# VERBOSE
+processing_start_time = Time.now
+# /VERBOSE
 # *************************
 
 
@@ -787,7 +815,7 @@ set_player_preplay_instruction("Instruction 3", &instruction_3_player_pre)
 #  one step each iteration, for the number of steps of the de/crescendo.  The amount
 #  amp changes overall is controlled in Ensemble setting 
 #  max_amp_range_for_seeking_crescendo
-instruction_4_ensemble_pre = lambda do |container|
+instruction_4_ensemble_pre = lambda do |container|  
   in_c_ensemble = in_c_players.values[0].ensemble   
   if in_c_ensemble.seeking_crescendo?
     in_c_ensemble.set_crescendo_decrescendo
@@ -831,13 +859,8 @@ instruction_5_player_pre = lambda do |container, score|
   # This in effect changes its "alignment" in playing relative to the other players
   # Construct the rest Note
   rest_note_dur = in_c_player.phase_adj
-  rest_note = Note.new
-  rest_note.duration rest_note_dur
-  rest_note.volume 0
-  rest_note.pitch 5.01 # TODO Why isn't const working? # :C1
-  rest_note.func_table 1 if $FORMAT == :csound
+  rest_note = Note.initialize_rest(rest_note_dur)
   # Shift the start times of all notes following the prepended note, and prepend it
-    
   # This (i.e. score.notes.first == nil) won't happen if notes are defined in Composer score, but MIDI import brings in
   #  more variable quality note data
   if score.notes.first
@@ -957,6 +980,20 @@ instruction_14_ensemble_post = lambda do |container|
   # Every call to play(), i.e. every iteration of the repeat until loop, fires every instruction, so
   #  increment a counter here that is used in the concluding unison code below
   play_count = aleatoric_ensemble.get_state("play_count")
+  
+  # VERBOSE
+  if not play_count.nil?
+    if play_count % 100 == 0
+      puts "play() called #{play_count} times"
+      in_c_players.values.each do |p|    
+        puts "player #{p.handle}  phrase index #{p.phrases_idx}"
+        processing_elapsed_time = Time.now - processing_start_time
+        puts "score processing time elapsed #{processing_elapsed_time}"
+        puts "avg processing time per iteration #{processing_elapsed_time / (play_count * 1.0)}"
+      end
+    end
+  end
+  # VERBOSE
     
   if play_count == nil
     aleatoric_ensemble.set_state("play_count", 1)  
@@ -975,13 +1012,18 @@ instruction_14_ensemble_post = lambda do |container|
     # Use flags to just all this block once, which which catches each player up to the one farthest ahead
     # Get current phrase of any player because all are on the last phrase
     aleatoric_players = aleatoric_ensemble.get_players
-    durations = aleatoric_players[0].current_phrase.notes.collect {|note| note.duration}
-    last_phrase_dur = durations.inject(0) {|sum, x| sum + x}
+    # NOTE: This only worked for "In C" where no players had any phrases with no notes.  In
+    #  "Kashmir," player 0 had no notes until many measures in, so it broke on a divide by 0 below.
+    #  Also, it wasn't meaningful in that case of imported MIDI where each measure is the same
+    #  duration and each is imported as a seprate phrase, so the duration of the last "phrase"
+    #  is known -- it's the duration of one measure in the meter of the input (i.e. 4/4 == WHL)
+    # durations = aleatoric_players[0].current_phrase.notes.collect {|note| note.duration}
+    last_phrase_dur = SCORE_SETTINGS['last_phrase_dur'] # durations.inject(0) {|sum, x| sum + x}
     # Get the start time past current latest start time so all crescendo notes start after that
     max_start = aleatoric_ensemble.players_attr_slice(:current_start).max
     # Loop through all players in the Aleatoric Ensemble
     aleatoric_players.each do |al_player|
-      # Figure out how many times it needs to repeat the last phrase
+      # Figure out how many times it needs to repeat the last phrase      
       num_plays_last_phrase = ((max_start - al_player.current_start) / last_phrase_dur).floor    
       # Append the notes of the last phrase to the output for this Player
       num_plays_last_phrase.times do 
@@ -991,10 +1033,11 @@ instruction_14_ensemble_post = lambda do |container|
       end
     end
     
-    # Verbose timing logging
+    # VERBOSE
     t_new = Time.now
     puts "Appending concluding unison notes took #{(t_new - t) * 1000.0} milliseconds"
     t = Time.now
+    # /VERBOSE
     
     #  "... The group then makes a large crescendo and diminuendo a few times ..."
     # Crescendo a random number of times below a settings limit
@@ -1013,10 +1056,11 @@ instruction_14_ensemble_post = lambda do |container|
       num_crescendo_steps = ((ENSEMBLE_SETTINGS["crescendo_max_amp_range"] * 2).to_f / volume_adj.to_f).ceil
     end
     
-    # TEMP DEBUG
+    # VERBOSE
     puts "num_crescendos #{num_crescendos}"
     puts "num_crescendo_steps #{num_crescendo_steps}"
     puts "volume_adj #{volume_adj}"
+    # /VERBOSE
     
     
     num_crescendos.times do
@@ -1046,19 +1090,16 @@ instruction_14_ensemble_post = lambda do |container|
       end  
     end
     
-    # Verbose timing logging
+    # VERBOSE
     t_new = Time.now
-    puts "Appending concluding crescendos took #{(t_new - t) * 1000.0} milliseconds"      
-        
-    # TEMP DEBUG
-    puts "total loops #{aleatoric_players[0].total_loops}"
+    puts "Appending concluding crescendos took #{(t_new - t) * 1000.0} milliseconds"              
     @@in_c_ensemble.players.each do |player|
       puts "handle #{player.handle}  advanced on play next #{player.advanced_on_play_next}"
       puts "handle #{player.handle}  advanced on too far behind #{player.advanced_on_play_next2}"
       puts "handle #{player.handle}  advanced on seeking unison #{player.advanced_on_play_next3}"
       puts "handle #{player.handle}  max phrase count #{player.max_phrase_count}"
     end        
-    # TEMP DEBUG        
+    # /VERBOSE        
         
     # ****
     # Set flag for repeat_until() handler to detect and end the performance

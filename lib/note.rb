@@ -205,6 +205,22 @@ class Note
       ret
     end    
   end
+  
+  def Note.initialize_rest(dur, chan=0)
+    rest_note = Note.new
+    rest_note.instrument 0
+    rest_note.start 0.0
+    rest_note.duration dur 
+    rest_note.amplitude 0
+    if $FORMAT == :csound
+      rest_note.pitch 5.01
+      rest_note.func_table 1
+    elsif $FORMAT == :midi
+      rest_note.pitch 1
+      rest_note.channel chan
+    end
+    rest_note
+  end
 
   # Creates accessors for newly created attributes of the object
   def method_missing(name, val)         
