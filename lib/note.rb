@@ -15,6 +15,9 @@ class AleatoricIllegalNoteFormatException < Exception; end
 # in the order they are added to the object.  Format is class-scope, meaning that 
 # all Notes in one execution of a Composer score are of the same format.
 class Note
+
+  NO_CHANNEL = 17
+
   attr_accessor :name, :measure
   attr_reader :ordered_keys, :note_attrs
   # Default is to not include appended player_id, ensemble_id and score_id
@@ -206,7 +209,7 @@ class Note
     end    
   end
   
-  def Note.initialize_rest(dur, chan=0)
+  def Note.initialize_rest(dur, chan=NO_CHANNEL)
     rest_note = Note.new
     rest_note.instrument 0
     rest_note.start 0.0
@@ -215,7 +218,7 @@ class Note
     if $FORMAT == :csound
       rest_note.pitch 5.01
       rest_note.func_table 1
-    elsif $FORMAT == :midi
+    else # if $FORMAT == :midi
       rest_note.pitch 1
       rest_note.channel chan
     end

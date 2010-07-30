@@ -193,10 +193,6 @@ class Ensemble
     end
     
     # Ensemble outputs score for each player    
-    
-    # TEMP DEBUG
-    puts "@preplay_hooks.length #{@preplay_hooks.length}"
-    
     @preplay_hooks_ordered_names.each do |hook_name|
       @preplay_hooks[hook_name].call self      
     end

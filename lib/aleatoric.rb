@@ -63,8 +63,9 @@ def main
     set_midi_consts
   end
   
-  # LOGGING
+  # VERBOSE
   puts "Format set to #{$ARG_FORMAT}"
+  # /VERBOSE
   
   script_lines = portable_readlines(options[:score_file_name])
     
@@ -76,26 +77,29 @@ def main
   # Now preprocess to add 'do/end' syntax, add 'do |index|/end' to repeat blocks
   #  and validate syntax and grammar (structure)
   if options[:preprocess_flag]      
-    # LOGGING
+    # VERBOSE
     t = Time.now
     puts "Preprocessing started at #{t}"
+    # /VERBOSE
     
     # Returns the script lines preprocessed, and joined into one big string, i.e. - the whole script preprocessed
     script = ComposerAST.new.optional_preprocess_script(script_lines, options[:score_file_name])
 
-    # LOGGING
+    # VERBOSE
     t_new = Time.now
     puts "Preprocessing took #{(t_new - t) * 1000.0} milliseconds"
+    # /VERBOSE
   else
     script = script_lines.join('')
   end
   
   # Wrap the script in necessary directives, so user doesn't have to 
   File.open(file_name_tmp, "w") do |f| 
-    # LOGGING
+    # VERBOSE
     t = Time.now
     puts "Started writing preprocessed score file at #{t}"
-      
+    # VERBOSE
+ 
     header = "require 'util'\nrequire 'global'\n"
     if user_instr_file_name.nil?
       header += "require 'user_instruction'\n"
@@ -105,9 +109,10 @@ def main
   	header += "module Aleatoric\n\n"  
     f << header + script + "\n\nend\n"
     
-    # LOGGING
+    # VERBOSE
     t_new = Time.now
-    puts "Writing preprocessed score file took #{(t_new - t) * 1000.0} milliseconds"    
+    puts "Writing preprocessed score file took #{(t_new - t) * 1000.0} milliseconds"
+    # VERBOSE
   end  
   
   # *********************************
@@ -115,15 +120,17 @@ def main
   #  in the context of the 'Aleatoric' namespace included above
   #  with all the constants loaded above
   
-  # LOGGING
+  # VERBOSE
   t = Time.now
   puts "Started interpreting and rendering score #{t}"   
+  # /VERBOSE
   
   load file_name_tmp
 
-  # LOGGING
+  # VERBOSE
   t_new = Time.now
-  puts "Interpreting and rendering score took #{(t_new - t) * 1000.0} milliseconds"     
+  puts "Interpreting and rendering score took #{(t_new - t) * 1000.0} milliseconds"
+  # /VERBOSE    
 end
 
 main

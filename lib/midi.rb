@@ -16,7 +16,13 @@ class AleatoricIllegalMidiOperationException < Exception; end
 class AleatoricFailedMidiLoadException < Exception; end
 
 
-# TODO - need a Composer keyword to set bpm, child of format midi, make that a block
+# Some Usage Notes - from the midilib documentation
+#  - MIDI file IO only understands MIDI file format 1 
+#    (where a sequence is made up of multiple tracks. It doesn’t yet understand format 0 
+#    (a single track containing all events) or format 2 (a collection of format 0 files in one file))
+#  - The first track in a sequence is special; it holds meta-events like tempo and sequence name. 
+#    Don’t put any notes in this track.
+
 class MidiManager
 
   if include_win? or include_mac?
@@ -37,11 +43,11 @@ class MidiManager
     @channel_tracks = {}
     @channel_instruments = {}
     # midilib init steps
-    @seq = MIDI::Sequence.new()
+    @seq = MIDI::Sequence.new()    
     # TODO ******** Linux MIDI support! ******** 
     else
     raise "ONLY WINDOWS AND MAC ARE SUPPORTED FOR MIDI RENDERING AT THIS TIME"    
-    end
+    end    
   end
   
   # NOTE: MIDI doesn't require this, but this interface assumes each track will be
@@ -96,7 +102,7 @@ class MidiManager
   def add_note(channel, note, velocity, delta_time)       
     if include_win? or include_mac?
     self.channel(channel) if channel_nil?(channel)
-    note_length = @seq.length_to_delta(seconds_to_beats(delta_time))        
+    note_length = @seq.length_to_delta(seconds_to_beats(delta_time))         
     @channel_tracks[channel].events << NoteOnEvent.new(channel, note, velocity, 0)
     @channel_tracks[channel].events << NoteOffEvent.new(channel, note, velocity, note_length)
     end
@@ -117,7 +123,7 @@ class MidiManager
   def tempo(bpm)
     @bpm = bpm
   end
-  
+    
   def load(file_name)
     ret_notes = []
         
@@ -127,6 +133,9 @@ class MidiManager
     File.open(file_name, 'rb') do |file|
       seq.read(file)
     end
+    
+    # TEMP DEBUG
+    channels_found = {}
         
     note_num = 0
     # Get the tracks from the loaded file
@@ -144,26 +153,30 @@ class MidiManager
       # Iterate events and only extract props from MIDI events that have what we need
       events.each do |event|        
         next if not (event.program_change? or event.note?)
-      
-        # TODO THIS CRAP GOES AWAY
-        # Get the measure information, have to parse it out of string from the midilib API
-        # Set it for this series of note events if we haven't set it yet
-        # event_measure = seq_measures.measure_for_event(event).to_s.strip
-        # If the MIDI::Measure object returned is nil, then to_s() is '', check for length
-        # if event_measure.length > 0
-          # Format of measure_for_event(e):   'measure 1  0-1919  4/4   1.0 qs metronome' 
-          # So match first number and retrieve from regex global var capturing first match                    
-        #  event_measure =~ /\d+/          
-        #  measure = $&.to_i
-        # end
+  
         if event.program_change?       
           instrument = event.program
-        end
-        
+        end      
         if event.note?          
           channel = event.channel
+          
+          # TEMP DEBUG
+          
+          # TODO RIGHT HERE
+          # Not importing notes on channel 2. Importing all others.  Huh?
+          
+          if not channels_found.include? channel
+          channels_found[channel] = ''
+          puts channels_found.keys
+          end
+                    
+          # From the midilib docs: "... delta times that represent note lengths. 
+          #  MIDI::Sequence#length_to_delta takes a note length (a multiple of a quarter note) 
+          #  and returns the delta time given the sequence’s current ppqn (pulses per quarter note) 
+          #  setting. 1 is a quarter note, 1.0/32.0 is a 32nd note (use floating-point numbers 
+          #  to avoid integer rounding), 1.5 is a dotted quarter, etc."
           start = midi_ticks_to_seconds(event.time_from_start)
-          duration = midi_ticks_to_seconds(event.delta_time)
+          duration = midi_ticks_to_seconds(event.delta_time)          
           volume = event.velocity
           pitch = event.note         
           if (measure = seq_measures.measure_for_event(event))
@@ -173,12 +186,6 @@ class MidiManager
           if channel.nil? or start.nil? or duration.nil? or volume.nil? or pitch.nil? # or instrument.nil? 
             raise AleatoricFailedMidiLoadException, "Load of file #{file_name} failed on note # #{note_num}"
           else
-            # If we get to here we have a note, it's channel and its instrument, i.e. the
-            #  instrument for that channel.  So set it in the underlying MIDI class if we haven't alreaduy
-            if not channels_assigned_instruments.include? channel
-              self.instrument(channel, instrument)
-              channels_assigned_instruments.push channel
-            end
             # Construct new note from base properties
             note = Note.new("#{note_num}", {:instrument=>instrument, :channel=>channel, :start=>start, :duration=>duration, :amplitude=>volume, :pitch=>pitch})
             # Add measure value -- this is a note built-in attr that is used by kw 'import' but isn't part of note output to score        
@@ -211,9 +218,16 @@ class MidiManager
     end
   end
   
+
+  # WRONG RIGHT HERE - NOTES WITH WAY TOO LONG DURS EVEN WITH KASHMI3.MID SINGLE MEASURE DUMMY INPUT
+  
+  # Midilib docs: "On each quarter note, there‘s 24 ticks"
+  # TODO Used to be ticks / 960.0 -- WHERE DID THAT COME FROM? -- 16 ticks/sec.?
   def midi_ticks_to_seconds(ticks)
     if include_win? or include_mac?
-    ticks / 960.0
+    # This is a magic number arrived at by using simple test data (single measure, different durations) as input
+    #  and listening to output to determine its notes had same duration
+    ticks / 240.0 
     end
   end  
   

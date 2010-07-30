@@ -321,15 +321,23 @@ def import(name, &args_blk)
     # but players() handler needs to know about capture_measures
 
     # Notes already each have channel info, group by channel so players will be
-    #  assigned notes in phrase for each measure only for the notes in their channel
+    #  assigned notes in phrase for each measure only for the notes in their channel    
     @notes_by_channel = {}
     import_notes.each do |note|
       if not @notes_by_channel.include? note.channel
         @notes_by_channel[note.channel] = [note]
+        
+        # TEMP DEBUG
+        puts note.channel
+        
       else
         @notes_by_channel[note.channel] << note
       end
     end
+    
+    # TEMP DEBUG
+    breakpoint
+    
     
     yield
     
@@ -733,7 +741,7 @@ def players(*names)
         end
         # Catch single/last measure caes
         all_measures_notes.push cur_measure_notes if cur_measure_notes.length > 0
- 
+
         names.each do |name|
           name = name.strip
           player = @players_by_name[name]          

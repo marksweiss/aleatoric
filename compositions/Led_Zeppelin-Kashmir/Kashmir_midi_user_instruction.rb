@@ -17,7 +17,7 @@ DEFAULT_VOLUME = 20
 # Player State Management
 # These values govern the behavior of each Player
 PLAYER_SETTINGS = {
-  "num_phrases" => 162,
+  "num_phrases" => 1, # 162,
   
   # Player Phrase Advance
   # Player must play each phrase at least this long
@@ -712,26 +712,31 @@ end
 #  in Composer to the callback, namely Notes, Scores, Measures, Phrases, Sections, Players, Ensembles
 in_c_players = {}
 @@al_players = {}
-in_c_init_play_handler = lambda do |notes, scores, measures, phrases, sections, players, ensembles|
+in_c_init_play_handler = lambda do |notes, scores, measures, phrases, sections, al_players, al_ensembles|
   # Instantiate In_C_Ensemble and In_C_Players, these are used by the Instruction handlers
   #  to implement the Instructions
-  players.each {|player| @@al_players[player.handle] = player}
-  ensemble_handle = ensembles.first.handle
-  player_handles = players.collect {|p| p.handle}
+  al_players.each {|al_player| @@al_players[al_player.handle] = al_player}
+  al_ensemble_handle = al_ensembles.first.handle
+  al_player_handles = al_players.collect {|p| p.handle}
   # Construct with reference to Composer Ensemble object
-  @@in_c_ensemble = In_C_Ensemble.new("In C Orchestra", ensemble_handle)
-  # Call to create accessors from settings  
+  @@in_c_ensemble = In_C_Ensemble.new("In C Orchestra", al_ensemble_handle)
+  # Call to create accessors from ENSEMBLE_SETTINGS  
   @@in_c_ensemble.def_accessors
+
+  num_players = al_player_handles.length
   num_phrases = PLAYER_SETTINGS["num_phrases"]
-  ENSEMBLE_SETTINGS["num_players"].times do |j|
-    player = In_C_Player.new(@@in_c_ensemble, num_phrases, player_handles[j])
-    player.def_accessors
+  initial_rest_note_dur = PLAYER_SETTINGS["init_adj_phase_dur"]
+  num_players.times do |j|
+    in_c_player = In_C_Player.new(@@in_c_ensemble, num_phrases, al_player_handles[j])
+    in_c_player.def_accessors
     # Reverse key mapping of Composer Player handle to this shadowing In_C_Player
-    in_c_players[player_handles[j]] = player  
+    in_c_players[al_player_handles[j]] = in_c_player  
     # Add a rest of duration times index so each Aleatoric player has an offset
     # This sets each ones notes off from the others a bit to make MIDI more likely to play well
-    rest_note_dur = j * PLAYER_SETTINGS["init_adj_phase_dur"]
-    players[j].append_note_to_output(Note.initialize_rest(rest_note_dur))
+    # Get player's assigned MIDI channel from associated al_player -- MIDI already imported by now
+    al_player = @@al_players[al_player_handles[j]]
+    rest_note = Note.initialize_rest(j * initial_rest_note_dur, al_player.channel)
+    al_player.append_note_to_output rest_note
   end
   @@in_c_ensemble.players = in_c_players  
 end

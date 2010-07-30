@@ -25,8 +25,7 @@ class Player
   attr_accessor :preplay_hooks, :postplay_hooks, :improvising_hooks
   attr_accessor :state, :is_playing, :is_improvising, :out_notes
   attr_accessor :current_start # Made this read/write becasue reset by player_test.rb
-  # TEMP DEBUG
-  # attr_reader :total_loops
+  # attr_reader :total_loops   # VERBOSE
   
   @@NO_INDEX = -1
   def Player.no_index
@@ -245,12 +244,13 @@ class Player
   # @return [Array<Aleatoric::Note>] the notes generated from this call to play()
   def play(name=nil, &blk)    
     
-    # TEMP DEBUG
+    # VERBOSE
     # puts "#{self.name}  #{@scores_idx}"
     # @total_loops = 0 if @total_loops.nil?
     # @total_loops += 1
     # puts "#{self.name}  #{@total_loops}"
-        
+    # /VERBOSE    
+    
     ret = []
     return ret if not playing?
     # NOTE: Default is to NOT change the state of score but to make a copy for each play call.
