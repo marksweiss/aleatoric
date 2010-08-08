@@ -245,10 +245,10 @@ class Player
   def play(name=nil, &blk)    
     
     # VERBOSE
-    puts "#{self.name}  Scores Index: #{@scores_idx}"
+    puts "#{self.name}\t\tIndex: #{@scores_idx}"
     @total_loops = 0 if @total_loops.nil?
     @total_loops += 1
-    puts "#{self.name}  Total Loops: #{@total_loops}"
+    # puts "#{self.name}  Total Loops: #{@total_loops}"
     # /VERBOSE    
     
     ret = []
