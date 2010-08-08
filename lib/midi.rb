@@ -47,7 +47,7 @@ class MidiManager
     # TODO ******** Linux MIDI support! ******** 
     else
     raise "ONLY WINDOWS AND MAC ARE SUPPORTED FOR MIDI RENDERING AT THIS TIME"    
-    end    
+    end
   end
   
   # NOTE: MIDI doesn't require this, but this interface assumes each track will be
