@@ -1,0 +1,218 @@
+require 'util'
+require 'global'
+require '../compositions/Funkadelic-Maggot_Brain/Maggot_Brain_midi_user_instruction.rb'
+module Aleatoric
+
+##############################################################################
+# Define variables and assign a default value. User-defined variables must be at top of score
+_default_tempo=200
+# TODO Support user variables defined here and used in user function defs immediately below. Uggh.
+##############################################################################
+# Define user-defined functions. These must immediately follow the variables.
+# TODO Why can't we define variables and use them in function bodies?
+def legato_start( start,dur)
+adj_dur =(( dur*1.02)- dur )
+if start >=adj_dur
+start-adj_dur
+else
+start
+end
+end
+def legato_duration( dur)
+dur*1.02
+##############################################################################
+# Define the score. Ensemble,players,instruments,improvisations,sections ,
+# measures,phrases,notes,note properties. Then render at the end.
+# Declare format for rendering to a sound file. CSound and MIDI supported.
+end
+format midi 
+# Set tempo for the piece in bpm
+tempo 200 
+##############################################################################
+# NOTE A STRANGE PROBLEM WITH MIDI IMPORT HERE
+# Had to assign channels to skip Channel 2 because midilib imported kashmir.mid
+# and for some reason had channels assigned as 0,1,3,4,5,6,7,8,9
+# even though they were clean 1-9 in MusicMagic,and so should have come in 0-8
+# No reason why 2 being skipped,it just was. So that is why these Channels
+# are assigned as they are
+# Declare Players in the Ensemble,and assign them instruments
+player "Player 1" do
+instrument MIDI_Church_Organ,channel=0
+end
+player "Player 2" do
+instrument MIDI_Reed_Organ,channel=1
+end
+player "Player 3" do
+instrument MIDI_Reed_Organ,channel=3
+end
+player "Player 4" do
+instrument MIDI_Flute,channel=4
+end
+player "Player 5" do
+instrument MIDI_Pan_Flute,channel=5
+end
+player "Player 6" do
+instrument MIDI_Drawbar_Organ,channel=6
+end
+player "Player 7" do
+instrument MIDI_Violin,channel=7
+end
+player "Player 8" do
+instrument MIDI_Vibraphone,channel=8
+end
+player "Player 9" do
+instrument MIDI_Vibraphone,channel=10
+end
+player "Player 10" do
+instrument MIDI_Vibraphone,channel=11
+end
+player "Player 11" do
+instrument MIDI_Vibraphone,channel=12
+end
+player "Player 12" do
+instrument MIDI_Vibraphone,channel=13
+end
+player "Player 13" do
+instrument MIDI_Vibraphone,channel=14
+# Declare Ensemble,assign Players to Ensemble,and define all Phrases
+# within the Ensemble block,thereby assigning all Phrases to all Players
+# in the Ensemble
+end
+ensemble "In C Orchestra" do
+players "Player 1","Player 2","Player 3","Player 4","Player 5","Player 6","Player 7","Player 8","Player 9","Player 10","Player 11","Player 12","Player 13" 
+# TODO Ensemble support for import
+end
+import "../compositions/Funkadelic-Maggot_Brain/resources/MAGGT21.mid" do
+players "Player 1","Player 2","Player 3","Player 4","Player 5","Player 6","Player 7","Player 8","Player 9","Player 10","Player 11","Player 12","Player 13" 
+end
+import "../compositions/Funkadelic-Maggot_Brain/resources/MAGGT22.mid" do
+players "Player 1","Player 2","Player 3","Player 4","Player 5","Player 6","Player 7","Player 8","Player 9","Player 10","Player 11","Player 12","Player 13" 
+end
+import "../compositions/Funkadelic-Maggot_Brain/resources/MAGGT23.mid" do
+players "Player 1","Player 2","Player 3","Player 4","Player 5","Player 6","Player 7","Player 8","Player 9","Player 10","Player 11","Player 12","Player 13" 
+end
+import "../compositions/Funkadelic-Maggot_Brain/resources/MAGGT24.mid" do
+players "Player 1","Player 2","Player 3","Player 4","Player 5","Player 6","Player 7","Player 8","Player 9","Player 10","Player 11","Player 12","Player 13" 
+end
+import "../compositions/Funkadelic-Maggot_Brain/resources/MAGGT25.mid" do
+players "Player 1","Player 2","Player 3","Player 4","Player 5","Player 6","Player 7","Player 8","Player 9","Player 10","Player 11","Player 12","Player 13" 
+end
+import "../compositions/Funkadelic-Maggot_Brain/resources/MAGGT26.mid" do
+players "Player 1","Player 2","Player 3","Player 4","Player 5","Player 6","Player 7","Player 8","Player 9","Player 10","Player 11","Player 12","Player 13" 
+end
+import "../compositions/Funkadelic-Maggot_Brain/resources/MAGGT27.mid" do
+players "Player 1","Player 2","Player 3","Player 4","Player 5","Player 6","Player 7","Player 8","Player 9","Player 10","Player 11","Player 12","Player 13" 
+end
+import "../compositions/Funkadelic-Maggot_Brain/resources/MAGGT28.mid" do
+players "Player 1","Player 2","Player 3","Player 4","Player 5","Player 6","Player 7","Player 8","Player 9","Player 10","Player 11","Player 12","Player 13" 
+end
+import "../compositions/Funkadelic-Maggot_Brain/resources/MAGGT29.mid" do
+players "Player 1","Player 2","Player 3","Player 4","Player 5","Player 6","Player 7","Player 8","Player 9","Player 10","Player 11","Player 12","Player 13" 
+end
+import "../compositions/Funkadelic-Maggot_Brain/resources/MAGGT30.mid" do
+players "Player 1","Player 2","Player 3","Player 4","Player 5","Player 6","Player 7","Player 8","Player 9","Player 10","Player 11","Player 12","Player 13" 
+##############################################################################
+# Instructions
+# Instruction block for each aleatoric instruction in the original score of " In C "
+# Each Instruction is assigneed to Ensemble,so the Ensemble plays it
+end
+instruction "Instruction 1" do
+description "All performers play from the same page of 53 melodic patterns played in sequence."
+# Assign all instructions to both Players individually and Ensemble as a whole
+# This insures that each Player can do whatever it needs to on its own
+# to fulifll the instruction,and also insures that if there is
+# information needed at the Ensemble level,such as what phrase each Player
+# is currently playing,then this can also be collected.
+# As a composer,you need to ask the question," Does this instruction apply
+# to just each Player,to just the Ensemble as a whole,or both? "
+players "Player 1","Player 2","Player 3","Player 4","Player 5","Player 6","Player 7","Player 8","Player 9","Player 10"  #," Player 11 "," Player 12 "
+ensembles "In C Orchestra" 
+end
+instruction "Instruction 2" do
+description "Any number of any kind of instruments can play. A group of about 35 is desired if possible but smaller or larger groups will work. If vocalist(s)join in they can use any vowel and consonant sounds they like."
+players "Player 1","Player 2","Player 3","Player 4","Player 5","Player 6","Player 7","Player 8","Player 9","Player 10","Player 11","Player 12","Player 13" 
+ensembles "In C Orchestra" 
+end
+instruction "Instruction 3" do
+description "Patterns are to be played consecutively with each performer having the freedom to determine how many times he or she will repeat each pattern before moving on to the next. There is no fixed rule as to the number of repetitions a pattern may have,however,since performances normally average between 45 minutes and an hour and a half,it can be assumed that one would repeat each pattern from somewhere between 45 seconds and a minute and a half or longer."
+players "Player 1","Player 2","Player 3","Player 4","Player 5","Player 6","Player 7","Player 8","Player 9","Player 10","Player 11","Player 12","Player 13" 
+ensembles "In C Orchestra" 
+end
+instruction "Instruction 4" do
+description "It is very important that performers listen very carefully to one another and this means occasionally to drop out and listen. As an ensemble,it is very desirable to play very softly as well as very loudly and to try to diminuendo and crescendo together."
+players "Player 1","Player 2","Player 3","Player 4","Player 5","Player 6","Player 7","Player 8","Player 9","Player 10","Player 11","Player 12","Player 13" 
+ensembles "In C Orchestra" 
+end
+instruction "Instruction 5" do
+description "Each pattern can be played in unison or canonically in any alignment with itself or with its neighboring patterns. One of the joys of IN C is the interaction of the players in polyrhythmic combinations that spontaneously arise between patterns. Some quite fantastic shapes will arise and disintegrate as the group moves through the piece when it is properly played."
+players "Player 1","Player 2","Player 3","Player 4","Player 5","Player 6","Player 7","Player 8","Player 9","Player 10","Player 11","Player 12","Player 13" 
+ensembles "In C Orchestra" 
+end
+instruction "Instruction 6" do
+description "It is important not to hurry from pattern to pattern but to stay on a pattern long enough to interlock with other patterns being played. As the performance progresses,performers should stay within 2 or 3 patterns of each other. It is important not to race too far ahead or to lag too far behind."
+players "Player 1","Player 2","Player 3","Player 4","Player 5","Player 6","Player 7","Player 8","Player 9","Player 10","Player 11","Player 12","Player 13" 
+ensembles "In C Orchestra" 
+# TODO Make this an Improvisation that fires every time?
+end
+instruction "Instruction 7" do
+description "The ensemble can be aided by the means of an eighth note pulse played on the high c’s of the piano or on a mallet instrument. It is also possible to use improvised percussion in strict rhythm(drum set,cymbals,bells,etc. ),if it is carefully done and doesn’t overpower the ensemble. All performers must play strictly in rhythm and it is essential that everyone play each pattern carefully. It is advised to rehearse patterns in unison before attempting to play the piece,to determine that everyone is playing correctly."
+players "Player 1","Player 2","Player 3","Player 4","Player 5","Player 6","Player 7","Player 8","Player 9","Player 10","Player 11","Player 12","Player 13" 
+ensembles "In C Orchestra" 
+end
+instruction "Instruction 8" do
+description "The tempo is left to the discretion of the performers,obviously not too slow,but not faster than performers can comfortably play."
+players "Player 1","Player 2","Player 3","Player 4","Player 5","Player 6","Player 7","Player 8","Player 9","Player 10","Player 11","Player 12","Player 13" 
+ensembles "In C Orchestra" 
+end
+instruction "Instruction 9" do
+description "It is important to think of patterns periodically so that when you are resting you are conscious of the larger periodic composite accents that are sounding,and when you re-enter you are aware of what effect your entrance will have on the music’s flow."
+players "Player 1","Player 2","Player 3","Player 4","Player 5","Player 6","Player 7","Player 8","Player 9","Player 10","Player 11","Player 12","Player 13" 
+ensembles "In C Orchestra" 
+end
+instruction "Instruction 10" do
+description "The group should aim to merge into a unison at least once or twice during the performance. At the same time,if the players seem to be consistently too much in the same alignment of a pattern,they should try shifting their alignment by an eighth note or quarter note with what’s going on in the rest of the ensemble."
+players "Player 1","Player 2","Player 3","Player 4","Player 5","Player 6","Player 7","Player 8","Player 9","Player 10","Player 11","Player 12","Player 13" 
+ensembles "In C Orchestra" 
+end
+instruction "Instruction 11" do
+description "It is OK to transpose patterns by an octave,especially to transpose up. Transposing down by octaves works best on the patterns containing notes of long durations. Augmentation of rhythmic values can also be effective."
+players "Player 1","Player 2","Player 3","Player 4","Player 5","Player 6","Player 7","Player 8","Player 9","Player 10","Player 11","Player 12","Player 13" 
+ensembles "In C Orchestra" 
+end
+instruction "Instruction 12" do
+description "If for some reason a pattern can’t be played,the performer should omit it and go on."
+players "Player 1","Player 2","Player 3","Player 4","Player 5","Player 6","Player 7","Player 8","Player 9","Player 10","Player 11","Player 12","Player 13" 
+ensembles "In C Orchestra" 
+end
+instruction "Instruction 13" do
+description "Instruments can be amplified if desired. Electronic keyboards are welcome also."
+players "Player 1","Player 2","Player 3","Player 4","Player 5","Player 6","Player 7","Player 8","Player 9","Player 10","Player 11","Player 12","Player 13" 
+ensembles "In C Orchestra" 
+end
+instruction "Instruction 14" do
+description "In C is ended in this way: when each performer arrives at figure #53,he or she stays on it until the entire ensemble has arrived there. The group then makes a large crescendo and diminuendo a few times and each player drops out as he or she wishes."
+players "Player 1","Player 2","Player 3","Player 4","Player 5","Player 6","Player 7","Player 8","Player 9","Player 10","Player 11","Player 12","Player 13" 
+ensembles "In C Orchestra" 
+##############################################################################
+# Play and Render
+# Tell the Ensemble to perform,tell all Players in the Ensemble to play
+# 'repeat' the 'play' command(that is,have each member of the Ensemble go through all the Instructions )
+# until the 'continue' condition is met
+end
+repeat_until "... each player drops out as he or she wishes." do
+play do
+ensembles "In C Orchestra" 
+#** NOTE: For debugging only. NOT necessary for rendering to MIDI,can just have a 'render' block
+end
+end
+write "../compositions/Funkadelic-Maggot_Brain/Maggot_Brain_mid.txt" do
+format midi 
+ensembles "In C Orchestra" 
+# Capture the performance in rendered sound file
+end
+render "../compositions/Funkadelic-Maggot_Brain/Maggot_Brain_aleatoric.mid" do
+ensembles "In C Orchestra" 
+end
+
+
+end
