@@ -326,18 +326,10 @@ def import(name, &args_blk)
     import_notes.each do |note|
       if not @notes_by_channel.include? note.channel
         @notes_by_channel[note.channel] = [note]
-        
-        # TEMP DEBUG
-        puts note.channel
-        
       else
         @notes_by_channel[note.channel] << note
       end
     end
-    
-    # TEMP DEBUG
-    breakpoint
-    
     
     yield
     

@@ -134,8 +134,9 @@ class MidiManager
       seq.read(file)
     end
     
-    # TEMP DEBUG
+    # VERBOSE
     channels_found = {}
+    # /VERBOSE
         
     note_num = 0
     # Get the tracks from the loaded file
@@ -160,15 +161,12 @@ class MidiManager
         if event.note?          
           channel = event.channel
           
-          # TEMP DEBUG
-          
-          # TODO RIGHT HERE
-          # Not importing notes on channel 2. Importing all others.  Huh?
-          
+          # VERBOSE
           if not channels_found.include? channel
-          channels_found[channel] = ''
-          puts channels_found.keys
+            channels_found[channel] = ''
+            puts "Channels Found #{channels_found.keys.sort.join(' ')}"
           end
+          # /VERBOSE
                     
           # From the midilib docs: "... delta times that represent note lengths. 
           #  MIDI::Sequence#length_to_delta takes a note length (a multiple of a quarter note) 
