@@ -25,7 +25,7 @@ class Player
   attr_accessor :preplay_hooks, :postplay_hooks, :improvising_hooks
   attr_accessor :state, :is_playing, :is_improvising, :out_notes
   attr_accessor :current_start # Made this read/write becasue reset by player_test.rb
-  # attr_reader :total_loops   # VERBOSE
+  attr_reader :total_loops   # VERBOSE
   
   @@NO_INDEX = -1
   def Player.no_index
@@ -245,10 +245,10 @@ class Player
   def play(name=nil, &blk)    
     
     # VERBOSE
-    # puts "#{self.name}  #{@scores_idx}"
-    # @total_loops = 0 if @total_loops.nil?
-    # @total_loops += 1
-    # puts "#{self.name}  #{@total_loops}"
+    puts "#{self.name}\t\tIndex: #{@scores_idx}"
+    @total_loops = 0 if @total_loops.nil?
+    @total_loops += 1
+    # puts "#{self.name}  Total Loops: #{@total_loops}"
     # /VERBOSE    
     
     ret = []

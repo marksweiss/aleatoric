@@ -136,8 +136,6 @@ class MidiManager
     
     # VERBOSE
     channels_found = {}
-    last_keys = []
-    max_last_keys_length = 0
     # /VERBOSE
         
     note_num = 0
@@ -166,13 +164,10 @@ class MidiManager
           # VERBOSE          
           if not channels_found.include? channel
             channels_found[channel] = ''
-            keys = channels_found.keys
-            puts "Channels Found #{channels_found.keys.sort.join(' ')}" if (last_keys != keys and keys.length > max_last_keys_length)
-            last_keys = keys
-            max_last_keys_length = last_keys.length if last_keys.length > max_last_keys_length
+            puts "Channels Found #{channels_found.keys.sort.join(' ')}"
           end
           # /VERBOSE
-                              
+
           # From the midilib docs: "... delta times that represent note lengths. 
           #  MIDI::Sequence#length_to_delta takes a note length (a multiple of a quarter note) 
           #  and returns the delta time given the sequence’s current ppqn (pulses per quarter note) 
