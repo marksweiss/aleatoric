@@ -1,6 +1,6 @@
 ##############################################################################
 # Define variables and assign a default value. User-defined variables must be at top of score
-_default_tempo = 200
+_default_tempo = 120
 # TODO Support user variables defined here and used in user function defs immediately below. Uggh.
 
 ##############################################################################

@@ -34,6 +34,7 @@ class MidiManager
   attr_reader :name, :bpm
   
   DEFAULT_BPM = 120
+  MIDI_TICKS_PER_QRTR_NOTE = 960
   
   def initialize(name=nil, bpm=nil)
     if include_win? or include_mac?
@@ -75,6 +76,10 @@ class MidiManager
     if include_win? or include_mac?
     @channel_tracks[channel].nil?
     end
+  end
+  
+  def channels_list
+    @channel_tracks.keys.sort
   end
   
   def instrument(channel, instrument, delta_time=0)
@@ -170,7 +175,7 @@ class MidiManager
 
           # From the midilib docs: "... delta times that represent note lengths. 
           #  MIDI::Sequence#length_to_delta takes a note length (a multiple of a quarter note) 
-          #  and returns the delta time given the sequence’s current ppqn (pulses per quarter note) 
+          #  and returns the delta time given the sequence's current ppqn (pulses per quarter note) 
           #  setting. 1 is a quarter note, 1.0/32.0 is a 32nd note (use floating-point numbers 
           #  to avoid integer rounding), 1.5 is a dotted quarter, etc."
           start = midi_ticks_to_seconds(event.time_from_start)
@@ -216,16 +221,11 @@ class MidiManager
     end
   end
   
-
-  # WRONG RIGHT HERE - NOTES WITH WAY TOO LONG DURS EVEN WITH KASHMI3.MID SINGLE MEASURE DUMMY INPUT
-  
-  # Midilib docs: "On each quarter note, there‘s 24 ticks"
-  # TODO Used to be ticks / 960.0 -- WHERE DID THAT COME FROM? -- 16 ticks/sec.?
   def midi_ticks_to_seconds(ticks)
     if include_win? or include_mac?
-    # This is a magic number arrived at by using simple test data (single measure, different durations) as input
-    #  and listening to output to determine its notes had same duration
-    ticks / 240.0 
+    # This is a magic number arrived at by seeing defaults in other software, e.g. Reaper
+    num_qrtr_notes = ticks / MIDI_TICKS_PER_QRTR_NOTE
+    num_qrtr_notes * QRTR  # qrtr note duration defined in global.rb
     end
   end  
   

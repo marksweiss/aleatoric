@@ -194,6 +194,7 @@ end
 @meter = Meter.new(quantizing=false)
 
 @cur_start = 0.0
+@channel_import_start = 0.0 # Offset of latest note from previous MIDI 'import' call
 @cur_measure = nil
 @measures = []
 @measures_by_name = {}
@@ -302,13 +303,6 @@ def import(name, &args_blk)
   #  players statement in the import block
   else
     @capture_measures = false
-    # The hack worsens ... this is first case in this "nested block based" language
-    #  implementation where we can't just yield the block because each line is not independent
-    #  of the others.  So we need to "look ahead" on the block and find out whether it
-    #  contains 'capture measures' line because that creates state that must be set before
-    #  the 'players' line in the block is evaluated.  So, two choices ... require that the block
-    #  be written with 'capture measures' or lookahead here, make 'capture' handler a no-op
-    #  and use the @capure_measures flag in the 'players' block.
     # We want to support this ...
     # import "myfile.mid" do
     #   capture measuers
@@ -319,17 +313,56 @@ def import(name, &args_blk)
     #   players "Player 1", "Player 2"                                                                                                                                                                                                                      mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
     #   capture measuers
     # but players() handler needs to know about capture_measures
+    # This flag is set if the keyword is encountered in the yield
 
     # Notes already each have channel info, group by channel so players will be
     #  assigned notes in phrase for each measure only for the notes in their channel    
     @notes_by_channel = {}
+    cur_max_start = 0.0
     import_notes.each do |note|
+      # Adjust note.start here to be offset from beginning of all imported notes, not just this call to 'import'
+      note.start(note.start + @channel_import_start)
+      # Track max start among all notes on all channels to use to adjust all channels to be aligned below
+      cur_note_max_start = note.start + note.duration
+      cur_max_start = cur_note_max_start if cur_note_max_start > cur_max_start 
+      
       if not @notes_by_channel.include? note.channel
-        @notes_by_channel[note.channel] = [note]        
+        @notes_by_channel[note.channel] = [note]                
       else
         @notes_by_channel[note.channel] << note
       end
     end
+    
+    # Adjust all channels so they have notes or rests that align with max(note.start + note.duration)
+    # All channels line up and have note events so each channel has the same number of phrases
+    # This means each Player will have the same number of phrases so iterating over phrases for
+    #   each Player will line up in time and this also fixes a bug where on a series of imports
+    #   some channels had notes for some imports and some didn't, so Players didn't all have the 
+    #   same number of phrases
+    # Loop over all the channels for all players in the score, whether or not this import had 
+    #  notes for the channel, to set rests appropriately as per previous comment
+    @midi_mgr.channels_list.each do |channel|
+      # First case, no notes for channel, set rest
+      if not @notes_by_channel.include? channel
+        rest_dur = cur_max_start
+        rest = Note.initialize_rest(rest_dur, channel)
+        rest.start(@channel_import_start)
+        @notes_by_channel[channel] = [rest]
+      # Second case, channel had some notes, make sure it has a rest even up to cur_note_max_start
+      else
+        last_note = @notes_by_channel[channel].last
+        last_note_next_start = last_note.start + last_note.duration
+        rest_dur = cur_max_start - last_note_next_start
+        if rest_dur > 0
+          rest = Note.initialize_rest(rest_dur, channel)
+          rest.start(last_note_next_start)
+          @notes_by_channel[channel] << rest
+        end
+      end
+    end
+    
+    # Adjust note start offset for next call to 'import'
+    @channel_import_start = cur_max_start if cur_max_start > @channel_import_start        
 
     yield
     
@@ -731,7 +764,7 @@ def players(*names)
           end
           last_measure = cur_measure
         end
-        # Catch single/last measure caes
+        # Catch single/last measure case
         all_measures_notes.push cur_measure_notes if cur_measure_notes.length > 0
 
         names.each do |name|
@@ -750,7 +783,9 @@ def players(*names)
             end       
           end
         end
-      end      
+      end
+      
+      # TODO - Rebaseline Player start time for next set of notes to be loaded    
     else # if ! @capture_measures
       @notes_by_channel.keys.each do |channel| 
         names.each do |name|
@@ -758,7 +793,7 @@ def players(*names)
           player = @players_by_name[name]
           if player.channel == channel
             score = Score.new
-            score << @notes_by_channel[channel]
+            score << @notes_by_channel[channel]            
             player.add_score(score.name, score)            
           end
         end
@@ -1077,6 +1112,7 @@ def reset_script_state
   @processing_measure = false
   @measures_by_name = {}
   @cur_start = 0.0
+  @channel_import_start = 0.0
   
   @processing_instruction = false
   @cur_instruction = nil
