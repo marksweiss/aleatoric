@@ -209,7 +209,7 @@ class Note
     end    
   end
   
-  def Note.initialize_rest(dur, chan=NO_CHANNEL)
+  def Note.new_rest(dur, chan=NO_CHANNEL)
     rest_note = Note.new
     rest_note.instrument 0
     rest_note.start 0.0

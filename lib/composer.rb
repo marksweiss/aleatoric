@@ -278,7 +278,7 @@ def import(name, &args_blk)
   
   import_notes = @midi_mgr.load_notes_from_file name
   return if import_notes.length == 0
-
+  
   # import can be used in two ways, if its child of phrase then its just assigning notes to that phrase
   if @processing_phrase
     # Call MidiMgr to get the notes in sequence from the named MIDI file
@@ -344,8 +344,8 @@ def import(name, &args_blk)
     @midi_mgr.channels_list.each do |channel|
       # First case, no notes for channel, set rest
       if not @notes_by_channel.include? channel
-        rest_dur = cur_max_start
-        rest = Note.initialize_rest(rest_dur, channel)
+        rest_dur = cur_max_start - @channel_import_start
+        rest = Note.new_rest(rest_dur, channel)
         rest.start(@channel_import_start)
         @notes_by_channel[channel] = [rest]
       # Second case, channel had some notes, make sure it has a rest even up to cur_note_max_start
@@ -353,14 +353,14 @@ def import(name, &args_blk)
         last_note = @notes_by_channel[channel].last
         last_note_next_start = last_note.start + last_note.duration
         rest_dur = cur_max_start - last_note_next_start
-        if rest_dur > 0
-          rest = Note.initialize_rest(rest_dur, channel)
+        if rest_dur > 0.0
+          rest = Note.new_rest(rest_dur, channel)
           rest.start(last_note_next_start)
           @notes_by_channel[channel] << rest
         end
       end
     end
-    
+        
     # Adjust note start offset for next call to 'import'
     @channel_import_start = cur_max_start if cur_max_start > @channel_import_start        
 

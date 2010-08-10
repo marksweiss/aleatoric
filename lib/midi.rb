@@ -163,7 +163,9 @@ class MidiManager
         if event.program_change?       
           instrument = event.program
         end      
-        if event.note?          
+        if event.note?
+          next if midi_ticks_to_seconds(event.delta_time) == 0.0    
+                
           channel = event.channel
           
           # VERBOSE          
@@ -185,6 +187,9 @@ class MidiManager
           if (measure = seq_measures.measure_for_event(event))
             measure = measure.measure_number
           end
+          
+          # TEMP DEBUG
+          breakpoint if duration == 0.0
           
           if channel.nil? or start.nil? or duration.nil? or volume.nil? or pitch.nil? # or instrument.nil? 
             raise AleatoricFailedMidiLoadException, "Load of file #{file_name} failed on note # #{note_num}"

@@ -735,7 +735,7 @@ in_c_init_play_handler = lambda do |notes, scores, measures, phrases, sections, 
     # This sets each ones notes off from the others a bit to make MIDI more likely to play well
     # Get player's assigned MIDI channel from associated al_player -- MIDI already imported by now
     al_player = @@al_players[al_player_handles[j]]
-    rest_note = Note.initialize_rest(j * initial_rest_note_dur, al_player.channel)
+    rest_note = Note.new_rest(j * initial_rest_note_dur, al_player.channel)
     al_player.append_note_to_output rest_note
   end
   @@in_c_ensemble.players = in_c_players  
@@ -864,7 +864,7 @@ instruction_5_player_pre = lambda do |container, score|
   # This in effect changes its "alignment" in playing relative to the other players
   # Construct the rest Note
   rest_note_dur = in_c_player.phase_adj
-  rest_note = Note.initialize_rest(rest_note_dur)
+  rest_note = Note.new_rest(rest_note_dur)
   # Shift the start times of all notes following the prepended note, and prepend it
   # This (i.e. score.notes.first == nil) won't happen if notes are defined in Composer score, but MIDI import brings in
   #  more variable quality note data
