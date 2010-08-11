@@ -6,6 +6,7 @@ if include_win? or include_mac?
 require 'dl/import'
 require 'rubygems'
 require 'midilib/sequence'
+require 'midilib/event'
 require 'midilib/consts'
 end
 
@@ -34,7 +35,7 @@ class MidiManager
   attr_reader :name, :bpm
   
   DEFAULT_BPM = 120
-  MIDI_TICKS_PER_QRTR_NOTE = 960
+  MIDI_TICKS_PER_QRTR_NOTE = 960.0
   
   def initialize(name=nil, bpm=nil)
     if include_win? or include_mac?
@@ -164,15 +165,15 @@ class MidiManager
           instrument = event.program
         end      
         if event.note?
-          next if midi_ticks_to_seconds(event.delta_time) == 0.0    
+          next if (duration = midi_ticks_to_seconds(event.delta_time, seq)) == 0.0    
                 
           channel = event.channel
           
           # VERBOSE          
-          if not channels_found.include? channel
-            channels_found[channel] = ''
-            puts "Channels Found #{channels_found.keys.sort.join(' ')}"
-          end
+          #if not channels_found.include? channel
+          #  channels_found[channel] = ''
+          #  puts "Channels Found #{channels_found.keys.sort.join(' ')}"
+          #end
           # /VERBOSE
 
           # From the midilib docs: "... delta times that represent note lengths. 
@@ -180,8 +181,8 @@ class MidiManager
           #  and returns the delta time given the sequence's current ppqn (pulses per quarter note) 
           #  setting. 1 is a quarter note, 1.0/32.0 is a 32nd note (use floating-point numbers 
           #  to avoid integer rounding), 1.5 is a dotted quarter, etc."
-          start = midi_ticks_to_seconds(event.time_from_start)
-          duration = midi_ticks_to_seconds(event.delta_time)          
+          start = midi_ticks_to_seconds(event.time_from_start, seq)
+          # duration = midi_ticks_to_seconds(event.delta_time)  # Assigned above in test for 0.0 dur         
           volume = event.velocity
           pitch = event.note         
           if (measure = seq_measures.measure_for_event(event))
@@ -189,7 +190,7 @@ class MidiManager
           end
           
           # TEMP DEBUG
-          breakpoint if duration == 0.0
+          puts "duration #{duration}"
           
           if channel.nil? or start.nil? or duration.nil? or volume.nil? or pitch.nil? # or instrument.nil? 
             raise AleatoricFailedMidiLoadException, "Load of file #{file_name} failed on note # #{note_num}"
@@ -226,13 +227,20 @@ class MidiManager
     end
   end
   
-  def midi_ticks_to_seconds(ticks)
-    if include_win? or include_mac?
-    # This is a magic number arrived at by seeing defaults in other software, e.g. Reaper
-    num_qrtr_notes = ticks / MIDI_TICKS_PER_QRTR_NOTE
-    num_qrtr_notes * QRTR  # qrtr note duration defined in global.rb
-    end
-  end  
+  #def midi_ticks_to_seconds(ticks)
+  #  if include_win? or include_mac?
+    # MIDI_TICKS_PER_QRTR_NOTE arrived at by seeing defaults in other software, e.g. Reaper
+    # @bpm term because MIDI BPM is quarter notes per minute, so this factor adjusts
+    #  duration in seconds of quarter note based on current BPM
+  #  (ticks / MIDI_TICKS_PER_QRTR_NOTE) * (@bpm / 60.0)
+  #  end
+  #end  
+  # Conversion formula from here: 
+  #  http://groups.google.com/group/ruby-midi/browse_thread/thread/8e596632f0d239e7?pli=1
+  def midi_ticks_to_seconds(ticks, sequence) 
+    ticks / sequence.ppqn.to_f / @bpm.to_f * 60.0
+  end   
+  
   
   # For testing only, exposed with temporary make private methods public in one midi_test.rb test
   def seq

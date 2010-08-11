@@ -47,7 +47,7 @@ $LAST_FORMAT = $FORMAT
 REST = 0
 
 # Default tempo is 120 bpm
-$DEFAULT_TEMPO = 120.0
+$DEFAULT_TEMPO = 120
 $DUR_FACTOR = 1.0
 
 # Default durations in seconds
