@@ -189,9 +189,6 @@ class MidiManager
             measure = measure.measure_number
           end
           
-          # TEMP DEBUG
-          puts "duration #{duration}"
-          
           if channel.nil? or start.nil? or duration.nil? or volume.nil? or pitch.nil? # or instrument.nil? 
             raise AleatoricFailedMidiLoadException, "Load of file #{file_name} failed on note # #{note_num}"
           else

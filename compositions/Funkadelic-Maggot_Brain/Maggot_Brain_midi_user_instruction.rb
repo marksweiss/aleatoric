@@ -112,7 +112,6 @@ PLAYER_SETTINGS = {
 # Ensemble State Management
 # These values govern the behavior of the Ensemble
 ENSEMBLE_SETTINGS = {
-  "num_players" => 10,
   # Threshold number of phrases behind the furthest ahead any Player is allowed to slip.
   # If they are more than N behind the leader, they must advance.     
   "phrases_idx_range_threshold" => 1,
@@ -132,10 +131,10 @@ ENSEMBLE_SETTINGS = {
   "decrescendo_max_amp_range" => DEFAULT_VOLUME,
   # Minimum number of iterations over which a de/crescendo will take to de/increase volume by crescendo amount
   # NOTE: Must be < max_crescendo_num_steps
-  "min_crescendo_num_steps" => 10, # 50,
+  "min_crescendo_num_steps" => 50, # 50,
   # Maximum number of iterations over which a de/crescendo will take to de/increase volume by crescendo amount
   # NOTE: Must be >= de/crescendo_max_amp_range
-  "max_crescendo_num_steps" => 20, # 70, 
+  "max_crescendo_num_steps" => 70, # 70, 
   
   # Parameters governing the Conclusion
   # This is the ratio of steps in the Conclusion to the total steps before the Conclusion  
@@ -148,10 +147,10 @@ ENSEMBLE_SETTINGS = {
   "conclusion_cur_start_offset_factor" => 0.05,
   # Minimum number of crescendo and decrescendo steps in the conclusion, supporting the 
   #  Instruction indicating ensemble should de/crescendo "several times"
-  "min_number_concluding_crescendos" => 1,  
+  "min_number_concluding_crescendos" => 0,  
   # Maximum number of crescendo and decrescendo steps in the conclusion, supporting the 
   #  Instruction indicating ensemble should de/crescendo "several times"
-  "max_number_concluding_crescendos" => 3
+  "max_number_concluding_crescendos" => 0
 }
 
 # Add this to store properties global to the score and need to be stored in module-scope vars
@@ -627,7 +626,6 @@ class In_C_Ensemble
       end
     end
     @reached_concluding_unison = true
-    @reached_concluding_unison                           
   end
   
   # Set by Instruction 14 Postplay Handler when it enters the block to have the players
@@ -1005,108 +1003,119 @@ instruction_14_ensemble_post = lambda do |container|
   else
     aleatoric_ensemble.set_state("play_count", play_count + 1)
   end
-
+  
   if @@in_c_ensemble.reached_concluding_unison?    
     
-    # Verbose timing logging
-    t = Time.now
-    puts "Entering concluding unison"
-    
-    # In practice, variations in duration from swing, added notes for phase align changes can lead to significant delta
-    #  in when players arrive at the same phrase, so we need this
-    # Use flags to just all this block once, which which catches each player up to the one farthest ahead
-    # Get current phrase of any player because all are on the last phrase
-    aleatoric_players = aleatoric_ensemble.get_players
-    # NOTE: This only worked for "In C" where no players had any phrases with no notes.  In
-    #  "Kashmir," player 0 had no notes until many measures in, so it broke on a divide by 0 below.
-    #  Also, it wasn't meaningful in that case of imported MIDI where each measure is the same
-    #  duration and each is imported as a seprate phrase, so the duration of the last "phrase"
-    #  is known -- it's the duration of one measure in the meter of the input (i.e. 4/4 == WHL)
+    # # Verbose timing logging
+    # t = Time.now
+    # puts "Entering concluding unison"    
+    #     
+    # # In practice, variations in duration from swing, added notes for phase align changes can lead to significant delta
+    # #  in when players arrive at the same phrase, so we need this
+    # # Use flags to just all this block once, which which catches each player up to the one farthest ahead
+    # # Get current phrase of any player because all are on the last phrase
+    # aleatoric_players = aleatoric_ensemble.get_players
+    # # NOTE: This only worked for "In C" where no players had any phrases with no notes.  In
+    # #  "Kashmir," player 0 had no notes until many measures in, so it broke on a divide by 0 below.
+    # #  Also, it wasn't meaningful in that case of imported MIDI where each measure is the same
+    # #  duration and each is imported as a seprate phrase, so the duration of the last "phrase"
+    # #  is known -- it's the duration of one measure in the meter of the input (i.e. 4/4 == WHL)
     # durations = aleatoric_players[0].current_phrase.notes.collect {|note| note.duration}
-    last_phrase_dur = SCORE_SETTINGS['last_phrase_dur'] # durations.inject(0) {|sum, x| sum + x}
-    # Get the start time past current latest start time so all crescendo notes start after that
-    max_start = aleatoric_ensemble.players_attr_slice(:current_start).max
-    # Loop through all players in the Aleatoric Ensemble
-    aleatoric_players.each do |al_player|
-      # Figure out how many times it needs to repeat the last phrase      
-      num_plays_last_phrase = ((max_start - al_player.current_start) / last_phrase_dur).floor    
-      # Append the notes of the last phrase to the output for this Player
-      num_plays_last_phrase.times do 
-        in_c_player = in_c_players[al_player.handle]
-        phrase = al_player.current_phrase
-        al_player.append_phrase_to_output(phrase=phrase, adj_start_to_current_start=true)        
-      end
-    end
+    # last_phrase_dur = durations.inject(0) {|sum, x| sum + x}  # last_phrase_dur = SCORE_SETTINGS['last_phrase_dur']
+    # # Get the start time past current latest start time so all crescendo notes start after that
+    # max_start = aleatoric_ensemble.players_attr_slice(:current_start).max
+    # # Loop through all players in the Aleatoric Ensemble
+    # aleatoric_players.each do |al_player|
+    #   
+    #   # TEMP DEBUG
+    #   puts "#{al_player.current_start}"
+    #   
+    #   # Figure out how many times it needs to repeat the last phrase      
+    #   num_plays_last_phrase = ((max_start - al_player.current_start) / last_phrase_dur).floor    
+    #   # Append the notes of the last phrase to the output for this Player
+    #   num_plays_last_phrase.times do 
+    #     in_c_player = in_c_players[al_player.handle]
+    #     
+    #     # TEMP DEBUG
+    #      puts "#{in_c_player.handle}  #{al_player.current_phrase.notes.last.start + al_player.current_phrase.notes.last.duration}"
+    #     
+    #     phrase = al_player.current_phrase
+    #     al_player.append_phrase_to_output(phrase=phrase, adj_start_to_current_start=true)        
+    #   end
+    # end
+    # 
+    # # VERBOSE
+    # t_new = Time.now
+    # puts "Appending concluding unison notes took #{(t_new - t) * 1000.0} milliseconds"
+    # t = Time.now
+    # # /VERBOSE
+    # 
+    # #  "... The group then makes a large crescendo and diminuendo a few times ..."
+    # # Crescendo a random number of times below a settings limit
+    # # e.g. range is 2 to 4, min is 2, max is 4 ...
+    # #  2 + rand(4 - 2 + 1) == 2 + rand(3) == 2 + [0|1|2] == [2|3|4]
+    # min_crescendos = ENSEMBLE_SETTINGS["min_number_concluding_crescendos"]
+    # max_crescendos = ENSEMBLE_SETTINGS["max_number_concluding_crescendos"]
+    # num_crescendos = min_crescendos + rand(max_crescendos - min_crescendos + 1)            
+    # # Calculate the number of steps in each crescendo -- total calls to play * a fraction of 1 to determine 
+    # #  the length of the conclusion crescendo as a ratio of length of the whole performance, divide by
+    # #  number of crescendos to spread total crescendoing length over multiple crescendos
+    # if num_crescendos > 0
+    #   num_crescendo_steps = (play_count * (ENSEMBLE_SETTINGS["conclusion_steps_ratio"] / num_crescendos)).ceil    
+    #   # Split the max allowed increase in amp for a crescendo evenly among the steps of the crescendo
+    #   volume_adj = ((ENSEMBLE_SETTINGS["crescendo_max_amp_range"] * 2).to_f / num_crescendo_steps.to_f).ceil
+    #   if (num_crescendo_steps * volume_adj) > (ENSEMBLE_SETTINGS["crescendo_max_amp_range"] * 2)
+    #     num_crescendo_steps = ((ENSEMBLE_SETTINGS["crescendo_max_amp_range"] * 2).to_f / volume_adj.to_f).ceil
+    #   end
+    # end
+    # 
+    # # VERBOSE
+    # puts "num_crescendos #{num_crescendos}"
+    # puts "num_crescendo_steps #{num_crescendo_steps}"
+    # puts "volume_adj #{volume_adj}"
+    # # /VERBOSE
+    # 
+    # 
+    # num_crescendos.times do
+    #   # Walk half the steps and crescendo
+    #   cur_volume_adj = volume_adj
+    #   num_crescendo_steps.times do     
+    #     aleatoric_players.each do |al_player|  
+    #       phrase = al_player.current_phrase.dup              
+    #       phrase.notes.each do |note|             
+    #         note.volume(note.volume + cur_volume_adj) 
+    #       end          
+    #       al_player.append_phrase_to_output(phrase=phrase, adj_start_to_current_start=true)
+    #     end
+    #     cur_volume_adj += volume_adj
+    #   end
+    #   
+    #   # Walk the other half of the steps and diminuendo, using factor starting at current step
+    #   #  and subtracting on each time through, times the volume adjusement per step, down to 0
+    #   j = num_crescendo_steps - 1
+    #   num_crescendo_steps.times do     
+    #     aleatoric_players.each do |al_player| 
+    #       phrase = al_player.current_phrase.dup
+    #       phrase.notes.each {|note| note.volume(note.volume + (j * volume_adj))}
+    #       al_player.append_phrase_to_output(phrase=phrase, adj_start_to_current_start=true)
+    #     end
+    #     j -= 1
+    #   end  
+    # end
+    # 
+    # # VERBOSE
+    # t_new = Time.now
+    # puts "Appending concluding crescendos took #{(t_new - t) * 1000.0} milliseconds"              
+    # @@in_c_ensemble.players.each do |player|
+    #   puts "handle #{player.handle}  advanced on play next #{player.advanced_on_play_next}"
+    #   puts "handle #{player.handle}  advanced on too far behind #{player.advanced_on_play_next2}"
+    #   puts "handle #{player.handle}  advanced on seeking unison #{player.advanced_on_play_next3}"
+    #   puts "handle #{player.handle}  max phrase count #{player.max_phrase_count}"
+    # end        
+    # # /VERBOSE        
+    #     
     
-    # VERBOSE
-    t_new = Time.now
-    puts "Appending concluding unison notes took #{(t_new - t) * 1000.0} milliseconds"
-    t = Time.now
-    # /VERBOSE
-    
-    #  "... The group then makes a large crescendo and diminuendo a few times ..."
-    # Crescendo a random number of times below a settings limit
-    # e.g. range is 2 to 4, min is 2, max is 4 ...
-    #  2 + rand(4 - 2 + 1) == 2 + rand(3) == 2 + [0|1|2] == [2|3|4]
-    min_crescendos = ENSEMBLE_SETTINGS["min_number_concluding_crescendos"]
-    max_crescendos = ENSEMBLE_SETTINGS["max_number_concluding_crescendos"]
-    num_crescendos = min_crescendos + rand(max_crescendos - min_crescendos + 1)            
-    # Calculate the number of steps in each crescendo -- total calls to play * a fraction of 1 to determine 
-    #  the length of the conclusion crescendo as a ratio of length of the whole performance, divide by
-    #  number of crescendos to spread total crescendoing length over multiple crescendos
-    num_crescendo_steps = (play_count * (ENSEMBLE_SETTINGS["conclusion_steps_ratio"] / num_crescendos)).ceil    
-    # Split the max allowed increase in amp for a crescendo evenly among the steps of the crescendo
-    volume_adj = ((ENSEMBLE_SETTINGS["crescendo_max_amp_range"] * 2).to_f / num_crescendo_steps.to_f).ceil
-    if (num_crescendo_steps * volume_adj) > (ENSEMBLE_SETTINGS["crescendo_max_amp_range"] * 2)
-      num_crescendo_steps = ((ENSEMBLE_SETTINGS["crescendo_max_amp_range"] * 2).to_f / volume_adj.to_f).ceil
-    end
-    
-    # VERBOSE
-    puts "num_crescendos #{num_crescendos}"
-    puts "num_crescendo_steps #{num_crescendo_steps}"
-    puts "volume_adj #{volume_adj}"
-    # /VERBOSE
-    
-    
-    num_crescendos.times do
-      # Walk half the steps and crescendo
-      cur_volume_adj = volume_adj
-      num_crescendo_steps.times do     
-        aleatoric_players.each do |al_player|  
-          phrase = al_player.current_phrase.dup              
-          phrase.notes.each do |note|             
-            note.volume(note.volume + cur_volume_adj) 
-          end          
-          al_player.append_phrase_to_output(phrase=phrase, adj_start_to_current_start=true)
-        end
-        cur_volume_adj += volume_adj
-      end
-      
-      # Walk the other half of the steps and diminuendo, using factor starting at current step
-      #  and subtracting on each time through, times the volume adjusement per step, down to 0
-      j = num_crescendo_steps - 1
-      num_crescendo_steps.times do     
-        aleatoric_players.each do |al_player| 
-          phrase = al_player.current_phrase.dup
-          phrase.notes.each {|note| note.volume(note.volume + (j * volume_adj))}
-          al_player.append_phrase_to_output(phrase=phrase, adj_start_to_current_start=true)
-        end
-        j -= 1
-      end  
-    end
-    
-    # VERBOSE
-    t_new = Time.now
-    puts "Appending concluding crescendos took #{(t_new - t) * 1000.0} milliseconds"              
-    @@in_c_ensemble.players.each do |player|
-      puts "handle #{player.handle}  advanced on play next #{player.advanced_on_play_next}"
-      puts "handle #{player.handle}  advanced on too far behind #{player.advanced_on_play_next2}"
-      puts "handle #{player.handle}  advanced on seeking unison #{player.advanced_on_play_next3}"
-      puts "handle #{player.handle}  max phrase count #{player.max_phrase_count}"
-    end        
-    # /VERBOSE        
-        
-    # ****
+    # # ****    
     # Set flag for repeat_until() handler to detect and end the performance
     @@in_c_ensemble.reached_conclusion = true    
   end  

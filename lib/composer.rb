@@ -360,7 +360,7 @@ def import(name, &args_blk)
         end
       end
     end
-        
+     
     # Adjust note start offset for next call to 'import'
     @channel_import_start = cur_max_start if cur_max_start > @channel_import_start        
 
