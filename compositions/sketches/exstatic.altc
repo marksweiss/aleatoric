@@ -1,0 +1,255 @@
+# NOTE: Lame but right now assignment to vars must be in first block of script above all other statements
+_num_steps = 100
+_base_amp = 2000
+_num_modfactors = 7
+_mod_factors = [0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.3]
+
+_start1 = 0.0001
+_start2 = 0.00011
+_rest_dur1 = 0.001
+_nt_dur1 = (0.075 - 0.001)
+_pitch_step1 = (E3F - C3) / _num_steps
+
+_start3 = 0.00012
+_start4 = 0.00013
+_rest_dur2 = 0.004
+_nt_dur2 = (0.075 - 0.004)
+_pitch_step2 = (F3 - E3F) / _num_steps
+
+_start5 = 0.00014
+_start6 = 0.00015
+_rest_dur3 = 0.016
+_nt_dur3 = (0.075 - 0.016)
+_pitch_step3 = (B3F - F3) / _num_steps
+
+_start7 = 0.00016
+_start8 = 0.00017
+_rest_dur4 = 0.008
+_nt_dur4 = (0.075 - 0.008)
+_pitch_step4 = (C4LIM - B3F) / _num_steps
+
+# This is function declaration syntax.  Functions can be anywhere in the script, but can't 
+#  be nested within anything else (not within sections, phrases, notes, write, repeat, format blocks etc.)
+loop_step_u: start, step, index
+  start + (step * index)
+  
+loop_step_d: start, step, index
+  start - (step * index)
+
+modulate_i: val
+  (val * _mod_factors[(rand * _num_modfactors).to_i]).to_i
+  
+f_start: index, is_rest
+  $last_start = 0
+  if not is_rest
+    x = rand(_num_steps)
+    x = x % (_nt_dur1 * _num_steps).to_i
+    $last_start = x
+    x
+  else
+    $last_start
+  end
+  
+f_dur: index
+  x = EITH
+  if rand(20) == 0
+    x = WHL + (rand(0.1))
+  else
+    dur = [EITH, SXTNTH, EITH, SXTNTH, EITH, SXTNTH, QRTR, SXTNTH]
+    x = dur[index % 8] + (rand(0.1))
+  end
+  x
+  
+f_amp: index, factor
+  amp = [2400, 200, 2800, 2000, 2350, 700, 2900, 2000]
+  x = 0
+  if rand(2) % 2 == 0
+    x = amp[index % 8] + rand(0.1)
+  else
+    x = amp[index % 8] - rand(0.1)
+  end
+  x * factor
+
+f_pitch: index, transpose
+  pitch = [C4, A4F, E4F, C4, F4, A4F, C4, C3]
+  x = pitch[index % 8]
+  adj = (rand(0.1) * 0.001)
+  adj *= -1 if rand(2) % 2 == 0
+  x + adj + transpose
+
+
+phrase "C => EFlat, EFlat => C"
+  repeat _num_steps
+    note "rise 1"
+      instrument  1      
+      start       loop_step_u: _start1, _nt_dur1 + _rest_dur1, index - 1
+      duration    _nt_dur1
+      amplitude   modulate_i: _base_amp
+      pitch       loop_step_u: C3, _pitch_step1, index
+      func_table  1
+    
+    note "fall 1"
+      instrument  1
+      start       loop_step_u: _start2, _nt_dur1 + _rest_dur1, index - 1
+      duration    _nt_dur1
+      amplitude   modulate_i: _base_amp
+      pitch       loop_step_d: E3F, _pitch_step1, index
+      func_table  1      
+      
+    note "rest pulse"
+      instrument  1
+      start       loop_step_u: _start2 + _nt_dur1, _nt_dur1 + _rest_dur1, index - 1
+      duration    _rest_dur1
+      amplitude   0
+      pitch       8.01
+      func_table  1
+
+phrase "EFlat => F, F => EFlat"
+  repeat _num_steps
+    note "rise 2"
+      instrument  1      
+      start       loop_step_u: _start3, _nt_dur2 + _rest_dur2, index - 1
+      duration    _nt_dur2
+      amplitude   modulate_i: _base_amp
+      pitch       loop_step_u: E3F, _pitch_step2, index
+      func_table  1
+    
+    note "fall 2"
+      instrument  1
+      start       loop_step_u: _start4, _nt_dur2 + _rest_dur2, index - 1
+      duration    _nt_dur2
+      amplitude   modulate_i: _base_amp
+      pitch       loop_step_d: F3, _pitch_step2, index
+      func_table  1      
+      
+    note "rest pulse"
+      instrument  1
+      start       loop_step_u: _start4 + _nt_dur2, _nt_dur2 + _rest_dur2, index - 1
+      duration    _rest_dur2 
+      amplitude   0
+      pitch       8.01
+      func_table  1      
+
+phrase "F => BFlat, BFlat => F"
+  repeat _num_steps
+    note "rise 3"
+      instrument  1      
+      start       loop_step_u: _start5, _nt_dur3 + _rest_dur3, index - 1
+      duration    _nt_dur3
+      amplitude   modulate_i: _base_amp
+      pitch       loop_step_u: F3, _pitch_step3, index
+      func_table  1
+    
+    note "fall 3"
+      instrument  1
+      start       loop_step_u: _start6, _nt_dur3 + _rest_dur3, index - 1
+      duration    _nt_dur3
+      amplitude   modulate_i: _base_amp
+      pitch       loop_step_d: B3F, _pitch_step3, index
+      func_table  1      
+      
+    note "rest pulse"
+      instrument  1
+      start       loop_step_u: _start6 + _nt_dur3, _nt_dur3 + _rest_dur3, index - 1
+      duration    _rest_dur3
+      amplitude   0
+      pitch       8.01
+      func_table  1 
+
+phrase "BFlat => C, C => BFlat"
+  repeat _num_steps
+    note "rise 4"
+      instrument  1      
+      start       loop_step_u: _start7, _nt_dur4 + _rest_dur4, index - 1
+      duration    _nt_dur4
+      amplitude   modulate_i: _base_amp
+      pitch       loop_step_u: B3F, _pitch_step4, index
+      func_table  1
+    
+    note "fall 4"
+      instrument  1
+      start       loop_step_u: _start8, _nt_dur4 + _rest_dur4, index - 1
+      duration    _nt_dur4
+      amplitude   modulate_i: _base_amp
+      pitch       loop_step_d: C4, _pitch_step4, index
+      func_table  1           
+    note "rest pulse"
+      instrument  1
+      start       loop_step_u: _start8 + _nt_dur4, _nt_dur4 + _rest_dur4, index - 1
+      duration    _rest_dur4
+      amplitude   0
+      pitch       8.01
+      func_table  1      
+
+repeat _num_steps
+  phrase "foreground 1"
+    repeat _num_steps
+      note "C7 Down"
+        instrument  1      
+        start       loop_step_u: _start5, SXTYFRTH + (rand(0.1)/500), index - 1
+        duration    f_dur: index
+        amplitude   f_amp: index, 0.2 
+        pitch       loop_step_d: C7, 0.01, index
+        func_table  1
+      note "C6 Up"
+        instrument  1      
+        start       loop_step_u: _start4, SXTYFRTH + (rand(0.1)/500), index - 1
+        duration    f_dur: index
+        amplitude   f_amp: index, 0.2 
+        pitch       loop_step_u: C6, 0.01, index
+        func_table  1
+
+      note "C7 Down"
+        instrument  1      
+        start       loop_step_u: _start5 + (SXTYFRTH * _num_steps), SXTYFRTH + (rand(0.1)/500), index - 1
+        duration    f_dur: index
+        amplitude   f_amp: index, 0.2 
+        pitch       loop_step_d: C7, 0.01, index
+        func_table  1
+      note "C6 Up"
+        instrument  1      
+        start       loop_step_u: _start4 + (SXTYFRTH * _num_steps), SXTYFRTH + (rand(0.1)/500), index - 1
+        duration    f_dur: index
+        amplitude   f_amp: index, 0.2 
+        pitch       loop_step_u: C6, 0.01, index
+        func_table  1        
+        
+      note "C7 Down"
+        instrument  1      
+        start       loop_step_u: _start6, THRTYSCND + (rand(0.1)/250), index - 1
+        duration    f_dur: index
+        amplitude   f_amp: index, 0.1 
+        pitch       loop_step_d: C5, 0.01, index
+        func_table  1
+      note "C6 Up"
+        instrument  1      
+        start       loop_step_u: _start7, THRTYSCND + (rand(0.1)/250), index - 1
+        duration    f_dur: index
+        amplitude   f_amp: index, 0.1 
+        pitch       loop_step_u: C4, 0.01, index
+        func_table  1        
+
+      note "Melody"
+        instrument  1      
+        start       loop_step_u: _start4, SXTYFRTH + (rand(0.1)/500), index - 1
+        duration    THRTYSCND + (rand(0.1)/250) # f_dur: index
+        amplitude   f_amp: index, 0.2
+        pitch       f_pitch: index, 0.0
+        func_table  1 
+      note "Melody"
+        instrument  1      
+        start       loop_step_u: _start4 + (SXTYFRTH * _num_steps), SXTYFRTH + (rand(0.1)/500), index - 1
+        duration    THRTYSCND + (rand(0.1)/250) # f_dur: index
+        amplitude   f_amp: index, 0.2
+        pitch       f_pitch: index, 1.0
+        func_table  1        
+        
+        
+        
+write "exstatic.sco"
+  format csound
+  phrases "foreground 1"
+  # "C => EFlat, EFlat => C", "EFlat => F, F => EFlat", "F => BFlat, BFlat => F", "BFlat => C, C => BFlat" , 
+
+render "exstatic.aif"
+  orchestra  "markov_opt_1.orc"

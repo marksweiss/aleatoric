@@ -1,0 +1,42 @@
+section "3"
+
+phrase "p31"
+  repeat _pi_rng_fth
+  
+    note "p31 n1"
+      # Open Bug: channel must be declared before instrument
+      channel     2 
+      instrument  MIDI_Vibraphone
+      duration    _blen * 5 * (cocycle: index) 
+      amplitude   _midi_max * (cocycle: index) * _ampfctr * 0.5
+      pitch       D2
+
+    note "p31 n1 rest 1"
+      channel     2 
+      instrument  MIDI_Vibraphone
+      duration    _blenrst * 2.5 * (cocycle: index) 
+      velocity    0
+      pitch       Cneg1
+      
+    note "p31 n2"
+      # Open Bug: channel must be declared before instrument
+      channel     2 
+      instrument  MIDI_Tubular_Bells # midi_rng: index
+      duration    _blen * 5 * (cocycle: index)   
+      amplitude   _midi_max * (cocycle: index) * _ampfctr * 0.6
+      pitch       A2
+
+    note "p31 n2 rest 1"
+      channel     2 
+      instrument  MIDI_Vibraphone
+      duration    _blenrst * 7.5 * (cocycle: index) 
+      velocity    0
+      pitch       Cneg1
+      
+    note "p31 n3"
+      # Open Bug: channel must be declared before instrument
+      channel     2 
+      instrument  MIDI_Tubular_Bells # midi_rng: index
+      duration    _blen * 5 * (cocycle: index) 
+      amplitude   _midi_max * (cocycle: index) * _ampfctr * 0.5
+      pitch       C2  
