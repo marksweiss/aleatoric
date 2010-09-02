@@ -320,6 +320,10 @@ def import(name, &args_blk)
     @notes_by_channel = {}
     cur_max_start = 0.0
     import_notes.each do |note|
+      
+      # TEMP DEBUG
+      puts "import_notes duration #{note.duration}" if note.duration == 0.0
+      
       # Adjust note.start here to be offset from beginning of all imported notes, not just this call to 'import'
       note.start(note.start + @channel_import_start)
       # Track max start among all notes on all channels to use to adjust all channels to be aligned below
@@ -345,17 +349,27 @@ def import(name, &args_blk)
       # First case, no notes for channel, set rest
       if not @notes_by_channel.include? channel
         rest_dur = cur_max_start - @channel_import_start
-        rest = Note.new_rest(rest_dur, channel)
-        rest.start(@channel_import_start)
-        @notes_by_channel[channel] = [rest]
+        if rest_dur > 0.0009
+          rest = Note.new_rest(rest_dur, channel)
+          rest.start(@channel_import_start)
+
+          # TEMP DEBUG
+          puts "Added rest as only measure note #{rest.to_s}"
+
+          @notes_by_channel[channel] = [rest]
+        end
       # Second case, channel had some notes, make sure it has a rest even up to cur_note_max_start
       else
         last_note = @notes_by_channel[channel].last
         last_note_next_start = last_note.start + last_note.duration
         rest_dur = cur_max_start - last_note_next_start
-        if rest_dur > 0.0
+        if rest_dur > 0.0009
           rest = Note.new_rest(rest_dur, channel)
           rest.start(last_note_next_start)
+          
+          # TEMP DEBUG
+          puts "Added rest as additional measure note #{rest.to_s}"
+          
           @notes_by_channel[channel] << rest
         end
       end
@@ -733,7 +747,11 @@ def players(*names)
       name = name.strip
       player = @players_by_name[name]
       if player != nil
-        player.output.each do |note|        
+        player.output.each do |note|    
+          
+          # TEMP DEBUG
+          puts "note with 0 duration" if note.duration == 0.0
+              
           @score_notes << note
         end
         player.clear_output
@@ -911,7 +929,7 @@ def ensembles(*names)
       name = name.strip
       ensemble = @ensembles_by_name[name]
       ensemble.players.each do |player|
-        player.output.each do |note|
+        player.output.each do |note|          
           @score_notes << note
         end
         player.clear_output
@@ -978,6 +996,12 @@ def write(file_name, &args_blk)
   yield
 
   @score_out << @score_notes  
+  
+  # TEMP DEBUG
+  @score_notes.each do |note|
+    # puts "note with 0 duration in write()" if note.duration == 0.0
+  end
+  
   case @score_out.format.to_sym
   when :csound    
     File.open(file_name, 'w') do |f|

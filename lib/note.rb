@@ -197,6 +197,7 @@ class Note
         val = @note_attrs[key].to_s.strip
         ret.concat("#{key.to_s.strip}")
         # TODO: This is an abominable check for a float
+        
         if val.include? '.'
           ret.concat(sprintf(" %.5f", val) + "  ")
         else

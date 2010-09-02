@@ -165,26 +165,27 @@ class MidiManager
           instrument = event.program
         end      
         if event.note?
-          next if (duration = midi_ticks_to_seconds(event.delta_time, seq)) == 0.0    
-                
-          channel = event.channel
-          
+          channel = event.channel          
           # VERBOSE          
           #if not channels_found.include? channel
           #  channels_found[channel] = ''
           #  puts "Channels Found #{channels_found.keys.sort.join(' ')}"
           #end
           # /VERBOSE
-
+          
           # From the midilib docs: "... delta times that represent note lengths. 
           #  MIDI::Sequence#length_to_delta takes a note length (a multiple of a quarter note) 
           #  and returns the delta time given the sequence's current ppqn (pulses per quarter note) 
           #  setting. 1 is a quarter note, 1.0/32.0 is a 32nd note (use floating-point numbers 
           #  to avoid integer rounding), 1.5 is a dotted quarter, etc."
           start = midi_ticks_to_seconds(event.time_from_start, seq)
-          # duration = midi_ticks_to_seconds(event.delta_time)  # Assigned above in test for 0.0 dur         
+          duration = midi_ticks_to_seconds(event.delta_time, seq)  # Assigned above in test for 0.0 dur         
           volume = event.velocity
-          pitch = event.note         
+          pitch = event.note
+          
+          # Validate note properties and continue if invalid.  Someday understand MIDI and midilib better
+          next if duration == 0.0 || volume == 0      
+          
           if (measure = seq_measures.measure_for_event(event))
             measure = measure.measure_number
           end
@@ -192,11 +193,15 @@ class MidiManager
           if channel.nil? or start.nil? or duration.nil? or volume.nil? or pitch.nil? # or instrument.nil? 
             raise AleatoricFailedMidiLoadException, "Load of file #{file_name} failed on note # #{note_num}"
           else
+            
+            # TEMP DEBUG
+            puts "MidiMgr#load() adding note with 0 duration" if duration == 0.0
+            
             # Construct new note from base properties
             note = Note.new("#{note_num}", {:instrument=>instrument, :channel=>channel, :start=>start, :duration=>duration, :amplitude=>volume, :pitch=>pitch})
             # Add measure value -- this is a note built-in attr that is used by kw 'import' but isn't part of note output to score        
             note.measure = measure
-            ret_notes << note
+            ret_notes << note            
             # instrument = nil; 
             channel = nil; start = nil; duration = nil; volume = nil; pitch = nil; measure = nil          
             note_num += 1
