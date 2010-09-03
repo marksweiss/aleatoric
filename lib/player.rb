@@ -279,7 +279,7 @@ class Player
       #  the start time of notes ahead of their literal value.  Modified this because it broke a test
       #  which pointed out the subtle issue that it should really only do this if the new note is before
       #  the current Player start time. So added the if check.
-      if @auto_next_start and new_note.start < @current_start
+      if @auto_next_start and new_note.start <= @current_start
         # if the new note start is < current_start, treat it as an offset from current_start
         new_note.start(new_note.start + @current_start)
       end      

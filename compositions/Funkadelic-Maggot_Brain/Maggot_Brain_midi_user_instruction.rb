@@ -863,7 +863,7 @@ instruction_5_player_pre = lambda do |container, score|
   #  in its current phrase to not start at the same time as the last time it played.  
   # This in effect changes its "alignment" in playing relative to the other players
   # Construct the rest Note
-  rest_note_dur = in_c_player.phase_adj
+  rest_note_dur = in_c_player.phase_adj  
   rest_note = Note.new_rest(rest_note_dur)
   # Shift the start times of all notes following the prepended note, and prepend it
   # This (i.e. score.notes.first == nil) won't happen if notes are defined in Composer score, but MIDI import brings in
@@ -949,7 +949,10 @@ set_player_postplay_instruction("Instruction 10", &instruction_3_6_10_player_pos
 instruction_11_player_pre = lambda do |container, score|
   in_c_player = in_c_players[container.handle]
   shift = in_c_player.transpose_shift(score)
-  score.notes.each {|note| note.pitch(note.pitch + shift)}
+  score.notes.each do |note| 
+    note.pitch(note.pitch + shift)
+  end
+  
   score
 end
 set_player_preplay_instruction("Instruction 11", &instruction_11_player_pre)

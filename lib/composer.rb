@@ -194,7 +194,7 @@ end
 @meter = Meter.new(quantizing=false)
 
 @cur_start = 0.0
-@channel_import_start = 0.0 # Offset of latest note from previous MIDI 'import' call
+MIDI_IMPORT_NO_START = 0.0
 @cur_measure = nil
 @measures = []
 @measures_by_name = {}
@@ -295,8 +295,8 @@ def import(name, &args_blk)
       delta = 0.0 if delta < 0.0
       note.start(init_cur_start + delta) 
       @notes << note 
-      @notes_by_name[name] = note unless note.name == nil
-      adjust_cur_start([note])
+      @notes_by_name[name] = note unless note.name == nil      
+      adjust_cur_start([note])      
     end
   # import can also be used as child of root, and then its loading channels, instruments, notes
   #  and measures (if capture measure is part of the import block) into players listed in 
@@ -319,16 +319,8 @@ def import(name, &args_blk)
     #  assigned notes in phrase for each measure only for the notes in their channel    
     @notes_by_channel = {}
     cur_max_start = 0.0
-    import_notes.each do |note|
-      
-      # TEMP DEBUG
-      puts "import_notes duration #{note.duration}" if note.duration == 0.0
-      
-      # Adjust note.start here to be offset from beginning of all imported notes, not just this call to 'import'
-      note.start(note.start + @channel_import_start)
-      # Track max start among all notes on all channels to use to adjust all channels to be aligned below
-      cur_note_max_start = note.start + note.duration
-      cur_max_start = cur_note_max_start if cur_note_max_start > cur_max_start 
+    import_notes.each do |note| 
+      note.start MIDI_IMPORT_NO_START
       
       if not @notes_by_channel.include? note.channel
         @notes_by_channel[note.channel] = [note]                
@@ -352,10 +344,6 @@ def import(name, &args_blk)
         if rest_dur > 0.0009
           rest = Note.new_rest(rest_dur, channel)
           rest.start(@channel_import_start)
-
-          # TEMP DEBUG
-          puts "Added rest as only measure note #{rest.to_s}"
-
           @notes_by_channel[channel] = [rest]
         end
       # Second case, channel had some notes, make sure it has a rest even up to cur_note_max_start
@@ -365,18 +353,11 @@ def import(name, &args_blk)
         rest_dur = cur_max_start - last_note_next_start
         if rest_dur > 0.0009
           rest = Note.new_rest(rest_dur, channel)
-          rest.start(last_note_next_start)
-          
-          # TEMP DEBUG
-          puts "Added rest as additional measure note #{rest.to_s}"
-          
+          rest.start(last_note_next_start)          
           @notes_by_channel[channel] << rest
         end
       end
     end
-     
-    # Adjust note start offset for next call to 'import'
-    @channel_import_start = cur_max_start if cur_max_start > @channel_import_start        
 
     yield
     
@@ -748,10 +729,6 @@ def players(*names)
       player = @players_by_name[name]
       if player != nil
         player.output.each do |note|    
-          
-          # TEMP DEBUG
-          puts "note with 0 duration" if note.duration == 0.0
-              
           @score_notes << note
         end
         player.clear_output
@@ -998,8 +975,11 @@ def write(file_name, &args_blk)
   @score_out << @score_notes  
   
   # TEMP DEBUG
-  @score_notes.each do |note|
-    # puts "note with 0 duration in write()" if note.duration == 0.0
+  starts = @score_notes.collect {|note| note.start}
+  last_start = 0.0
+  starts.sort.each do |start| 
+    puts "#{start} - #{last_start} = #{start - last_start}" if start - last_start > 2.0
+    last_start = start
   end
   
   case @score_out.format.to_sym
