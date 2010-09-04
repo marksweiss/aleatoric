@@ -41,13 +41,13 @@ tempo _default_tempo
 player "Player 1"
   instrument MIDI_Church_Organ, channel=0
 player "Player 2"
-  instrument MIDI_Reed_Organ, channel=0
-#player "Player 3"
-#  instrument MIDI_Vibraphone, channel=2
-#player "Player 4"
-#  instrument MIDI_Church_Organ, channel=0
-#player "Player 5"
-#  instrument MIDI_Church_Organ, channel=0
+  instrument MIDI_Church_Organ, channel=0
+player "Player 3"
+  instrument MIDI_Church_Organ, channel=0
+player "Player 4"
+  instrument MIDI_Church_Organ, channel=0
+player "Player 5"
+  instrument MIDI_Church_Organ, channel=0
 #player "Player 6"
 #  instrument MIDI_Church_Organ, channel=0
 #player "Player 7"
@@ -62,27 +62,27 @@ player "Player 2"
 #  within the Ensemble block, thereby assigning all Phrases to all Players
 #  in the Ensemble
 ensemble "In C Orchestra"
-  players "Player 1", "Player 2"#, "Player 3", "Player 4" , "Player 5", "Player 6", "Player 7", "Player 8", "Player 9"#, "Player 10", "Player 11", "Player 12", "Player 13"
+  players "Player 1", "Player 2", "Player 3", "Player 4" , "Player 5"#, "Player 6", "Player 7", "Player 8", "Player 9"#, "Player 10", "Player 11", "Player 12", "Player 13"
 
 # TODO Ensemble support for import
 import "../compositions/Funkadelic-Maggot_Brain/resources/MAG_2_1.mid"
-  players "Player 1", "Player 2"#, "Player 3", "Player 4" , "Player 5", "Player 6", "Player 7", "Player 8", "Player 9"#, "Player 10", "Player 11", "Player 12", "Player 13"
+  players "Player 1", "Player 2", "Player 3", "Player 4" , "Player 5"#, "Player 6", "Player 7", "Player 8", "Player 9"#, "Player 10", "Player 11", "Player 12", "Player 13"
 import "../compositions/Funkadelic-Maggot_Brain/resources/MAG_2_2.mid"
-  players "Player 1", "Player 2"#, "Player 3", "Player 4" , "Player 5", "Player 6", "Player 7", "Player 8", "Player 9"#, "Player 10", "Player 11", "Player 12", "Player 13"
+  players "Player 1", "Player 2", "Player 3", "Player 4" , "Player 5"#, "Player 6", "Player 7", "Player 8", "Player 9"#, "Player 10", "Player 11", "Player 12", "Player 13"
 import "../compositions/Funkadelic-Maggot_Brain/resources/MAG_2_3.mid"
-  players "Player 1", "Player 2"#, "Player 3", "Player 4" , "Player 5", "Player 6", "Player 7", "Player 8", "Player 9"#, "Player 10", "Player 11", "Player 12", "Player 13"
+  players "Player 1", "Player 2", "Player 3", "Player 4" , "Player 5"#, "Player 6", "Player 7", "Player 8", "Player 9"#, "Player 10", "Player 11", "Player 12", "Player 13"
 import "../compositions/Funkadelic-Maggot_Brain/resources/MAG_2_4.mid"
-  players "Player 1", "Player 2"#, "Player 3", "Player 4" , "Player 5", "Player 6", "Player 7", "Player 8", "Player 9"#, "Player 10", "Player 11", "Player 12", "Player 13"
+  players "Player 1", "Player 2", "Player 3", "Player 4" , "Player 5"#, "Player 6", "Player 7", "Player 8", "Player 9"#, "Player 10", "Player 11", "Player 12", "Player 13"
 import "../compositions/Funkadelic-Maggot_Brain/resources/MAG_2_5.mid"
-  players "Player 1", "Player 2"#, "Player 3", "Player 4" , "Player 5", "Player 6", "Player 7", "Player 8", "Player 9"#, "Player 10", "Player 11", "Player 12", "Player 13"
+  players "Player 1", "Player 2", "Player 3", "Player 4" , "Player 5"#, "Player 6", "Player 7", "Player 8", "Player 9"#, "Player 10", "Player 11", "Player 12", "Player 13"
 import "../compositions/Funkadelic-Maggot_Brain/resources/MAG_2_6.mid"
-  players "Player 1", "Player 2"#, "Player 3", "Player 4" , "Player 5", "Player 6", "Player 7", "Player 8", "Player 9"#, "Player 10", "Player 11", "Player 12", "Player 13"
+  players "Player 1", "Player 2", "Player 3", "Player 4" , "Player 5"#, "Player 6", "Player 7", "Player 8", "Player 9"#, "Player 10", "Player 11", "Player 12", "Player 13"
 import "../compositions/Funkadelic-Maggot_Brain/resources/MAG_2_7.mid"
-  players "Player 1", "Player 2"#, "Player 3", "Player 4" , "Player 5", "Player 6", "Player 7", "Player 8", "Player 9"#, "Player 10", "Player 11", "Player 12", "Player 13"
+  players "Player 1", "Player 2", "Player 3", "Player 4" , "Player 5"#, "Player 6", "Player 7", "Player 8", "Player 9"#, "Player 10", "Player 11", "Player 12", "Player 13"
 import "../compositions/Funkadelic-Maggot_Brain/resources/MAG_2_8.mid"
-  players "Player 1", "Player 2"#, "Player 3", "Player 4" , "Player 5", "Player 6", "Player 7", "Player 8", "Player 9"#, "Player 10", "Player 11", "Player 12", "Player 13"
+  players "Player 1", "Player 2", "Player 3", "Player 4" , "Player 5"#, "Player 6", "Player 7", "Player 8", "Player 9"#, "Player 10", "Player 11", "Player 12", "Player 13"
 import "../compositions/Funkadelic-Maggot_Brain/resources/MAG_2_9.mid"
-  players "Player 1", "Player 2"#, "Player 3", "Player 4" , "Player 5", "Player 6", "Player 7", "Player 8", "Player 9"#, "Player 10", "Player 11", "Player 12", "Player 13"
+  players "Player 1", "Player 2", "Player 3", "Player 4" , "Player 5"#, "Player 6", "Player 7", "Player 8", "Player 9"#, "Player 10", "Player 11", "Player 12", "Player 13"
 
 ##############################################################################
 # Instructions
@@ -103,68 +103,68 @@ instruction "Instruction 1"
 
 instruction "Instruction 2"
   description "Any number of any kind of instruments can play.  A group of about 35 is desired if possible but smaller or larger groups will work.  If vocalist(s) join in they can use any vowel and consonant sounds they like."
-  players "Player 1", "Player 2", "Player 3", "Player 4" , "Player 5", "Player 6", "Player 7", "Player 8", "Player 9", "Player 10", "Player 11", "Player 12", "Player 13"
+  players "Player 1", "Player 2", "Player 3", "Player 4" , "Player 5"#, "Player 6", "Player 7", "Player 8", "Player 9"#, "Player 10", "Player 11", "Player 12", "Player 13"
   ensembles "In C Orchestra"
 
 instruction "Instruction 3"
   description "Patterns are to be played consecutively with each performer having the freedom to determine how many times he or she will repeat each pattern before moving on to the next.  There is no fixed rule as to the number of repetitions a pattern may have, however, since performances normally average between 45 minutes and an hour and a half, it can be assumed that one would repeat each pattern from somewhere between 45 seconds and a minute and a half or longer."
-  players "Player 1", "Player 2", "Player 3", "Player 4" , "Player 5", "Player 6", "Player 7", "Player 8", "Player 9", "Player 10", "Player 11", "Player 12", "Player 13"
+  players "Player 1", "Player 2", "Player 3", "Player 4" , "Player 5"#, "Player 6", "Player 7", "Player 8", "Player 9"#, "Player 10", "Player 11", "Player 12", "Player 13"
   ensembles "In C Orchestra"
 
 instruction "Instruction 4"
   description "It is very important that performers listen very carefully to one another and this means occasionally to drop out and listen.  As an ensemble, it is very desirable to play very softly as well as very loudly and to try to diminuendo and crescendo together."
-  players "Player 1", "Player 2", "Player 3", "Player 4" , "Player 5", "Player 6", "Player 7", "Player 8", "Player 9", "Player 10", "Player 11", "Player 12", "Player 13"
+  players "Player 1", "Player 2", "Player 3", "Player 4" , "Player 5"#, "Player 6", "Player 7", "Player 8", "Player 9"#, "Player 10", "Player 11", "Player 12", "Player 13"
   ensembles "In C Orchestra"
 
 instruction "Instruction 5"
   description "Each pattern can be played in unison or canonically in any alignment with itself or with its neighboring patterns.  One of the joys of IN C is the interaction of the players in polyrhythmic combinations that spontaneously arise between patterns.  Some quite fantastic shapes will arise and disintegrate as the group moves through the piece when it is properly played."
-  players "Player 1", "Player 2", "Player 3", "Player 4" , "Player 5", "Player 6", "Player 7", "Player 8", "Player 9", "Player 10", "Player 11", "Player 12", "Player 13"
+  players "Player 1", "Player 2", "Player 3", "Player 4" , "Player 5"#, "Player 6", "Player 7", "Player 8", "Player 9"#, "Player 10", "Player 11", "Player 12", "Player 13"
   ensembles "In C Orchestra"
 
 instruction "Instruction 6"
   description "It is important not to hurry from pattern to pattern but to stay on a pattern long enough to interlock with other patterns being played.  As the performance progresses, performers should stay within 2 or 3 patterns of each other.  It is important not to race too far ahead or to lag too far behind."
-  players "Player 1", "Player 2", "Player 3", "Player 4" , "Player 5", "Player 6", "Player 7", "Player 8", "Player 9", "Player 10", "Player 11", "Player 12", "Player 13"
+  players "Player 1", "Player 2", "Player 3", "Player 4" , "Player 5"#, "Player 6", "Player 7", "Player 8", "Player 9"#, "Player 10", "Player 11", "Player 12", "Player 13"
   ensembles "In C Orchestra"
 
 # TODO Make this an Improvisation that fires every time?
 instruction "Instruction 7"
   description "The ensemble can be aided by the means of an eighth note pulse played on the high c’s of the piano or on a mallet instrument.  It is also possible to use improvised percussion in strict rhythm (drum set, cymbals, bells, etc.), if it is carefully done and doesn’t overpower the ensemble.  All performers must play strictly in rhythm and it is essential that everyone play each pattern carefully.  It is advised to rehearse patterns in unison before attempting to play the piece, to determine that everyone is playing correctly."
-  players "Player 1", "Player 2", "Player 3", "Player 4" , "Player 5", "Player 6", "Player 7", "Player 8", "Player 9", "Player 10", "Player 11", "Player 12", "Player 13"
+  players "Player 1", "Player 2", "Player 3", "Player 4" , "Player 5"#, "Player 6", "Player 7", "Player 8", "Player 9"#, "Player 10", "Player 11", "Player 12", "Player 13"
   ensembles "In C Orchestra"
 
 instruction "Instruction 8"
   description "The tempo is left to the discretion of the performers, obviously not too slow, but not faster than performers can comfortably play."
-  players "Player 1", "Player 2", "Player 3", "Player 4" , "Player 5", "Player 6", "Player 7", "Player 8", "Player 9", "Player 10", "Player 11", "Player 12", "Player 13"
+  players "Player 1", "Player 2", "Player 3", "Player 4" , "Player 5"#, "Player 6", "Player 7", "Player 8", "Player 9"#, "Player 10", "Player 11", "Player 12", "Player 13"
   ensembles "In C Orchestra"
 
 instruction "Instruction 9"
   description "It is important to think of patterns periodically so that when you are resting you are conscious of the larger periodic composite accents that are sounding, and when you re-enter you are aware of what effect your entrance will have on the music’s flow."
-  players "Player 1", "Player 2", "Player 3", "Player 4" , "Player 5", "Player 6", "Player 7", "Player 8", "Player 9", "Player 10", "Player 11", "Player 12", "Player 13"
+  players "Player 1", "Player 2", "Player 3", "Player 4" , "Player 5"#, "Player 6", "Player 7", "Player 8", "Player 9"#, "Player 10", "Player 11", "Player 12", "Player 13"
   ensembles "In C Orchestra"
 
 instruction "Instruction 10"
   description "The group should aim to merge into a unison at least once or twice during the performance.  At the same time, if the players seem to be consistently too much in the same alignment of a pattern, they should try shifting their alignment by an eighth note or quarter note with what’s going on in the rest of the ensemble."
-  players "Player 1", "Player 2", "Player 3", "Player 4" , "Player 5", "Player 6", "Player 7", "Player 8", "Player 9", "Player 10", "Player 11", "Player 12", "Player 13"
+  players "Player 1", "Player 2", "Player 3", "Player 4" , "Player 5"#, "Player 6", "Player 7", "Player 8", "Player 9"#, "Player 10", "Player 11", "Player 12", "Player 13"
   ensembles "In C Orchestra"
 
 instruction "Instruction 11"
   description "It is OK to transpose patterns by an octave, especially to transpose up.  Transposing down by octaves works best on the patterns containing notes of long durations. Augmentation of rhythmic values can also be effective."
-  players "Player 1", "Player 2", "Player 3", "Player 4" , "Player 5", "Player 6", "Player 7", "Player 8", "Player 9", "Player 10", "Player 11", "Player 12", "Player 13"
+  players "Player 1", "Player 2", "Player 3", "Player 4" , "Player 5"#, "Player 6", "Player 7", "Player 8", "Player 9"#, "Player 10", "Player 11", "Player 12", "Player 13"
   ensembles "In C Orchestra"
 
 instruction "Instruction 12"
   description "If for some reason a pattern can’t be played, the performer should omit it and go on."
-  players "Player 1", "Player 2", "Player 3", "Player 4" , "Player 5", "Player 6", "Player 7", "Player 8", "Player 9", "Player 10", "Player 11", "Player 12", "Player 13"
+  players "Player 1", "Player 2", "Player 3", "Player 4" , "Player 5"#, "Player 6", "Player 7", "Player 8", "Player 9"#, "Player 10", "Player 11", "Player 12", "Player 13"
   ensembles "In C Orchestra"
 
 instruction "Instruction 13"
   description "Instruments can be amplified if desired.  Electronic keyboards are welcome also."
-  players "Player 1", "Player 2", "Player 3", "Player 4" , "Player 5", "Player 6", "Player 7", "Player 8", "Player 9", "Player 10", "Player 11", "Player 12", "Player 13"
+  players "Player 1", "Player 2", "Player 3", "Player 4" , "Player 5"#, "Player 6", "Player 7", "Player 8", "Player 9"#, "Player 10", "Player 11", "Player 12", "Player 13"
   ensembles "In C Orchestra"
 
 instruction "Instruction 14"
   description "In C is ended in this way: when each performer arrives at figure #53, he or she stays on it until the entire ensemble has arrived there.  The group then makes a large crescendo and diminuendo a few times and each player drops out as he or she wishes."
-  players "Player 1", "Player 2", "Player 3", "Player 4" , "Player 5", "Player 6", "Player 7", "Player 8", "Player 9", "Player 10", "Player 11", "Player 12", "Player 13"
+  players "Player 1", "Player 2", "Player 3", "Player 4" , "Player 5"#, "Player 6", "Player 7", "Player 8", "Player 9"#, "Player 10", "Player 11", "Player 12", "Player 13"
   ensembles "In C Orchestra"
 
 ##############################################################################

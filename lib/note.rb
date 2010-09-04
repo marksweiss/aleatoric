@@ -206,7 +206,8 @@ class Note
       end
       ret.chop!
       ret.concat("; #{@name}")
-      ret.concat("") if self.respond_to? :player_id
+      ret.concat("  #{@player_id}") if self.respond_to? :player_id
+      ret.concat("  #{@player}") if self.respond_to? :player
       ret
     end    
   end
