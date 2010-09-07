@@ -327,6 +327,9 @@ def capture_measures
   @capture_measures = true  
 end
 
+# TODO FIX THIS RIDICULOUS BUG THAT REQUIRES channel and instrument ON SAME LINE
+# THIS IS ANOTHER EXAMPLE OF NEEDING LOOKAHEAD OR STATE IN A BLOCK
+# BLOCK EXECUTION MODEL IS BREAKING DOWN
 def channel(channel, instrument=nil)
   # Allocate a MIDI channel for the channel number if there isn't one already
   @midi_mgr.channel channel if $FORMAT == :midi 
@@ -343,6 +346,9 @@ def channel(channel, instrument=nil)
   end
 end
 
+# TODO FIX THIS RIDICULOUS BUG THAT REQUIRES channel and instrument ON SAME LINE
+# THIS IS ANOTHER EXAMPLE OF NEEDING LOOKAHEAD OR STATE IN A BLOCK
+# BLOCK EXECUTION MODEL IS BREAKING DOWN
 def instrument(instrument, channel=nil)
   # Need to check note first and elsif exclusion because can process note nested with player
   #  so when this is being handled both @processing_note and @processing_player can be true
@@ -399,13 +405,18 @@ def tempo(new_tempo_bpm)
 end
 
 def amplitude(arg)
-  @cur_note.amplitude arg
+  if @processing_note
+    @cur_note.amplitude arg
+  end
+  if @processing_player
+    @cur_player.default_volume arg
+  end
 end
 def velocity(arg)
-  @cur_note.amplitude arg
+  amplitude arg
 end
 def volume(arg)
-  @cur_note.amplitude arg
+  amplitude arg
 end
 
 def pitch(arg)

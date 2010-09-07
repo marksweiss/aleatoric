@@ -55,7 +55,9 @@ class ComposerAST
     'instruction' => "do\n",
     'improvisation' => "do\n",  
     'improvise' => "do\n",
-    'import' => "do\n"
+    'import' => "do\n",
+    'volume' => "\n",
+    'amplitude' => "\n"
   }
   
   @@kw_block_close_completions= {
@@ -82,7 +84,9 @@ class ComposerAST
     'instruction' => "end\n",
     'improvisation' => "end\n",
     'improvise' => "end\n",
-    'import' => "end\n" 
+    'import' => "end\n",
+    'volume' => "",
+    'amplitude' => "" 
   }
  
   @@kw_children = {
@@ -117,12 +121,14 @@ class ComposerAST
     'ensemble' => ['players', 'note', 'section', 'phrase', 'measure', 'copy_measure'],
     'ensembles' => [],
     'players' => [],
-    'player' => ['note', 'section', 'phrase', 'measure', 'copy_measure'],
+    'player' => ['note', 'section', 'phrase', 'measure', 'copy_measure', 'volume', 'amplitude'],
     'play' => ['players', 'ensembles'],
     'instruction' => ['players', 'ensembles'],
     'improvisation' => ['players'],
     'improvise' => ['players'],
-    'import' => ['capture', 'players', 'tempo']
+    'import' => ['capture', 'players', 'tempo'],
+    'volume' => [],
+    'amplitude' => []    
   }
   @@kw_parents = {
     'root' => [],
@@ -149,7 +155,9 @@ class ComposerAST
     'improvisation' => ['root'],
     'improvise' => ['root', 'repeat'],
     'import' => ['phrase', 'root'],
-    'capture' => ['import']
+    'capture' => ['import'],
+    'volume' => ['player', 'note'],
+    'amplitude' => ['player', 'note']
   }
   @@kw = @@kw_children.keys
  
