@@ -36,6 +36,7 @@ class MidiManager
   
   DEFAULT_BPM = 120
   MIDI_TICKS_PER_QRTR_NOTE = 960.0
+  START_TIME_APPEND_NOTE = 0
   
   def initialize(name=nil, bpm=nil)
     if include_win? or include_mac?
@@ -44,8 +45,9 @@ class MidiManager
     @bpm = bpm || DEFAULT_BPM
     @channel_tracks = {}
     @channel_instruments = {}
+    @last_start_time = 0.0
     # midilib init steps
-    @seq = MIDI::Sequence.new()    
+    @seq = MIDI::Sequence.new()  
     # TODO ******** Linux MIDI support! ******** 
     else
     raise "ONLY WINDOWS AND MAC ARE SUPPORTED FOR MIDI RENDERING AT THIS TIME"    
@@ -104,13 +106,27 @@ class MidiManager
   end
   
   # Args named with MIDI semantics. Converting to Composer semantics:
-  #  note == pitch, velocity == amplitude == volume, delta_time == duration  
-  def add_note(channel, note, velocity, delta_time)       
+  #  channel == channel, note == pitch, velocity == amplitude == volume, delta_time == duration, start_time == start  
+  # Note that if start_time is supplied and value is > 0 then this behaves by positioning note at absolute start time
+  #  but start_time is not supplied or value == 0 then this behaves by appending note in track for sequence for channel
+  def add_note(channel, note, velocity, delta_time, start_time=nil)
     if include_win? or include_mac?
     self.channel(channel) if channel_nil?(channel)
-    note_length = @seq.length_to_delta(seconds_to_beats(delta_time))         
+    note_length = @seq.length_to_delta(seconds_to_beats(delta_time))
+
+    # If start_time not passed then pass 0 to NoteOnEvent, which has the effect of appending note at current start time
+    if start_time.nil? or start_time == 0
+      start_time = START_TIME_APPEND_NOTE
+    #else
+      start_time = @seq.length_to_delta(seconds_to_beats(start_time))
+    end
+
     @channel_tracks[channel].events << NoteOnEvent.new(channel, note, velocity, 0)
     @channel_tracks[channel].events << NoteOffEvent.new(channel, note, velocity, note_length)
+    @channel_tracks[channel].events.last.time_from_start = start_time
+        
+    # @channel_tracks[channel].recalc_times(@last_start_time) # starting_at=start_time
+    @last_start_time = start_time
     end
   end
   

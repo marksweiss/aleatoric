@@ -1018,7 +1018,7 @@ def render(out_file_name, &args_blk)
     @score_out.notes.each do |note|      
       # NOTE: named args caused error on this call, no reason why, all args had values. Nice.
       # MIDI arg names: channel, note, velocity, delta_time
-      @midi_mgr.add_note(note.channel, note.pitch, note.velocity, note.duration)
+      @midi_mgr.add_note(note.channel, note.pitch, note.velocity, note.duration, note.start)
     end
     @midi_mgr.save out_file_name
   elsif @score_out.format.to_sym == :csound
