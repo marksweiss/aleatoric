@@ -81,12 +81,13 @@ class Player
   # but also stored in order they are added.  Clients can call #play by passing
   # a score name, but they can also use the #increment_scores_index and decrement ...
   # methods along with #scores_length to iterate the scores in order and play them.
+  # NOTE: MIDI scores added have all notes set channel to this player's channel
   # @param [String] name of the Aleatoric::Score object being added
   # @param [Aleatoric::Score] the score object being added
   def add_score(score_name, score)
     # Append player name and id to each note for debugging
-    score.notes.each {|note| note.player_id = "#{@name}_#{self.object_id}"}    
-    @scores[score_name] = score
+    dup_score = set_added_score_note_attrs score
+    @scores[score_name] = dup_score
     @scores_ordered_names << score_name
     # If there were no scores, set index to new first score
     @scores_idx = 0 if @scores_idx == -1
@@ -130,9 +131,10 @@ class Player
       break if name == score_name
     end
     if valid_scores_idx? idx
+      set_score_channel score
       # For debugging
-      score.notes.each {|note| note.player_id = "#{@name}_#{self.object_id}"}
-      @scores[score_name] = score 
+      dup_score = set_added_score_note_attrs score
+      @scores[score_name] = dup_score 
     end
     self
   end
@@ -271,23 +273,21 @@ class Player
     
     # Now push the notes cur_score to output. Store added notes just from
     #  this #play call in separate step to return them for client convenience, testing
-    cur_score.notes.each do |note|       
-      new_note = note.dup
-      new_note.instrument(self.instrument) if self.instrument
-      new_note.channel(self.channel) if self.channel            
+    cur_score.notes.each do |note|
+      dup_note = set_added_note_attrs note       
       # NOTE: This is a very important business rule on this line, namely that Player silently pushes
       #  the start time of notes ahead of their literal value.  Modified this because it broke a test
       #  which pointed out the subtle issue that it should really only do this if the new note is before
       #  the current Player start time. So added the if check.
-      if @auto_next_start and new_note.start <= @current_start
+      if @auto_next_start and dup_note.start <= @current_start
         # if the new note start is < current_start, treat it as an offset from current_start
-        new_note.start(new_note.start + @current_start)
+        dup_note.start(dup_note.start + @current_start)
       end      
       # and move the offset forward past the end of the current note
-      @current_start += new_note.duration        
+      @current_start += dup_note.duration        
 
-      ret << new_note
-      @out_notes << new_note            
+      ret << dup_note
+      @out_notes << dup_note            
     end
             
     # Now run postplay hooks. 
@@ -313,12 +313,10 @@ class Player
     ret = []     
     return ret if not improvising? or @improvising_hooks.empty? or not @improvising_hooks.include? name   
     @improvising_hooks[name].call.notes.each do |note| 
-      note.instrument(self.instrument) if self.instrument
-      # For debugging
-      note.player_id = "#{@name}_#{self.object_id}"      
-      @out_notes << note
-      @current_start += note.duration
-      ret << note.dup
+      dup_note = set_added_note_attrs note
+      @out_notes << dup_note
+      @current_start += dup_note.duration
+      ret << dup_note.dup
     end    
     ret
   end
@@ -470,12 +468,9 @@ class Player
   # @return [self]
   def set_output_notes(notes)
     @out_notes.clear
-    notes.each do |note | 
-      # For debugging
-      note.player_id = "#{@name}_#{self.object_id}"    
-      note.instrument(@instrument) if @instrument      
-      note.channel(@channel) if @channel
-      @out_notes << note
+    notes.each do |note|
+      dup_note = set_added_note_attrs note
+      @out_notes << dup_note
     end
     self
   end
@@ -486,26 +481,19 @@ class Player
   # @param [Array<Aleatoric::Note>] a notes to be appended to the current output for the Player 
   # @return [self]  
   def append_note_to_output(note, adj_start_to_current_start=false)
-    dup_note = note.dup
-    dup_note.instrument(@instrument) if @instrument
-    dup_note.channel(@channel) if @channel
+    dup_note = set_added_note_attrs note
     if adj_start_to_current_start
       dup_note.start(dup_note.start + @current_start) 
       @current_start += dup_note.duration
     end    
     # For debugging
-    dup_note.player_id = "#{@name}_#{self.object_id}"    
     @out_notes << dup_note
     self
   end
   
   # TODO TEST FOR adj_start_to_current_start=true
   def prepend_note_to_output(note)
-    dup_note = note.dup
-    dup_note.instrument(@instrument) if @instrument
-    dup_note.channel(@channel) if @channel
-    # For debugging
-    dup_note.player_id = "#{@name}_#{self.object_id}"    
+    dup_note = set_added_note_attrs note   
     @out_notes.insert(0, dup_note)
     self    
   end
@@ -516,14 +504,11 @@ class Player
   # @return [self]  
   def append_score_to_output(score, adj_start_to_current_start=false)   
     score.notes.each do |note| 
-      dup_note = note.dup
-      dup_note.instrument(@instrument) if @instrument 
-      dup_note.channel(@channel) if @channel
+      dup_note = set_added_note_attrs note
       if adj_start_to_current_start
         dup_note.start(dup_note.start + @current_start) 
         @current_start += dup_note.duration
-      end      # For debugging
-      dup_note.player_id = "#{@name}_#{self.object_id}"            
+      end
       @out_notes << dup_note
     end
     self
@@ -576,7 +561,28 @@ class Player
   def valid_scores_idx?(idx)
      idx >= 0 and idx < @scores.length
   end
-    
+  
+  def set_added_score_note_attrs(score)
+    dup_score = score.dup
+    dup_score.notes.each do |note| 
+      set_added_note_attrs_helper note
+    end
+    dup_score  
+  end
+  
+  def set_added_note_attrs(note)
+    dup_note = note.dup
+    set_added_note_attrs_helper dup_note
+    dup_note
+  end
+  
+  def set_added_note_attrs_helper(note)
+    note.instrument(@instrument) if @instrument
+    note.channel(@channel) if @channel
+    # For debugging
+    note.player_id = "#{@name}_#{self.object_id}"
+  end
+  
 end
 
 end

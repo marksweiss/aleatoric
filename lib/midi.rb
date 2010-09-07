@@ -111,22 +111,18 @@ class MidiManager
   #  but start_time is not supplied or value == 0 then this behaves by appending note in track for sequence for channel
   def add_note(channel, note, velocity, delta_time, start_time=nil)
     if include_win? or include_mac?
+    
     self.channel(channel) if channel_nil?(channel)
     note_length = @seq.length_to_delta(seconds_to_beats(delta_time))
-
-    # If start_time not passed then pass 0 to NoteOnEvent, which has the effect of appending note at current start time
-    if start_time.nil? or start_time == 0
-      start_time = START_TIME_APPEND_NOTE
-    #else
-      start_time = @seq.length_to_delta(seconds_to_beats(start_time))
-    end
-
-    @channel_tracks[channel].events << NoteOnEvent.new(channel, note, velocity, 0)
+    # NOTE: Attempts to write notes from multiple players to same channel at absolute start times
+    #  that didn't just append forward in time all failed
+    # Tried using the Track#recalc_times() but that didn't set absolute times. Tried to write
+    #  notes in with actual start times (not 0 for NoteOnEvent#new arg4) and that gave null pointer
+    #  errors in midilib code. Only reliable way was to pass 0 and let it append notes
+    # So to get polyphony must have each Player write into separate Track on separate Channel
+    @channel_tracks[channel].events << NoteOnEvent.new(channel, note, velocity, START_TIME_APPEND_NOTE)
     @channel_tracks[channel].events << NoteOffEvent.new(channel, note, velocity, note_length)
-    @channel_tracks[channel].events.last.time_from_start = start_time
         
-    # @channel_tracks[channel].recalc_times(@last_start_time) # starting_at=start_time
-    @last_start_time = start_time
     end
   end
   
@@ -183,10 +179,10 @@ class MidiManager
         if event.note?
           channel = event.channel          
           # VERBOSE          
-          #if not channels_found.include? channel
-          #  channels_found[channel] = ''
-          #  puts "Channels Found #{channels_found.keys.sort.join(' ')}"
-          #end
+          if not channels_found.include? channel
+            channels_found[channel] = ''
+            puts "Channels Found on MidiManager#load() #{channels_found.keys.sort.join(' ')}"
+          end
           # /VERBOSE
           
           # From the midilib docs: "... delta times that represent note lengths. 

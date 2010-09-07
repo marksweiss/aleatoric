@@ -11,7 +11,7 @@ include Aleatoric
 # IMPLEMENTATION OF THIS user_instruction.rb
 
 # Used to restore volume if it has decrescendo'd to 0
-DEFAULT_VOLUME = 20
+DEFAULT_VOLUME = 10
 
 # *************************
 # Player State Management
@@ -115,10 +115,10 @@ ENSEMBLE_SETTINGS = {
   # "num_players" => 2,
   # Threshold number of phrases behind the furthest ahead any Player is allowed to slip.
   # If they are more than N behind the leader, they must advance.     
-  "phrases_idx_range_threshold" => 4,
+  "phrases_idx_range_threshold" => 3,
   # Prob that the Ensemble will seek to have all Players play the same phrase
   #  on any one iteration through the Players  
-  "unison_prob_factor" => 0.65,
+  "unison_prob_factor" => 0.6,
   # Threshold number of phrases apart within which all players 
   #  must be for Ensemble to seek unison
   "max_phrases_idx_range_for_seeking_unison" => 3,
@@ -139,7 +139,7 @@ ENSEMBLE_SETTINGS = {
   
   # Parameters governing the Conclusion
   # This is the ratio of steps in the Conclusion to the total steps before the Conclusion  
-  "conclusion_steps_ratio" => 0.05, # 0.06,
+  "conclusion_steps_ratio" => 0.1, # 0.06,
   # This extends the duration of the repetition of the last phrase
   #  curing the final coda.  At the start of the coda each player
   #  has its start time pushed ahead to be closer to the maximum
@@ -992,7 +992,7 @@ instruction_14_ensemble_post = lambda do |container|
   # VERBOSE
   if not play_count.nil?
     if play_count % 10 == 0
-      puts "play() called #{play_count} times"
+      puts "\nplay() called #{play_count} times\n"
       in_c_players.values.each do |p|    
         puts "player #{p.handle}  phrase index #{p.phrases_idx}"
         processing_elapsed_time = Time.now - processing_start_time
@@ -1016,7 +1016,7 @@ instruction_14_ensemble_post = lambda do |container|
     
     # Verbose timing logging
     t = Time.now
-    puts "Entering concluding unison"
+    puts "\nEntering concluding unison"
     
     # In practice, variations in duration from swing, added notes for phase align changes can lead to significant delta
     #  in when players arrive at the same phrase, so we need this
@@ -1102,7 +1102,7 @@ instruction_14_ensemble_post = lambda do |container|
     end
     
     # VERBOSE
-    puts "Total number of play() calls by all Players #{play_count}"
+    puts "\nTotal number of play() calls by all Players #{play_count}\n"
     t_new = Time.now
     puts "Appending concluding crescendos took #{(t_new - t) * 1000.0} milliseconds"              
     @@in_c_ensemble.players.each do |player|

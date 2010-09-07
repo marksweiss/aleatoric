@@ -230,7 +230,7 @@ CSOUND_SCORE_EXT = '.sco'
 @renderer = Renderer.instance
 @processing_renderer = false
 
-@notes_by_channel = {}
+@import_notes = []
 @capture_measures = false
 
 Note.output_format $FORMAT
@@ -274,10 +274,9 @@ def note(name=nil, &args_blk)
 end
 
 def import(name, &args_blk)
-  @processing_import = true
-  
-  import_notes = @midi_mgr.load_notes_from_file name
-  return if import_notes.length == 0
+  @processing_import = true  
+  @import_notes = @midi_mgr.load_notes_from_file name
+  return if @import_notes.length == 0
   
   # import can be used in two ways, if its child of phrase then its just assigning notes to that phrase
   if @processing_phrase
@@ -290,7 +289,7 @@ def import(name, &args_blk)
     # So it is just as if script encountered a whole series of 'note' stmts
     # So make all adjustsments as above in note(), but for each note imported
     # But if note does have start, ignore it and make it start at cur_start
-    import_notes.each do |note|
+    @import_notes.each do |note|
       delta = note.start - init_import_start
       delta = 0.0 if delta < 0.0
       note.start(init_cur_start + delta) 
@@ -315,55 +314,12 @@ def import(name, &args_blk)
     # but players() handler needs to know about capture_measures
     # This flag is set if the keyword is encountered in the yield
 
-    # Notes already each have channel info, group by channel so players will be
-    #  assigned notes in phrase for each measure only for the notes in their channel    
-    @notes_by_channel = {}
-    cur_max_start = 0.0
-    import_notes.each do |note| 
-      note.start MIDI_IMPORT_NO_START
-      
-      if not @notes_by_channel.include? note.channel
-        @notes_by_channel[note.channel] = [note]                
-      else
-        @notes_by_channel[note.channel] << note
-      end
-    end
-    
-    # Adjust all channels so they have notes or rests that align with max(note.start + note.duration)
-    # All channels line up and have note events so each channel has the same number of phrases
-    # This means each Player will have the same number of phrases so iterating over phrases for
-    #   each Player will line up in time and this also fixes a bug where on a series of imports
-    #   some channels had notes for some imports and some didn't, so Players didn't all have the 
-    #   same number of phrases
-    # Loop over all the channels for all players in the score, whether or not this import had 
-    #  notes for the channel, to set rests appropriately as per previous comment
-    @midi_mgr.channels_list.each do |channel|
-      # First case, no notes for channel, set rest
-      if not @notes_by_channel.include? channel
-        rest_dur = cur_max_start - @channel_import_start
-        if rest_dur > 0.0009
-          rest = Note.new_rest(rest_dur, channel)
-          rest.start(@channel_import_start)
-          @notes_by_channel[channel] = [rest]
-        end
-      # Second case, channel had some notes, make sure it has a rest even up to cur_note_max_start
-      else
-        last_note = @notes_by_channel[channel].last
-        last_note_next_start = last_note.start + last_note.duration
-        rest_dur = cur_max_start - last_note_next_start
-        if rest_dur > 0.0009
-          rest = Note.new_rest(rest_dur, channel)
-          rest.start(last_note_next_start)          
-          @notes_by_channel[channel] << rest
-        end
-      end
-    end
-
     yield
     
     @capture_measures = false
   end
   
+  @import_notes = []
   @processing_import = false
 end
 
@@ -741,60 +697,45 @@ def players(*names)
     #  not turning measures into separate phrases.  In that case, sequence of notes for each channel
     #  is appended as a single phrase to the phrases for each player that is assigned that channel
     if @capture_measures      
-      @notes_by_channel.keys.each do |channel|         
-        # Group the notes for this channel by measure
-        notes = @notes_by_channel[channel]
-        all_measures_notes = []
-        cur_measure_notes = []
-        # Init to same lookahead first note measure value to avoid check on being first pass in loop
-        cur_measure = notes[0].measure if notes.length > 0
-        last_measure = notes[0].measure if notes.length > 0
-        notes.each do |note|
-          cur_measure = note.measure
-          if cur_measure == last_measure
-            cur_measure_notes.push note
-          else # if cur_measure != last_measure
-            all_measures_notes.push cur_measure_notes            
-            cur_measure_notes = []            
-          end
-          last_measure = cur_measure
+      # Iterate notes and group into lists of notes for each measure
+      # list of lists, one list for each measure's notes, in sequenc
+      all_measures_notes = []
+      # temp to hold current measures notes, copied into all_measure_notes for each measure
+      cur_measure_notes = []
+      # Init to same lookahead first note measure value to avoid check on being first pass in loop
+      cur_measure = notes[0].measure if notes.length > 0
+      last_measure = notes[0].measure if notes.length > 0
+      @import_notes.each do |note|
+        cur_measure = note.measure
+        if cur_measure == last_measure
+          cur_measure_notes.push note
+        else # if cur_measure != last_measure
+          all_measures_notes.push cur_measure_notes            
+          cur_measure_notes = []            
         end
-        # Catch single/last measure case
-        all_measures_notes.push cur_measure_notes if cur_measure_notes.length > 0
-
-        names.each do |name|
-          name = name.strip
-          player = @players_by_name[name]          
-          if player.channel == channel
-            # Set player's instrument to instr for this (player's) channel
-            # Notes on same channel so get a note and its instr -- all notes assigned instrument
-            #  during processing of 'import' kw with 'capture measures' kw option
-            player.instrument(all_measures_notes[0][0].instrument)
-            # Add the notes for each measure as a separate phrase
-            all_measures_notes.each do |measure_notes|
-              score = Score.new
-              score << measure_notes              
-              player.add_score(score.name, score)
-            end       
-          end
-        end
+        last_measure = cur_measure
       end
+      # Catch single/last measure case
+      all_measures_notes.push cur_measure_notes if cur_measure_notes.length > 0
       
-      # TODO - Rebaseline Player start time for next set of notes to be loaded    
+      # Iterate the players in the list of kw 'players' for this import block, assign them the notes
+      names.each do |name|
+        # Add the notes for each measure as a separate phrase
+        all_measures_notes.each do |measure_notes|
+          score = Score.new
+          score << measure_notes              
+          @players_by_name[name.strip].add_score(score.name, score)
+        end       
+      end
     else # if ! @capture_measures
-      @notes_by_channel.keys.each do |channel| 
-        names.each do |name|
-          name = name.strip
-          player = @players_by_name[name]
-          if player.channel == channel
-            score = Score.new
-            score << @notes_by_channel[channel]            
-            player.add_score(score.name, score)            
-          end
-        end
+      names.each do |name|
+        score = Score.new
+        score << @import_notes            
+        @players_by_name[name.strip].add_score(score.name, score)
       end      
     end
   end
+  
 end
 
 def instruction(name)
@@ -1152,6 +1093,9 @@ def reset_script_state
   @score_notes = []
   
   @processing_renderer = false
+  
+  @import_notes = []
+  @capture_measures = false
   
   @midi_mgr = ::MidiManager.new
   
