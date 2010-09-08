@@ -230,9 +230,10 @@ CSOUND_SCORE_EXT = '.sco'
 @renderer = Renderer.instance
 @processing_renderer = false
 
+@cur_channel = nil
+@cur_instrument = nil
 @import_notes = []
 @capture_measures = false
-
 Note.output_format $FORMAT
 @midi_mgr = ::MidiManager.new
 
@@ -280,12 +281,14 @@ def import(name, &args_blk)
   
   # import can be used in two ways, if its child of phrase then its just assigning notes to that phrase
   if @processing_phrase
-    # Call MidiMgr to get the notes in sequence from the named MIDI file
+    
+    yield
+    
     # Import notes could have start or not and it still doesn't make sense to have them
     #  occur out of sequence with what already has been recorded in this score
     #  so just offset them from current cur_start  
-    init_import_start = import_notes[0].start
-    init_cur_start = @cur_start
+    init_import_start = @import_notes[0].start
+    init_cur_start = @cur_start    
     # So it is just as if script encountered a whole series of 'note' stmts
     # So make all adjustsments as above in note(), but for each note imported
     # But if note does have start, ignore it and make it start at cur_start
@@ -327,10 +330,7 @@ def capture_measures
   @capture_measures = true  
 end
 
-# TODO FIX THIS RIDICULOUS BUG THAT REQUIRES channel and instrument ON SAME LINE
-# THIS IS ANOTHER EXAMPLE OF NEEDING LOOKAHEAD OR STATE IN A BLOCK
-# BLOCK EXECUTION MODEL IS BREAKING DOWN
-def channel(channel, instrument=nil)
+def channel(channel)
   # Allocate a MIDI channel for the channel number if there isn't one already
   @midi_mgr.channel channel if $FORMAT == :midi 
   
@@ -339,26 +339,31 @@ def channel(channel, instrument=nil)
   if @processing_note
     @cur_note.channel channel
     @midi_mgr.instrument(@cur_note.channel, @cur_note.instrument) if $FORMAT == :midi and not @cur_note.instrument.nil?
-  elsif @processing_player  
-    @cur_player.channel channel
-    @cur_player.instrument instrument if not instrument.nil?
-    @midi_mgr.instrument(channel, instrument) if $FORMAT == :midi and not instrument.nil?    
+  elsif @processing_player
+    @cur_channel = channel 
+    @cur_player.channel @cur_channel
+    if $FORMAT == :midi and not @cur_instrument.nil?
+      @midi_mgr.instrument(@cur_channel, @cur_instrument)    
+      @cur_channel = nil
+      @cur_instrument = nil
+    end
   end
 end
 
-# TODO FIX THIS RIDICULOUS BUG THAT REQUIRES channel and instrument ON SAME LINE
-# THIS IS ANOTHER EXAMPLE OF NEEDING LOOKAHEAD OR STATE IN A BLOCK
-# BLOCK EXECUTION MODEL IS BREAKING DOWN
-def instrument(instrument, channel=nil)
+def instrument(instrument)
   # Need to check note first and elsif exclusion because can process note nested with player
   #  so when this is being handled both @processing_note and @processing_player can be true
   if @processing_note
     @cur_note.instrument instrument
     @midi_mgr.instrument(@cur_note.channel, @cur_note.instrument) if $FORMAT == :midi and not @cur_note.channel.nil?
-  elsif @processing_player   
-    @cur_player.instrument instrument    
-    @cur_player.channel channel if not channel.nil?
-    @midi_mgr.instrument(channel, instrument) if $FORMAT == :midi and not channel.nil?
+  elsif @processing_player
+    @cur_instrument = instrument  
+    @cur_player.instrument @cur_instrument    
+    if $FORMAT == :midi and not @cur_channel.nil?
+      @midi_mgr.instrument(@cur_channel, @cur_instrument)    
+      @cur_channel = nil
+      @cur_instrument = nil
+    end
   end
 end
 
@@ -408,15 +413,20 @@ def amplitude(arg)
   if @processing_note
     @cur_note.amplitude arg
   end
-  if @processing_player
-    @cur_player.default_volume arg
-  end
 end
 def velocity(arg)
   amplitude arg
 end
 def volume(arg)
   amplitude arg
+end
+
+def normalize(arg)
+  if @processing_import
+    @import_notes.each do |note|      
+      note.amplitude(arg) if note.amplitude > arg
+    end    
+  end
 end
 
 def pitch(arg)
@@ -703,7 +713,7 @@ def players(*names)
     end
   end
   
-  if @processing_import        
+  if @processing_import                
     # Simple case is that we are processing import block with players list and
     #  not turning measures into separate phrases.  In that case, sequence of notes for each channel
     #  is appended as a single phrase to the phrases for each player that is assigned that channel
@@ -924,16 +934,8 @@ def write(file_name, &args_blk)
   # Sets write properties, and writes all notes of all Phrases and Sections into a queue  
   yield
 
-  @score_out << @score_notes  
-  
-  # TEMP DEBUG
-  starts = @score_notes.collect {|note| note.start}
-  last_start = 0.0
-  starts.sort.each do |start| 
-    puts "#{start} - #{last_start} = #{start - last_start}" if start - last_start > 2.0
-    last_start = start
-  end
-  
+  @score_out << @score_notes
+    
   case @score_out.format.to_sym
   when :csound    
     File.open(file_name, 'w') do |f|
@@ -1104,10 +1106,11 @@ def reset_script_state
   @score_notes = []
   
   @processing_renderer = false
-  
+
+  @cur_channel = nil
+  @cur_instrument = nil  
   @import_notes = []
   @capture_measures = false
-  
   @midi_mgr = ::MidiManager.new
   
   $DUR_FACTOR = 1.0

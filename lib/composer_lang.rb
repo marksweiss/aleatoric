@@ -57,7 +57,8 @@ class ComposerAST
     'improvise' => "do\n",
     'import' => "do\n",
     'volume' => "\n",
-    'amplitude' => "\n"
+    'amplitude' => "\n",
+    'normalize' => "\n"
   }
   
   @@kw_block_close_completions= {
@@ -86,7 +87,8 @@ class ComposerAST
     'improvise' => "end\n",
     'import' => "end\n",
     'volume' => "",
-    'amplitude' => "" 
+    'amplitude' => "",
+    'normalize' => "" 
   }
  
   @@kw_children = {
@@ -121,14 +123,15 @@ class ComposerAST
     'ensemble' => ['players', 'note', 'section', 'phrase', 'measure', 'copy_measure'],
     'ensembles' => [],
     'players' => [],
-    'player' => ['note', 'section', 'phrase', 'measure', 'copy_measure', 'volume', 'amplitude'],
+    'player' => ['note', 'section', 'phrase', 'measure', 'copy_measure'],
     'play' => ['players', 'ensembles'],
     'instruction' => ['players', 'ensembles'],
     'improvisation' => ['players'],
     'improvise' => ['players'],
-    'import' => ['capture', 'players', 'tempo'],
+    'import' => ['capture', 'players', 'tempo', 'normalize'],
     'volume' => [],
-    'amplitude' => []    
+    'amplitude' => [],
+    'normalize' => []
   }
   @@kw_parents = {
     'root' => [],
@@ -156,8 +159,9 @@ class ComposerAST
     'improvise' => ['root', 'repeat'],
     'import' => ['phrase', 'root'],
     'capture' => ['import'],
-    'volume' => ['player', 'note'],
-    'amplitude' => ['player', 'note']
+    'volume' => ['note'],
+    'amplitude' => ['note'],
+    'normalize' => ['import']
   }
   @@kw = @@kw_children.keys
  
@@ -215,6 +219,9 @@ class ComposerAST
       child_kws.include? 'players'
     end,  # 'improvise' has 'players' child    
     'capture' => lambda do |node|
+       node.parent.kw == 'import'
+    end,  # 'capture' has 'import' parent    
+    'normalize' => lambda do |node|
        node.parent.kw == 'import'
     end,  # 'capture' has 'import' parent    
   }

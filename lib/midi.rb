@@ -33,6 +33,7 @@ class MidiManager
   require 'note'
 
   attr_reader :name, :bpm
+  attr_accessor :import_volume
   
   DEFAULT_BPM = 120
   MIDI_TICKS_PER_QRTR_NOTE = 960.0
@@ -96,6 +97,11 @@ class MidiManager
     self.channel(channel) if channel_nil?(channel)        
     @channel_tracks[channel].events << ProgramChange.new(channel, instrument, delta_time)
     @channel_instruments[channel] = instrument
+    
+    # VERBOSE
+    puts "Mapped channel #{channel} to instrument #{instrument}"
+    # /VERBOSE
+    
     end
   end
 
@@ -119,7 +125,7 @@ class MidiManager
     # Tried using the Track#recalc_times() but that didn't set absolute times. Tried to write
     #  notes in with actual start times (not 0 for NoteOnEvent#new arg4) and that gave null pointer
     #  errors in midilib code. Only reliable way was to pass 0 and let it append notes
-    # So to get polyphony must have each Player write into separate Track on separate Channel
+    # So to get polyphony must have each Player write into separate Track on separate Channel    
     @channel_tracks[channel].events << NoteOnEvent.new(channel, note, velocity, START_TIME_APPEND_NOTE)
     @channel_tracks[channel].events << NoteOffEvent.new(channel, note, velocity, note_length)
         
@@ -193,8 +199,7 @@ class MidiManager
           start = midi_ticks_to_seconds(event.time_from_start, seq)
           duration = midi_ticks_to_seconds(event.delta_time, seq)  # Assigned above in test for 0.0 dur         
           volume = event.velocity
-          pitch = event.note
-          
+          pitch = event.note           
           # Validate note properties and continue if invalid.  Someday understand MIDI and midilib better
           next if duration == 0.0 || volume == 0      
           
@@ -203,12 +208,8 @@ class MidiManager
           end
           
           if channel.nil? or start.nil? or duration.nil? or volume.nil? or pitch.nil? # or instrument.nil? 
-            raise AleatoricFailedMidiLoadException, "Load of file #{file_name} failed on note # #{note_num}"
-          else
-            
-            # TEMP DEBUG
-            puts "MidiMgr#load() adding note with 0 duration" if duration == 0.0
-            
+            raise AleatoricFailedMidiLoadException, "Load of file #{file_name} failed on note # #{note_num}. start #{start} duration #{duration} volume #{volume} note(pitch) #{pitch} channel #{channel}"
+          else            
             # Construct new note from base properties
             note = Note.new("#{note_num}", {:instrument=>instrument, :channel=>channel, :start=>start, :duration=>duration, :amplitude=>volume, :pitch=>pitch})
             # Add measure value -- this is a note built-in attr that is used by kw 'import' but isn't part of note output to score        
@@ -241,21 +242,12 @@ class MidiManager
     end
   end
   
-  #def midi_ticks_to_seconds(ticks)
-  #  if include_win? or include_mac?
-    # MIDI_TICKS_PER_QRTR_NOTE arrived at by seeing defaults in other software, e.g. Reaper
-    # @bpm term because MIDI BPM is quarter notes per minute, so this factor adjusts
-    #  duration in seconds of quarter note based on current BPM
-  #  (ticks / MIDI_TICKS_PER_QRTR_NOTE) * (@bpm / 60.0)
-  #  end
-  #end  
   # Conversion formula from here: 
   #  http://groups.google.com/group/ruby-midi/browse_thread/thread/8e596632f0d239e7?pli=1
   def midi_ticks_to_seconds(ticks, sequence) 
     ticks / sequence.ppqn.to_f / @bpm.to_f * 60.0
   end   
-  
-  
+    
   # For testing only, exposed with temporary make private methods public in one midi_test.rb test
   def seq
     if include_win? or include_mac?    

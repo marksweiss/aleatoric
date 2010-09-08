@@ -38,7 +38,6 @@ class Player
     @name = name
     @instrument = instrument
     @channel = channel
-    @default_volume = nil
     @scores = {}
     @scores_idx = -1
     @scores_ordered_names = []
@@ -77,16 +76,7 @@ class Player
       self
     end
   end
-  
-  def default_volume(volume=nil)
-    if volume == nil
-      @default_volume
-    else
-      @default_volume = volume
-      self
-    end
-  end
-  
+    
   # Add a score to the Player's list of scores.  Note the scores are added by key
   # but also stored in order they are added.  Clients can call #play by passing
   # a score name, but they can also use the #increment_scores_index and decrement ...
@@ -589,7 +579,6 @@ class Player
   def set_added_note_attrs_helper(note)
     note.instrument(@instrument) if @instrument
     note.channel(@channel) if @channel
-    note.volume(@default_volume) if @default_volume
     # For debugging
     note.player_id = "#{@name}_#{self.object_id}"
   end

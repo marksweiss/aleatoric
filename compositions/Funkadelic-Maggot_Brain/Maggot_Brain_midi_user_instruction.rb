@@ -11,20 +11,20 @@ include Aleatoric
 # IMPLEMENTATION OF THIS user_instruction.rb
 
 # Used to restore volume if it has decrescendo'd to 0
-DEFAULT_VOLUME = 10
+DEFAULT_VOLUME = 12
 
 # *************************
 # Player State Management
 # These values govern the behavior of each Player
 PLAYER_SETTINGS = {
-  "num_phrases" => 9, # 162,
+  "num_phrases" => 9,
   
   # Player Phrase Advance
   # Player must play each phrase at least this long
-  "min_repeat_phrase_count" => 3, # WHL * 2.0, # QRTR * (45.0 + rand(15).to_f),
+  "min_repeat_phrase_count" => 2, # WHL * 2.0, # QRTR * (45.0 + rand(15).to_f),
   # The most important factor governing advance of Players through phrases, this is simply
   #  the percentage prob that they advance on any given iteration  
-  "phrase_advance_prob" => 0.2, # 0.11, 
+  "phrase_advance_prob" => 0.3, # 0.11, 
   # Tunable parms for shifting playing of current phrase out of its current
   #  phase, and also to shift it more in alignment.  Shift simple pre-pends
   #  a rest Note to current phrase before writing it to Score.  Supports
@@ -33,26 +33,26 @@ PLAYER_SETTINGS = {
   
   # Player Phrase Phase Adjustment
   # Percentage prob that a Player will adjust phase on any given iteration
-  "adj_phase_prob_factor" => 0.02,
+  "adj_phase_prob_factor" => 0.08,
   # Supports Instruction that Player this is too often in alignment should favor
   #  trying to be out of phase a bit more. If Player hasn't adjusted phase
   #  this many times or more, then adj_phase_prob_increase_factor will be applied
   "adj_phase_count_threshold" => 2,
   "adj_phase_prob_increase_factor" => 1.2,
   # The length of the rest Note (in seconds) inserted if a Player is adjusting its phase  
-  "phase_adj_dur" => SXTYFRTH * 0.1,
+  "phase_adj_dur" => SXTYFRTH * 0.25,
   # Players are adjusted out of phase initially a tiny bit, to make it easier for midi file to play
   "init_adj_phase_dur" => SXTYFRTH * 0.1,
   
   # Prob that a Player will seek unison on any given iteration.  The idea is that
   #  to seek unison the Ensemble and all the Players must seek unison  
-  "unison_prob_factor" => 0.40,
+  "unison_prob_factor" => 0.25,
   
   # Player Rest/Play
   # Tunable parms for probability that Player will rest rather than playing a note.
   # Supports score directive to listen as well as play and not always play
   # Prob that a Player will try to rest on a given iteration (not play)
-  "rest_prob_factor" => 0.05,  
+  "rest_prob_factor" => 0.15,  
   # Factor multiplied by rest_prob_factor if the Player is already at rest  
   "stay_at_rest_prob_factor" => 1.5,
   
@@ -64,18 +64,18 @@ PLAYER_SETTINGS = {
   #  to the max average amp among all the Players. Ratio above/below this means the Player
   #  will raise/lower its amp by amp_de/crescendo_adj_factor    
   "amp_adj_crescendo_ratio_threshold" => 1.0,
-  "amp_crescendo_adj_factor" => 1.1,
+  "amp_crescendo_adj_factor" => 1.3,
   "amp_adj_diminuendo_ratio_threshold" => 1.0,
-  "amp_diminuendo_adj_factor" => 0.9,
+  "amp_diminuendo_adj_factor" => 0.7,
   # Prob that a Player is seeking de/crescendo  
-  "crescendo_prob_factor" => 0.2,
-  "diminuendo_prob_factor" => 0.2,
+  "crescendo_prob_factor" => 0.7,
+  "diminuendo_prob_factor" => 0.7,
   
   # Player Pitch Transpose
   # Tunable parms for transposing the playing of a phrase.  Suppports score directive
   #  to transpose as desired.
   # Prob that a Player will seek to transpose its current phrase
-  "transpose_prob_factor" => 0.05,
+  "transpose_prob_factor" => 0.1,
   # Number of octaves to transpose if the Player does do so
   # Amount that represents an octave in backend being used to render notes (1.0 in CSound, 12 in MIDI)
   "transpose_shift" => 12, 
@@ -103,39 +103,38 @@ PLAYER_SETTINGS = {
   #  num_steps - the number of values incremented up from the base_val
   #  swing_step - the size of each step value increment
   # So, example: swing(0.98, 5, 0.01) -> swing range with the discrete values [0.98, 0.99, 1.0, 1.01, 1.02]
-  "swing_base_val" => 0.9999,
-  "swing_num_steps" => 3,
-  "swing_step_size" => 0.0001
+  "swing_base_val" => 0.9994,
+  "swing_num_steps" => 8,
+  "swing_step_size" => 0.0002
 }
 
 
 # Ensemble State Management
 # These values govern the behavior of the Ensemble
 ENSEMBLE_SETTINGS = {
-  # "num_players" => 2,
   # Threshold number of phrases behind the furthest ahead any Player is allowed to slip.
   # If they are more than N behind the leader, they must advance.     
   "phrases_idx_range_threshold" => 3,
   # Prob that the Ensemble will seek to have all Players play the same phrase
   #  on any one iteration through the Players  
-  "unison_prob_factor" => 0.6,
+  "unison_prob_factor" => 0.55,
   # Threshold number of phrases apart within which all players 
   #  must be for Ensemble to seek unison
   "max_phrases_idx_range_for_seeking_unison" => 3,
   
   # Crescendos before concluding section
   # Probability that the ensemble will de/crescendo in a unison
-  "crescendo_prob_factor"=> 0.05,
-  "decrescendo_prob_factor"=> 0.05,
+  "crescendo_prob_factor"=> 0.3,
+  "decrescendo_prob_factor"=> 0.3,
   # Maximum de/increase in volume (in CSound scale) that notes can gain in de/crescendo 
   "crescendo_max_amp_range" => DEFAULT_VOLUME,
   "decrescendo_max_amp_range" => DEFAULT_VOLUME,
   # Minimum number of iterations over which a de/crescendo will take to de/increase volume by crescendo amount
   # NOTE: Must be < max_crescendo_num_steps
-  "min_crescendo_num_steps" => 5, # 50,
+  "min_crescendo_num_steps" => 4, # 50,
   # Maximum number of iterations over which a de/crescendo will take to de/increase volume by crescendo amount
   # NOTE: Must be >= de/crescendo_max_amp_range
-  "max_crescendo_num_steps" => 20, # 70, 
+  "max_crescendo_num_steps" => 10, # 70, 
   
   # Parameters governing the Conclusion
   # This is the ratio of steps in the Conclusion to the total steps before the Conclusion  
