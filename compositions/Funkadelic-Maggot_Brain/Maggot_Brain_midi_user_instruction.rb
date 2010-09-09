@@ -17,11 +17,11 @@ DEFAULT_VOLUME = 12
 # Player State Management
 # These values govern the behavior of each Player
 PLAYER_SETTINGS = {
-  "num_phrases" => 9,
+  "num_phrases" => 5,
   
   # Player Phrase Advance
   # Player must play each phrase at least this long
-  "min_repeat_phrase_count" => 2, # WHL * 2.0, # QRTR * (45.0 + rand(15).to_f),
+  "min_repeat_phrase_count" => 1, # WHL * 2.0, # QRTR * (45.0 + rand(15).to_f),
   # The most important factor governing advance of Players through phrases, this is simply
   #  the percentage prob that they advance on any given iteration  
   "phrase_advance_prob" => 0.3, # 0.11, 
@@ -33,14 +33,14 @@ PLAYER_SETTINGS = {
   
   # Player Phrase Phase Adjustment
   # Percentage prob that a Player will adjust phase on any given iteration
-  "adj_phase_prob_factor" => 0.08,
+  "adj_phase_prob_factor" => 0.25,
   # Supports Instruction that Player this is too often in alignment should favor
   #  trying to be out of phase a bit more. If Player hasn't adjusted phase
   #  this many times or more, then adj_phase_prob_increase_factor will be applied
-  "adj_phase_count_threshold" => 2,
+  "adj_phase_count_threshold" => 10,
   "adj_phase_prob_increase_factor" => 1.2,
   # The length of the rest Note (in seconds) inserted if a Player is adjusting its phase  
-  "phase_adj_dur" => SXTYFRTH * 0.25,
+  "phase_adj_dur" => THRTYSCND, # * 0.25,
   # Players are adjusted out of phase initially a tiny bit, to make it easier for midi file to play
   "init_adj_phase_dur" => SXTYFRTH * 0.1,
   
@@ -52,7 +52,7 @@ PLAYER_SETTINGS = {
   # Tunable parms for probability that Player will rest rather than playing a note.
   # Supports score directive to listen as well as play and not always play
   # Prob that a Player will try to rest on a given iteration (not play)
-  "rest_prob_factor" => 0.15,  
+  "rest_prob_factor" => 0.30,  
   # Factor multiplied by rest_prob_factor if the Player is already at rest  
   "stay_at_rest_prob_factor" => 1.5,
   
@@ -64,12 +64,12 @@ PLAYER_SETTINGS = {
   #  to the max average amp among all the Players. Ratio above/below this means the Player
   #  will raise/lower its amp by amp_de/crescendo_adj_factor    
   "amp_adj_crescendo_ratio_threshold" => 1.0,
-  "amp_crescendo_adj_factor" => 1.3,
+  "amp_crescendo_adj_factor" => 1.2,
   "amp_adj_diminuendo_ratio_threshold" => 1.0,
-  "amp_diminuendo_adj_factor" => 0.7,
+  "amp_diminuendo_adj_factor" => 0.8,
   # Prob that a Player is seeking de/crescendo  
-  "crescendo_prob_factor" => 0.7,
-  "diminuendo_prob_factor" => 0.7,
+  "crescendo_prob_factor" => 0.6,
+  "diminuendo_prob_factor" => 0.5,
   
   # Player Pitch Transpose
   # Tunable parms for transposing the playing of a phrase.  Suppports score directive
@@ -103,9 +103,9 @@ PLAYER_SETTINGS = {
   #  num_steps - the number of values incremented up from the base_val
   #  swing_step - the size of each step value increment
   # So, example: swing(0.98, 5, 0.01) -> swing range with the discrete values [0.98, 0.99, 1.0, 1.01, 1.02]
-  "swing_base_val" => 0.9994,
+  "swing_base_val" => 0.992,
   "swing_num_steps" => 8,
-  "swing_step_size" => 0.0002
+  "swing_step_size" => 0.002
 }
 
 
@@ -124,17 +124,17 @@ ENSEMBLE_SETTINGS = {
   
   # Crescendos before concluding section
   # Probability that the ensemble will de/crescendo in a unison
-  "crescendo_prob_factor"=> 0.3,
-  "decrescendo_prob_factor"=> 0.3,
+  "crescendo_prob_factor"=> 0.5,
+  "decrescendo_prob_factor"=> 0.4,
   # Maximum de/increase in volume (in CSound scale) that notes can gain in de/crescendo 
-  "crescendo_max_amp_range" => DEFAULT_VOLUME,
-  "decrescendo_max_amp_range" => DEFAULT_VOLUME,
+  "crescendo_max_amp_range" => 8,
+  "decrescendo_max_amp_range" => 8,
   # Minimum number of iterations over which a de/crescendo will take to de/increase volume by crescendo amount
   # NOTE: Must be < max_crescendo_num_steps
-  "min_crescendo_num_steps" => 4, # 50,
+  "min_crescendo_num_steps" => 2, # 50,
   # Maximum number of iterations over which a de/crescendo will take to de/increase volume by crescendo amount
   # NOTE: Must be >= de/crescendo_max_amp_range
-  "max_crescendo_num_steps" => 10, # 70, 
+  "max_crescendo_num_steps" => 4, # 70, 
   
   # Parameters governing the Conclusion
   # This is the ratio of steps in the Conclusion to the total steps before the Conclusion  
@@ -1101,7 +1101,7 @@ instruction_14_ensemble_post = lambda do |container|
     end
     
     # VERBOSE
-    puts "\nTotal number of play() calls by all Players #{play_count}\n"
+    puts "\nTotal number of play() calls by all Players #{play_count}\n\n"
     t_new = Time.now
     puts "Appending concluding crescendos took #{(t_new - t) * 1000.0} milliseconds"              
     @@in_c_ensemble.players.each do |player|
