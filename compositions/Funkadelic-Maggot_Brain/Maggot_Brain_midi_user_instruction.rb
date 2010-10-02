@@ -17,14 +17,14 @@ DEFAULT_VOLUME = 12
 # Player State Management
 # These values govern the behavior of each Player
 PLAYER_SETTINGS = {
-  "num_phrases" => 5,
+  "num_phrases" => 6,
   
   # Player Phrase Advance
   # Player must play each phrase at least this long
-  "min_repeat_phrase_count" => 1, # WHL * 2.0, # QRTR * (45.0 + rand(15).to_f),
+  "min_repeat_phrase_count" => 2, # WHL * 2.0, # QRTR * (45.0 + rand(15).to_f),
   # The most important factor governing advance of Players through phrases, this is simply
   #  the percentage prob that they advance on any given iteration  
-  "phrase_advance_prob" => 0.3, # 0.11, 
+  "phrase_advance_prob" => 0.15, # 0.11, 
   # Tunable parms for shifting playing of current phrase out of its current
   #  phase, and also to shift it more in alignment.  Shift simple pre-pends
   #  a rest Note to current phrase before writing it to Score.  Supports
@@ -52,7 +52,7 @@ PLAYER_SETTINGS = {
   # Tunable parms for probability that Player will rest rather than playing a note.
   # Supports score directive to listen as well as play and not always play
   # Prob that a Player will try to rest on a given iteration (not play)
-  "rest_prob_factor" => 0.30,  
+  "rest_prob_factor" => 0.2,  
   # Factor multiplied by rest_prob_factor if the Player is already at rest  
   "stay_at_rest_prob_factor" => 1.5,
   
@@ -68,7 +68,7 @@ PLAYER_SETTINGS = {
   "amp_adj_diminuendo_ratio_threshold" => 1.0,
   "amp_diminuendo_adj_factor" => 0.8,
   # Prob that a Player is seeking de/crescendo  
-  "crescendo_prob_factor" => 0.6,
+  "crescendo_prob_factor" => 0.8,
   "diminuendo_prob_factor" => 0.5,
   
   # Player Pitch Transpose
@@ -103,9 +103,9 @@ PLAYER_SETTINGS = {
   #  num_steps - the number of values incremented up from the base_val
   #  swing_step - the size of each step value increment
   # So, example: swing(0.98, 5, 0.01) -> swing range with the discrete values [0.98, 0.99, 1.0, 1.01, 1.02]
-  "swing_base_val" => 0.992,
-  "swing_num_steps" => 8,
-  "swing_step_size" => 0.002
+  "swing_base_val" => 0.93,
+  "swing_num_steps" => 14,
+  "swing_step_size" => 0.01
 }
 
 
@@ -117,28 +117,28 @@ ENSEMBLE_SETTINGS = {
   "phrases_idx_range_threshold" => 3,
   # Prob that the Ensemble will seek to have all Players play the same phrase
   #  on any one iteration through the Players  
-  "unison_prob_factor" => 0.55,
+  "unison_prob_factor" => 0.7,
   # Threshold number of phrases apart within which all players 
   #  must be for Ensemble to seek unison
-  "max_phrases_idx_range_for_seeking_unison" => 3,
+  "max_phrases_idx_range_for_seeking_unison" => 2,
   
   # Crescendos before concluding section
   # Probability that the ensemble will de/crescendo in a unison
-  "crescendo_prob_factor"=> 0.5,
-  "decrescendo_prob_factor"=> 0.4,
+  "crescendo_prob_factor"=> 0.6,
+  "decrescendo_prob_factor"=> 0.5,
   # Maximum de/increase in volume (in CSound scale) that notes can gain in de/crescendo 
   "crescendo_max_amp_range" => 8,
   "decrescendo_max_amp_range" => 8,
   # Minimum number of iterations over which a de/crescendo will take to de/increase volume by crescendo amount
   # NOTE: Must be < max_crescendo_num_steps
-  "min_crescendo_num_steps" => 2, # 50,
+  "min_crescendo_num_steps" => 1, # 50,
   # Maximum number of iterations over which a de/crescendo will take to de/increase volume by crescendo amount
   # NOTE: Must be >= de/crescendo_max_amp_range
   "max_crescendo_num_steps" => 4, # 70, 
   
   # Parameters governing the Conclusion
   # This is the ratio of steps in the Conclusion to the total steps before the Conclusion  
-  "conclusion_steps_ratio" => 0.1, # 0.06,
+  "conclusion_steps_ratio" => 0.01, # 0.06,
   # This extends the duration of the repetition of the last phrase
   #  curing the final coda.  At the start of the coda each player
   #  has its start time pushed ahead to be closer to the maximum
@@ -227,7 +227,7 @@ class In_C_Player
     # Must repeat each phrase for minimum duration, so skip all other checks
     #  for advancing duration if haven't done so for current phrase
     @repeating_cur_phrase = repeat_cur_phrase?
-        
+           
     can_advance = ! @repeating_cur_phrase && ! reached_last_phrase?
     # Now test this advance condition, if conditions preventing advance aren't true
     if can_advance and advance_phrases_idx?
@@ -494,8 +494,8 @@ class In_C_Ensemble
   ## Unison methods  
   def seeking_unison?
     ! reached_unison? &&
-      players_phrases_idx_range <= @max_phrases_idx_range_for_seeking_unison &&
-      meets_condition?(@unison_prob_factor)
+    players_phrases_idx_range <= @max_phrases_idx_range_for_seeking_unison &&
+    meets_condition?(@unison_prob_factor)
   end  
   ## /Unison methods
 
@@ -619,6 +619,10 @@ class In_C_Ensemble
     # Once in conclusion phase can't exit it, so just set and test this once
     if not @reached_concluding_unison
       @players.each do |player|
+        
+        # TEMP DEBUG
+        puts "#{player.handle}  #{player.phrases_idx}"
+        
         if not player.reached_last_phrase?
           @reached_concluding_unison = false
           return @reached_concluding_unison
@@ -801,11 +805,28 @@ set_player_preplay_instruction("Instruction 13", &instruction_13)
 #  as to the number of repetitions a pattern may have, however, since performances normally average 
 #  between 45 minutes and an hour and a half, it can be assumed that one would repeat each pattern 
 #  from somewhere between 45 seconds and a minute and a half or longer."
-instruction_3_player_pre = lambda do |container, score|  
+instruction_3_player_pre = lambda do |container, score|      
   # In_C_Players stowed in a Hash keyed to the handle() (a unique id) of the Aleatoric Player 
   in_c_player = in_c_players[container.handle]  
   # In_C_Player stores all the state about a player.  Ask if this player is on the last phrase  
   container.increment_scores_index if in_c_player.play_next_phrase?
+
+  # VERBOSE
+  aleatoric_player = container
+  # Every call to play(), i.e. every iteration of the repeat until loop, fires every instruction, so
+  #  increment a counter here that is used in the concluding unison code below
+  play_count = aleatoric_player.get_state("play_count")
+  if play_count.nil?
+    aleatoric_player.set_state("play_count", 1)  
+  else
+    aleatoric_player.set_state("play_count", play_count + 1)
+  end
+  if not play_count.nil?
+    if play_count % 10 == 0
+      puts "\nplayer play() called #{play_count} times for player #{aleatoric_player.name}\n"
+    end
+  end
+  # /VERBOSE    
     
   score
 end
@@ -984,14 +1005,18 @@ set_repeat_until_stop_postplay_test("... each player drops out as he or she wish
 instruction_14_ensemble_post = lambda do |container|  
   aleatoric_ensemble = container
   
+  # VERBOSE
   # Every call to play(), i.e. every iteration of the repeat until loop, fires every instruction, so
   #  increment a counter here that is used in the concluding unison code below
   play_count = aleatoric_ensemble.get_state("play_count")
-  
-  # VERBOSE
+  if play_count.nil?
+    aleatoric_ensemble.set_state("play_count", 1)  
+  else
+    aleatoric_ensemble.set_state("play_count", play_count + 1)
+  end
   if not play_count.nil?
     if play_count % 10 == 0
-      puts "\nplay() called #{play_count} times\n"
+      puts "\nEnsemble play() called #{play_count} times\n"
       in_c_players.values.each do |p|    
         puts "player #{p.handle}  phrase index #{p.phrases_idx}"
         processing_elapsed_time = Time.now - processing_start_time
@@ -1000,22 +1025,14 @@ instruction_14_ensemble_post = lambda do |container|
       end
     end
   end
-  # VERBOSE
-    
-  # TEMP DEBUG
-  # breakpoint
-  
-  if play_count == nil
-    aleatoric_ensemble.set_state("play_count", 1)  
-  else
-    aleatoric_ensemble.set_state("play_count", play_count + 1)
-  end
+  # /VERBOSE    
 
   if @@in_c_ensemble.reached_concluding_unison?    
     
-    # Verbose timing logging
+    # VERBOSE
     t = Time.now
     puts "\nEntering concluding unison"
+    # /VERBOSE
     
     # In practice, variations in duration from swing, added notes for phase align changes can lead to significant delta
     #  in when players arrive at the same phrase, so we need this
