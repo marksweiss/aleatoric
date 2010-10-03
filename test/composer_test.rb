@@ -531,7 +531,7 @@ phrase "Intro Phrase"
     instrument  1 
     start       0.0 
     duration    0.5
-    amplitude   1000
+    volume      1000
     pitch       7.01
     func_table  1
 
@@ -732,10 +732,11 @@ write "composer_test_results.txt"
 }
   tester, results = test_runner(test_name, throw_on_failure, script, lite_syntax)
   actual = results
-  expected0 = 'i 1 0.00000 2.00000 1000 7.01000 1 ; 1'
-  expected1 = 'i 1 2.00000 2.00000 1100 7.02000 1 ; 2'
-  expected2 = 'i 1 0.00000 2.00000 1000 7.01000 1 ; 1'
-  expected3 = 'i 1 2.00000 2.00000 1100 7.02000 1 ; 2'
+  expected0 = "i 1 0.00000 #{'%.5f' % HLF} 1000 7.01000 1 ; 1"
+  expected1 = "i 1 #{'%.5f' % HLF} #{'%.5f' % HLF} 1100 7.02000 1 ; 2"
+  expected2 = "i 1 0.00000 #{'%.5f' % HLF} 1000 7.01000 1 ; 1"
+  expected3 = "i 1 #{'%.5f' % HLF} #{'%.5f' % HLF} 1100 7.02000 1 ; 2"
+  
   tester.assert(expected0 == actual[2])
   tester.assert(expected1 == actual[3])
   puts tester.to_s  
@@ -758,7 +759,6 @@ times_two: x
 
 # Tempo is specified in bpm, i.e. 60 == 60 quarter notes/min
 #  or a quarter note is 1 sec. or a whole note is 4 secs.
-# Default tempo is 60, so if this isn't set above holds
 # If it is set, AND durations are specified using duration constants
 #  such as WHL, HLF, etc.  The reason for this is that if the score specifies
 #  exact tempos in seconds, not just "relative" lengths such as WHL etc. then
@@ -791,7 +791,7 @@ measure "Measure 1"
     pitch       7.03
     func_table  1
 
-# You can reset tempo whenever you want. Now it's twice as fast as default
+# You can reset tempo whenever you want.
 tempo 120
 
 # Test expression rather than simple 2-token line
@@ -824,14 +824,20 @@ write "composer_test_results.txt"
   format    csound
   measures   "Measure 1", "Measure 2"
 }
-  tester, results = test_runner(test_name, throw_on_failure, script, lite_syntax)
-  actual = results        
-  expected0 = 'i 1 0.00000 12.00000 1000 7.01000 1 ; 1'
-  expected1 = 'i 1 1.00000 8.00000 1100 7.02000 1 ; 2'
-  expected2 = 'i 1 0.00000 2.00000 1200 7.03000 1 ; 3'
-  expected3 = 'i 1 12.00000 3.00000 1000 7.01000 1 ; 4'
-  expected4 = 'i 1 13.00000 1.00000 1100 7.02000 1 ; 5'
-  expected5 = 'i 1 12.00000 0.50000 1200 7.03000 1 ; 6'
+  tester, results = test_runner(test_name, throw_on_failure, script, lite_syntax)  
+  actual = results
+
+  tempo_factor = $DEFAULT_TEMPO / 30        
+  expected0 = "i 1 0.00000 #{'%.5f' % ((WHL + HLF) * tempo_factor)} 1000 7.01000 1 ; 1"
+  expected1 = "i 1 #{'%.5f' % (EITH * tempo_factor)} #{'%.5f' % (HLF * 2.0 * tempo_factor)} 1100 7.02000 1 ; 2"
+  expected2 = "i 1 0.00000 #{'%.5f' % (QRTR * tempo_factor)} 1200 7.03000 1 ; 3"  
+
+  offset = ((WHL + HLF) * tempo_factor)           
+  tempo_factor = $DEFAULT_TEMPO / 120
+  expected3 = "i 1 #{'%.5f' % offset} #{'%.5f' % ((WHL + HLF) * tempo_factor)} 1000 7.01000 1 ; 4"
+  expected4 = "i 1 #{'%.5f' % (offset + ((QRTR + QRTR) * tempo_factor))} #{'%.5f' % (HLF * tempo_factor)} 1100 7.02000 1 ; 5"
+  expected5 = "i 1 #{'%.5f' % offset} #{'%.5f' % (QRTR * tempo_factor)} 1200 7.03000 1 ; 6"
+
   tester.assert(expected0 == actual[2])
   tester.assert(expected1 == actual[3])
   tester.assert(expected2 == actual[4])
@@ -884,10 +890,10 @@ write "composer_test_results.txt"
   measures   "Measure 1"
 }
   tester, results = test_runner(test_name, throw_on_failure, script, lite_syntax)
-  actual = results        
-  expected0 = 'i 1 0.00000 4.00000 1000 7.01000 1 ; 1'
-  expected1 = 'i 1 1.00000 2.00000 1100 7.02000 1 ; 2'
-  expected2 = 'i 1 0.00000 1.00000 1200 7.03000 1 ; 3'
+  actual = results         
+  expected0 = "i 1 0.00000 #{'%.5f' % WHL} 1000 7.01000 1 ; 1"
+  expected1 = "i 1 1.00000 #{'%.5f' % HLF} 1100 7.02000 1 ; 2"
+  expected2 = "i 1 0.00000 #{'%.5f' % QRTR} 1200 7.03000 1 ; 3"
   tester.assert(expected0 == actual[2])
   tester.assert(expected1 == actual[3])
   tester.assert(expected2 == actual[4])
@@ -1783,11 +1789,11 @@ write "composer_test_results.txt"
   # TODO THIS NEEDS TO BE IN ONLINE DOCUMENTATION
   # NOTE: These start times advance to start at the next current starting time for each Player
   #  because players are set to work this way, because otherwise they are painful to use in a 
-  #  real composition.  The behavior can be overriddent with attribute player.auto_next_start_off
+  #  real composition.  The behavior can be overridden with attribute player.auto_next_start_off
   expected0 = 'i 1 1.00000 0.50000 0 7.01000 1 ; 1'
   expected1 = 'i 2 2.00000 1.00000 0 7.02000 1 ; 2'
   expected2 = 'i 1 2.50000 0.50000 1000 7.01000 1 ; 1'
-  expected3 = 'i 2 2.00000 1.00000 1100 7.02000 1 ; 2'
+  expected3 = 'i 2 4.00000 1.00000 1100 7.02000 1 ; 2'
   expected4 = 'i 1 4.00000 0.50000 0 7.01000 1 ; 1'
   expected5 = 'i 2 5.50000 1.00000 0 7.02000 1 ; 2'
   expected6 = 'i 3 3.00000 1.50000 0 7.03000 1 ; 3'
@@ -1886,7 +1892,7 @@ write "composer_test_results.txt"
   expected0 = 'i 1 1.00000 0.50000 0 7.01000 1 ; 1'
   expected1 = 'i 2 2.00000 1.00000 0 7.02000 1 ; 2'
   expected2 = 'i 1 2.50000 0.50000 1000 7.01000 1 ; 1'
-  expected3 = 'i 2 2.00000 1.00000 1100 7.02000 1 ; 2'
+  expected3 = 'i 2 4.00000 1.00000 1100 7.02000 1 ; 2'
   expected4 = 'i 1 4.00000 0.50000 0 7.01000 1 ; 1'
   expected5 = 'i 2 5.50000 1.00000 0 7.02000 1 ; 2'
   expected6 = 'i 3 3.00000 1.50000 0 7.03000 1 ; 3'
@@ -1996,6 +2002,8 @@ def test__phrase_midi_lite_syntax
 # TESTING PURPOSES ONLY
 reset_script_state
 # test__phrase_midi_lite_syntax
+
+format midi
 
 phrase "Intro Phrase"
   
@@ -2146,18 +2154,19 @@ write "composer_test_results.txt"
 }
   tester, results = test_runner(test_name, throw_on_failure, script, lite_syntax)
   actual = results     
-  expected0 = 'instrument 1  start 0.00000  duration 1.00000  amplitude 100  pitch 64  channel 1 ; 1'
-  expected1 = 'instrument 1  start 1.00000  duration 1.00000  amplitude 100  pitch 65  channel 1 ; 2'
-  expected2 = 'instrument 1  start 2.00000  duration 1.00000  amplitude 100  pitch 66  channel 1 ; 3'
-  expected3 = 'instrument 2  start 0.00000  duration 1.00000  amplitude 100  pitch 64  channel 2 ; 1'
-  expected4 = 'instrument 2  start 1.00000  duration 1.00000  amplitude 100  pitch 65  channel 2 ; 2'
-  expected5 = 'instrument 2  start 2.00000  duration 1.00000  amplitude 100  pitch 66  channel 2 ; 3'
-  tester.assert(expected0 == actual[0])
-  tester.assert(expected1 == actual[1])
-  tester.assert(expected2 == actual[2])
-  tester.assert(expected3 == actual[3])
-  tester.assert(expected4 == actual[4])
-  tester.assert(expected5 == actual[5])
+  expected0 = 'instrument 1  start 0.00000  duration 1.00000  amplitude 100  pitch 64  channel 1'
+  expected1 = 'instrument 1  start 2.00000  duration 1.00000  amplitude 100  pitch 65  channel 1'
+  expected2 = 'instrument 1  start 4.00000  duration 1.00000  amplitude 100  pitch 66  channel 1'
+  expected3 = 'instrument 2  start 0.00000  duration 1.00000  amplitude 100  pitch 64  channel 2'
+  expected4 = 'instrument 2  start 2.00000  duration 1.00000  amplitude 100  pitch 65  channel 2'
+  expected5 = 'instrument 2  start 4.00000  duration 1.00000  amplitude 100  pitch 66  channel 2'
+
+  tester.assert(expected0 == actual[0].split(';')[0].strip)
+  tester.assert(expected1 == actual[1].split(';')[0].strip)
+  tester.assert(expected2 == actual[2].split(';')[0].strip)
+  tester.assert(expected3 == actual[3].split(';')[0].strip)
+  tester.assert(expected4 == actual[4].split(';')[0].strip)
+  tester.assert(expected5 == actual[5].split(';')[0].strip)
   puts tester.to_s  
 end
 
@@ -2492,43 +2501,9 @@ write "composer_test_results.txt"
   players "Player 1", "Player 2"
 }
   tester, results = test_runner(test_name, throw_on_failure, script, lite_syntax)
-  actual = results        
-  expected0 = 'instrument 1  start 4.00000  duration 4.00000  amplitude 100  pitch 64  channel 1 ; 0'
-  tester.assert(expected0 == actual[0])
-  puts tester.to_s
-
-script = 
-%Q{
-# TESTING PURPOSES ONLY
-reset_script_state
-# test__import_root_map_players
-
-format midi
-
-player "Player 1"
-  channel 1
-player "Player 2"
-  channel 20
-
-# Loads the midi file, gets all notes from each channel, assigns the notes and the instrument
-#  and channel to the player in the same ordinal position as the midi track.
-# capture measures also gets all the measure boundaries and makes each a separate phrase which is
-#  assigned to the player in sequence
-import "composer_lang_ut.mid"
-  capture measures
-  players "Player 1", "Player 2"
-
-# So this test should only show the note in Channel 20
-play
-  players "Player 2" 
-
-write "composer_test_results.txt"
-  players "Player 1", "Player 2"
-}
-  tester, results = test_runner(test_name, throw_on_failure, script, lite_syntax)
-  actual = results
-  expected1 = 'instrument 20  start 4.00000  duration 4.00000  amplitude 100  pitch 65  channel 20 ; 1'
-  tester.assert(expected1 == actual[0])
+  actual = results  
+  expected0 = 'instrument 1  start 4.00000  duration 4.00000  amplitude 100  pitch 64  channel 1'
+  tester.assert(expected0 == actual[0].split(';')[0].strip)
   puts tester.to_s
 end
 
@@ -2607,7 +2582,6 @@ def run_tests(flags='run_all')
     begin    
       
       # *** run_only TESTS GO HERE ***
-      test__import_root_map_players; num_tests += 1
       # *** run_only TESTS GO HERE ***
     
     rescue AleatoricTestException => e      

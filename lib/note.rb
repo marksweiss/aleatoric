@@ -75,7 +75,7 @@ class Note
     end    
   end
   
-  def amplitude(amplitude=nil)    
+  def amplitude(amplitude=nil)      
     if amplitude == nil
       @note_attrs[:amplitude]
     else
@@ -167,6 +167,10 @@ class Note
   end
   def Note.set_output_format_midi
     @@format = :midi
+  end
+  
+  def ==(other)
+    return self.note_attrs == other.note_attrs
   end
   
   # Outputs a string representation of the note, based on the value for format passed to #initialize

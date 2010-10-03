@@ -97,7 +97,7 @@ class Player_Test < Test::Unit::TestCase
     score_2 << [note_3, note_4]
     player.add_score(score_2.name, score_2)
     expected = score_1.notes
-    actual = player.current_score.notes    
+    actual = player.current_score.notes        
     assert(expected == actual)
     
     puts "test__current_score COMPLETED"
@@ -123,11 +123,11 @@ class Player_Test < Test::Unit::TestCase
     player = Player.new("Test Player")
     score_name = "score 1"
     score_1 = Score.new(score_name)
-    player.add_score(score_name, score_1)
-    assert(player.current_score.object_id == score_1.object_id)
+    player.add_score(score_name, score_1)    
+    assert(player.current_score == score_1)
     score_2 = Score.new(score_name)
     player.set_score(score_name, score_2)
-    assert(player.current_score.object_id == score_2.object_id)
+    assert(player.current_score == score_2)
     
     puts "test__set_score COMPLETED"
   end  

@@ -719,20 +719,17 @@ def players(*names)
     #  is appended as a single phrase to the phrases for each player that is assigned that channel
     if @capture_measures      
       # Iterate notes and group into lists of notes for each measure
-      # list of lists, one list for each measure's notes, in sequenc
+      # list of lists, one list for each measure's notes, in sequence
       all_measures_notes = []
-      # temp to hold current measures notes, copied into all_measure_notes for each measure
       cur_measure_notes = []
-      # Init to same lookahead first note measure value to avoid check on being first pass in loop
-      cur_measure = notes[0].measure if notes.length > 0
-      last_measure = notes[0].measure if notes.length > 0
+      cur_measure = last_measure = @import_notes[0].measure if @import_notes.length > 0     
       @import_notes.each do |note|
         cur_measure = note.measure
         if cur_measure == last_measure
           cur_measure_notes.push note
         else # if cur_measure != last_measure
           all_measures_notes.push cur_measure_notes            
-          cur_measure_notes = []            
+          cur_measure_notes = [note]            
         end
         last_measure = cur_measure
       end

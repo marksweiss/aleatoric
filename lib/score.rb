@@ -102,6 +102,12 @@ class Score
     ret
   end
   
+  def ==(other)
+    return self.name == other.name && 
+      self.score_attrs == other.score_attrs && 
+      self.notes == other.notes
+  end
+  
   # Returns a deep copy of the object
   def dup
     ret = Score.new

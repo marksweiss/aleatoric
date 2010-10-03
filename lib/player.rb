@@ -131,7 +131,6 @@ class Player
       break if name == score_name
     end
     if valid_scores_idx? idx
-      set_score_channel score
       # For debugging
       dup_score = set_added_score_note_attrs score
       @scores[score_name] = dup_score 

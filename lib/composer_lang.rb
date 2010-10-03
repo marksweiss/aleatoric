@@ -56,8 +56,6 @@ class ComposerAST
     'improvisation' => "do\n",  
     'improvise' => "do\n",
     'import' => "do\n",
-    'volume' => "\n",
-    'amplitude' => "\n",
     'normalize' => "\n"
   }
   
@@ -86,8 +84,6 @@ class ComposerAST
     'improvisation' => "end\n",
     'improvise' => "end\n",
     'import' => "end\n",
-    'volume' => "",
-    'amplitude' => "",
     'normalize' => "" 
   }
  
@@ -129,8 +125,6 @@ class ComposerAST
     'improvisation' => ['players'],
     'improvise' => ['players'],
     'import' => ['capture', 'players', 'tempo', 'normalize'],
-    'volume' => [],
-    'amplitude' => [],
     'normalize' => []
   }
   @@kw_parents = {
@@ -159,8 +153,6 @@ class ComposerAST
     'improvise' => ['root', 'repeat'],
     'import' => ['phrase', 'root'],
     'capture' => ['import'],
-    'volume' => ['note'],
-    'amplitude' => ['note'],
     'normalize' => ['import']
   }
   @@kw = @@kw_children.keys
