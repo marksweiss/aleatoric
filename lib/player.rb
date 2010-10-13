@@ -53,6 +53,8 @@ class Player
     @out_notes = []
     @current_start = 0.0
     @auto_next_start = true
+    # VERBOSE
+    @total_loops = 0
   end
   
   def handle
@@ -246,9 +248,8 @@ class Player
   def play(name=nil, &blk)    
     
     # VERBOSE
-    @total_loops = 0 if @total_loops.nil?
     @total_loops += 1
-    # puts "#{self.name}\t\tTotal Loops: #{@total_loops}"
+    #puts "#{self.name}\t\tTotal Loops: #{@total_loops}"
     # /VERBOSE    
     
     ret = []
@@ -272,6 +273,7 @@ class Player
     
     # Now push the notes cur_score to output. Store added notes just from
     #  this #play call in separate step to return them for client convenience, testing
+    dup_note = nil
     cur_score.notes.each do |note|
       dup_note = set_added_note_attrs note       
       # NOTE: This is a very important business rule on this line, namely that Player silently pushes
@@ -279,16 +281,16 @@ class Player
       #  which pointed out the subtle issue that it should really only do this if the new note is before
       #  the current Player start time. So added the if check.
       if @auto_next_start and dup_note.start <= @current_start
-        # if the new note start is < current_start, treat it as an offset from current_start
+        # If the new note start is < current_start, treat it as an offset from current_start
         dup_note.start(dup_note.start + @current_start)
-      end      
-      # and move the offset forward past the end of the current note
-      @current_start += dup_note.duration        
-
+      end
+      
       ret << dup_note
       @out_notes << dup_note            
     end
-            
+    # Move the offset forward past the end of the current score
+    @current_start += (dup_note.start + dup_note.duration)       
+
     # Now run postplay hooks. 
     # NOTE: These make no promise as far as manipulating the current_score.  These rely on the
     #  Player API and the client simply must implement whatever logic they want.  Only promise
@@ -471,6 +473,7 @@ class Player
       dup_note = set_added_note_attrs note
       @out_notes << dup_note
     end
+    @current_start = notes.last.start + notes.last.duration if not notes.nil? && notes.length > 0
     self
   end
   alias set_output set_output_notes
@@ -494,6 +497,7 @@ class Player
   def prepend_note_to_output(note)
     dup_note = set_added_note_attrs note   
     @out_notes.insert(0, dup_note)
+    @current_start += dup_note.duration
     self    
   end
   
@@ -501,14 +505,26 @@ class Player
   # Appends a score to the current output
   # @param [Array<Aleatoric::Score>] a score which has all of its notes appended to the current output for the Player 
   # @return [self]  
-  def append_score_to_output(score, adj_start_to_current_start=false)   
+  def append_score_to_output(score, adj_start_to_current_start=false)
+    
+    # TEMP DEBUG
+    @append_count = 0 if @append_count.nil?
+    @append_count += 1
+    puts "appending score #{score.name}"
+    puts "#{@scores[@scores_ordered_names[@scores_idx]].name}"
+    puts "#{@name} append_score_to_output count = #{@append_count}"
+    @scores.keys.sort.each {|k| puts "#{k}"}
+       
     score.notes.each do |note| 
       dup_note = set_added_note_attrs note
       if adj_start_to_current_start
         dup_note.start(dup_note.start + @current_start) 
-        @current_start += dup_note.duration
       end
       @out_notes << dup_note
+    end
+    if not score.nil? && score.length > 0
+      last_note = score.notes.last
+      @current_start += (last_note.start + last_note.duration)
     end
     self
   end

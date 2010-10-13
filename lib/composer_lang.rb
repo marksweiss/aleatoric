@@ -314,8 +314,8 @@ class ComposerAST
           expr.gsub!(op, op + ' ')
         end
         # NOTE: This strips trailing '\n' which we will restore at the end of all line preprocessing
-        expr_tkns = expr.split(' ').collect{|tkn| tkn.strip}         
-        expr_tkns = tokenize_join_str expr_tkns                
+        expr_tkns = expr.split(' ').collect{|tkn| tkn.strip}
+        expr_tkns = tokenize_join_str expr_tkns
         tkns << expr_tkns
       end    
     tkns    

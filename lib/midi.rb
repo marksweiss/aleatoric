@@ -19,10 +19,10 @@ class AleatoricFailedMidiLoadException < Exception; end
 
 # Some Usage Notes - from the midilib documentation
 #  - MIDI file IO only understands MIDI file format 1 
-#    (where a sequence is made up of multiple tracks. It doesn’t yet understand format 0 
+#    (where a sequence is made up of multiple tracks. It doesn't yet understand format 0 
 #    (a single track containing all events) or format 2 (a collection of format 0 files in one file))
 #  - The first track in a sequence is special; it holds meta-events like tempo and sequence name. 
-#    Don’t put any notes in this track.
+#    Don't put any notes in this track.
 
 class MidiManager
 
@@ -160,6 +160,7 @@ class MidiManager
     
     # VERBOSE
     channels_found = {}
+    notes_loaded_count = 0
     # /VERBOSE
         
     note_num = 0
@@ -182,7 +183,7 @@ class MidiManager
         if event.program_change?       
           instrument = event.program
         end      
-        if event.note?
+        if event.note_off?
           channel = event.channel          
           # VERBOSE          
           if not channels_found.include? channel
@@ -209,13 +210,22 @@ class MidiManager
           
           if channel.nil? or start.nil? or duration.nil? or volume.nil? or pitch.nil? # or instrument.nil? 
             raise AleatoricFailedMidiLoadException, "Load of file #{file_name} failed on note # #{note_num}. start #{start} duration #{duration} volume #{volume} note(pitch) #{pitch} channel #{channel}"
-          else            
+          else
+            # VERBOSE
+            puts "Note #{notes_loaded_count} loaded for channel #{channel} for track #{track}"
+            notes_loaded_count += 1
+            # /VERBOSE
+                        
             # Construct new note from base properties
             note = Note.new("#{note_num}", {:instrument=>instrument, :channel=>channel, :start=>start, :duration=>duration, :amplitude=>volume, :pitch=>pitch})
             # Add measure value -- this is a note built-in attr that is used by kw 'import' but isn't part of note output to score        
             note.measure = measure
             ret_notes << note            
-            # instrument = nil; 
+            
+            # TEMP DEBUG
+            puts "RET NOTES ADDED COUNT #{ret_notes.length}"
+
+            instrument = nil; 
             channel = nil; start = nil; duration = nil; volume = nil; pitch = nil; measure = nil          
             note_num += 1
           end          
