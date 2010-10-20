@@ -412,7 +412,6 @@ class ComposerAST
       end
       tkns_out << tkn_line  
     end
-    tkns_out
   end
     
   def preprocess_assignment(tkn_lines)

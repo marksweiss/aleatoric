@@ -26,12 +26,12 @@ class Player
   attr_accessor :state, :is_playing, :is_improvising, :out_notes
   attr_accessor :current_start # Made this read/write becasue reset by player_test.rb
   attr_reader :total_loops   # VERBOSE
-  
+
   @@NO_INDEX = -1
   def Player.no_index
     @@NO_INDEX
   end
-  
+
   # Ctor
   # @param [String] name of the Player
   def initialize(name, instrument=nil, channel=nil)
@@ -49,18 +49,18 @@ class Player
     @improvising_hooks = {}
     @state = {}
     @is_playing = true
-    @is_improvising = true    
+    @is_improvising = true
     @out_notes = []
     @current_start = 0.0
     @auto_next_start = true
     # VERBOSE
     @total_loops = 0
   end
-  
+
   def handle
     self.object_id
   end
-  
+
   def instrument(instrument=nil)
     if instrument == nil
       @instrument
@@ -69,7 +69,7 @@ class Player
       self
     end
   end
-  
+
   def channel(channel=nil)
     if channel == nil
       @channel
@@ -78,7 +78,7 @@ class Player
       self
     end
   end
-    
+
   # Add a score to the Player's list of scores.  Note the scores are added by key
   # but also stored in order they are added.  Clients can call #play by passing
   # a score name, but they can also use the #increment_scores_index and decrement ...
@@ -98,7 +98,7 @@ class Player
   alias append_score add_score
   alias append_phrase add_score
   alias add_phrase add_score
-    
+
   # Remove a score from the Player's list of scores.
   # @param [String] name of the Aleatoric::Score object being removed
   # @return [self]
@@ -119,7 +119,7 @@ class Player
   alias delete_score remove_score
   alias remove_phrase remove_score
   alias delete_phrase remove_score
-  
+
   # Replace (update) a score in the Player's list of scores.
   # @param [String] name of the Aleatoric::Score object being replaced
   # @param [Aleatoric::Score] the score object being added in place of the previous
@@ -140,7 +140,7 @@ class Player
     self
   end
   alias set_phrase set_score
-  
+
   def set_current_score(score_name)
     # Start out in invalid position and index for each score until we match
     idx = -1
@@ -154,7 +154,7 @@ class Player
     self
   end
   alias set_current_phrase set_current_score
-  
+
   # Clear all scores stored by this Player
   # @return [self]
   def clear_scores
@@ -175,13 +175,13 @@ class Player
   alias scores_size scores_length
   alias phrases_length scores_length
   alias phrases_size scores_length
-  
+
   # @return [true, false] indicates whether the Player currently stores any scores
   def scores_empty?
     @scores_ordered_names.length == 0
   end
   alias phrases_empty? scores_empty?
-  
+
   # Clients can call #play by passing
   # a score name, but they can also use the #increment_scores_index and decrement ...
   # methods along with #scores_length to iterate the scores in order and play them.  
@@ -196,7 +196,7 @@ class Player
     @scores[@scores_ordered_names[@scores_idx]] if valid_scores_idx? @scores_idx
   end
   alias current_phrase current_score
-  
+
   # Increments the index of the currently active scorein the ordered list of scores
   # stored by this Player.  Clients can call #play by passing
   # a score name, but they can also use the #increment_scores_index and decrement ...
@@ -220,7 +220,7 @@ class Player
     self
   end
   alias decrement decrement_scores_index
-  alias dec decrement_scores_index  
+  alias dec decrement_scores_index
   alias decrement_phrases_index decrement_scores_index
 
   # By default Player will make sure each note starts after the last one, which is very useful
@@ -232,7 +232,7 @@ class Player
   def auto_next_start_off
     @auto_next_start = false
   end
-  
+
   # Plays the currently active score, which means, precisely:
   # - set current score to the name argument passed, if name is not nil
   # - set current score to self's current_score if name arg is nil
@@ -245,37 +245,37 @@ class Player
   # @param [String, nil] the name of the score to play
   # @param [block, nil] a block to apply to the current score after preplay hooks are run
   # @return [Array<Aleatoric::Note>] the notes generated from this call to play()
-  def play(name=nil, &blk)    
-    
+  def play(name=nil, &blk)
+
     # VERBOSE
     @total_loops += 1
     #puts "#{self.name}\t\tTotal Loops: #{@total_loops}"
-    # /VERBOSE    
-    
+    # /VERBOSE
+
     ret = []
     return ret if not playing?
     # NOTE: Default is to NOT change the state of score but to make a copy for each play call.
-    #  Client can call    
+    #  Client can call
     cur_score = @scores[name] if name != nil
-    cur_score = self.current_score() if name == nil      
+    cur_score = self.current_score() if name == nil
     cur_score = cur_score.dup
-                
+
     # NOTE: hooks can have whatever side effects they want, based on the access they have through
     #  the Player public API.  But barring that the promise the class makes in #play is like a 
     #  a functional map idea -- each hook is called, in order, and transforms the current state
-    #  of the current score and passes that to the next hook        
+    #  of the current score and passes that to the next hook
     @preplay_hooks_ordered_names.each do |hook_name|
-      cur_score = @preplay_hooks[hook_name].call(self, cur_score)    
+      cur_score = @preplay_hooks[hook_name].call(self, cur_score)
     end
-    
+
     # If user passed in additional one-time-only block for this #play call, run it on current score
     cur_score = blk.call cur_score if block_given?
-    
+
     # Now push the notes cur_score to output. Store added notes just from
     #  this #play call in separate step to return them for client convenience, testing
     dup_note = nil
     cur_score.notes.each do |note|
-      dup_note = set_added_note_attrs note       
+      dup_note = set_added_note_attrs note
       # NOTE: This is a very important business rule on this line, namely that Player silently pushes
       #  the start time of notes ahead of their literal value.  Modified this because it broke a test
       #  which pointed out the subtle issue that it should really only do this if the new note is before
@@ -284,12 +284,12 @@ class Player
         # If the new note start is < current_start, treat it as an offset from current_start
         dup_note.start(dup_note.start + @current_start)
       end
-      
+
       ret << dup_note
-      @out_notes << dup_note            
+      @out_notes << dup_note
     end
     # Move the offset forward past the end of the current score
-    @current_start += (dup_note.start + dup_note.duration)       
+    @current_start += (dup_note.start + dup_note.duration)
 
     # Now run postplay hooks. 
     # NOTE: These make no promise as far as manipulating the current_score.  These rely on the
@@ -300,13 +300,13 @@ class Player
     # Must pass in reference to containing object since method was passed in from outside this object as lambda
     @postplay_hooks_ordered_names.each do |hook_name|
       @postplay_hooks[hook_name].call self
-    end    
-    
+    end
+
     # Also return the notes written, for client convenience in case they want a local copy, 
     #  and, more so, for convenience of unit testing    
     ret
   end
-  
+
   # Runs the improvisation hook registered with the name arg to generate output notes.
   # @param [String] name of the improvisation hook to run
   # @return [Array<Aleatoric::Note>] a copy of the notes generated by the improvisation hook call
@@ -323,7 +323,7 @@ class Player
   end
 
   # TODO add a @see below to link to documentation about preplay hooks
-  
+
   # Preplay hooks are named blocks that run, in the order they are registered, before each
   # call to #play.  They are responsible for taking a reference to the Player in which the 
   # hook is registered and an Aleatoric::Score object as input and returning an Aleatoric::Score.
@@ -335,7 +335,7 @@ class Player
     @preplay_hooks[name] = f    
     self
   end
-  
+
   # @param [String] the name of the hook to remove
   # @return [self]
   def remove_preplay_hook(name)
@@ -343,7 +343,7 @@ class Player
     @preplay_hooks.delete(name)
     self
   end
-  
+
   # @param [String] the name of the hook being retrieved
   # @return [block] returns a lambda of the body of the hook matching the name argument
   def get_preplay_hook(name)
@@ -361,7 +361,7 @@ class Player
     @postplay_hooks[name] = f    
     self
   end
-  
+
   # @param [String] the name of the hook to remove
   # @return [self]
   def remove_postplay_hook(name)
@@ -369,13 +369,13 @@ class Player
     @postplay_hooks.delete(name)
     self
   end
-  
+
   # @param [String] the name of the hook being retrieved
   # @return [block] returns a lambda of the body of the hook matching the name argument
   def get_postplay_hook(name)
     @postplay_hooks[name]
   end
-  
+
   # Improvising hooks are named blocks that run, when called by name in the #improvise method.
   # They are responsible for taking no arguments and for returning an Array of Aleatoric::Note's
   # @param [String] a name of the hook to add
@@ -387,7 +387,7 @@ class Player
     self
   end
   alias add_improvisation_hook add_improvising_hook
-  
+
   # @param [String] the name of the hook to remove
   # @return [self]
   def remove_improvising_hook(name)
@@ -396,14 +396,14 @@ class Player
     self
   end
   alias remove_improvisation_hook remove_improvising_hook
-  
+
   # @param [String] the name of the hook being retrieved
   # @return [block] returns a lambda of the body of the hook matching the name argument  
   def get_improvising_hook(name)
     @improvising_hooks[name]
   end
   alias get_improvisation_hook get_improvising_hook
-  
+
   # Store a value by keyname, serving as a generic interface for hooks to store state for later use.
   # Supports the design pattern of testing/setting state in preplay hooks and testing/setting in 
   # postplay hooks in a complementary fashion.  So, state can be tested/set before and after each
@@ -415,7 +415,7 @@ class Player
     @state[key] = val
     self
   end
-  
+
   # Retrieves a value by keyname, serving as a generic interface for hooks to store state for later use.
   # Supports the design pattern of testing/setting state in preplay hooks and testing/setting in 
   # postplay hooks in a complementary fashion.  So, state can be tested/set before and after each
@@ -425,19 +425,19 @@ class Player
   def get_state(key)
     @state[key]
   end
-  
+
   # Clears all key/values in the Player's state store.
   # @return [self]
   def clear_state
     @state.clear
     self
   end
-  
+
   # Returns the keys in the Player's state store.
   def state_keys
     @state.keys
   end
-  
+
   # Test set whether the player is enabled to play.  Setting this to false means a call to #play
   # will generate no output notes.
   # @param [true, false, nil] if a boolean is passed then it sets this on or off.
@@ -455,7 +455,7 @@ class Player
     @is_improvising = is_improvising if is_improvising != nil
     @is_improvising
   end
-  
+
   # @return [Array<Aleatoric::Note>] a copy of the notes currently in this Player's output
   def get_output
     ret = []
@@ -477,7 +477,7 @@ class Player
     self
   end
   alias set_output set_output_notes
-  
+
   # TODO TEST FOR adj_start_to_current_start=true
   # Appends a note to the current output
   # @param [Array<Aleatoric::Note>] a notes to be appended to the current output for the Player 
@@ -487,12 +487,12 @@ class Player
     if adj_start_to_current_start
       dup_note.start(dup_note.start + @current_start) 
       @current_start += dup_note.duration
-    end    
+    end
     # For debugging
     @out_notes << dup_note
     self
   end
-  
+
   # TODO TEST FOR adj_start_to_current_start=true
   def prepend_note_to_output(note)
     dup_note = set_added_note_attrs note   
@@ -500,13 +500,13 @@ class Player
     @current_start += dup_note.duration
     self    
   end
-  
+
   # TODO TEST FOR adj_start_to_current_start=true
   # Appends a score to the current output
   # @param [Array<Aleatoric::Score>] a score which has all of its notes appended to the current output for the Player 
   # @return [self]  
   def append_score_to_output(score, adj_start_to_current_start=false)
-    
+
     # TEMP DEBUG
     @append_count = 0 if @append_count.nil?
     @append_count += 1
@@ -514,7 +514,7 @@ class Player
     puts "#{@scores[@scores_ordered_names[@scores_idx]].name}"
     puts "#{@name} append_score_to_output count = #{@append_count}"
     @scores.keys.sort.each {|k| puts "#{k}"}
-       
+
     score.notes.each do |note| 
       dup_note = set_added_note_attrs note
       if adj_start_to_current_start
@@ -529,32 +529,32 @@ class Player
     self
   end
   alias append_phrase_to_output append_score_to_output
-    
+
   # Tests whether there is any output, that is, any notes in the current output
   # @return [true, false] indicates whethere ther are currently any notes in the output of this Player
   def output_empty?
     @out_notes.length == 0
   end
-  
+
   # Clears all notes from the output of this Player
-  # @return [self]  
+  # @return [self]
   def clear_output
     @out_notes.clear
     self
   end
-  
+
   # Creates and returns a deep copy of this Player, including copies of all Scores
   # stored by the player (with in turn copies of the Notes it the Scores), and copies
   # of all registered hooks, the same current score, and the values for #playing? and #improvising?
   # @return [Aleatoric::Player]
-  def dup  
+  def dup
     ret = Player.new(self.name)
-    
-    @scores.keys.each do |score_name| 
-      add_score = @scores[score_name].dup      
+
+    @scores.keys.each do |score_name|
+      add_score = @scores[score_name].dup
       ret.add_score(add_score.name, add_score)
     end
-    
+
     ret.scores_ordered_names = @scores_ordered_names
     ret.scores_idx = @scores_idx
     ret.preplay_hooks_ordered_names = @preplay_hooks_ordered_names
@@ -562,21 +562,21 @@ class Player
     ret.improvising_hooks_ordered_names = @improvising_hooks_ordered_names
     ret.state = @state
     ret.is_playing = @is_playing
-    ret.is_improvising = @is_improvising    
+    ret.is_improvising = @is_improvising
     @out_notes.each {|note| ret.out_notes << note.dup}
     ret.preplay_hooks = @preplay_hooks
     ret.postplay_hooks = @postplay_hooks
     ret.improvising_hooks = @improvising_hooks
     ret.current_start = @current_start
-    
+
     ret
   end
-  
+
   private
   def valid_scores_idx?(idx)
      idx >= 0 and idx < @scores.length
   end
-  
+
   def set_added_score_note_attrs(score)
     dup_score = score.dup
     dup_score.notes.each do |note| 
@@ -584,20 +584,20 @@ class Player
     end
     dup_score  
   end
-  
+
   def set_added_note_attrs(note)
     dup_note = note.dup
     set_added_note_attrs_helper dup_note
     dup_note
   end
-  
+
   def set_added_note_attrs_helper(note)
     note.instrument(@instrument) if @instrument
     note.channel(@channel) if @channel
     # For debugging
     note.player_id = "#{@name}_#{self.object_id}"
   end
-  
+
 end
 
 end

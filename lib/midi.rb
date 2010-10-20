@@ -222,9 +222,6 @@ class MidiManager
             note.measure = measure
             ret_notes << note            
             
-            # TEMP DEBUG
-            puts "RET NOTES ADDED COUNT #{ret_notes.length}"
-
             instrument = nil; 
             channel = nil; start = nil; duration = nil; volume = nil; pitch = nil; measure = nil          
             note_num += 1

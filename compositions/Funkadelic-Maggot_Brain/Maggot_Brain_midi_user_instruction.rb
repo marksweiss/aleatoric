@@ -11,20 +11,20 @@ include Aleatoric
 # IMPLEMENTATION OF THIS user_instruction.rb
 
 # Used to restore volume if it has decrescendo'd to 0
-DEFAULT_VOLUME = 12
+DEFAULT_VOLUME = 20 
 
 # *************************
 # Player State Management
 # These values govern the behavior of each Player
 PLAYER_SETTINGS = {
-  "num_phrases" => 5,
+  "num_phrases" => 6,
   
   # Player Phrase Advance
   # Player must play each phrase at least this long
-  "min_repeat_phrase_count" => 2, # WHL * 2.0, # QRTR * (45.0 + rand(15).to_f),
+  "min_repeat_phrase_count" => 3, # WHL * 2.0, # QRTR * (45.0 + rand(15).to_f),
   # The most important factor governing advance of Players through phrases, this is simply
   #  the percentage prob that they advance on any given iteration  
-  "phrase_advance_prob" => 0.25, # 0.11, 
+  "phrase_advance_prob" => 0.18, # 0.11, 
   # Tunable parms for shifting playing of current phrase out of its current
   #  phase, and also to shift it more in alignment.  Shift simple pre-pends
   #  a rest Note to current phrase before writing it to Score.  Supports
@@ -33,28 +33,28 @@ PLAYER_SETTINGS = {
   
   # Player Phrase Phase Adjustment
   # Percentage prob that a Player will adjust phase on any given iteration
-  "adj_phase_prob_factor" => 0.25,
+  "adj_phase_prob_factor" => 0.05,
   # Supports Instruction that Player this is too often in alignment should favor
-  #  trying to be out of phase a Fbit more. If Player hasn't adjusted phase
+  #  trying to be out of phase a bit more. If Player hasn't adjusted phase
   #  this many times or more, then adj_phase_prob_increase_factor will be applied
-  "adj_phase_count_threshold" => 10,
-  "adj_phase_prob_increase_factor" => 1.2,
+  "adj_phase_count_threshold" => 5,
+  "adj_phase_prob_increase_factor" => 1.0,
   # The length of the rest Note (in seconds) inserted if a Player is adjusting its phase  
-  "phase_adj_dur" => SXTYFRTH, # * 0.25,
+  "phase_adj_dur" => SXTYFRTH * 0.05,
   # Players are adjusted out of phase initially a tiny bit, to make it easier for midi file to play
-  "init_adj_phase_dur" => SXTYFRTH * 0.1,
+  "init_adj_phase_dur" => SXTYFRTH * 0.02,
   
   # Prob that a Player will seek unison on any given iteration.  The idea is that
   #  to seek unison the Ensemble and all the Players must seek unison  
-  "unison_prob_factor" => 0.25,
+  "unison_prob_factor" => 0.40,
   
   # Player Rest/Play
   # Tunable parms for probability that Player will rest rather than playing a note.
   # Supports score directive to listen as well as play and not always play
   # Prob that a Player will try to rest on a given iteration (not play)
-  "rest_prob_factor" => 0.2,  
+  "rest_prob_factor" => 0.11,  
   # Factor multiplied by rest_prob_factor if the Player is already at rest  
-  "stay_at_rest_prob_factor" => 1.5,
+  "stay_at_rest_prob_factor" => 1.2,
   
   # Player Volume Adjusment, De/Crescendo
   # Tunable parms for adjusting volume up and down, and prob of making
@@ -68,8 +68,8 @@ PLAYER_SETTINGS = {
   "amp_adj_diminuendo_ratio_threshold" => 1.0,
   "amp_diminuendo_adj_factor" => 0.8,
   # Prob that a Player is seeking de/crescendo  
-  "crescendo_prob_factor" => 0.8,
-  "diminuendo_prob_factor" => 0.5,
+  "crescendo_prob_factor" => 0.4,
+  "diminuendo_prob_factor" => 0.25,
   
   # Player Pitch Transpose
   # Tunable parms for transposing the playing of a phrase.  Suppports score directive
@@ -89,8 +89,6 @@ PLAYER_SETTINGS = {
   # Minimum average duration of notes in a phrase for that phrase to be more likely
   #  to transpose down rather than up
   "transpose_down_prob_factor" => 0.5,
-  # Minimum average duration of notes in a phrase for that phrase to be more likely
-  #  to transpose down rather than up  
   "transpose_down_dur_threshold" => 2.0,
   
   # Swing
@@ -103,9 +101,9 @@ PLAYER_SETTINGS = {
   #  num_steps - the number of values incremented up from the base_val
   #  swing_step - the size of each step value increment
   # So, example: swing(0.98, 5, 0.01) -> swing range with the discrete values [0.98, 0.99, 1.0, 1.01, 1.02]
-  "swing_base_val" => 0.95,
-  "swing_num_steps" => 10,
-  "swing_step_size" => 0.01
+  "swing_base_val" => 0.928,
+  "swing_num_steps" => 8,
+  "swing_step_size" => 0.018
 }
 
 
@@ -117,28 +115,28 @@ ENSEMBLE_SETTINGS = {
   "phrases_idx_range_threshold" => 3,
   # Prob that the Ensemble will seek to have all Players play the same phrase
   #  on any one iteration through the Players  
-  "unison_prob_factor" => 0.7,
+  "unison_prob_factor" => 0.90,
   # Threshold number of phrases apart within which all players 
   #  must be for Ensemble to seek unison
   "max_phrases_idx_range_for_seeking_unison" => 2,
   
   # Crescendos before concluding section
   # Probability that the ensemble will de/crescendo in a unison
-  "crescendo_prob_factor"=> 0.6,
-  "decrescendo_prob_factor"=> 0.5,
+  "crescendo_prob_factor"=> 0.3,
+  "decrescendo_prob_factor"=> 0.25,
   # Maximum de/increase in volume (in CSound scale) that notes can gain in de/crescendo 
-  "crescendo_max_amp_range" => 8,
-  "decrescendo_max_amp_range" => 8,
+  "crescendo_max_amp_range" => 15,
+  "decrescendo_max_amp_range" => 15,
   # Minimum number of iterations over which a de/crescendo will take to de/increase volume by crescendo amount
   # NOTE: Must be < max_crescendo_num_steps
-  "min_crescendo_num_steps" => 1, # 50,
+  "min_crescendo_num_steps" => 2, # 50,
   # Maximum number of iterations over which a de/crescendo will take to de/increase volume by crescendo amount
   # NOTE: Must be >= de/crescendo_max_amp_range
-  "max_crescendo_num_steps" => 4, # 70, 
+  "max_crescendo_num_steps" => 3, # 70, 
   
   # Parameters governing the Conclusion
   # This is the ratio of steps in the Conclusion to the total steps before the Conclusion  
-  "conclusion_steps_ratio" => 0.10, # 0.06,
+  "conclusion_steps_ratio" => 0.03, # 0.06,
   # This extends the duration of the repetition of the last phrase
   #  curing the final coda.  At the start of the coda each player
   #  has its start time pushed ahead to be closer to the maximum
@@ -1087,9 +1085,9 @@ instruction_14_ensemble_post = lambda do |container|
     #  number of crescendos to spread total crescendoing length over multiple crescendos        
     num_crescendo_steps = (play_count * (ENSEMBLE_SETTINGS["conclusion_steps_ratio"] / num_crescendos)).ceil    
     # Split the max allowed increase in amp for a crescendo evenly among the steps of the crescendo
-    volume_adj = ((ENSEMBLE_SETTINGS["crescendo_max_amp_range"] * 2).to_f / num_crescendo_steps.to_f).ceil
-    if (num_crescendo_steps * volume_adj) > (ENSEMBLE_SETTINGS["crescendo_max_amp_range"] * 2)
-      num_crescendo_steps = ((ENSEMBLE_SETTINGS["crescendo_max_amp_range"] * 2).to_f / volume_adj.to_f).ceil
+    volume_adj = ((ENSEMBLE_SETTINGS["crescendo_max_amp_range"]).to_f / num_crescendo_steps.to_f).ceil
+    if (num_crescendo_steps * volume_adj) > (ENSEMBLE_SETTINGS["crescendo_max_amp_range"])
+      num_crescendo_steps = ((ENSEMBLE_SETTINGS["crescendo_max_amp_range"]).to_f / volume_adj.to_f).ceil
     end
     
     # VERBOSE
@@ -1109,11 +1107,6 @@ instruction_14_ensemble_post = lambda do |container|
             note.volume(note.volume + cur_volume_adj) 
           end  
           
-          # TEMP DEBUG
-          appended_cresc_phrase = 0 if appended_cresc_phrase.nil?
-          appended_cresc_phrase += 1
-          puts "#{appended_cresc_phrase}"
-                  
           al_player.append_phrase_to_output(phrase=phrase, adj_start_to_current_start=true)
         end
         cur_volume_adj += volume_adj
@@ -1121,16 +1114,11 @@ instruction_14_ensemble_post = lambda do |container|
       
       # Walk the other half of the steps and diminuendo, using factor starting at current step
       #  and subtracting on each time through, times the volume adjusement per step, down to 0
-      j = num_crescendo_steps
+      j = num_crescendo_steps - 1
       num_crescendo_steps.times do     
         aleatoric_players.each do |al_player| 
           phrase = al_player.current_phrase.dup
           phrase.notes.each {|note| note.volume(note.volume + (j * volume_adj))}
-          
-          # TEMP DEBUG
-          appended_cresc_phrase2 = 0 if appended_cresc_phrase2.nil?
-          appended_cresc_phrase2 += 1
-          puts "#{appended_cresc_phrase2}"
           
           al_player.append_phrase_to_output(phrase=phrase, adj_start_to_current_start=true)
         end
