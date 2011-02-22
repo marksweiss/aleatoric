@@ -84,8 +84,8 @@ end
 class BasicParser < Parslet::Parser
 
   # White space, define for exp rules to use for tokenization
-  rule(:space) { match('\s').repeat(1) }
-  rule(:space?) { space.maybe }
+  rule(:sp) { match('\s').repeat(1) }
+  rule(:sp?) { sp.maybe }
 
   # Line handling
   rule(:eol) { line_end.repeat(1) }
@@ -98,23 +98,23 @@ class BasicParser < Parslet::Parser
   #  where min and max are number of times repeat must match, and nil for max
   #  means any number of times.  Hence repeat(1) is min=1, max=nil == one or more times
   rule(:integer) {
-    space? >> 
+    sp? >> 
       ((str('+') | str('-')).maybe >> match("[0-9]").repeat(1)).as(:integer) >> 
-    space?
+    sp?
   }  
 
   rule(:float) { 
-    space? >> 
+    sp? >> 
       (integer >> str('.') >> match('[0-9]').repeat(1)).as(:float) >> 
-    space?
+    sp?
   }
 
   rule(:string) {
-    space? >> 
+    sp? >> 
       str('"') >> (str('\\') >> any | 
       str('"').absnt? >> any ).repeat.
       as(:string) >> 
-    str('"') >> space?
+    str('"') >> sp?
   }
 
 end
@@ -124,33 +124,62 @@ end
 class ComposerParser < BasicParser
   
   # Keywords/Expressions
+  rule(:name) { string }
   rule(:name?) { string.maybe }
+  rule(:arg) { sp? >> ( integer | float | string | (str('(') >> func_call >> str(')')) ).as(:arg) >> sp? }
+  rule(:arg_list?) { 
+    sp? >> 
+    (arg >> (str(',') >> arg).repeat(0)).maybe.as(:arg_list?) >>
+    sp?
+  }
+  rule(:func_call) { sp? >> (name >> str(':') >> sp? >> arg_list?).as(:func_call) >> sp? }
   
-  rule(:kw_note) { 
-    space? >> 
-      str('note').as(:kw_note) >> 
-    space? }
-  rule(:kw_note_exp) {
-    eol? >> 
-      (kw_note >> name?).as(:kw_note_exp) >> 
-    eol?
+  rule(:kw_note_attr) {
+    sp? >> 
+    # TODO support aliased names, e.g. 'volume' for 'amplitude'
+    ( ((str('instrument') | str('start') | str('duration') | str('amplitude') | str('pitch')) >> sp >> arg_list? )
+    ).as(:kw_note_attr) >> 
+    sp?
   }
   
+  rule(:kw_note) { sp? >> str('note').as(:kw_note) >> sp? }
+  rule(:kw_note_stmt) { eol? >> (kw_note >> name?).as(:kw_note_stmt) >> eol? }
+  rule(:kw_note_attr_stmt) { eol? >> kw_note_attr.as(:kw_note_attr) >> eol? }
+  rule(:kw_note_blk) {
+    # TODO Validate that expected five minimum attributes are present
+    # 'instrument', 'start', 'duration', 'amplitude', 'pitch'
+    kw_note_stmt >> kw_note_attr_stmt.repeat(5) 
+  }
+
+  rule(:kw_phrase) { sp? >> str('phrase').as(:kw_phrase) >> sp? }
+  rule(:kw_phrase_exp) { eol? >> (kw_phrase >> name?).as(:kw_phrase_exp) >> eol? }
+
+  rule(:kw_section) { sp? >> str('section').as(:kw_section) >> sp? }
+  rule(:kw_section_exp) { eol? >> (kw_section >> name?).as(:kw_section_exp) >> eol? }
+  
   # Begin parse at root() rule
-  root(:kw_note_exp)    
+  root(:kw_note_exp)  
+  
+  # Helpers
+  private  
+  def note_attr_generator(attr)
+    
+  end
+  
 end
 
 class BasicTransformer < Parslet::Transform
+  include Parslet
+
   SP = ' '
   CRLF = '\r\n'
   DQT = '"'
   SQT = "'"
 end
 
-class ComposerTransformer < BasicTransformer
-  include Parslet
-  
+class ComposerTransformer < BasicTransformer  
   BLK_OPEN = 'do'
+  BLK_CLS = 'end'
   
   def initialize
     @xform = Parslet::Transform.new
@@ -158,13 +187,19 @@ class ComposerTransformer < BasicTransformer
     # Primitive and scalar types, output their value
     @xform.rule(:integer => simple(:i)) { Integer(i) }
     @xform.rule(:float=> simple(:f))  { Float(f) }
-    @xform.rule(:string => simple(:s))  { s }      
+    @xform.rule(:string => simple(:s))  { String('"' + s.to_s + '"') }      
     
     # Keywords/Expressions
     # @xform.rule(:name => simple(:name)) { name.nil? ? '' : name }
     # @xform.rule(:kw_note => simple(:kw_note)) { kw_note }
-    @xform.rule(:kw_note_exp => {:kw_note => simple(:kw_note), :string => simple(:string)}) { 
-      kw_note + SP + DQT + string + DQT + SP + BLK_OPEN + CRLF 
+    @xform.rule(:kw_note_stmt => {:kw_note => simple(:kw_note), {:name? => {:string => simple(:string)}} => simple(:name?)}) { 
+      kw_note + SP + name? + CRLF 
+    }
+    @xform.rule(:kw_note_attr_stmt => {:kw_note_attr => simple(:kw_note_attr), :arg_list? => sequence(:arg_list?)}) {
+      kw_note_attr + SP + arg_list? + CRLF
+    }
+    @xform.rule(:kw_note_blk => {:kw_note_stmt => simple(:kw_note_stmt), kw_note_attr_stmt => sequence(:kw_note_attr_stmt)}) {
+      CRLF + kw_note_stmt + BLK_OPEN + CRLF + kw_note_attr_stmt + CRLF + BLK_CLS + CRLF      
     }
     
     # TODO Understanding subtrees is the key to getting all the blocks to work
@@ -189,21 +224,24 @@ def parslet_xform_composer_to_ruby(script, lite_syntax=false)
   rescue Parslet::ParseFailed => error
     puts "ERROR PARSING:\n#{script}"
     puts error, parser.root.error_tree
+  rescue Exception => error
+    puts "ERROR PARSING:\n#{script}"
+    puts error.message
+    puts error.backtrace.inspect
   end
   ret
 end
 
 def parslet_test_runner(test_name, throw_on_failure, script, lite_syntax=false)
   tester = AleatoricTest.new(test_name, throw_on_failure)  
+  # NEW PARSLET CALL TO XFORM INPUT BEFORE RUNNING WITH composer.rb
+  results = parslet_xform_composer_to_ruby(script, lite_syntax)
   
   # TODO RESTORE FOR FULL COMPOSER TEST
   # write_test_script(script, lite_syntax)
   # run_test_script
   # results = read_test_results
-  
-  # NEW PARSLET CALL TO XFORM INPUT BEFORE RUNNING WITH composer.rb
-  results = parslet_xform_composer_to_ruby(script, lite_syntax)
-  
+    
   return tester, results
 end
 
