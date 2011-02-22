@@ -129,7 +129,7 @@ class ComposerParser < BasicParser
   rule(:arg) { sp? >> ( integer | float | string | (str('(') >> func_call >> str(')')) ).as(:arg) >> sp? }
   rule(:arg_list?) { 
     sp? >> 
-    (arg >> (str(',') >> arg).repeat(0)).maybe.as(:arg_list?) >>
+    (sp >> arg >> (str(',') >> sp? >> arg).repeat(0)).maybe.as(:arg_list?) >>
     sp?
   }
   rule(:func_call) { sp? >> (name >> str(':') >> sp? >> arg_list?).as(:func_call) >> sp? }
@@ -137,7 +137,7 @@ class ComposerParser < BasicParser
   rule(:kw_note_attr) {
     sp? >> 
     # TODO support aliased names, e.g. 'volume' for 'amplitude'
-    ( ((str('instrument') | str('start') | str('duration') | str('amplitude') | str('pitch')) >> sp >> arg_list? )
+    ( ((str('instrument') | str('start') | str('duration') | str('amplitude') | str('pitch') | match('.').repeat(1)) >> arg_list? )
     ).as(:kw_note_attr) >> 
     sp?
   }
