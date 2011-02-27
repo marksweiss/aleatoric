@@ -55,14 +55,19 @@ class ComposerParser < BasicParser
   # Keywords/Expressions
   rule(:name) { string.as(:name) }
   rule(:name?) { string.maybe.as(:name?) }
+  
+  rule(:func_name) { match('[A-Za-z0-9|_]').repeat(1) }
+  rule(:udf_call) { func_name >> str(':') >> (sp >> arg_list).maybe }
+  rule(:udf_call_stmt) { sp? >> udf_call >> eol.as(:udf_call_stmt) }
+  rule(:udf_call_arg) { str('(') >> udf_call >> str(')') }
 
   # float must come first in alternation or matching int breaks float
-  rule(:arg) { (float | integer | string).as(:arg) } # (str('(') >> func_call >> str(')') )
+  rule(:arg) { (float | integer | string | udf_call_arg).as(:arg) }
   rule(:arg_list) { (arg >>  (sp? >> str(',') >> sp? >> arg).repeat(0)).as(:arg_list) }
   rule(:arg_list?) { arg_list.maybe.as(:arg_list?) }
-    
+      
   rule(:kw_note) { str('note').as(:kw_note) }
-  rule(:kw_note_stmt) { (sp? >> kw_note >> sp? >> name? >> eol).as(:kw_note_stmt) }  # (sp? >> kw_note >> name? >> sp? >> eol)
+  rule(:kw_note_stmt) { (sp? >> kw_note >> sp? >> name? >> eol).as(:kw_note_stmt) }
   rule(:kw_note_attr_stmt) {
     # TODO support aliased names, e.g. 'volume' for 'amplitude'
     (sp? >> 
@@ -71,7 +76,7 @@ class ComposerParser < BasicParser
      str('duration') | 
      str('amplitude') | 
      str('pitch') | 
-     match('[A-Za-z0-9|_]').repeat(1)) >> 
+     func_name) >> 
     sp >> arg_list >> eol).as(:kw_note_attr_stmt) 
   }
   
@@ -127,7 +132,7 @@ end
 
 # WS, EOL, Delimiters
 
-describe ComposerParser  do
+describe ComposerParser do
   let(:parser) { ComposerParser.new }
   context 'eol' do
     it 'should consume \n' do
@@ -138,7 +143,7 @@ end
 
 # Literals
 
-describe ComposerParser  do
+describe ComposerParser do
   let(:parser) { ComposerParser.new }
   context 'integer' do
     it 'should consume 100' do
@@ -147,7 +152,7 @@ describe ComposerParser  do
   end
 end
 
-describe ComposerParser  do
+describe ComposerParser do
   let(:parser) { ComposerParser.new }
   context 'float' do
     it 'should consume -100.001' do
@@ -156,7 +161,7 @@ describe ComposerParser  do
   end
 end
 
-describe ComposerParser  do
+describe ComposerParser do
   let(:parser) { ComposerParser.new }
   context 'string' do
     it 'should consume " sfdkj3432#$#$@"' do
@@ -167,7 +172,7 @@ end
 
 # Keyword Terminals
 
-describe ComposerParser  do
+describe ComposerParser do
   let(:parser) { ComposerParser.new }
   context 'kw_note' do
     it 'should consume note' do
@@ -178,8 +183,8 @@ end
 
 # Terminals
 
-# 'name'
-describe ComposerParser  do
+# "name"
+describe ComposerParser do
   let(:parser) { ComposerParser.new }
   context 'name' do
     it 'should consume "my_name"' do
@@ -188,8 +193,18 @@ describe ComposerParser  do
   end
 end
 
+# func_name
+describe ComposerParser do
+  let(:parser) { ComposerParser.new }
+  context 'func_name' do
+    it 'should consume _my_name123' do
+      parser.func_name.should parse('_my_name123')
+    end 
+  end
+end
+
 # arg
-describe ComposerParser  do
+describe ComposerParser do
   let(:parser) { ComposerParser.new }
   context 'arg' do
     it 'should consume "my_name"' do
@@ -198,7 +213,7 @@ describe ComposerParser  do
   end
 end
 
-describe ComposerParser  do
+describe ComposerParser do
   let(:parser) { ComposerParser.new }
   context 'arg' do
     it 'should consume 42' do
@@ -207,7 +222,7 @@ describe ComposerParser  do
   end
 end
 
-describe ComposerParser  do
+describe ComposerParser do
   let(:parser) { ComposerParser.new }
   context 'arg' do
     it 'should consume 9.42' do
@@ -217,7 +232,7 @@ describe ComposerParser  do
 end
 
 # arg_list
-describe ComposerParser  do
+describe ComposerParser do
   let(:parser) { ComposerParser.new }
   context 'arg_list?' do
     it 'should consume -9.42' do
@@ -226,7 +241,7 @@ describe ComposerParser  do
   end
 end
 
-describe ComposerParser  do
+describe ComposerParser do
   let(:parser) { ComposerParser.new }
   context 'arg_list?' do
     it 'should consume "my_arg"' do
@@ -235,7 +250,7 @@ describe ComposerParser  do
   end
 end
 
-describe ComposerParser  do
+describe ComposerParser do
   let(:parser) { ComposerParser.new }
   context 'arg_list?' do
     it 'should consume -9.42, 100' do
@@ -244,7 +259,7 @@ describe ComposerParser  do
   end
 end
 
-describe ComposerParser  do
+describe ComposerParser do
   let(:parser) { ComposerParser.new }
   context 'arg_list?' do
     it 'should consume -9.42, 100 , "my_arg"' do
@@ -255,8 +270,56 @@ end
 
 # Non-Terminals (Statements)
 
+# udf_call
+describe ComposerParser do
+  let(:parser) { ComposerParser.new }
+  context 'udf_call' do
+    it 'should consume my_func:' do
+      parser.udf_call.should parse('my_func:')
+    end 
+  end
+end
+
+describe ComposerParser do
+  let(:parser) { ComposerParser.new }
+  context 'udf_call' do
+    it 'should consume my_func: -9.42, 100 , "my_arg"' do
+      parser.udf_call.should parse('my_func: -9.42, 100 , "my_arg"')
+    end 
+  end
+end
+
+# udf_call_stmt
+describe ComposerParser do
+  let(:parser) { ComposerParser.new }
+  context 'udf_call_stmt' do
+    it 'should consume my_func: -9.42, 100 , "my_arg"' do
+      parser.udf_call_stmt.should parse('  my_func: -9.42, 100 , "my_arg"\n')
+    end 
+  end
+end
+
+# udf_call_arg
+describe ComposerParser do
+  let(:parser) { ComposerParser.new }
+  context 'udf_call_arg' do
+    it 'should consume (my_func: -9.42, 100 , "my_arg")' do
+      parser.udf_call_arg.should parse('(my_func: -9.42, 100 , "my_arg")')
+    end 
+  end
+end
+
+describe ComposerParser do
+  let(:parser) { ComposerParser.new }
+  context 'udf_call' do
+    it 'should consume my_func: -9.42, 100 , "my_arg", (my_func_arg: 100)' do
+      parser.udf_call.should parse('my_func: -9.42, 100 , "my_arg", (my_func_arg: 100)')
+    end 
+  end
+end
+
 # 'note' Statement
-describe ComposerParser  do
+describe ComposerParser do
   let(:parser) { ComposerParser.new }
   context 'kw_note_stmt' do
     it 'should consume note "note 1"\n' do
@@ -266,7 +329,7 @@ describe ComposerParser  do
 end
 
 # 'note' attributes
-describe ComposerParser  do
+describe ComposerParser do
   let(:parser) { ComposerParser.new }
   context 'kw_note_attr_stmt' do
     it 'should consume instrument 1\n' do
@@ -275,7 +338,7 @@ describe ComposerParser  do
   end
 end
 
-describe ComposerParser  do
+describe ComposerParser do
   let(:parser) { ComposerParser.new }
   context 'kw_note_attr_stmt' do
     it 'should consume start 0.0\n' do
@@ -284,7 +347,7 @@ describe ComposerParser  do
   end
 end
 
-describe ComposerParser  do
+describe ComposerParser do
   let(:parser) { ComposerParser.new }
   context 'kw_note_attr_stmt' do
     it 'should consume duration 1.0\n' do
@@ -293,7 +356,7 @@ describe ComposerParser  do
   end
 end
 
-describe ComposerParser  do
+describe ComposerParser do
   let(:parser) { ComposerParser.new }
   context 'kw_note_attr_stmt' do
     it 'should consume amplitude 500\n' do
@@ -302,7 +365,7 @@ describe ComposerParser  do
   end
 end
 
-describe ComposerParser  do
+describe ComposerParser do
   let(:parser) { ComposerParser.new }
   context 'kw_note_attr_stmt' do
     it 'should consume custom_attribute "attr_arg"\n' do
