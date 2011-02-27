@@ -58,24 +58,23 @@ class ComposerParser < BasicParser
 
   # float must come first in alternation or matching int breaks float
   rule(:arg) { (float | integer | string).as(:arg) } # (str('(') >> func_call >> str(')') )
-  
-  # rule(:arg_list?) { S( (arg >> (str(',') >> arg).repeat(0)).maybe.as(:arg_list?) ) }
+  rule(:arg_list) { (arg >>  (sp? >> str(',') >> sp? >> arg).repeat(0)).as(:arg_list) }
+  rule(:arg_list?) { arg_list.maybe.as(:arg_list?) }
     
   rule(:kw_note) { str('note').as(:kw_note) }
   rule(:kw_note_stmt) { (sp? >> kw_note >> sp? >> name? >> eol).as(:kw_note_stmt) }  # (sp? >> kw_note >> name? >> sp? >> eol)
-  #rule(:kw_note_attr) {
-  #  S( 
+  rule(:kw_note_attr_stmt) {
     # TODO support aliased names, e.g. 'volume' for 'amplitude'
-  #  ( ((str('instrument') | 
-  #      str('start') | 
-  #      str('duration') | 
-  #      str('amplitude') | 
-  #      str('pitch')) >> 
-  #      sp >> arg_list?)).as(:kw_note_attr) 
-  #  )
-  #}
+    (sp? >> 
+    (str('instrument') | 
+     str('start') | 
+     str('duration') | 
+     str('amplitude') | 
+     str('pitch') | 
+     match('[A-Za-z0-9|_]').repeat(1)) >> 
+    sp >> arg_list >> eol).as(:kw_note_attr_stmt) 
+  }
   
-
   #rule(:kw_note_attr_stmt) { E( kw_note_attr.as(:kw_note_attr) ) }
   #rule(:kw_note_blk) {
     # TODO Validate that expected five minimum attributes are present
@@ -189,6 +188,7 @@ describe ComposerParser  do
   end
 end
 
+# arg
 describe ComposerParser  do
   let(:parser) { ComposerParser.new }
   context 'arg' do
@@ -216,6 +216,43 @@ describe ComposerParser  do
   end
 end
 
+# arg_list
+describe ComposerParser  do
+  let(:parser) { ComposerParser.new }
+  context 'arg_list?' do
+    it 'should consume -9.42' do
+      parser.arg_list?.should parse('-9.42')
+    end 
+  end
+end
+
+describe ComposerParser  do
+  let(:parser) { ComposerParser.new }
+  context 'arg_list?' do
+    it 'should consume "my_arg"' do
+      parser.arg_list?.should parse('"my_arg"')
+    end 
+  end
+end
+
+describe ComposerParser  do
+  let(:parser) { ComposerParser.new }
+  context 'arg_list?' do
+    it 'should consume -9.42, 100' do
+      parser.arg_list?.should parse('-9.42, 100')
+    end 
+  end
+end
+
+describe ComposerParser  do
+  let(:parser) { ComposerParser.new }
+  context 'arg_list?' do
+    it 'should consume -9.42, 100 , "my_arg"' do
+      parser.arg_list?.should parse('-9.42, 100 , "my_arg"')
+    end 
+  end
+end
+
 # Non-Terminals (Statements)
 
 # 'note' Statement
@@ -228,7 +265,51 @@ describe ComposerParser  do
   end
 end
 
+# 'note' attributes
+describe ComposerParser  do
+  let(:parser) { ComposerParser.new }
+  context 'kw_note_attr_stmt' do
+    it 'should consume instrument 1\n' do
+      parser.kw_note_attr_stmt.should parse('instrument 1\n')
+   end 
+  end
+end
 
+describe ComposerParser  do
+  let(:parser) { ComposerParser.new }
+  context 'kw_note_attr_stmt' do
+    it 'should consume start 0.0\n' do
+      parser.kw_note_attr_stmt.should parse('start 0.0\n')
+   end 
+  end
+end
+
+describe ComposerParser  do
+  let(:parser) { ComposerParser.new }
+  context 'kw_note_attr_stmt' do
+    it 'should consume duration 1.0\n' do
+      parser.kw_note_attr_stmt.should parse('duration 1.0\n')
+   end 
+  end
+end
+
+describe ComposerParser  do
+  let(:parser) { ComposerParser.new }
+  context 'kw_note_attr_stmt' do
+    it 'should consume amplitude 500\n' do
+      parser.kw_note_attr_stmt.should parse('amplitude 500\n')
+   end 
+  end
+end
+
+describe ComposerParser  do
+  let(:parser) { ComposerParser.new }
+  context 'kw_note_attr_stmt' do
+    it 'should consume custom_attribute "attr_arg"\n' do
+      parser.kw_note_attr_stmt.should parse('custom_attribute "attr_arg"\n')
+   end 
+  end
+end
 
 ######### Transform TESTS ##########
 
