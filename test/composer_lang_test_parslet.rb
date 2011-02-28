@@ -35,17 +35,6 @@ class BasicParser < Parslet::Parser
     str('"')).as(:string)
   }
   
-  def S(s)
-    sp >> s >> sp
-  end
-
-  def S?(s)
-    sp? >> s >> sp?
-  end
-
-  def E(s)
-    eol? >> s >> eol?
-  end
 end
 
 
@@ -54,7 +43,6 @@ class ComposerParser < BasicParser
   
   # Keywords/Expressions
   rule(:name) { string.as(:name) }
-  rule(:name?) { string.maybe.as(:name?) }
   
   rule(:func_name) { match('[A-Za-z0-9|_]').repeat(1) }
   rule(:udf_call) { func_name >> str(':') >> (sp >> arg_list).maybe }
@@ -67,7 +55,7 @@ class ComposerParser < BasicParser
   rule(:arg_list?) { arg_list.maybe.as(:arg_list?) }
       
   rule(:kw_note) { str('note').as(:kw_note) }
-  rule(:kw_note_stmt) { (sp? >> kw_note >> sp? >> name? >> eol).as(:kw_note_stmt) }
+  rule(:kw_note_stmt) { (sp? >> kw_note >> (sp >> name).maybe >> eol).as(:kw_note_stmt) }
   rule(:kw_note_attr_stmt) {
     # TODO support aliased names, e.g. 'volume' for 'amplitude'
     (sp? >> 
@@ -80,12 +68,11 @@ class ComposerParser < BasicParser
     sp >> arg_list >> eol).as(:kw_note_attr_stmt) 
   }
   
-  #rule(:kw_note_attr_stmt) { E( kw_note_attr.as(:kw_note_attr) ) }
-  #rule(:kw_note_blk) {
+  rule(:kw_note_blk) {
     # TODO Validate that expected five minimum attributes are present
     # 'instrument', 'start', 'duration', 'amplitude', 'pitch'
-  #  kw_note_stmt >> kw_note_attr_stmt.repeat(5) 
-  #}
+    kw_note_stmt >> kw_note_attr_stmt.repeat(5) 
+  }
 
   # Begin parse at root() rule
   root(:kw_note_stmt)    
@@ -370,6 +357,16 @@ describe ComposerParser do
   context 'kw_note_attr_stmt' do
     it 'should consume custom_attribute "attr_arg"\n' do
       parser.kw_note_attr_stmt.should parse('custom_attribute "attr_arg"\n')
+   end 
+  end
+end
+
+# 'note' block
+describe ComposerParser do
+  let(:parser) { ComposerParser.new }
+  context 'kw_note_blk' do
+    it 'should consume note "my note 1"\n  instrument 1\n  start 0.0\n  duration 1.0\n  amplitude 500\n  pitch 8.3\n' do
+      parser.kw_note_blk.should parse('note "my note 1"\n  instrument 1\n  start 0.0\n  duration 1.0\n  amplitude 500\n  pitch 8.3\n')
    end 
   end
 end
