@@ -1,6 +1,7 @@
 require 'rubygems'
-require 'parslet'
+require 'ruby-debug'
 require 'rspec'
+require 'parslet'
 require 'parslet/rig/rspec'
 
 class BasicParser < Parslet::Parser
@@ -79,18 +80,44 @@ class ComposerParser < BasicParser
 end
 
 class BasicTransformer < Parslet::Transform
-  SP = ' '
-  CRLF = '\r\n'
-  DQT = '"'
-  SQT = "'"
-end
-
-class ComposerTransformer < BasicTransformer
   include Parslet
   
-  BLK_OPEN = 'do'
+  def initialize
+    @sp = ' '
+    @eol = '\r\n'
+    @blk_open = 'do'
+    @blk_close = 'end'
+  end
+  
+end
+
+# Transformer Helper Methods
+# TODO Move into 'lib' for my wrap of Parslet test framework
+# Free functions in module scope, so they can be called with lower-case
+#  syntax matching the rule names in Parser, sp, eol, etc., and are in scope
+#  inside any @xform.rule() in any Transformer, and within any RSpec Transform test
+def sp
+ ' '
+end
+
+def eol
+  '\r\n'
+end
+
+def blk_open
+  'do'
+end
+
+def blk_close
+  'end'
+end
+
+class ComposerTransformer # < BasicTransformer
+  include Parslet
   
   def initialize
+
+
     @xform = Parslet::Transform.new
         
     # Primitive and scalar types, output their value
@@ -98,11 +125,9 @@ class ComposerTransformer < BasicTransformer
     @xform.rule(:float=> simple(:f))  { Float(f.to_s.strip) }
     @xform.rule(:string => simple(:s))  { s.strip }      
     
-    # Keywords/Expressions
-    # @xform.rule(:name => simple(:name)) { name.nil? ? '' : name }
-    # @xform.rule(:kw_note => simple(:kw_note)) { kw_note }
-    @xform.rule(:kw_note_stmt => {:kw_note => simple(:kw_note), :string => simple(:string)}) { 
-      kw_note + SP + string + SP + BLK_OPEN + CRLF 
+    # Keyword Expressions
+    @xform.rule(:kw_note_stmt => subtree(:stmt)) { 
+      stmt[:kw_note] + sp + stmt[:name] + sp + blk_open + eol 
     }
     
     # TODO Understanding subtrees is the key to getting all the blocks to work
@@ -361,6 +386,10 @@ describe ComposerParser do
   end
 end
 
+# NOTE: Will not parse exact same string enclosed in %Q{} block even though
+#  that is supposed to be identical under the language. In other words, if 
+#  you take below string and replace newlines with actual hard returns and have
+#  the same whitespace, the parse fails
 # 'note' block
 describe ComposerParser do
   let(:parser) { ComposerParser.new }
@@ -372,4 +401,27 @@ describe ComposerParser do
 end
 
 ######### Transform TESTS ##########
+
+describe ComposerTransformer do
+  let(:transformer) { ComposerTransformer.new }
+  context 'kw_note_stmt' do
+    test_stmt = 'note "note 1"' + sp + eol
+    expected = 'note "note 1"' + sp + blk_open + eol
+    it 'should transform ' + test_stmt + ' to' + expected do
+      parse_tree = ComposerParser.new.parse(test_stmt)
+      transformer.apply(parse_tree).should == expected
+   end 
+  end
+end
+
+#describe ComposerTransformer do
+#  let(:transformer) { ComposerTransformer.new }
+#  context 'kw_note_stmt' do
+#    it 'should apply :kw_note_stmt' do
+#      parser = ComposerParser.new
+#      stmt = 'note "note 1"\n'
+#      xformer.apply(parser.parse())
+#   end 
+#  end
+#end
 
