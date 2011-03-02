@@ -1,5 +1,5 @@
 require 'rubygems'
-require 'ruby-debug'
+# require 'ruby-debug'
 require 'rspec'
 require 'parslet'
 require 'parslet/rig/rspec'
@@ -221,22 +221,10 @@ describe ComposerParser do
   context 'arg' do
     it 'should consume "my_name"' do
       parser.arg.should parse('"my_name"')
-    end 
-  end
-end
-
-describe ComposerParser do
-  let(:parser) { ComposerParser.new }
-  context 'arg' do
+    end
     it 'should consume 42' do
       parser.arg.should parse('42')
-    end 
-  end
-end
-
-describe ComposerParser do
-  let(:parser) { ComposerParser.new }
-  context 'arg' do
+    end
     it 'should consume 9.42' do
       parser.arg.should parse('9.42')
     end 
@@ -250,30 +238,12 @@ describe ComposerParser do
     it 'should consume -9.42' do
       parser.arg_list?.should parse('-9.42')
     end 
-  end
-end
-
-describe ComposerParser do
-  let(:parser) { ComposerParser.new }
-  context 'arg_list?' do
     it 'should consume "my_arg"' do
       parser.arg_list?.should parse('"my_arg"')
     end 
-  end
-end
-
-describe ComposerParser do
-  let(:parser) { ComposerParser.new }
-  context 'arg_list?' do
     it 'should consume -9.42, 100' do
       parser.arg_list?.should parse('-9.42, 100')
     end 
-  end
-end
-
-describe ComposerParser do
-  let(:parser) { ComposerParser.new }
-  context 'arg_list?' do
     it 'should consume -9.42, 100 , "my_arg"' do
       parser.arg_list?.should parse('-9.42, 100 , "my_arg"')
     end 
@@ -289,15 +259,12 @@ describe ComposerParser do
     it 'should consume my_func:' do
       parser.udf_call.should parse('my_func:')
     end 
-  end
-end
-
-describe ComposerParser do
-  let(:parser) { ComposerParser.new }
-  context 'udf_call' do
     it 'should consume my_func: -9.42, 100 , "my_arg"' do
       parser.udf_call.should parse('my_func: -9.42, 100 , "my_arg"')
     end 
+    it 'should consume my_func: -9.42, 100 , "my_arg", (my_func_arg: 100)' do
+      parser.udf_call.should parse('my_func: -9.42, 100 , "my_arg", (my_func_arg: 100)')
+    end
   end
 end
 
@@ -321,15 +288,6 @@ describe ComposerParser do
   end
 end
 
-describe ComposerParser do
-  let(:parser) { ComposerParser.new }
-  context 'udf_call' do
-    it 'should consume my_func: -9.42, 100 , "my_arg", (my_func_arg: 100)' do
-      parser.udf_call.should parse('my_func: -9.42, 100 , "my_arg", (my_func_arg: 100)')
-    end 
-  end
-end
-
 # 'note' Statement
 describe ComposerParser do
   let(:parser) { ComposerParser.new }
@@ -346,43 +304,19 @@ describe ComposerParser do
   context 'kw_note_attr_stmt' do
     it 'should consume instrument 1\n' do
       parser.kw_note_attr_stmt.should parse('instrument 1\n')
-   end 
-  end
-end
-
-describe ComposerParser do
-  let(:parser) { ComposerParser.new }
-  context 'kw_note_attr_stmt' do
+    end 
     it 'should consume start 0.0\n' do
       parser.kw_note_attr_stmt.should parse('start 0.0\n')
-   end 
-  end
-end
-
-describe ComposerParser do
-  let(:parser) { ComposerParser.new }
-  context 'kw_note_attr_stmt' do
+    end 
     it 'should consume duration 1.0\n' do
       parser.kw_note_attr_stmt.should parse('duration 1.0\n')
-   end 
-  end
-end
-
-describe ComposerParser do
-  let(:parser) { ComposerParser.new }
-  context 'kw_note_attr_stmt' do
+    end 
     it 'should consume amplitude 500\n' do
       parser.kw_note_attr_stmt.should parse('amplitude 500\n')
-   end 
-  end
-end
-
-describe ComposerParser do
-  let(:parser) { ComposerParser.new }
-  context 'kw_note_attr_stmt' do
+    end 
     it 'should consume custom_attribute "attr_arg"\n' do
       parser.kw_note_attr_stmt.should parse('custom_attribute "attr_arg"\n')
-   end 
+    end 
   end
 end
 
@@ -413,15 +347,4 @@ describe ComposerTransformer do
    end 
   end
 end
-
-#describe ComposerTransformer do
-#  let(:transformer) { ComposerTransformer.new }
-#  context 'kw_note_stmt' do
-#    it 'should apply :kw_note_stmt' do
-#      parser = ComposerParser.new
-#      stmt = 'note "note 1"\n'
-#      xformer.apply(parser.parse())
-#   end 
-#  end
-#end
 
