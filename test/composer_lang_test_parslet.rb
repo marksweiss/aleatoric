@@ -1,5 +1,6 @@
 require 'rubygems'
 # require 'ruby-debug'
+require 'pp'
 require 'rspec'
 require 'parslet'
 require 'parslet/rig/rspec'
@@ -79,17 +80,6 @@ class ComposerParser < BasicParser
   root(:kw_note_stmt)    
 end
 
-class BasicTransformer < Parslet::Transform
-  include Parslet
-  
-  def initialize
-    @sp = ' '
-    @eol = '\r\n'
-    @blk_open = 'do'
-    @blk_close = 'end'
-  end
-  
-end
 
 # Transformer Helper Methods
 # TODO Move into 'lib' for my wrap of Parslet test framework
@@ -114,20 +104,41 @@ end
 
 class ComposerTransformer # < BasicTransformer
   include Parslet
+  attr_reader :xform
   
   def initialize
-
-
     @xform = Parslet::Transform.new
         
     # Primitive and scalar types, output their value
     @xform.rule(:integer => simple(:i)) { Integer(i.to_s.strip) }
-    @xform.rule(:float=> simple(:f))  { Float(f.to_s.strip) }
+    @xform.rule(:float => simple(:f))  { Float(f.to_s.strip) }
     @xform.rule(:string => simple(:s))  { s.strip }      
+
+    @xform.rule(:arg => simple(:arg)) { arg }
+    @xform.rule(:arg_list => sequence(:args)) { 
+      ret = ''
+      ret += args[0].to_s if args.length > 0
+      (1..args.length-1).each { |j|
+        ret += (', ' + args[j].to_s)
+      }
+      ret
+    }
     
     # Keyword Expressions
     @xform.rule(:kw_note_stmt => subtree(:stmt)) { 
       stmt[:kw_note] + sp + stmt[:name] + sp + blk_open + eol 
+    }
+    @xform.rule(:kw_note_attr_stmt => subtree(:stmt)) { 
+      stmt[:kw_note_attr_stmt] + sp + stmt[:name] + sp + blk_open + eol 
+    }
+    
+    @xform.rule(:kw_note_blk => subtree(:stmt)) { 
+      stmt[:kw_note] + sp + stmt[:name] + sp + blk_open + eol +
+      stmt[:kw_note_attr_stmt] + stmt[:arg_list]
+      #stmt[:kw_note_attr_stmt] + 
+      #stmt[:kw_note_attr_stmt] + 
+      #stmt[:kw_note_attr_stmt] + 
+      #stmt[:kw_note_attr_stmt]
     }
     
     # TODO Understanding subtrees is the key to getting all the blocks to work
@@ -168,7 +179,7 @@ describe ComposerParser do
   let(:parser) { ComposerParser.new }
   context 'float' do
     it 'should consume -100.001' do
-      parser.float.should parse('-100.001')
+      parser.float.should parse('-100.001', :trace => true)
     end 
   end
 end
@@ -336,14 +347,52 @@ end
 
 ######### Transform TESTS ##########
 
+# arg_list
+describe ComposerTransformer do
+  let(:transformer) { ComposerTransformer.new }
+  context 'arg_list' do
+    expected = in_stmt = '1, 2'
+    it 'should transform ' + in_stmt + ' to ' + expected do
+      parse_tree = ComposerParser.new.arg_list.parse(in_stmt)
+      transformer.apply(parse_tree)
+      transformer.should apply(parse_tree)
+      transformer.apply(parse_tree).should == expected
+   end 
+  end
+end
+
+# kw_note_stmt
 describe ComposerTransformer do
   let(:transformer) { ComposerTransformer.new }
   context 'kw_note_stmt' do
-    test_stmt = 'note "note 1"' + sp + eol
-    expected = 'note "note 1"' + sp + blk_open + eol
-    it 'should transform ' + test_stmt + ' to' + expected do
-      parse_tree = ComposerParser.new.parse(test_stmt)
+    stmt = 'note "note 1"'
+    in_stmt = stmt + sp + eol
+    expected = stmt + sp + blk_open + eol
+    it 'should transform ' + in_stmt + ' to ' + expected do
+      parse_tree = ComposerParser.new.parse(in_stmt)
+      transformer.should apply(parse_tree)
       transformer.apply(parse_tree).should == expected
+   end 
+  end
+end
+
+# kw_note_blk
+describe ComposerTransformer do
+  let(:transformer) { ComposerTransformer.new }
+  context 'kw_note_blk' do
+    stmt = 'note "note 1"\n  instrument 1\n  start 0.0\n  duration 1.0\n  amplitude 500\n  pitch 8.3\n'
+    note_stmt_expected = 'note "note 1"' + sp + blk_open + eol    
+    it 'should transform kw_note_blk' do
+      parser = ComposerParser.new
+      parse_tree = parser.kw_note_blk.parse(stmt)      
+      transformer.should apply(parse_tree[0])
+      transformer.apply(parse_tree[0]).should == note_stmt_expected
+      # Each elem in parse_tree after the first is a subtree for a note attribute
+      parse_tree.length.should >= 6
+      
+            
+      transformer.should apply(parse_tree)
+      #transformer.apply(parse_tree).should == expected
    end 
   end
 end
