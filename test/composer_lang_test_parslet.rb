@@ -1,5 +1,5 @@
 require 'rubygems'
-# require 'ruby-debug'
+require 'ruby-debug'
 require 'pp'
 require 'rspec'
 require 'parslet'
@@ -11,9 +11,9 @@ class BasicParser < Parslet::Parser
   rule(:sp) { match('\s').repeat(1) }
   rule(:sp?) { sp.maybe }
   # Line handling
-  rule(:line_end) { str('\r\n') | str('\n') }
-  rule(:eol) { sp? >> line_end.repeat(1, 1) }
-  rule (:eol?) { line_end.maybe }  
+  rule(:line_end) { str('\n') | str('\r\n') }
+  rule(:eol) { sp? >> line_end.repeat } #.repeat(1, 1) }
+  rule (:eol?) { eol.maybe }  
   # Delimiters  
   rule(:delim) { sp | eol }
   rule(:delim?) { delim.maybe }
@@ -53,7 +53,7 @@ class ComposerParser < BasicParser
 
   # float must come first in alternation or matching int breaks float
   rule(:arg) { (float | integer | string | udf_call_arg).as(:arg) }
-  rule(:arg_list) { (arg >>  (sp? >> str(',') >> sp? >> arg).repeat(0)).as(:arg_list) }
+  rule(:arg_list) { (sp? >> arg >> (sp? >> str(',') >> sp? >> arg).repeat(0)).as(:arg_list) }
   rule(:arg_list?) { arg_list.maybe.as(:arg_list?) }
       
   rule(:kw_note) { str('note').as(:kw_note) }
@@ -67,10 +67,13 @@ class ComposerParser < BasicParser
      str('amplitude') | 
      str('pitch') | 
      func_name) >> 
-    sp >> arg_list >> eol).as(:kw_note_attr_stmt) 
+    sp >> arg_list? >> eol).as(:kw_note_attr_stmt) 
   }
   
   rule(:kw_note_blk) {
+    
+    breakpoint
+    
     # TODO Validate that expected five minimum attributes are present
     # 'instrument', 'start', 'duration', 'amplitude', 'pitch'
     kw_note_stmt >> kw_note_attr_stmt.repeat(5) 
@@ -91,7 +94,7 @@ def sp
 end
 
 def eol
-  '\r\n'
+  '\n'
 end
 
 def blk_open
@@ -128,11 +131,11 @@ class ComposerTransformer # < BasicTransformer
     @xform.rule(:kw_note_stmt => subtree(:stmt)) { 
       stmt[:kw_note] + sp + stmt[:name] + sp + blk_open + eol 
     }
-    @xform.rule(:kw_note_attr_stmt => subtree(:stmt)) { 
-      stmt[:kw_note_attr_stmt] + sp + stmt[:name] + sp + blk_open + eol 
+    @xform.rule(:kw_note_attr_stmt => subtree(:stmt)) {       
+      stmt[:kw_note_attr_stmt] + stmt[:arg_list] + eol 
     }
     
-    @xform.rule(:kw_note_blk => subtree(:stmt)) { 
+    @xform.rule(:kw_note_blk => sequence(:stmt)) {       
       stmt[:kw_note] + sp + stmt[:name] + sp + blk_open + eol +
       stmt[:kw_note_attr_stmt] + stmt[:arg_list]
       #stmt[:kw_note_attr_stmt] + 
@@ -331,6 +334,18 @@ describe ComposerParser do
   end
 end
 
+# kw_note_blk
+describe ComposerParser do
+  let(:parser) { ComposerParser.new }
+  context 'kw_note_blk' do
+    stmt = 'note "note 1"\n  instrument 1\n  start 0.0\n  duration 1.0\n  amplitude 500\n  pitch 8.3\n'
+    it 'should consume ' + stmt do
+      parser.kw_note_attr_stmt.should parse(stmt, :trace => true)
+    end 
+  end
+end
+
+
 # NOTE: Will not parse exact same string enclosed in %Q{} block even though
 #  that is supposed to be identical under the language. In other words, if 
 #  you take below string and replace newlines with actual hard returns and have
@@ -355,7 +370,7 @@ describe ComposerTransformer do
     it 'should transform ' + in_stmt + ' to ' + expected do
       parse_tree = ComposerParser.new.arg_list.parse(in_stmt)
       transformer.apply(parse_tree)
-      transformer.should apply(parse_tree)
+      transformer.should apply(parse_tree, :trace => false)
       transformer.apply(parse_tree).should == expected
    end 
   end
@@ -366,33 +381,46 @@ describe ComposerTransformer do
   let(:transformer) { ComposerTransformer.new }
   context 'kw_note_stmt' do
     stmt = 'note "note 1"'
-    in_stmt = stmt + sp + eol
+    in_stmt = stmt + eol
     expected = stmt + sp + blk_open + eol
     it 'should transform ' + in_stmt + ' to ' + expected do
       parse_tree = ComposerParser.new.parse(in_stmt)
-      transformer.should apply(parse_tree)
+      transformer.should apply(parse_tree, :trace => false)
       transformer.apply(parse_tree).should == expected
    end 
   end
 end
 
+# kw_note_attr_stmt
+describe ComposerTransformer do
+  let(:transformer) { ComposerTransformer.new }
+  context 'kw_note_attr_stmt' do
+    in_stmt = expected = 'instrument 1' + eol
+    it 'should transform ' + in_stmt + ' to ' + expected do
+      parse_tree = ComposerParser.new.parse(in_stmt)
+      transformer.should apply(parse_tree, :trace => false)
+      transformer.apply(parse_tree).should == expected
+   end 
+  end
+end
+
+
 # kw_note_blk
 describe ComposerTransformer do
   let(:transformer) { ComposerTransformer.new }
   context 'kw_note_blk' do
-    stmt = 'note "note 1"\n  instrument 1\n  start 0.0\n  duration 1.0\n  amplitude 500\n  pitch 8.3\n'
-    note_stmt_expected = 'note "note 1"' + sp + blk_open + eol    
+    stmt = %Q{'note "note 1"\ninstrument 1\r\n}#  start 0.0\n  duration 1.0\n  amplitude 500\n  pitch 8.3\n'
+    note_stmt_expected = 'note "note 1"' + sp + blk_open + eol
+    note_attr_stmt_expected_1 = 'instrument 1' + eol  
     it 'should transform kw_note_blk' do
       parser = ComposerParser.new
       parse_tree = parser.kw_note_blk.parse(stmt)      
-      transformer.should apply(parse_tree[0])
+      transformer.should apply(parse_tree[0], :trace => false)
       transformer.apply(parse_tree[0]).should == note_stmt_expected
       # Each elem in parse_tree after the first is a subtree for a note attribute
       parse_tree.length.should >= 6
       
-            
-      transformer.should apply(parse_tree)
-      #transformer.apply(parse_tree).should == expected
+      pp parse_tree[1]
    end 
   end
 end
