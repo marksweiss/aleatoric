@@ -12,14 +12,14 @@ class BasicParser < Parslet::Parser
   rule(:sp?) { sp.maybe }
   # Line handling
   rule(:line_end) { str('\n') | str('\r\n') }
-  rule(:eol) { sp? >> line_end.repeat } #.repeat(1, 1) }
+  rule(:eol) { sp? >> line_end } #.repeat(1, 1) } .repeat(1)
   rule (:eol?) { eol.maybe }  
   # Delimiters  
   rule(:delim) { sp | eol }
   rule(:delim?) { delim.maybe }
 
   # Primitive/scalar types
-  # NOTE: repeat(1) means 1 or more.  repeat signuture is repeat(min=nil, max=nil)
+  # NOTE: repeat(1) means 1 or more.  repeat signature is repeat(min=nil, max=nil)
   #  where min and max are number of times repeat must match, and nil for max
   #  means any number of times.  Hence repeat(1) is min=1, max=nil == one or more times
   rule(:integer) { ((str('+') | str('-')).maybe >> match('[0-9]').repeat(1)).as(:integer) }
@@ -57,7 +57,7 @@ class ComposerParser < BasicParser
   rule(:arg_list?) { arg_list.maybe.as(:arg_list?) }
       
   rule(:kw_note) { str('note').as(:kw_note) }
-  rule(:kw_note_stmt) { (sp? >> kw_note >> (sp >> name).maybe >> eol).as(:kw_note_stmt) }
+  rule(:kw_note_stmt) { (sp? >> kw_note >> (sp >> name).maybe >> eol ).as(:kw_note_stmt) } # >> eol
   rule(:kw_note_attr_stmt) {
     # TODO support aliased names, e.g. 'volume' for 'amplitude'
     (sp? >> 
@@ -67,12 +67,12 @@ class ComposerParser < BasicParser
      str('amplitude') | 
      str('pitch') | 
      func_name) >> 
-    sp >> arg_list? >> eol).as(:kw_note_attr_stmt) 
+    sp >> arg_list? >> eol).as(:kw_note_attr_stmt)  # >> eol
   }
   
   rule(:kw_note_blk) {
     
-    breakpoint
+    # breakpoint
     
     # TODO Validate that expected five minimum attributes are present
     # 'instrument', 'start', 'duration', 'amplitude', 'pitch'
@@ -154,193 +154,201 @@ class ComposerTransformer # < BasicTransformer
 end
 
 
+
+
+# TODO RIGHT HERE
+# TURN ON AND PASS ALL OTHER TESTS
+# ADD VALIDATION IN 'kw_note_blk' test for actually validating the right 5 attributes
+
+
+
 ######### Parser TESTS ##########
 
 # WS, EOL, Delimiters
 
-describe ComposerParser do
-  let(:parser) { ComposerParser.new }
-  context 'eol' do
-    it 'should consume \n' do
-      parser.eol.should parse('\n')
-    end 
-  end
-end
+# describe ComposerParser do
+#   let(:parser) { ComposerParser.new }
+#   context 'eol' do
+#     it 'should consume \n' do
+#       parser.eol.should parse('\n')
+#     end 
+#   end
+# end
 
 # Literals
 
-describe ComposerParser do
-  let(:parser) { ComposerParser.new }
-  context 'integer' do
-    it 'should consume 100' do
-      parser.integer.should parse('100')
-    end 
-  end
-end
+# describe ComposerParser do
+#   let(:parser) { ComposerParser.new }
+#   context 'integer' do
+#     it 'should consume 100' do
+#       parser.integer.should parse('100')
+#     end 
+#   end
+# end
 
-describe ComposerParser do
-  let(:parser) { ComposerParser.new }
-  context 'float' do
-    it 'should consume -100.001' do
-      parser.float.should parse('-100.001', :trace => true)
-    end 
-  end
-end
-
-describe ComposerParser do
-  let(:parser) { ComposerParser.new }
-  context 'string' do
-    it 'should consume " sfdkj3432#$#$@"' do
-      parser.string.should parse('" sfdkj3432#$#$@"')
-    end 
-  end
-end
+# describe ComposerParser do
+#   let(:parser) { ComposerParser.new }
+#   context 'float' do
+#     it 'should consume -100.001' do
+#       parser.float.should parse('-100.001', :trace => true)
+#     end 
+#   end
+# end
+# 
+# describe ComposerParser do
+#   let(:parser) { ComposerParser.new }
+#   context 'string' do
+#     it 'should consume " sfdkj3432#$#$@"' do
+#       parser.string.should parse('" sfdkj3432#$#$@"')
+#     end 
+#   end
+# end
 
 # Keyword Terminals
 
-describe ComposerParser do
-  let(:parser) { ComposerParser.new }
-  context 'kw_note' do
-    it 'should consume note' do
-      parser.kw_note.should parse('note')
-    end 
-  end
-end
+# describe ComposerParser do
+#   let(:parser) { ComposerParser.new }
+#   context 'kw_note' do
+#     it 'should consume note' do
+#       parser.kw_note.should parse('note')
+#     end 
+#   end
+# end
 
 # Terminals
 
 # "name"
-describe ComposerParser do
-  let(:parser) { ComposerParser.new }
-  context 'name' do
-    it 'should consume "my_name"' do
-      parser.name.should parse('"my_name"')
-    end 
-  end
-end
+# describe ComposerParser do
+#   let(:parser) { ComposerParser.new }
+#   context 'name' do
+#     it 'should consume "my_name"' do
+#       parser.name.should parse('"my_name"')
+#     end 
+#   end
+# end
 
 # func_name
-describe ComposerParser do
-  let(:parser) { ComposerParser.new }
-  context 'func_name' do
-    it 'should consume _my_name123' do
-      parser.func_name.should parse('_my_name123')
-    end 
-  end
-end
+# describe ComposerParser do
+#   let(:parser) { ComposerParser.new }
+#   context 'func_name' do
+#     it 'should consume _my_name123' do
+#       parser.func_name.should parse('_my_name123')
+#     end 
+#   end
+# end
 
 # arg
-describe ComposerParser do
-  let(:parser) { ComposerParser.new }
-  context 'arg' do
-    it 'should consume "my_name"' do
-      parser.arg.should parse('"my_name"')
-    end
-    it 'should consume 42' do
-      parser.arg.should parse('42')
-    end
-    it 'should consume 9.42' do
-      parser.arg.should parse('9.42')
-    end 
-  end
-end
+# describe ComposerParser do
+#   let(:parser) { ComposerParser.new }
+#   context 'arg' do
+#     it 'should consume "my_name"' do
+#       parser.arg.should parse('"my_name"')
+#     end
+#     it 'should consume 42' do
+#       parser.arg.should parse('42')
+#     end
+#     it 'should consume 9.42' do
+#       parser.arg.should parse('9.42')
+#     end 
+#   end
+# end
 
 # arg_list
-describe ComposerParser do
-  let(:parser) { ComposerParser.new }
-  context 'arg_list?' do
-    it 'should consume -9.42' do
-      parser.arg_list?.should parse('-9.42')
-    end 
-    it 'should consume "my_arg"' do
-      parser.arg_list?.should parse('"my_arg"')
-    end 
-    it 'should consume -9.42, 100' do
-      parser.arg_list?.should parse('-9.42, 100')
-    end 
-    it 'should consume -9.42, 100 , "my_arg"' do
-      parser.arg_list?.should parse('-9.42, 100 , "my_arg"')
-    end 
-  end
-end
+# describe ComposerParser do
+#   let(:parser) { ComposerParser.new }
+#   context 'arg_list?' do
+#     it 'should consume -9.42' do
+#       parser.arg_list?.should parse('-9.42')
+#     end 
+#     it 'should consume "my_arg"' do
+#       parser.arg_list?.should parse('"my_arg"')
+#     end 
+#     it 'should consume -9.42, 100' do
+#       parser.arg_list?.should parse('-9.42, 100')
+#     end 
+#     it 'should consume -9.42, 100 , "my_arg"' do
+#       parser.arg_list?.should parse('-9.42, 100 , "my_arg"')
+#     end 
+#   end
+# end
 
 # Non-Terminals (Statements)
 
 # udf_call
-describe ComposerParser do
-  let(:parser) { ComposerParser.new }
-  context 'udf_call' do
-    it 'should consume my_func:' do
-      parser.udf_call.should parse('my_func:')
-    end 
-    it 'should consume my_func: -9.42, 100 , "my_arg"' do
-      parser.udf_call.should parse('my_func: -9.42, 100 , "my_arg"')
-    end 
-    it 'should consume my_func: -9.42, 100 , "my_arg", (my_func_arg: 100)' do
-      parser.udf_call.should parse('my_func: -9.42, 100 , "my_arg", (my_func_arg: 100)')
-    end
-  end
-end
+# describe ComposerParser do
+#   let(:parser) { ComposerParser.new }
+#   context 'udf_call' do
+#     it 'should consume my_func:' do
+#       parser.udf_call.should parse('my_func:')
+#     end 
+#     it 'should consume my_func: -9.42, 100 , "my_arg"' do
+#       parser.udf_call.should parse('my_func: -9.42, 100 , "my_arg"')
+#     end 
+#     it 'should consume my_func: -9.42, 100 , "my_arg", (my_func_arg: 100)' do
+#       parser.udf_call.should parse('my_func: -9.42, 100 , "my_arg", (my_func_arg: 100)')
+#     end
+#   end
+# end
 
 # udf_call_stmt
-describe ComposerParser do
-  let(:parser) { ComposerParser.new }
-  context 'udf_call_stmt' do
-    it 'should consume my_func: -9.42, 100 , "my_arg"' do
-      parser.udf_call_stmt.should parse('  my_func: -9.42, 100 , "my_arg"\n')
-    end 
-  end
-end
+# describe ComposerParser do
+#   let(:parser) { ComposerParser.new }
+#   context 'udf_call_stmt' do
+#     it 'should consume my_func: -9.42, 100 , "my_arg"' do
+#       parser.udf_call_stmt.should parse('  my_func: -9.42, 100 , "my_arg"\n')
+#     end 
+#   end
+# end
 
 # udf_call_arg
-describe ComposerParser do
-  let(:parser) { ComposerParser.new }
-  context 'udf_call_arg' do
-    it 'should consume (my_func: -9.42, 100 , "my_arg")' do
-      parser.udf_call_arg.should parse('(my_func: -9.42, 100 , "my_arg")')
-    end 
-  end
-end
+# describe ComposerParser do
+#   let(:parser) { ComposerParser.new }
+#   context 'udf_call_arg' do
+#     it 'should consume (my_func: -9.42, 100 , "my_arg")' do
+#       parser.udf_call_arg.should parse('(my_func: -9.42, 100 , "my_arg")')
+#     end 
+#   end
+# end
 
 # 'note' Statement
-describe ComposerParser do
-  let(:parser) { ComposerParser.new }
-  context 'kw_note_stmt' do
-    it 'should consume note "note 1"\n' do
-      parser.kw_note_stmt.should parse(' note "note 1"\n')
-   end 
-  end
-end
+# describe ComposerParser do
+#   let(:parser) { ComposerParser.new }
+#   context 'kw_note_stmt' do
+#     it 'should consume note "note 1"\n' do
+#       parser.kw_note_stmt.should parse(' note "note 1"\n')
+#    end 
+#   end
+# end
 
 # 'note' attributes
-describe ComposerParser do
-  let(:parser) { ComposerParser.new }
-  context 'kw_note_attr_stmt' do
-    it 'should consume instrument 1\n' do
-      parser.kw_note_attr_stmt.should parse('instrument 1\n')
-    end 
-    it 'should consume start 0.0\n' do
-      parser.kw_note_attr_stmt.should parse('start 0.0\n')
-    end 
-    it 'should consume duration 1.0\n' do
-      parser.kw_note_attr_stmt.should parse('duration 1.0\n')
-    end 
-    it 'should consume amplitude 500\n' do
-      parser.kw_note_attr_stmt.should parse('amplitude 500\n')
-    end 
-    it 'should consume custom_attribute "attr_arg"\n' do
-      parser.kw_note_attr_stmt.should parse('custom_attribute "attr_arg"\n')
-    end 
-  end
-end
+# describe ComposerParser do
+#   let(:parser) { ComposerParser.new }
+#   context 'kw_note_attr_stmt' do
+#     it 'should consume instrument 1\n' do
+#       parser.kw_note_attr_stmt.should parse('instrument 1\n')
+#     end 
+    # it 'should consume start 0.0\n' do
+    #   parser.kw_note_attr_stmt.should parse('start 0.0\n')
+    # end 
+    # it 'should consume duration 1.0\n' do
+    #   parser.kw_note_attr_stmt.should parse('duration 1.0\n')
+    # end 
+    # it 'should consume amplitude 500\n' do
+    #   parser.kw_note_attr_stmt.should parse('amplitude 500\n')
+    # end 
+    # it 'should consume custom_attribute "attr_arg"\n' do
+    #   parser.kw_note_attr_stmt.should parse('custom_attribute "attr_arg"\n')
+    # end 
+#   end
+# end
 
 # kw_note_blk
 describe ComposerParser do
   let(:parser) { ComposerParser.new }
   context 'kw_note_blk' do
-    stmt = 'note "note 1"\n  instrument 1\n  start 0.0\n  duration 1.0\n  amplitude 500\n  pitch 8.3\n'
+    stmt = 'note "note 1"\n instrument 1\n  start 0.0\n  duration 1.0\n  amplitude 500\n  pitch 8.3\n'
     it 'should consume ' + stmt do
-      parser.kw_note_attr_stmt.should parse(stmt, :trace => true)
+      parser.kw_note_blk.should parse(stmt, :trace => true)
     end 
   end
 end
@@ -351,77 +359,76 @@ end
 #  you take below string and replace newlines with actual hard returns and have
 #  the same whitespace, the parse fails
 # 'note' block
-describe ComposerParser do
-  let(:parser) { ComposerParser.new }
-  context 'kw_note_blk' do
-    it 'should consume note "my note 1"\n  instrument 1\n  start 0.0\n  duration 1.0\n  amplitude 500\n  pitch 8.3\n' do
-      parser.kw_note_blk.should parse('note "my note 1"\n  instrument 1\n  start 0.0\n  duration 1.0\n  amplitude 500\n  pitch 8.3\n')
-   end 
-  end
-end
+# describe ComposerParser do
+#   let(:parser) { ComposerParser.new }
+#   context 'kw_note_blk' do
+#     it 'should consume note "my note 1"\n  instrument 1\n  start 0.0\n  duration 1.0\n  amplitude 500\n  pitch 8.3\n' do
+#       parser.kw_note_blk.should parse('note "my note 1"\n  instrument 1\n  start 0.0\n  duration 1.0\n  amplitude 500\n  pitch 8.3\n')
+#    end 
+#   end
+# end
 
 ######### Transform TESTS ##########
 
 # arg_list
-describe ComposerTransformer do
-  let(:transformer) { ComposerTransformer.new }
-  context 'arg_list' do
-    expected = in_stmt = '1, 2'
-    it 'should transform ' + in_stmt + ' to ' + expected do
-      parse_tree = ComposerParser.new.arg_list.parse(in_stmt)
-      transformer.apply(parse_tree)
-      transformer.should apply(parse_tree, :trace => false)
-      transformer.apply(parse_tree).should == expected
-   end 
-  end
-end
+# describe ComposerTransformer do
+#   let(:transformer) { ComposerTransformer.new }
+#   context 'arg_list' do
+#     expected = in_stmt = '1, 2'
+#     it 'should transform ' + in_stmt + ' to ' + expected do
+#       parse_tree = ComposerParser.new.arg_list.parse(in_stmt)
+#       transformer.apply(parse_tree)
+#       transformer.should apply(parse_tree, :trace => false)
+#       transformer.apply(parse_tree).should == expected
+#    end 
+#   end
+# end
 
 # kw_note_stmt
-describe ComposerTransformer do
-  let(:transformer) { ComposerTransformer.new }
-  context 'kw_note_stmt' do
-    stmt = 'note "note 1"'
-    in_stmt = stmt + eol
-    expected = stmt + sp + blk_open + eol
-    it 'should transform ' + in_stmt + ' to ' + expected do
-      parse_tree = ComposerParser.new.parse(in_stmt)
-      transformer.should apply(parse_tree, :trace => false)
-      transformer.apply(parse_tree).should == expected
-   end 
-  end
-end
+# describe ComposerTransformer do
+#   let(:transformer) { ComposerTransformer.new }
+#   context 'kw_note_stmt' do
+#     stmt = 'note "note 1"'
+#     in_stmt = stmt + eol
+#     expected = stmt + sp + blk_open + eol
+#     it 'should transform ' + in_stmt + ' to ' + expected do
+#       parse_tree = ComposerParser.new.parse(in_stmt)
+#       transformer.should apply(parse_tree, :trace => false)
+#       transformer.apply(parse_tree).should == expected
+#    end 
+#   end
+# end
 
 # kw_note_attr_stmt
-describe ComposerTransformer do
-  let(:transformer) { ComposerTransformer.new }
-  context 'kw_note_attr_stmt' do
-    in_stmt = expected = 'instrument 1' + eol
-    it 'should transform ' + in_stmt + ' to ' + expected do
-      parse_tree = ComposerParser.new.parse(in_stmt)
-      transformer.should apply(parse_tree, :trace => false)
-      transformer.apply(parse_tree).should == expected
-   end 
-  end
-end
-
+# describe ComposerTransformer do
+#   let(:transformer) { ComposerTransformer.new }
+#   context 'kw_note_attr_stmt' do
+#     in_stmt = expected = 'instrument 1' + eol
+#     it 'should transform ' + in_stmt + ' to ' + expected do
+#       parse_tree = ComposerParser.new.parse(in_stmt)
+#       transformer.should apply(parse_tree, :trace => false)
+#       transformer.apply(parse_tree).should == expected
+#    end 
+#   end
+# end
 
 # kw_note_blk
-describe ComposerTransformer do
-  let(:transformer) { ComposerTransformer.new }
-  context 'kw_note_blk' do
-    stmt = %Q{'note "note 1"\ninstrument 1\r\n}#  start 0.0\n  duration 1.0\n  amplitude 500\n  pitch 8.3\n'
-    note_stmt_expected = 'note "note 1"' + sp + blk_open + eol
-    note_attr_stmt_expected_1 = 'instrument 1' + eol  
-    it 'should transform kw_note_blk' do
-      parser = ComposerParser.new
-      parse_tree = parser.kw_note_blk.parse(stmt)      
-      transformer.should apply(parse_tree[0], :trace => false)
-      transformer.apply(parse_tree[0]).should == note_stmt_expected
-      # Each elem in parse_tree after the first is a subtree for a note attribute
-      parse_tree.length.should >= 6
-      
-      pp parse_tree[1]
-   end 
-  end
-end
+# describe ComposerTransformer do
+#   let(:transformer) { ComposerTransformer.new }
+#   context 'kw_note_blk' do
+#     stmt = %Q{'note "note 1"\ninstrument 1\r\n}#  start 0.0\n  duration 1.0\n  amplitude 500\n  pitch 8.3\n'
+#     note_stmt_expected = 'note "note 1"' + sp + blk_open + eol
+#     note_attr_stmt_expected_1 = 'instrument 1' + eol  
+#     it 'should transform kw_note_blk' do
+#       parser = ComposerParser.new
+#       parse_tree = parser.kw_note_blk.parse(stmt)      
+#       transformer.should apply(parse_tree[0], :trace => false)
+#       transformer.apply(parse_tree[0]).should == note_stmt_expected
+#       # Each elem in parse_tree after the first is a subtree for a note attribute
+#       parse_tree.length.should >= 6
+#       
+#       pp parse_tree[1]
+#    end 
+#   end
+# end
 
