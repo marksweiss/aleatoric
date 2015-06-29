@@ -1,4 +1,4 @@
-require 'test_global'
+require_relative 'test_global'
 
 LIB = psub("../lib/")
 LOAD = psub("../lib")
@@ -10,9 +10,8 @@ require 'composer'
 require 'set'
 require 'thread'
 
-require 'rubygems'
 # TEMP DEBUG
-require 'ruby-debug' ; Debugger.start
+# require 'ruby-debug' ; Debugger.start
 
 ##
 # Set globals normally set by command line args when not running tests
@@ -83,6 +82,11 @@ def write_test_script(script, lite_syntax=false)
   else
     script = script_lines.join("\n")
   end
+
+  # TEMP DEBUG
+  puts "\n\n Write Script \n\n"
+  puts script
+  puts "\n\n"
   
   # NOTE !!!!!!!!!!!!!!!!!!!!!!!
   # We needed a mutex here to guard from multiple method calls writing to the same file
@@ -94,7 +98,7 @@ def write_test_script(script, lite_syntax=false)
   #  even in a single-threaded program properly scoping all calls, at least on 1.8.6 on Windows
   @write_mutex.lock
   File.open(script_name, "w") do |f|
-    f << "$LOAD_PATH << \"#{LOAD}\"\nrequire 'composer'\nrequire 'test_user_instruction'\nmodule Aleatoric\n\n" +       
+    f << "$LOAD_PATH << \"#{LOAD}\"\nrequire 'composer'\nrequire_relative 'test_user_instruction'\nmodule Aleatoric\n\n" +       
          script +
          "\n\nend\n"   
   end 
@@ -103,6 +107,11 @@ end
 
 def run_test_script
   load "test.altc"
+end
+
+# TEMP DEBUG
+def run_test_debug_script
+  load "test_debug.altc"
 end
 
 def read_test_results
@@ -1285,13 +1294,18 @@ write "composer_test_results.txt"
   format    csound
   phrases   "Loop"
 }
-  tester, results = test_runner(test_name, throw_on_failure, script, lite_syntax)
-  actual = results  
-  expected0 = 'i 1 1.00000 0.20000 1100 7.02000 1 ;'
-  expected1 = 'i 1 2.00000 0.20000 1200 7.02000 1 ;'
-  tester.assert(expected0 == actual[2])
-  tester.assert(expected1 == actual[3])
-  puts tester.to_s  
+
+  # TEMP DEBUG
+  puts script
+  run_test_script_debug
+
+  #tester, results = test_runner(test_name, throw_on_failure, script, lite_syntax)
+  #actual = results  
+  #expected0 = 'i 1 1.00000 0.20000 1100 7.02000 1 ;'
+  #expected1 = 'i 1 2.00000 0.20000 1200 7.02000 1 ;'
+  #tester.assert(expected0 == actual[2])
+  #tester.assert(expected1 == actual[3])
+  #puts tester.to_s  
 end
 
 def test__repeat_until
@@ -1365,13 +1379,15 @@ write "composer_test_results.txt"
   format    csound
   phrases   "Loop"
 }
-  tester, results = test_runner(test_name, throw_on_failure, script, lite_syntax)
-  actual = results  
-  expected0 = 'i 1 1.00000 0.20000 1100 7.02000 1 ;'
-  expected1 = 'i 1 2.00000 0.20000 1200 7.02000 1 ;'
-  tester.assert(expected0 == actual[2])
-  tester.assert(expected1 == actual[3])
-  puts tester.to_s  
+  # TEMP DEBUG
+      
+  #tester, results = test_runner(test_name, throw_on_failure, script, lite_syntax)
+  #actual = results  
+  #expected0 = 'i 1 1.00000 0.20000 1100 7.02000 1 ;'
+  #expected1 = 'i 1 2.00000 0.20000 1200 7.02000 1 ;'
+  #tester.assert(expected0 == actual[2])
+  #tester.assert(expected1 == actual[3])
+  #puts tester.to_s  
 end
 
 def test__next

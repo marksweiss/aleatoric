@@ -1,5 +1,5 @@
-require 'global'
-require 'midi'
+require_relative 'global'
+require_relative 'midi'
 
 module Aleatoric
  
@@ -159,25 +159,25 @@ class ComposerAST
  
   @@syntax_rules = {
     'note' =>     lambda {|x| x == nil or x[0] == nil or x[0].kind_of? String},     # 1st arg optional, valid type
-    'phrase' => 	lambda {|x| x == nil or x[0] == nil or x[0].kind_of? String},     # 1st arg optional, valid type
-    'section' => 	lambda {|x| x == nil or x[0] == nil or x[0].kind_of? String},     # 1st arg optional, valid type
-    'repeat' => 	lambda {|x| x != nil and x[0] != nil },# and eval(x[0].to_s).kind_of? Fixnum},  # 1st arg required, valid type
+    'phrase' =>   lambda {|x| x == nil or x[0] == nil or x[0].kind_of? String},     # 1st arg optional, valid type
+    'section' =>   lambda {|x| x == nil or x[0] == nil or x[0].kind_of? String},     # 1st arg optional, valid type
+    'repeat' =>   lambda {|x| x != nil and x[0] != nil },# and eval(x[0].to_s).kind_of? Fixnum},  # 1st arg required, valid type
     'repeat_until' => lambda {|x| x != nil and x[0] != nil and (x[0].kind_of? String and x[0].length > 0)},       # 1st arg optional, valid type
-    'render' => 	lambda {|x| x != nil and x[0] != nil and (x[0].kind_of? String and x[0].length > 0)},           # 1st arg required, valid type
-    'write' => 		lambda {|x| x != nil and x[0] != nil and (x[0].kind_of? String and x[0].length > 0)},           # 1st arg required, valid type
-    'format' => 	lambda {|x| x != nil and x[0] != nil and (x[0].to_s == 'csound' or x[0].to_s == 'midi')},       # 1st arg required, valid value
-    'tempo' => 	lambda {|x| x != nil and x[0] != nil and (x[0].kind_of? Integer or x[0].kind_of? Float)},         # 1st arg required, valid value
-    'measure' => 	lambda {|x| x == nil or x[0] == nil or x[0].kind_of? String},     # 1st arg optional, valid type
+    'render' =>   lambda {|x| x != nil and x[0] != nil and (x[0].kind_of? String and x[0].length > 0)},           # 1st arg required, valid type
+    'write' =>     lambda {|x| x != nil and x[0] != nil and (x[0].kind_of? String and x[0].length > 0)},           # 1st arg required, valid type
+    'format' =>   lambda {|x| x != nil and x[0] != nil and (x[0].to_s == 'csound' or x[0].to_s == 'midi')},       # 1st arg required, valid value
+    'tempo' =>   lambda {|x| x != nil and x[0] != nil and (x[0].kind_of? Integer or x[0].kind_of? Float)},         # 1st arg required, valid value
+    'measure' =>   lambda {|x| x == nil or x[0] == nil or x[0].kind_of? String},     # 1st arg optional, valid type
     'copy_measure' => lambda {|x| x != nil and x.length == 2 and x[0] != nil and x[1] != nil and x[0].kind_of? String and x[1].kind_of? String},   # 1st and second arg required, valid types    
     'meter' =>    lambda {|x| x != nil and x.length == 2 and x[0] != nil and x[1] != nil and x[0].kind_of? Fixnum and x[1].kind_of? Fixnum},       # 1st and second arg required, valid types    
     'quantize' => lambda {|x| x != nil and x[0] != nil and (x[0].to_s == 'on' or x[0].to_s == 'off')},
     'ensemble' => lambda {|x| x != nil and x[0] != nil and (x[0].kind_of? String and x[0].length > 0)},           # 1st arg required, valid type    
     'players' =>  lambda {|x| x != nil and x[0] != nil and (x[0].kind_of? String and x[0].length > 0)},           # 1st arg required, valid type    
     'ensembles' =>     lambda {|x| x != nil and x[0] != nil and (x[0].kind_of? String and x[0].length > 0)},      # 1st arg required, valid type    
-    'instruction' =>   lambda {|x| x != nil and x[0] != nil and x[0].kind_of? String},                       	    # 1st arg required, valid type
-    'improvisation' => lambda {|x| x != nil and x[0] != nil and x[0].kind_of? String},                       	    # 1st arg required, valid type
-    'import' => lambda {|x| x != nil and x[0] != nil and x[0].kind_of? String},                       	            # 1st arg required, valid type
-    'capture' => lambda {|x| x != nil and x[0] != nil and x[0].kind_of? String and x[0].to_s == 'measures'}                       	            # 1st arg required, valid type
+    'instruction' =>   lambda {|x| x != nil and x[0] != nil and x[0].kind_of? String},                             # 1st arg required, valid type
+    'improvisation' => lambda {|x| x != nil and x[0] != nil and x[0].kind_of? String},                             # 1st arg required, valid type
+    'import' => lambda {|x| x != nil and x[0] != nil and x[0].kind_of? String},                                     # 1st arg required, valid type
+    'capture' => lambda {|x| x != nil and x[0] != nil and x[0].kind_of? String and x[0].to_s == 'measures'}                                     # 1st arg required, valid type
   }
   
   @@grammar_rules = {
@@ -223,8 +223,8 @@ class ComposerAST
                  :assignment => ['=']
                 }
   @@op_values = @@operators.values.flatten
-	# NOTE: This includes the biggest hack ever, which supports 'NEXT' keyword by mapping it to the variable used to store
-	#  current running start time dynamically when script is being evaluated
+    # NOTE: This includes the biggest hack ever, which supports 'NEXT' keyword by mapping it to the variable used to store
+    #  current running start time dynamically when script is being evaluated
   @@var_map = {'NEXT' => '@cur_start'}
   @@assignment_states = [:declaring, :invoking]
   # Another hack, this one used to identify lines with duration constants and add an argument to them
@@ -271,7 +271,7 @@ class ComposerAST
  
   def optional_preprocess_script(script_lines, src_file_name)
     tkn_lines = tokenize script_lines
-		tkn_lines = preprocess_assignment tkn_lines
+    tkn_lines = preprocess_assignment tkn_lines
     tkn_lines = preprocess_func tkn_lines
     # This next one must always be called last because it appends to the end of the
     #  line two new tokens. So, if the line has a function call and one or the args
@@ -294,7 +294,13 @@ class ComposerAST
   def to_s  
     out_lines = []    
     out_lines = to_s_helper_validate_grammar(node=@@root, out_lines=[], line_no=0)    
+    
+    # TEMP DEBUG
+    # puts "IN HERE OUTLINES #{out_lines}"
+    
     out_lines.join('')
+    
+  
   end
   # /Public parse interface
   
@@ -302,22 +308,36 @@ class ComposerAST
   private
   
   def tokenize(script_lines, op_list=nil)     
+    # TEMP DEBUG
+    # puts "TOKENIZE ENTRY"
+    # puts script_lines
+    # puts script_lines.class
+    
     tkns = []    
     op_list ||= @@op_values
-      # For each operator token, replace it with the token plus ws on each side of it
-      # This lets us split the line and make sure all delimiting characters become their own token
-      #  along with all 'words'.  Build up a list (one entry per line), of lists (each line a list of tkns)
-      script_lines.each do |expr|
-        next if expr.length == 0
-        op_list.each do |op|        
-          expr.gsub!(op, ' ' + op)
-          expr.gsub!(op, op + ' ')
-        end
-        # NOTE: This strips trailing '\n' which we will restore at the end of all line preprocessing
-        expr_tkns = expr.split(' ').collect{|tkn| tkn.strip}
-        expr_tkns = tokenize_join_str expr_tkns
-        tkns << expr_tkns
-      end    
+
+    # TEMP DEBUG
+    # puts op_list
+
+    # For each operator token, replace it with the token plus ws on each side of it
+    # This lets us split the line and make sure all delimiting characters become their own token
+    #  along with all 'words'.  Build up a list (one entry per line), of lists (each line a list of tkns)
+    script_lines.each do |expr|
+
+      # TEMP DEBUG
+      # puts "TOKENIZE"
+      # puts expr
+
+      next if expr.length == 0
+      op_list.each do |op|        
+        expr.gsub!(op, ' ' + op)
+        expr.gsub!(op, op + ' ')
+      end
+      # NOTE: This strips trailing '\n' which we will restore at the end of all line preprocessing
+      expr_tkns = expr.split(' ').collect{|tkn| tkn.strip}
+      expr_tkns = tokenize_join_str expr_tkns
+      tkns << expr_tkns
+    end    
     tkns    
   end
     
@@ -451,8 +471,8 @@ class ComposerAST
     tkns_out = []
     tkn_lines.each do |tkn_line|
       tkns_out << preprocess_func_helper(tkn_line)
-		end
-		tkns_out  
+    end
+    tkns_out  
   end
   
   # Warning: this is a hack. Further proof that eventually this needs a real parser. 
@@ -496,9 +516,9 @@ class ComposerAST
     
     tkn_line_out
   end
-	
-	def preprocess_expressions(tkn_lines, src_file_name)
-	  line_no = 0
+
+  def preprocess_expressions(tkn_lines, src_file_name)
+    line_no = 0
     tkn_lines.each do |tkn_line|
       begin
         line_no += 1
@@ -507,8 +527,8 @@ class ComposerAST
         @parent.add_child(ASTNode.new(expr=e.to_s, kw='Composer_ERROR', parent=@parent))
         break      
       end
-    end	
-	end
+    end  
+  end
   
   def preprocess_expression(tkn_line, src_file_name, line_no)  
     # Test for keyword starting line or not, kw lines processed differently because they
@@ -523,9 +543,20 @@ class ComposerAST
       end
 
       # Add the kw completion tokens to the correct position in the line
-      tkns = tokenize(@@kw_completions[kw])
+      # TEMP DEBUG
+      #puts "KW COMPLETIONS"
+
+      tkns = tokenize([@@kw_completions[kw]])
       tkn_line.insert(find_insert_position(tkn_line), tkns)
-      
+
+      # TEMP DEBUG
+      #puts "KW COMPLETIONS 2"
+      #puts "#{kw}"
+      #puts "#{@@kw_completions[kw]}"
+      #puts "#{tokenize(@@kw_completions[kw])}"
+      #puts "#{tkns}"
+      #puts "#{tkn_line}"
+
       # If kw is valid child of @parent, new more nested parent, add_new node as child of @parent
       #  and make it the new @parent
       if valid_child_kw?(parent=@parent.kw, child=kw)      
@@ -604,7 +635,7 @@ class ComposerAST
     # If any args are a single comma, these are just delimiters for a list of args, so toss them
     arg_tkns_filtered = []
     arg_tkns.each {|arg_tkn| arg_tkns_filtered << arg_tkn if arg_tkn != ','}
-		
+    
     # Only test to convert int args if we actually need to call a validation function
     # And, obviously only go into block to call it if we need it
     syntax_rule = @@syntax_rules[kw]
@@ -665,11 +696,11 @@ class ComposerAST
     new_node
   end
     
-	# This is not a standard accessor because want it only private because should only be used for testing
-	def root
-		@@root
-	end
-	
+  # This is not a standard accessor because want it only private because should only be used for testing
+  def root
+    @@root
+  end
+  
   def root?(node)
     node.object_id == @@root.object_id
   end

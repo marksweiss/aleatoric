@@ -1,12 +1,12 @@
-require 'global'
-require 'util'
-require 'score'
-require 'meter'
-require 'player'
-require 'ensemble'
-require 'instruction'
-require 'renderer'
-require 'midi'
+require_relative 'global'
+require_relative 'util'
+require_relative 'score'
+require_relative 'meter'
+require_relative 'player'
+require_relative 'ensemble'
+require_relative 'instruction'
+require_relative 'renderer'
+require_relative 'midi'
 
 # This module implements the basic parser/processor for the Composer language.
 # At the core of the language is a simple class hierarchy that models both the main entities
@@ -495,6 +495,11 @@ def measure(name, &args_blk)
   @processing_measure = true
   @notes = @meter.quantize(@notes) if @meter.quantizing?
   @cur_measure << @notes  
+  
+  # TEMP DEBUG
+  puts "@cur_measure #{@cur_measure.to_s}"
+
+  
   @measures << @cur_measure
   @measures_by_name[name] = @cur_measure
   @notes.clear
@@ -1038,6 +1043,9 @@ end
 # /FOR UNIT TESTING
 
 def reset_script_state
+  # TEMP DEBUG
+  puts "RESET SCRIPT STATE"
+    
   # *** KEEP THIS HERE ALWAYS ***
   @score_out.clear
   # *** KEEP THIS HERE ALWAYS ***
@@ -1115,20 +1123,20 @@ def reset_script_state
 end
 # /FOR UNIT TESTING
 
-def method_missing(name, arg)
+def method_missing(*args)
   # Conditionals enforce the hierarchy from leaf to root:
   #  Note -> Phrase -> Section -> Score
   # This is in reverse order of the nested order of the blocks, so it's an implicit
   #  stack of precedence -- Notes are deepest and so always evaluated first, Phrases
   #  can contain Notes so a Note in scope should come first, but otherwise the Phrase
   #  should be considered before a Section, and so on.  
-  @cur_note.method_missing(name, arg) if @processing_note
-  @cur_phrase.method_missing(name, arg) if @processing_phrase
-  @cur_section.method_missing(name, arg) if @processing_section
-  @cur_measure.method_missing(name, arg) if @processing_measure
-  @cur_player.method_missing(name, arg) if @processing_player
-  @score_out.method_missing(name, arg) if @processing_score
-  @renderer.method_missing(name, arg) if @processing_renderer
+  @cur_note.method_missing(*args) if @processing_note
+  @cur_phrase.method_missing(*args) if @processing_phrase
+  @cur_section.method_missing(*args) if @processing_section
+  @cur_measure.method_missing(*args) if @processing_measure
+  @cur_player.method_missing(*args) if @processing_player
+  @score_out.method_missing(*args) if @processing_score
+  @renderer.method_missing(*args) if @processing_renderer
 end
 
 end

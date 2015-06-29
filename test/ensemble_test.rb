@@ -1,11 +1,10 @@
-require 'test_global'
+require_relative 'test_global'
 $LOAD_PATH << psub("../lib")
 
 require 'ensemble'
 
 require 'test/unit'
 
-require 'rubygems'
 # require 'ruby-debug' ; Debugger.start
 
 module Aleatoric

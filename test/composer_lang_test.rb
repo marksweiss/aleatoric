@@ -1,12 +1,11 @@
-require 'test_global'
+require_relative 'test_global'
 $LOAD_PATH << psub("../lib")
 
 require 'composer_lang'
 
 require 'test/unit'
 
-require 'rubygems'
-require 'ruby-debug' ; Debugger.start
+# require_relative 'ruby-debug' ; Debugger.start
 
 # Super-elegant solution for temporarily getting access to private methods to test stolen from here:
 #  http://blog.jayfields.com/2007/11/ruby-testing-private-methods.html

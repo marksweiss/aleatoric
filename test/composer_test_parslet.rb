@@ -12,9 +12,9 @@ require 'thread'
 
 require 'rubygems'
 
-if ARGV.include? 'debug'
-require 'ruby-debug' ; Debugger.start
-end
+#if ARGV.include? 'debug'
+#require 'ruby-debug' ; Debugger.start
+#end
 
 # TODO Move to its own source file
 # TODO UPDATE INSTALL to include this gem dependency
@@ -337,7 +337,7 @@ def write_test_script(script, lite_syntax=false)
   #  even in a single-threaded program properly scoping all calls, at least on 1.8.6 on Windows
   @write_mutex.lock
   File.open(script_name, "w") do |f|
-    f << "$LOAD_PATH << \"#{LOAD}\"\nrequire 'composer'\nrequire 'test_user_instruction'\nmodule Aleatoric\n\n" +       
+    f << "$LOAD_PATH << \"#{LOAD}\"\nrequire 'composer'\nrequire_relative 'test_user_instruction'\nmodule Aleatoric\n\n" +       
          script +
          "\n\nend\n"   
   end 

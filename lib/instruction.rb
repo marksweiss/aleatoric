@@ -1,7 +1,6 @@
 $LOAD_PATH << psub("../lib")
-require 'player'
+require_relative 'player'
 require 'test/unit'
-require 'rubygems'
 # require 'ruby-debug' ; Debugger.start
 
 module Aleatoric

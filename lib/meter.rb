@@ -1,4 +1,4 @@
-require 'global'
+require_relative 'global'
 
 module Aleatoric
 

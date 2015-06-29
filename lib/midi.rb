@@ -1,17 +1,14 @@
 $LOAD_PATH << psub("../lib")
 
-require 'rubygems'
-
 if include_win? or include_mac?
 require 'dl/import'
-require 'rubygems'
 require 'midilib/sequence'
 require 'midilib/event'
 require 'midilib/consts'
 end
 
 
-require 'ruby-debug' ; Debugger.start
+# require 'ruby-debug' ; Debugger.start
 
 class AleatoricIllegalMidiOperationException < Exception; end
 class AleatoricFailedMidiLoadException < Exception; end

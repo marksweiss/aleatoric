@@ -1,6 +1,6 @@
 $LOAD_PATH << psub("../lib")
-require 'util'
-require 'player'
+require_relative 'util'
+require_relative 'player'
 
 module Aleatoric
 

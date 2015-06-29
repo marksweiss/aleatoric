@@ -1,4 +1,4 @@
-require 'note'
+require_relative 'note'
 # require 'conf_csound'
 require 'singleton'
 

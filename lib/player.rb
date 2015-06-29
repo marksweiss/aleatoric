@@ -1,8 +1,7 @@
 $LOAD_PATH << psub("../lib")
-require 'util'
-require 'score'
+require_relative 'util'
+require_relative 'score'
 
-require 'rubygems'
 # TEMP DEBUG
 # require 'ruby-debug' ; Debugger.start
 
@@ -87,6 +86,11 @@ class Player
   # @param [String] name of the Aleatoric::Score object being added
   # @param [Aleatoric::Score] the score object being added
   def add_score(score_name, score)
+
+    # TEMP DEBUG
+    #puts "In add_score #{score_name} #{score}"
+
+
     # Append player name and id to each note for debugging
     dup_score = set_added_score_note_attrs score
     @scores[score_name] = dup_score
@@ -193,6 +197,16 @@ class Player
 
   # @return [Aleatoric::Score] a reference to the currently active score
   def current_score
+    # TEMP DEBUG
+    #puts "@scores_idx #{@scores_idx}"
+    #puts "@scores_ordered_names[@scores_idx] #{@scores_ordered_names[@scores_idx]}"
+    #puts "@scores[@scores_ordered_names[@scores_idx]] #{@scores[@scores_ordered_names[@scores_idx]]}"
+    #puts "@scores #{@scores}"
+    #puts "@scores obj at key 'Loop' #{@scores['Loop'].class}"
+    #puts "@scores.length #{@scores.length}"
+    #puts "has key 'Loop' #{@scores.has_key?('Loop')}"
+    #puts "#{@scores[@scores_ordered_names[@scores_idx]].to_s}"
+
     @scores[@scores_ordered_names[@scores_idx]] if valid_scores_idx? @scores_idx
   end
   alias current_phrase current_score
@@ -256,8 +270,18 @@ class Player
     return ret if not playing?
     # NOTE: Default is to NOT change the state of score but to make a copy for each play call.
     #  Client can call
+
+    # TEMP DEBUG
+    puts "name #{name}"
+    puts "@scores[name] #{@scores[name]}"
+
     cur_score = @scores[name] if name != nil
-    cur_score = self.current_score() if name == nil
+    cur_score = self.current_score if name == nil
+    
+    # TEMP DEBUG
+    puts "cur_score.class #{cur_score.class}"
+    puts "cur_score.notes.length #{cur_score.notes.length}"
+
     cur_score = cur_score.dup
 
     # NOTE: hooks can have whatever side effects they want, based on the access they have through
@@ -274,7 +298,15 @@ class Player
     # Now push the notes cur_score to output. Store added notes just from
     #  this #play call in separate step to return them for client convenience, testing
     dup_note = nil
+
+    # TEMP DEBUG
+    puts "cur_score.notes.length #{cur_score.notes.length}"
+
     cur_score.notes.each do |note|
+
+      # TEMP DEBUG
+      puts "IN HERE"
+
       dup_note = set_added_note_attrs note
       # NOTE: This is a very important business rule on this line, namely that Player silently pushes
       #  the start time of notes ahead of their literal value.  Modified this because it broke a test
@@ -289,7 +321,17 @@ class Player
       @out_notes << dup_note
     end
     # Move the offset forward past the end of the current score
-    @current_start += (dup_note.start + dup_note.duration)
+    
+    # TEMP DEBUG
+    puts "DUP NOTE CLASS #{dup_note.class}"
+
+    # TODO THIS PREVENTS TESTS FROM CRASHING, BUT THEY WERE CRASHING BECAUSE
+    # dup_note was nil (which should never happen) and as a reuslt the 'start()' being
+    # called was this class's start() method (which takes two mandatory args). So, lots
+    # of interesting reasons why we might have failed
+    if dup_note
+      @current_start += (dup_note.start + dup_note.duration)
+    end
 
     # Now run postplay hooks. 
     # NOTE: These make no promise as far as manipulating the current_score.  These rely on the

@@ -1,0 +1,31 @@
+$LOAD_PATH << "../lib"
+require 'composer'
+require_relative 'test_user_instruction'
+
+module Aleatoric
+# TESTING PURPOSES ONLY
+reset_script_state
+# test__next
+measure "Loop" do
+note do
+instrument 1
+start 0.0
+duration 1.0
+amplitude 1000
+pitch 7.01
+func_table 1
+end
+note do
+instrument 1
+start @cur_start
+duration 1.0
+amplitude 1100
+pitch 7.02
+func_table 1
+end
+end
+write "composer_test_results.txt" do
+format csound
+measures "Loop"
+end
+end

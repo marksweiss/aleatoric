@@ -1,4 +1,4 @@
-require 'util'
+require_relative 'util'
 
 module Aleatoric
 
@@ -53,11 +53,11 @@ class Note
     self.instrument(instrument)
   end
   
-  def start(start=nil)    
-    if start == nil
+  def start(args=nil)    
+    if args == nil || args.length == 0
       @note_attrs[:start]
     else
-      @note_attrs[:start] = start 
+      @note_attrs[:start] = args[0] # start 
       self
     end
   end

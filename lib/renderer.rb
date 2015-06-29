@@ -1,5 +1,5 @@
 # require 'conf_csound'
-require 'util'
+require_relative 'util'
 require 'singleton'
 
 module Aleatoric

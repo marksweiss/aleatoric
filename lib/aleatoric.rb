@@ -1,7 +1,5 @@
-require 'composer'
-require 'composer_lang'
+require_relative 'composer_lang'
 
-require 'rubygems'
 require 'optparse'
 # require 'ruby-debug' ; Debugger.start
 
