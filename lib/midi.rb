@@ -134,7 +134,7 @@ class MidiManager
     if include_win? or include_mac?
     notes = []
     if not channel_nil? channel
-      @channel_tracks[channel].each {|note| notes << note if note.note?}
+      @channel_tracks[channel].each {|note| notes << note if note}
     end
     notes
     end
@@ -175,12 +175,13 @@ class MidiManager
       measure = nil
       # Iterate events and only extract props from MIDI events that have what we need
       events.each do |event|        
-        next if not (event.program_change? or event.note?)
+        # next if not ((event.class == ProgramChange and event.program) or 
+        #              (event.class == NoteOffEvent and event.channel)
   
-        if event.program_change?       
+        if event.class == ProgramChange and event.program # event.program_change?       
           instrument = event.program
         end      
-        if event.note_off?
+        if event.class == NoteOffEvent and event.channel # event.note_off?
           channel = event.channel          
           # VERBOSE          
           if not channels_found.include? channel

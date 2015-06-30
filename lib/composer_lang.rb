@@ -308,26 +308,14 @@ class ComposerAST
   private
   
   def tokenize(script_lines, op_list=nil)     
-    # TEMP DEBUG
-    # puts "TOKENIZE ENTRY"
-    # puts script_lines
-    # puts script_lines.class
-    
-    tkns = []    
+    script_lines = [script_lines] if script_lines.class == String
     op_list ||= @@op_values
-
-    # TEMP DEBUG
-    # puts op_list
+    tkns = []    
 
     # For each operator token, replace it with the token plus ws on each side of it
     # This lets us split the line and make sure all delimiting characters become their own token
     #  along with all 'words'.  Build up a list (one entry per line), of lists (each line a list of tkns)
     script_lines.each do |expr|
-
-      # TEMP DEBUG
-      # puts "TOKENIZE"
-      # puts expr
-
       next if expr.length == 0
       op_list.each do |op|        
         expr.gsub!(op, ' ' + op)

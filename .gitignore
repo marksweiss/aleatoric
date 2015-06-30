@@ -1,2 +1,4 @@
 *.swp
 *DS_Store
+test/composer_test_results.txt
+test/*.altc

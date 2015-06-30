@@ -1,6 +1,0 @@
-instrument 1  start 0.00000  duration 1.00000  amplitude 100  pitch 64  channel 1 ; 1  Player 1_70196031993100  
-instrument 1  start 1.00000  duration 1.00000  amplitude 100  pitch 65  channel 1 ; 2  Player 1_70196031993100  
-instrument 1  start 2.00000  duration 1.00000  amplitude 100  pitch 66  channel 1 ; 3  Player 1_70196031993100  
-instrument 2  start 0.00000  duration 1.00000  amplitude 100  pitch 64  channel 2 ; 1  Player 2_70196031991340  
-instrument 2  start 1.00000  duration 1.00000  amplitude 100  pitch 65  channel 2 ; 2  Player 2_70196031991340  
-instrument 2  start 2.00000  duration 1.00000  amplitude 100  pitch 66  channel 2 ; 3  Player 2_70196031991340  

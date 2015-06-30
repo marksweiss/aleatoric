@@ -210,9 +210,9 @@ class ComposerAST_Test < Test::Unit::TestCase
   def test__root?
     puts "test__valid_child_kw? ENTERED"   
     ComposerAST.publicize_methods do
-		
+
     lang = ComposerAST.new
-		assert(lang.root?(lang.root))
+    assert(lang.root?(lang.root))
         
     end
     puts "test__valid_child_kw? COMPLETED"
@@ -223,9 +223,9 @@ class ComposerAST_Test < Test::Unit::TestCase
     ComposerAST.publicize_methods do
     
     script = ''
-    lang = ComposerAST.new		
-		
-		# parent == 'root'
+    lang = ComposerAST.new
+
+    # parent == 'root'
     assert(lang.valid_child_kw?('root', 'note'))
     assert(lang.valid_child_kw?('root', 'phrase')) 
     assert(lang.valid_child_kw?('root', 'section'))
@@ -234,17 +234,17 @@ class ComposerAST_Test < Test::Unit::TestCase
     assert(lang.valid_child_kw?('root', 'render'))
     assert(lang.valid_child_kw?('root', 'format'))
     assert(lang.valid_child_kw?('root', 'tempo'))
-		
-		# parent == 'note'
+
+    # parent == 'note'
     assert(! lang.valid_child_kw?('note', 'note'))
     assert(! lang.valid_child_kw?('note', 'phrase')) 
     assert(! lang.valid_child_kw?('note', 'section'))
     assert(! lang.valid_child_kw?('note', 'repeat'))
     assert(! lang.valid_child_kw?('note', 'write'))
-    assert(! lang.valid_child_kw?('note', 'render'))		
-    assert(! lang.valid_child_kw?('note', 'format'))		
+    assert(! lang.valid_child_kw?('note', 'render'))
+    assert(! lang.valid_child_kw?('note', 'format'))
 
-		# parent == 'phrase'
+    # parent == 'phrase'
     assert(lang.valid_child_kw?('phrase', 'note'))
     assert(! lang.valid_child_kw?('phrase', 'phrase')) 
     assert(! lang.valid_child_kw?('phrase', 'section'))
@@ -253,7 +253,7 @@ class ComposerAST_Test < Test::Unit::TestCase
     assert(! lang.valid_child_kw?('phrase', 'render'))
     assert(! lang.valid_child_kw?('phrase', 'format'))
 
-		# parent == 'section'
+    # parent == 'section'
     assert(! lang.valid_child_kw?('section', 'note'))
     assert(lang.valid_child_kw?('section', 'phrase')) 
     assert(! lang.valid_child_kw?('section', 'section'))
@@ -261,8 +261,8 @@ class ComposerAST_Test < Test::Unit::TestCase
     assert(! lang.valid_child_kw?('section', 'write'))
     assert(! lang.valid_child_kw?('section', 'render'))
     assert(! lang.valid_child_kw?('section', 'format'))
-		
-		# parent == 'repeat'
+
+    # parent == 'repeat'
     assert(lang.valid_child_kw?('repeat', 'note'))    
     assert(! lang.valid_child_kw?('repeat', 'phrase')) 
     assert(! lang.valid_child_kw?('repeat', 'section'))
@@ -270,17 +270,17 @@ class ComposerAST_Test < Test::Unit::TestCase
     assert(! lang.valid_child_kw?('repeat', 'write'))
     assert(! lang.valid_child_kw?('repeat', 'render'))
     assert(! lang.valid_child_kw?('repeat', 'format'))
-		
-		# parent == 'write'
+
+    # parent == 'write'
     assert(! lang.valid_child_kw?('write', 'note'))
     assert(! lang.valid_child_kw?('write', 'phrase')) 
     assert(! lang.valid_child_kw?('write', 'section'))
     assert(! lang.valid_child_kw?('write', 'repeat'))
     assert(! lang.valid_child_kw?('write', 'write'))
-    assert(! lang.valid_child_kw?('write', 'render'))		
+    assert(! lang.valid_child_kw?('write', 'render'))
     assert(lang.valid_child_kw?('write', 'format'))
 
-		# parent == 'render'
+    # parent == 'render'
     assert(! lang.valid_child_kw?('render', 'note'))
     assert(! lang.valid_child_kw?('render', 'phrase')) 
     assert(! lang.valid_child_kw?('render', 'section'))
@@ -291,7 +291,7 @@ class ComposerAST_Test < Test::Unit::TestCase
     # assert(! lang.valid_child_kw?('render', 'format'))
     assert(lang.valid_child_kw?('render', 'format'))
 
-		# parent == 'format'
+    # parent == 'format'
     assert(! lang.valid_child_kw?('format', 'note'))
     assert(! lang.valid_child_kw?('format', 'phrase')) 
     assert(! lang.valid_child_kw?('format', 'section'))
@@ -299,7 +299,7 @@ class ComposerAST_Test < Test::Unit::TestCase
     assert(! lang.valid_child_kw?('format', 'write'))
     assert(! lang.valid_child_kw?('format', 'render'))
     assert(! lang.valid_child_kw?('format', 'format'))
-		
+
     end
     puts "test__valid_child_kw? COMPLETED"
   end
@@ -307,7 +307,7 @@ class ComposerAST_Test < Test::Unit::TestCase
   def test__tokenize
     puts "test__tokenize ENTERED"   
     ComposerAST.publicize_methods do
-		
+
     lang = ComposerAST.new
 
     actual = lang.tokenize("foo: a, b, c\n")    
@@ -341,7 +341,7 @@ class ComposerAST_Test < Test::Unit::TestCase
   def test__preprocess_func_helper
     puts "test__preprocess_func_helper ENTERED"   
     ComposerAST.publicize_methods do
-		
+
     lang = ComposerAST.new
 
     actual = lang.preprocess_func_helper(lang.tokenize("foo: a, b, c\n")[0])        
@@ -376,7 +376,7 @@ class ComposerAST_Test < Test::Unit::TestCase
   def test__preprocess_start_duration
     puts "test__preprocess_start_duration ENTERED"   
     ComposerAST.publicize_methods do
-		
+
     lang = ComposerAST.new
 
     actual = lang.preprocess_start_duration(lang.tokenize("start EITH\n"))            
@@ -410,7 +410,7 @@ class ComposerAST_Test < Test::Unit::TestCase
   def test__preprocess_block_with_comment
     puts "test__preprocess_block_with_comment ENTERED"   
     ComposerAST.publicize_methods do
-		
+
     lang = ComposerAST.new  
     actual = lang.preprocess_expression(lang.tokenize("note \"one\" # comment about lots of stuff\n")[0], "file", 100)        
     actual = actual.strip    

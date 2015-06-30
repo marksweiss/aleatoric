@@ -75,10 +75,13 @@ class MidiManager_Test < Test::Unit::TestCase
     note_length = 4.0
     midi.add_note(channel=0, note=64, velocity=100, delta_time=note_length)
     midi_notes = midi.channel_notes(0)
+    
+    # NOTE: these next three asserts are pretty brittle and depend on the internals of the midi gem
+     
     # length == 2 because this sets NoteOn and NoteOff
-    assert(midi_notes.length == 2)
+    assert(midi_notes.length == 4)
     # returns true if event is either NoteOn or NoteOff
-    assert(midi_notes[0].note? && midi_notes[1].note?)
+    assert(midi_notes[2].class == MIDI::NoteOn && midi_notes[3].class == MIDI::NoteOff)
     
     # note.delta_time == 1920
     # 60.0 / (4.0 / 60)
@@ -86,7 +89,7 @@ class MidiManager_Test < Test::Unit::TestCase
     # MIDI Sequence has 480 ticks per quarter note when bpm = 60, so whole == 1920
     secs_per_min = 60.0    
     MidiManager.publicize_methods do
-      assert(midi_notes[1].delta_time == midi.seq.length_to_delta(midi.seconds_to_beats(note_length)))
+      assert(midi_notes[3].delta_time == midi.seq.length_to_delta(midi.seconds_to_beats(note_length)))
     end
       
     puts "test__add_note COMPLETED"
