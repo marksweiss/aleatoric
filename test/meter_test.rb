@@ -2,7 +2,7 @@ require_relative 'test_global'
 $LOAD_PATH << psub("../lib")
 
 require 'meter'
-require 'test/unit'
+require 'minitest/autorun'
 # require 'ruby-debug' ; Debugger.start
 
 module Aleatoric
@@ -26,7 +26,7 @@ class MockNote
   end
 end
 
-class Meter_Test < Test::Unit::TestCase
+class Meter_Test < MiniTest::Unit::TestCase
   # def setup
   # end
   # def teardown

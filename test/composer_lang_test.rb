@@ -3,7 +3,7 @@ $LOAD_PATH << psub("../lib")
 
 require 'composer_lang'
 
-require 'test/unit'
+require 'minitest/autorun'
 
 # require_relative 'ruby-debug' ; Debugger.start
 
@@ -40,7 +40,7 @@ end
 
 module Aleatoric
 
-class ComposerAST_Test < Test::Unit::TestCase
+class ComposerAST_Test < MiniTest::Unit::TestCase
 
   def test__kw?
     puts "test__kw? ENTERED"   

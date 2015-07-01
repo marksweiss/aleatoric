@@ -6,7 +6,7 @@ $LOAD_PATH << psub("../lib")
 module Aleatoric; end
 require 'midi'
 
-require 'test/unit'
+require 'minitest/autorun'
 # require 'ruby-debug' ; Debugger.start
 
 # Super-elegant solution for temporarily getting access to private methods to test stolen from here:
@@ -20,7 +20,7 @@ class Class
   end
 end
 
-class MidiManager_Test < Test::Unit::TestCase
+class MidiManager_Test < MiniTest::Unit::TestCase
   # def setup
   # end
   # def teardown
@@ -78,7 +78,6 @@ class MidiManager_Test < Test::Unit::TestCase
     
     # NOTE: these next three asserts are pretty brittle and depend on the internals of the midi gem
      
-    # length == 2 because this sets NoteOn and NoteOff
     assert(midi_notes.length == 4)
     # returns true if event is either NoteOn or NoteOff
     assert(midi_notes[2].class == MIDI::NoteOn && midi_notes[3].class == MIDI::NoteOff)

@@ -2,12 +2,12 @@ require_relative 'test_global'
 $LOAD_PATH << psub("../lib")
 
 require 'player'
-require 'test/unit'
+require 'minitest/autorun'
 # require 'ruby-debug' ; Debugger.start
 
 module Aleatoric
 
-class Player_Test < Test::Unit::TestCase
+class Player_Test < MiniTest::Unit::TestCase
 
   def test__initialize
     puts "test__initialize ENTERED"

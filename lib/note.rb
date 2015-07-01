@@ -40,7 +40,7 @@ class Note
   end
 
   def instrument(instrument=nil)  
-    if instrument == nil
+    if instrument.nil?
       @note_attrs[:instrument]
     else
       @note_attrs[:instrument] = instrument
@@ -52,12 +52,13 @@ class Note
   def program_change(instrument=nil)
     self.instrument(instrument)
   end
-  
-  def start(args=nil)    
-    if args == nil || args.length == 0
+ 
+  # NOTE: if arg is named 'start' here fails in Ruby 2.x with name argument exception. No reason for this 
+  def start(arg=nil)   
+    if arg.nil? 
       @note_attrs[:start]
     else
-      @note_attrs[:start] = args[0] # start 
+      @note_attrs[:start] = arg 
       self
     end
   end
@@ -67,7 +68,7 @@ class Note
   end
 
   def duration(duration=nil)
-    if duration == nil
+    if duration.nil?
       @note_attrs[:duration]
     else
       @note_attrs[:duration] = duration 
@@ -76,7 +77,7 @@ class Note
   end
   
   def amplitude(amplitude=nil)      
-    if amplitude == nil
+    if amplitude.nil?
       @note_attrs[:amplitude]
     else
       @note_attrs[:amplitude] = amplitude 
@@ -93,7 +94,7 @@ class Note
   end
 
   def pitch(pitch=nil)    
-    if pitch == nil
+    if pitch.nil?
       @note_attrs[:pitch]
     else
       @note_attrs[:pitch] = pitch 
@@ -105,7 +106,7 @@ class Note
   # MIDI only
   def channel(channel=nil)    
     if @@format == :midi
-      if channel == nil
+      if channel.nil?
         @note_attrs[:channel]
       else
         @note_attrs[:channel] = channel

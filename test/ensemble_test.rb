@@ -3,13 +3,13 @@ $LOAD_PATH << psub("../lib")
 
 require 'ensemble'
 
-require 'test/unit'
+require 'minitest/autorun'
 
 # require 'ruby-debug' ; Debugger.start
 
 module Aleatoric
 
-class Ensemble_Test < Test::Unit::TestCase
+class Ensemble_Test < MiniTest::Unit::TestCase
   def test__initialize
     puts "test__initialize ENTERED"
 

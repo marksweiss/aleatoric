@@ -272,15 +272,15 @@ class Player
     #  Client can call
 
     # TEMP DEBUG
-    puts "name #{name}"
-    puts "@scores[name] #{@scores[name]}"
+    # puts "name #{name}"
+    # puts "@scores[name] #{@scores[name]}"
 
     cur_score = @scores[name] if name != nil
     cur_score = self.current_score if name == nil
     
     # TEMP DEBUG
-    puts "cur_score.class #{cur_score.class}"
-    puts "cur_score.notes.length #{cur_score.notes.length}"
+    # puts "cur_score.class #{cur_score.class}"
+    # puts "cur_score.notes.length #{cur_score.notes.length}"
 
     cur_score = cur_score.dup
 
@@ -300,12 +300,12 @@ class Player
     dup_note = nil
 
     # TEMP DEBUG
-    puts "cur_score.notes.length #{cur_score.notes.length}"
+    # puts "cur_score.notes.length #{cur_score.notes.length}"
 
     cur_score.notes.each do |note|
 
       # TEMP DEBUG
-      puts "IN HERE"
+      # puts "IN HERE"
 
       dup_note = set_added_note_attrs note
       # NOTE: This is a very important business rule on this line, namely that Player silently pushes
@@ -323,7 +323,7 @@ class Player
     # Move the offset forward past the end of the current score
     
     # TEMP DEBUG
-    puts "DUP NOTE CLASS #{dup_note.class}"
+    # puts "DUP NOTE CLASS #{dup_note.class}"
 
     # TODO THIS PREVENTS TESTS FROM CRASHING, BUT THEY WERE CRASHING BECAUSE
     # dup_note was nil (which should never happen) and as a reuslt the 'start()' being
@@ -550,12 +550,12 @@ class Player
   def append_score_to_output(score, adj_start_to_current_start=false)
 
     # TEMP DEBUG
-    @append_count = 0 if @append_count.nil?
-    @append_count += 1
-    puts "appending score #{score.name}"
-    puts "#{@scores[@scores_ordered_names[@scores_idx]].name}"
-    puts "#{@name} append_score_to_output count = #{@append_count}"
-    @scores.keys.sort.each {|k| puts "#{k}"}
+    # @append_count = 0 if @append_count.nil?
+    # @append_count += 1
+    # puts "appending score #{score.name}"
+    # puts "#{@scores[@scores_ordered_names[@scores_idx]].name}"
+    # puts "#{@name} append_score_to_output count = #{@append_count}"
+    # @scores.keys.sort.each {|k| puts "#{k}"}
 
     score.notes.each do |note| 
       dup_note = set_added_note_attrs note

@@ -6,7 +6,6 @@ $LOAD_PATH << LIB
 
 require 'composer_lang'
 require 'composer'
-
 require 'set'
 require 'thread'
 
@@ -22,7 +21,7 @@ $csound_score_include_file_name = 'oscil_sine_ftables_1.txt'
 include Aleatoric
 
 # Functional tests for composer require a custom testing framework because the code runs from 
-#  load(), which is its own process and from which no state is returned.  So conventional test/unit
+#  load(), which is its own process and from which no state is returned.  So conventional minitest/autorun 
 #  approach won't work, because you can't just call functions and get return values.  So this
 #  source file handles this by creating a file I/O based testing framework.  Test scripts are created
 #  and run, the output is stowed in files, which are then read back into memory here to test
@@ -84,9 +83,9 @@ def write_test_script(script, lite_syntax=false)
   end
 
   # TEMP DEBUG
-  puts "\n\n Write Script \n\n"
-  puts script
-  puts "\n\n"
+  # puts "\n\n Write Script \n\n"
+  # puts script
+  # puts "\n\n"
   
   # NOTE !!!!!!!!!!!!!!!!!!!!!!!
   # We needed a mutex here to guard from multiple method calls writing to the same file
@@ -107,11 +106,6 @@ end
 
 def run_test_script
   load "test.altc"
-end
-
-# TEMP DEBUG
-def run_test_debug_script
-  load "test_debug.altc"
 end
 
 def read_test_results
@@ -157,7 +151,15 @@ dump_last_note
 }
   tester, results = test_runner(test_name, throw_on_failure, script)
   actual = results.first
+
+  # TEMP DEBUG
+  puts actual
+
   expected = "i 1 0.00000 0.50000 1000 7.01000 1 ; note 1"  
+  
+  # TEMP DEBUG
+  puts expected
+  
   tester.assert(expected == actual)
   puts tester.to_s  
 end
@@ -1296,8 +1298,8 @@ write "composer_test_results.txt"
 }
 
   # TEMP DEBUG
-  puts script
-  run_test_script_debug
+  # puts script
+  # run_test_script_debug
 
   #tester, results = test_runner(test_name, throw_on_failure, script, lite_syntax)
   #actual = results  
@@ -1802,6 +1804,10 @@ write "composer_test_results.txt"
 }
   tester, results = test_runner(test_name, throw_on_failure, script, lite_syntax)
   actual = results
+
+  # TEMP DEBUG
+  puts actual
+
   # TODO THIS NEEDS TO BE IN ONLINE DOCUMENTATION
   # NOTE: These start times advance to start at the next current starting time for each Player
   #  because players are set to work this way, because otherwise they are painful to use in a 
@@ -2527,13 +2533,12 @@ end
 ##################### /TESTS ########################
 
 # Call each test in here
-def run_tests(flags='run_all')    
+def run_tests(flags='run_all')
   # TODO - shore this up someday
   # Right now just a way to run just the tests in the else block below
   # Should eventually be able to take a list of tests or 'all' or something like that
   run_only = false
   run_only = true if flags[0].include? 'run_only' or flags[0].include? 'run_selected'
-    
   num_tests = 0
   if not run_only
   
@@ -2598,6 +2603,8 @@ def run_tests(flags='run_all')
     begin    
       
       # *** run_only TESTS GO HERE ***
+      test__instruction_players_state; num_tests += 1
+
       # *** run_only TESTS GO HERE ***
     
     rescue AleatoricTestException => e      
@@ -2612,10 +2619,12 @@ def run_tests(flags='run_all')
     puts "***** composer_test: ALL TESTS PASSED *****\n\n"
   else
     puts "***** composer_test: #{AleatoricTest.failed_tests.length} TESTS FAILED *****\n\n"
-    AleatoricTest.failed_tests.each {|test| puts test}
-    puts "\n\n"
+    AleatoricTest.failed_tests.each {|t| puts t}
+    puts "\n"
   end
-  puts "composer_lang_test: UNIT TESTING composer_lang\n\n"
+  puts "***** composer_test: complete *****\n\n"
 end
 
+
 run_tests ARGV
+
