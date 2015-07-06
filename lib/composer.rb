@@ -377,12 +377,7 @@ end
 
 def start(arg, is_duration_set_using_const=false)
   arg *= $DUR_FACTOR if is_duration_set_using_const and $FORMAT != :midi
-
   @cur_note.start arg
-
-  # TEMP DEBUG
-  @cur_note.to_s
-
 end
 def time(arg, is_duration_set_using_const=false)
   # We respect the wishes of the script and assume that a midi-only property
@@ -500,11 +495,6 @@ def measure(name, &args_blk)
   @processing_measure = true
   @notes = @meter.quantize(@notes) if @meter.quantizing?
   @cur_measure << @notes  
-  
-  # TEMP DEBUG
-  # puts "@cur_measure #{@cur_measure.to_s}"
-
-  
   @measures << @cur_measure
   @measures_by_name[name] = @cur_measure
   @notes.clear
@@ -526,15 +516,7 @@ def copy_measure(src_name, target_name)
 end
 
 def adjust_cur_start(notes)
-
-  # TEMP DEBUG
-  puts "#{notes}"
-
   new_start = (notes.collect {|note| note.start + note.duration}).max
-
-  # TEMP DEBUG
-  puts "#{new_start}"
-
   @cur_start = new_start if new_start > @cur_start
 end
 
@@ -702,11 +684,6 @@ def players(*names)
         if @players_by_name.include? name
           player = @players_by_name[name] 
           player.play
-  
-          # TEMP DEBUG
-          puts "PROCESSING PLAY"
-          puts player.current_start
-
           @cur_start = player.current_start if player.current_start > @cur_start 
         end
     end 
@@ -718,11 +695,6 @@ def players(*names)
        if @players_by_name.include? name
          player = @players_by_name[name]
          player.improvise(@cur_improvisation.name)
-  
-         # TEMP DEBUG
-         puts "PROCESSING IMPROVISE"
-         puts player.current_start
-
          @cur_start = player.current_start if player.current_start > @cur_start 
        end
     end 
@@ -788,10 +760,6 @@ def instruction(name)
   @processing_instruction = true  
   @cur_instruction = Instruction.new(name)  
   @instructions_by_name[name] = @cur_instruction
-
-  # TEMP DEBUG
-  puts "INSTRUCTION"
-
   yield
   @processing_instruction = false  
 end
@@ -889,10 +857,6 @@ def ensembles(*names)
         max_ensemble_cur_start = (ensemble.players.collect {|player| player.current_start}).max 
         @cur_start = max_ensemble_cur_start if max_ensemble_cur_start > @cur_start
 
-        # TEMP DEBUG
-        puts "@cur_start in ensembles procesing_play #{@cur_start}"
-        puts "max_ensemble_cur_start in ensembles procesing_play #{max_ensemble_cur_start}"
-
       end
     end 
   end
@@ -903,11 +867,6 @@ def ensembles(*names)
       ensemble = @ensembles_by_name[name]
       ensemble.players.each do |player|
         player.output.each do |note|
-
-          # TEMP DEBUG
-          puts "in processing_score block"
-          puts note.to_s
-
           @score_notes << note
         end
         player.clear_output
@@ -1080,9 +1039,6 @@ end
 # /FOR UNIT TESTING
 
 def reset_script_state
-  # TEMP DEBUG
-  # puts "RESET SCRIPT STATE"
-    
   # *** KEEP THIS HERE ALWAYS ***
   @score_out.clear
   # *** KEEP THIS HERE ALWAYS ***

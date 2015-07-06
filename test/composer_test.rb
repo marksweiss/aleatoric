@@ -42,6 +42,7 @@ class AleatoricTest
   end
 
   def initialize(test_name, throw_on_failure=false)
+    puts "RUNNING TEST #{test_name}"
     @test_name = test_name
     @throw_on_failure = throw_on_failure
     @s = "PASS: #{@test_name}"
@@ -1296,18 +1297,13 @@ write "composer_test_results.txt"
   format    csound
   phrases   "Loop"
 }
-
-  # TEMP DEBUG
-  # puts script
-  # run_test_script_debug
-
-  #tester, results = test_runner(test_name, throw_on_failure, script, lite_syntax)
-  #actual = results  
-  #expected0 = 'i 1 1.00000 0.20000 1100 7.02000 1 ;'
-  #expected1 = 'i 1 2.00000 0.20000 1200 7.02000 1 ;'
-  #tester.assert(expected0 == actual[2])
-  #tester.assert(expected1 == actual[3])
-  #puts tester.to_s  
+  tester, results = test_runner(test_name, throw_on_failure, script, lite_syntax)
+  actual = results  
+  expected0 = 'i 1 1.00000 0.20000 1100 7.02000 1 ;'
+  expected1 = 'i 1 2.00000 0.20000 1200 7.02000 1 ;'
+  tester.assert(expected0 == actual[2])
+  tester.assert(expected1 == actual[3])
+  puts tester.to_s  
 end
 
 def test__repeat_until
@@ -1381,15 +1377,13 @@ write "composer_test_results.txt"
   format    csound
   phrases   "Loop"
 }
-  # TEMP DEBUG
-      
-  #tester, results = test_runner(test_name, throw_on_failure, script, lite_syntax)
-  #actual = results  
-  #expected0 = 'i 1 1.00000 0.20000 1100 7.02000 1 ;'
-  #expected1 = 'i 1 2.00000 0.20000 1200 7.02000 1 ;'
-  #tester.assert(expected0 == actual[2])
-  #tester.assert(expected1 == actual[3])
-  #puts tester.to_s  
+  tester, results = test_runner(test_name, throw_on_failure, script, lite_syntax)
+  actual = results  
+  expected0 = 'i 1 1.00000 0.20000 1100 7.02000 1 ;'
+  expected1 = 'i 1 2.00000 0.20000 1200 7.02000 1 ;'
+  tester.assert(expected0 == actual[2])
+  tester.assert(expected1 == actual[3])
+  puts tester.to_s  
 end
 
 def test__next
@@ -1805,25 +1799,22 @@ write "composer_test_results.txt"
   tester, results = test_runner(test_name, throw_on_failure, script, lite_syntax)
   actual = results
 
-  # TEMP DEBUG
-  puts actual
-
   # TODO THIS NEEDS TO BE IN ONLINE DOCUMENTATION
   # NOTE: These start times advance to start at the next current starting time for each Player
   #  because players are set to work this way, because otherwise they are painful to use in a 
   #  real composition.  The behavior can be overridden with attribute player.auto_next_start_off
   expected0 = 'i 1 1.00000 0.50000 0 7.01000 1 ; 1'
   expected1 = 'i 2 2.00000 1.00000 0 7.02000 1 ; 2'
-  expected2 = 'i 1 2.50000 0.50000 1000 7.01000 1 ; 1'
-  expected3 = 'i 2 4.00000 1.00000 1100 7.02000 1 ; 2'
-  expected4 = 'i 1 4.00000 0.50000 0 7.01000 1 ; 1'
-  expected5 = 'i 2 5.50000 1.00000 0 7.02000 1 ; 2'
+  expected2 = 'i 1 4.00000 0.50000 1000 7.01000 1 ; 1'
+  expected3 = 'i 2 5.00000 1.00000 1100 7.02000 1 ; 2'
+  expected4 = 'i 1 7.00000 0.50000 0 7.01000 1 ; 1'
+  expected5 = 'i 2 8.00000 1.00000 0 7.02000 1 ; 2'
   expected6 = 'i 3 3.00000 1.50000 0 7.03000 1 ; 3'
   expected7 = 'i 4 4.00000 2.00000 0 7.04000 1 ; 4'
-  expected8 = 'i 3 6.50000 1.50000 1200 7.03000 1 ; 3'
-  expected9 = 'i 4 9.00000 2.00000 1300 7.04000 1 ; 4'
-  expected10 = 'i 3 10.00000 1.50000 0 7.03000 1 ; 3'
-  expected11 = 'i 4 12.50000 2.00000 0 7.04000 1 ; 4'
+  expected8 = 'i 3 9.00000 1.50000 1200 7.03000 1 ; 3'
+  expected9 = 'i 4 10.00000 2.00000 1300 7.04000 1 ; 4'
+  expected10 = 'i 3 15.00000 1.50000 0 7.03000 1 ; 3'
+  expected11 = 'i 4 16.00000 2.00000 0 7.04000 1 ; 4'
   
   tester.assert(expected0 == actual[2])
   tester.assert(expected1 == actual[3])
@@ -1913,16 +1904,16 @@ write "composer_test_results.txt"
         
   expected0 = 'i 1 1.00000 0.50000 0 7.01000 1 ; 1'
   expected1 = 'i 2 2.00000 1.00000 0 7.02000 1 ; 2'
-  expected2 = 'i 1 2.50000 0.50000 1000 7.01000 1 ; 1'
-  expected3 = 'i 2 4.00000 1.00000 1100 7.02000 1 ; 2'
-  expected4 = 'i 1 4.00000 0.50000 0 7.01000 1 ; 1'
-  expected5 = 'i 2 5.50000 1.00000 0 7.02000 1 ; 2'
+  expected2 = 'i 1 4.00000 0.50000 1000 7.01000 1 ; 1'
+  expected3 = 'i 2 5.00000 1.00000 1100 7.02000 1 ; 2'
+  expected4 = 'i 1 7.00000 0.50000 0 7.01000 1 ; 1'
+  expected5 = 'i 2 8.00000 1.00000 0 7.02000 1 ; 2'
   expected6 = 'i 3 3.00000 1.50000 0 7.03000 1 ; 3'
   expected7 = 'i 4 4.00000 2.00000 0 7.04000 1 ; 4'
-  expected8 = 'i 3 6.50000 1.50000 1200 7.03000 1 ; 3'
-  expected9 = 'i 4 9.00000 2.00000 1300 7.04000 1 ; 4'
-  expected10 = 'i 3 10.00000 1.50000 0 7.03000 1 ; 3'
-  expected11 = 'i 4 12.50000 2.00000 0 7.04000 1 ; 4'
+  expected8 = 'i 3 9.00000 1.50000 1200 7.03000 1 ; 3'
+  expected9 = 'i 4 10.00000 2.00000 1300 7.04000 1 ; 4'
+  expected10 = 'i 3 15.00000 1.50000 0 7.03000 1 ; 3'
+  expected11 = 'i 4 16.00000 2.00000 0 7.04000 1 ; 4'
   
   tester.assert(expected0 == actual[2])
   tester.assert(expected1 == actual[3])
@@ -2157,13 +2148,13 @@ ensemble "In C Orchestra"
       pitch       64 
 
     note "2"
-      start       1.0
+      start       2.0
       duration    1.0
       amplitude   100
       pitch       65 
     
     note "3"
-      start       2.0
+      start       4.0
       duration    1.0
       volume      100
       pitch       66 
@@ -2176,6 +2167,7 @@ write "composer_test_results.txt"
 }
   tester, results = test_runner(test_name, throw_on_failure, script, lite_syntax)
   actual = results     
+  
   expected0 = 'instrument 1  start 0.00000  duration 1.00000  amplitude 100  pitch 64  channel 1'
   expected1 = 'instrument 1  start 2.00000  duration 1.00000  amplitude 100  pitch 65  channel 1'
   expected2 = 'instrument 1  start 4.00000  duration 1.00000  amplitude 100  pitch 66  channel 1'
@@ -2541,7 +2533,7 @@ def run_tests(flags='run_all')
   run_only = true if flags[0].include? 'run_only' or flags[0].include? 'run_selected'
   num_tests = 0
   if not run_only
-  
+
     all_pass = true
     begin
       #
@@ -2603,7 +2595,7 @@ def run_tests(flags='run_all')
     begin    
       
       # *** run_only TESTS GO HERE ***
-      test__instruction_players_state; num_tests += 1
+      test__ensemble_instrument_channel_midi_render; num_tests += 1
 
       # *** run_only TESTS GO HERE ***
     

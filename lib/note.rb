@@ -54,7 +54,7 @@ class Note
   end
  
   # NOTE: if arg is named 'start' here fails in Ruby 2.x with name argument exception. No reason for this 
-  def start(arg=nil)   
+  def start(arg=nil)
     if arg.nil? 
       @note_attrs[:start]
     else

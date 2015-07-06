@@ -96,7 +96,7 @@ class MidiManager
     @channel_instruments[channel] = instrument
     
     # VERBOSE
-    puts "Mapped channel #{channel} to instrument #{instrument}"
+    # puts "Mapped channel #{channel} to instrument #{instrument}"
     # /VERBOSE
     
     end
