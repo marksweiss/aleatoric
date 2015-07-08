@@ -1799,10 +1799,56 @@ write "composer_test_results.txt"
   tester, results = test_runner(test_name, throw_on_failure, script, lite_syntax)
   actual = results
 
-  # TODO THIS NEEDS TO BE IN ONLINE DOCUMENTATION
   # NOTE: These start times advance to start at the next current starting time for each Player
   #  because players are set to work this way, because otherwise they are painful to use in a 
   #  real composition.  The behavior can be overridden with attribute player.auto_next_start_off
+  # What this means in practice is that each iteration in a looped 'play' block is like a 'measure'
+  #  block. Specifically it's a round of producing notes in a score, using the notes assigned to each
+  #  player in the ensemble playing in that play block, where the start times of those notes offset 
+  #  from the current score start position.
+  # So, for example, here in the first round Player 1 plays at 1.0 and 2.0, which are her two
+  #  notes, then again at 4.0. Why 4.0? Because the second note is duration 1.0, i.e. two notes
+  #  finish their first loop at 3.0. And the start time of the first note is 1.0 in the score, and 
+  #  1.0 *after* the end of the first loop is 3.0 + 1.0. Think of the first loop as setting the duration
+  #  of the window of the notes to be played by this player, with their start times offset from 0.0
+  #  since it's the first iteration. Subsequent iterations have the same duration and the same offsets,
+  #  but they are offset from the end of the previous loop (iteration).
+  # So
+  #
+  # Player 1
+  #
+  # start position at 0.0
+  # Loop 1
+  #  start + 1.0 + dur 0.5
+  #  start + 2.0 + dur 1.0
+  #  start position at 3.0
+  # Loop 2
+  #  start position at 3.0
+  #  start + 1.0 (4.0) + dur 0.5
+  #  start + 2.0 (5.0) + dur 1.0
+  #  start position at 6.0
+  # Loop 3
+  #  start position at 6.0
+  #  start + 1.0 (7.0) + dur 0.5
+  #  start + 2.0 (8.0) + dur 1.0
+  # 
+  # Player 2
+  #  
+  # start position at 0.0
+  # Loop 1
+  #  start + 3.0 + dur 1.5
+  #  start + 4.0 + dur 2.0
+  #  start position at 6.0
+  # Loop 2
+  #  start position at 6.0
+  #  start + 3.0 (9.0) + dur 1.5
+  #  start + 4.0 (10.0) + dur 2.0
+  #  start position at 12.0
+  # Loop 3
+  #  start position at 12.0
+  #  start + 3.0 (15.0) + dur 1.5
+  #  start + 4.0 (16.0) + dur 2.0
+  # 
   expected0 = 'i 1 1.00000 0.50000 0 7.01000 1 ; 1'
   expected1 = 'i 2 2.00000 1.00000 0 7.02000 1 ; 2'
   expected2 = 'i 1 4.00000 0.50000 1000 7.01000 1 ; 1'
@@ -2595,7 +2641,6 @@ def run_tests(flags='run_all')
     begin    
       
       # *** run_only TESTS GO HERE ***
-      test__ensemble_instrument_channel_midi_render; num_tests += 1
 
       # *** run_only TESTS GO HERE ***
     
