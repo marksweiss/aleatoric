@@ -119,7 +119,7 @@ ensemble "In C Orchestra"
       func_table 1
     note
       start QRTR + EITH
-      duration EITH
+      duration QRTR
       volume _default_volume
       pitch E4
       func_table 1
@@ -177,19 +177,13 @@ ensemble "In C Orchestra"
 
   phrase "5"
     note
-      start 0.0
-      duration EITH
-      volume REST
-      pitch C4
-      func_table 1
-    note
-      start EITH
+      start legato_start: 0.0
       duration EITH
       volume _default_volume
       pitch E4
       func_table 1
     note
-      start QRTR
+      start EITH
       duration EITH
       volume _default_volume
       pitch F4
@@ -201,7 +195,7 @@ ensemble "In C Orchestra"
       pitch G4
       func_table 1
     note
-      start HLF
+      start QRTR + EITH
       duration EITH
       volume REST
       pitch C4
@@ -248,48 +242,42 @@ ensemble "In C Orchestra"
       func_table 1
     note
       start HLF + QRTR + EITH
-      duration EITH
-      volume _default_volume
-      pitch C4
-      func_table 1
-    note
-      start WHL
       duration SXTNTH
       volume _default_volume
       pitch C4
       func_table 1
     note
-      start WHL + SXTNTH
-      duration EITH
+      start HLF + QRTR + EITH + SXTNTH
+      duration SXTNTH
       volume _default_volume
       pitch C4
       func_table 1
     note
-      start WHL + EITH + SXTNTH
+      start WHL
       duration EITH
       volume REST
       pitch C4
       func_table 1
     note
-      start WHL + QRTR + SXTNTH
+      start WHL + EITH
       duration QRTR
       volume REST
       pitch C4
       func_table 1
     note
-      start WHL + HLF + SXTNTH
+      start WHL + QRTR + EITH
       duration QRTR
       volume REST
       pitch C4
       func_table 1
     note
-      start WHL + HLF + QRTR + SXTNTH
+      start WHL + HLF + EITH
       duration QRTR
       volume REST
       pitch C4
       func_table 1
     note
-      start WHL + HLF + HLF + SXTNTH
+      start WHL + HLF + QTRTR + EITH 
       duration QRTR
       volume REST
       pitch C4
@@ -375,31 +363,31 @@ ensemble "In C Orchestra"
       pitch F4
       func_table 1
     note
-      start EITH
+      start SXTNTH
       duration SXTNTH
       volume _default_volume
       pitch G4
       func_table 1
     note
-      start EITH + SXTNTH
+      start EITH
       duration SXTNTH
       volume _default_volume
       pitch B4
       func_table 1
     note
-      start QRTR
+      start EITH + SXTNTH
       duration SXTNTH
       volume _default_volume
       pitch G4
       func_table 1
     note
-      start QRTR + SXTNTH
+      start QRTR
       duration SXTNTH
       volume _default_volume
       pitch B4    
       func_table 1
     note
-      start QRTR + EITH
+      start QRTR + SXTNTH
       duration SXTNTH
       volume _default_volume
       pitch G4
@@ -547,19 +535,19 @@ ensemble "In C Orchestra"
       pitch G4
       func_table 1
     note
-      start EITH
+      start SXTNTH
       duration SXTNTH
       volume _default_volume
       pitch B4
       func_table 1
     note
-      start EITH + SXTNTH
+      start EITH
       duration SXTNTH
       volume _default_volume
       pitch C5    
       func_table 1
     note
-      start QRTR
+      start EITH + SXTNTH
       duration SXTNTH
       volume _default_volume
       pitch B4
@@ -573,31 +561,31 @@ ensemble "In C Orchestra"
       pitch B4
       func_table 1
     note
-      start EITH
+      start SXTNTH
       duration SXTNTH
       volume _default_volume
       pitch C5
       func_table 1
     note
-      start EITH + SXTNTH
+      start EITH
       duration SXTNTH
       volume _default_volume
       pitch B4    
       func_table 1
     note
-      start QRTR
+      start EITH + SXTNTH
       duration SXTNTH
       volume _default_volume
       pitch C5
       func_table 1
     note
-      start QRTR + SXTNTH
+      start QRTR
       duration SXTNTH
       volume _default_volume
       pitch B4
       func_table 1
     note
-      start QRTR + EITH
+      start QRTR + SXTNTH
       duration SXTNTH
       volume REST
       pitch C4    
@@ -611,32 +599,32 @@ ensemble "In C Orchestra"
       pitch E4
       func_table 1
     note
-      start EITH
+      start SXTNTH
       duration SXTNTH
       volume _default_volume
       pitch F4S
       func_table 1
     note
-      start EITH + SXTNTH
+      start EITH
       duration SXTNTH
       volume _default_volume
       pitch E4    
       func_table 1
     note
-      start QRTR
+      start EITH + SXTNTH
       duration SXTNTH
       volume _default_volume
       pitch F4S
       func_table 1
     note
-      start QRTR + SXTNTH
+      start QRTR
       duration EITH + SXTNTH
       volume _default_volume
       pitch E4
       func_table 1
     note
-      start QRTR + EITH
-      duration EITH
+      start QRTR + EITH + SXTNTH
+      duration SXTNTH
       volume _default_volume
       pitch E4    
       func_table 1
@@ -663,55 +651,55 @@ ensemble "In C Orchestra"
       pitch E4
       func_table 1
     note
-      start EITH
+      start SXTNTH
       duration SXTNTH
       volume _default_volume
       pitch F4S
       func_table 1
     note
-      start EITH + SXTNTH
+      start EITH
       duration SXTNTH
       volume _default_volume
       pitch E4    
       func_table 1
     note
-      start QRTR
+      start EITH + SXTNTH
       duration SXTNTH
       volume _default_volume
       pitch F4S
       func_table 1
     note
-      start QRTR + SXTNTH
-      duration SXTNTH + THRTYSCND
+      start QRTR
+      duration EITH + SXTNTH
       volume _default_volume
       pitch G3
       func_table 1
     note
-      start QRTR + EITH + THRTYSCND
-      duration SXTNTH
-      volume _default_volume
-      pitch E4   
-      func_table 1
-    note
-      start QRTR + EITH + SXTNTH + THRTYSCND
-      duration SXTNTH
-      volume _default_volume
-      pitch F4S
-      func_table 1
-    note
-      start HLF + THRTYSCND
+      start QRTR + EITH + SXTNTH
       duration SXTNTH
       volume _default_volume
       pitch E4
       func_table 1
     note
-      start HLF + SXTNTH + THRTYSCND
+      start HLF
       duration SXTNTH
       volume _default_volume
       pitch F4S
       func_table 1
     note
-      start HLF + EITH + THRTYSCND
+      start HLF + SXTNTH
+      duration SXTNTH
+      volume _default_volume
+      pitch E4
+      func_table 1
+    note
+      start HLF + EITH
+      duration SXTNTH
+      volume _default_volume
+      pitch F4S
+      func_table 1
+    note
+      start HLF + EITH + SXTNTH
       duration SXTNTH
       volume _default_volume
       pitch E4    
@@ -739,43 +727,43 @@ ensemble "In C Orchestra"
       pitch E4
       func_table 1
     note
-      start 2.0 *  QRTR + EITH
+      start 2.0 * QRTR + EITH
       duration QRTR + EITH
       volume _default_volume
       pitch E4    
       func_table 1
     note
-      start 3.0 *  QRTR + EITH
+      start 3.0 * QRTR + EITH
       duration QRTR + EITH
       volume _default_volume
       pitch E4
       func_table 1
     note
-      start 4.0 *  QRTR + EITH
+      start 4.0 * QRTR + EITH
       duration QRTR + EITH
       volume _default_volume
       pitch E4
       func_table 1
     note
-      start 5.0 *  QRTR + EITH
+      start 5.0 * QRTR + EITH
       duration QRTR + EITH
       volume _default_volume
       pitch F4S
       func_table 1
     note
-      start 6.0 *  QRTR + EITH
+      start 6.0 * QRTR + EITH
       duration QRTR + EITH
       volume _default_volume
       pitch G4
       func_table 1
     note
-      start 7.0 *  QRTR + EITH
+      start 7.0 * QRTR + EITH
       duration QRTR + EITH
       volume _default_volume
       pitch A4
       func_table 1
     note
-      start 8.0 *  QRTR + EITH
+      start 8.0 * QRTR + EITH
       duration EITH
       volume _default_volume
       pitch B4
@@ -807,31 +795,31 @@ ensemble "In C Orchestra"
       pitch F4S
       func_table 1
     note
-      start HLF +  2.0 *  QRTR + EITH
+      start HLF +  2.0 * QRTR + EITH
       duration QRTR + EITH
       volume _default_volume
       pitch F4S
       func_table 1
     note
-      start HLF +  3.0 *  QRTR + EITH
+      start HLF +  3.0 * QRTR + EITH
       duration QRTR + EITH
       volume _default_volume
       pitch F4S    
       func_table 1
     note
-      start HLF +  4.0 *  QRTR + EITH
+      start HLF +  4.0 * QRTR + EITH
       duration QRTR + EITH
       volume _default_volume
       pitch G4
       func_table 1
     note
-      start HLF +  5.0 *  QRTR + EITH
+      start HLF +  5.0 * QRTR + EITH
       duration QRTR + EITH
       volume _default_volume
       pitch A4
       func_table 1
     note
-      start HLF +  6.0 *  QRTR + EITH
+      start HLF +  6.0 * QRTR + EITH
       duration QRTR
       volume _default_volume
       pitch B4
@@ -869,25 +857,25 @@ ensemble "In C Orchestra"
       pitch G4
       func_table 1
     note
-      start WHL +  QRTR + EITH
+      start WHL + QRTR + EITH
       duration QRTR + EITH
       volume _default_volume
       pitch G4    
       func_table 1
     note
-      start WHL +  2.0 *  QRTR + EITH
+      start WHL + 2.0 * QRTR + EITH
       duration QRTR + EITH
       volume _default_volume
       pitch G4
       func_table 1
     note
-      start WHL +  3.0 *  QRTR + EITH
+      start WHL + 3.0 * QRTR + EITH
       duration QRTR + EITH
       volume _default_volume
       pitch A4
       func_table 1
     note
-      start WHL +  4.0 *  QRTR + EITH
+      start WHL + 4.0 * QRTR + EITH
       duration EITH
       volume _default_volume
       pitch B4
@@ -925,25 +913,25 @@ ensemble "In C Orchestra"
       pitch A4
       func_table 1
     note
-      start WHL +  QRTR + EITH
+      start WHL + QRTR + EITH
       duration QRTR + EITH
       volume _default_volume
       pitch A4    
       func_table 1
     note
-      start WHL +  2.0 *  QRTR + EITH
+      start WHL + 2.0 * QRTR + EITH
       duration QRTR + EITH
       volume _default_volume
       pitch A4
       func_table 1
     note
-      start WHL +  3.0 *  QRTR + EITH
+      start WHL + 3.0 * QRTR + EITH
       duration QRTR + EITH
       volume _default_volume
       pitch A4
       func_table 1
     note
-      start WHL +  4.0 *  QRTR + EITH
+      start WHL + 4.0 * QRTR + EITH
       duration EITH
       volume _default_volume
       pitch B4
