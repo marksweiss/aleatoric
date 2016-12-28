@@ -6,12 +6,12 @@ _default_volume = 500
 ##############################################################################
 # Define user-defined functions.  These must immediately follow the variables.
 # TODO Why can't we define variables and use them in function bodies?
-legato_start: start, dur
+legato_start: st, dur
   adj_dur = ((dur * 1.03) - dur)
-  if start >= adj_dur
+  if st >= adj_dur
     start - adj_dur
   else
-    start
+    st
   end
 
 legato_duration: dur
@@ -177,7 +177,7 @@ ensemble "In C Orchestra"
 
   phrase "5"
     note
-      start legato_start: 0.0
+      start legato_start: 0.0, (2.0 * WHL)
       duration EITH
       volume _default_volume
       pitch E4
@@ -277,7 +277,7 @@ ensemble "In C Orchestra"
       pitch C4
       func_table 1
     note
-      start WHL + HLF + QTRTR + EITH 
+      start WHL + HLF + QRTR + EITH 
       duration QRTR
       volume REST
       pitch C4
@@ -297,7 +297,7 @@ ensemble "In C Orchestra"
       pitch F4
       func_table 1
     note
-      start legato_start: 2.0 * WHL + HLF, WHL
+      start legato_start: (2.0 * WHL) + HLF, WHL
       duration legato_duration: WHL
       volume _default_volume
       pitch F4
@@ -727,43 +727,43 @@ ensemble "In C Orchestra"
       pitch E4
       func_table 1
     note
-      start 2.0 * QRTR + EITH
+      start 2.0 * (QRTR + EITH)
       duration QRTR + EITH
       volume _default_volume
       pitch E4    
       func_table 1
     note
-      start 3.0 * QRTR + EITH
+      start 3.0 * (QRTR + EITH)
       duration QRTR + EITH
       volume _default_volume
       pitch E4
       func_table 1
     note
-      start 4.0 * QRTR + EITH
+      start 4.0 * (QRTR + EITH)
       duration QRTR + EITH
       volume _default_volume
       pitch E4
       func_table 1
     note
-      start 5.0 * QRTR + EITH
+      start 5.0 * (QRTR + EITH)
       duration QRTR + EITH
       volume _default_volume
       pitch F4S
       func_table 1
     note
-      start 6.0 * QRTR + EITH
+      start 6.0 * (QRTR + EITH)
       duration QRTR + EITH
       volume _default_volume
       pitch G4
       func_table 1
     note
-      start 7.0 * QRTR + EITH
+      start 7.0 * (QRTR + EITH)
       duration QRTR + EITH
       volume _default_volume
       pitch A4
       func_table 1
     note
-      start 8.0 * QRTR + EITH
+      start 8.0 * (QRTR + EITH)
       duration EITH
       volume _default_volume
       pitch B4
@@ -789,37 +789,37 @@ ensemble "In C Orchestra"
       pitch F4S    
       func_table 1
     note
-      start HLF +  QRTR + EITH
+      start HLF + QRTR + EITH
       duration QRTR + EITH
       volume _default_volume
       pitch F4S
       func_table 1
     note
-      start HLF +  2.0 * QRTR + EITH
+      start HLF + (2.0 * (QRTR + EITH))
       duration QRTR + EITH
       volume _default_volume
       pitch F4S
       func_table 1
     note
-      start HLF +  3.0 * QRTR + EITH
+      start HLF + (3.0 * (QRTR + EITH))
       duration QRTR + EITH
       volume _default_volume
       pitch F4S    
       func_table 1
     note
-      start HLF +  4.0 * QRTR + EITH
+      start HLF + (4.0 * (QRTR + EITH))
       duration QRTR + EITH
       volume _default_volume
       pitch G4
       func_table 1
     note
-      start HLF +  5.0 * QRTR + EITH
+      start HLF + (5.0 * (QRTR + EITH))
       duration QRTR + EITH
       volume _default_volume
       pitch A4
       func_table 1
     note
-      start HLF +  6.0 * QRTR + EITH
+      start HLF + (6.0 * (QRTR + EITH))
       duration QRTR
       volume _default_volume
       pitch B4
@@ -863,19 +863,19 @@ ensemble "In C Orchestra"
       pitch G4    
       func_table 1
     note
-      start WHL + 2.0 * QRTR + EITH
+      start WHL + (2.0 * (QRTR + EITH))
       duration QRTR + EITH
       volume _default_volume
       pitch G4
       func_table 1
     note
-      start WHL + 3.0 * QRTR + EITH
+      start WHL + (3.0 * (QRTR + EITH))
       duration QRTR + EITH
       volume _default_volume
       pitch A4
       func_table 1
     note
-      start WHL + 4.0 * QRTR + EITH
+      start WHL + (4.0 * (QRTR + EITH))
       duration EITH
       volume _default_volume
       pitch B4
@@ -919,19 +919,19 @@ ensemble "In C Orchestra"
       pitch A4    
       func_table 1
     note
-      start WHL + 2.0 * QRTR + EITH
+      start WHL + (2.0 * (QRTR + EITH))
       duration QRTR + EITH
       volume _default_volume
       pitch A4
       func_table 1
     note
-      start WHL + 3.0 * QRTR + EITH
+      start WHL + (3.0 * (QRTR + EITH))
       duration QRTR + EITH
       volume _default_volume
       pitch A4
       func_table 1
     note
-      start WHL + 4.0 * QRTR + EITH
+      start WHL + (4.0 * (QRTR + EITH))
       duration EITH
       volume _default_volume
       pitch B4
@@ -1347,25 +1347,25 @@ ensemble "In C Orchestra"
       pitch G5
       func_table 1
     note
-      start 2.0 * WHL + HLF
+      start ((2.0 * WHL) + HLF)
       duration EITH
       volume _default_volume
       pitch A5
       func_table 1
     note
-      start legato_start: 2.0 * WHL + HLF + EITH, EITH
+      start legato_start: ((2.0 * WHL) + HLF + EITH), EITH
       duration legato_duration: EITH
       volume _default_volume
       pitch G5
       func_table 1
     note
-      start  legato_start: 2.0 * WHL + HLF + QRTR, EITH
+      start  legato_start: ((2.0 * WHL) + HLF + QRTR), EITH
       duration legato_duration: EITH
       volume _default_volume
       pitch G5
       func_table 1
     note
-      start  2.0 * WHL + HLF + QRTR + EITH
+      start  ((2.0 * WHL) + HLF + QRTR + EITH)
       duration EITH
       volume _default_volume
       pitch B5
@@ -1377,67 +1377,67 @@ ensemble "In C Orchestra"
       pitch A5   
       func_table 1
     note
-      start  3.0 * WHL + QRTR + EITH
+      start  ((3.0 * WHL) + QRTR + EITH)
       duration EITH
       volume _default_volume
       pitch G5
       func_table 1
     note
-      start  3.0 * WHL + HLF
+      start  ((3.0 * WHL) + HLF)
       duration HLF + QRTR
       volume _default_volume
       pitch E5
       func_table 1
     note
-      start  4.0 * WHL + QRTR
+      start  ((4.0 * WHL) + QRTR)
       duration EITH
       volume _default_volume
       pitch G5
       func_table 1
     note
-      start  legato_start: 4.0 * WHL + QRTR + EITH, EITH
+      start  legato_start: ((4.0 * WHL) + QRTR + EITH), EITH
       duration legato_duration: EITH
       volume _default_volume
       pitch F5S
       func_table 1
     note
-      start  legato_start: 4.0 * WHL + HLF, HLF + QRTR
+      start  legato_start: ((4.0 * WHL) + HLF), HLF + QRTR
       duration legato_duration: HLF + QRTR
       volume _default_volume
       pitch F5S
       func_table 1
     note
-      start  5.0 * WHL + QRTR
+      start  ((5.0 * WHL) + QRTR)
       duration QRTR
       volume REST
       pitch C4
       func_table 1
     note
-      start  5.0 * WHL + HLF
+      start  ((5.0 * WHL) + HLF)
       duration QRTR
       volume REST
       pitch C4
       func_table 1
     note
-      start  5.0 * WHL + HLF + QRTR
+      start  ((5.0 * WHL) + HLF + QRTR)
       duration EITH
       volume REST
       pitch C4
       func_table 1
     note
-      start legato_start: 5.0 * WHL + HLF + QRTR + EITH, EITH
+      start legato_start: ((5.0 * WHL) + HLF + QRTR + EITH), EITH
       duration legato_duration: EITH
       volume _default_volume
       pitch E5
       func_table 1
     note
-      start legato_start: 6.0 * WHL, HLF
+      start legato_start: (6.0 * WHL), HLF
       duration legato_duration: HLF
       volume _default_volume
       pitch E5
       func_table 1
     note
-      start  6.0 * WHL + HLF
+      start  ((6.0 * WHL) + HLF)
       duration WHL + HLF
       volume _default_volume
       pitch F5     
@@ -1835,13 +1835,13 @@ ensemble "In C Orchestra"
       pitch G4
       func_table 1
     note
-      start legato_start: 2.0 * WHL + HLF, WHL
+      start legato_start: (2.0 * WHL) + HLF, WHL
       duration legato_duration: WHL
       volume _default_volume
       pitch F4
       func_table 1
     note
-      start legato_start: 3.0 * WHL + HLF, QRTR
+      start legato_start: (3.0 * WHL) + HLF, QRTR
       duration legato_duration: QRTR
       volume _default_volume
       pitch F4

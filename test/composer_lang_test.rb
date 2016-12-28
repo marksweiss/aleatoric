@@ -380,27 +380,27 @@ class ComposerAST_Test < MiniTest::Unit::TestCase
     lang = ComposerAST.new
 
     actual = lang.preprocess_start_duration(lang.tokenize("start EITH\n"))            
-    expected = ['start', 'EITH', ', ', 'true']        
+    expected = ['start', '(', 'EITH', ', ', 'true', ')']        
     assert(actual[0] == expected)
 
     actual = lang.preprocess_start_duration(lang.tokenize("duration HLF\n"))        
-    expected = ['duration', 'HLF', ', ', 'true']    
+    expected = ['duration', '(', 'HLF', ', ', 'true', ')']    
     assert(actual[0] == expected)
     
     actual = lang.preprocess_start_duration(lang.tokenize("duration WHL + HLF\n"))        
-    expected = ['duration', 'WHL', '+', 'HLF', ', ', 'true']    
+    expected = ['duration', '(', 'WHL', '+', 'HLF', ', ', 'true', ')']    
     assert(actual[0] == expected)
 
     actual = lang.preprocess_start_duration(lang.tokenize("start WHL + HLF\n"))        
-    expected = ['start', 'WHL', '+', 'HLF', ', ', 'true']    
+    expected = ['start', '(', 'WHL', '+', 'HLF', ', ', 'true', ')']    
     assert(actual[0] == expected)
     
     actual = lang.preprocess_start_duration([lang.preprocess_func_helper(lang.tokenize('duration foo: HLF')[0])])
-    expected = ['duration', 'foo(', 'HLF', ')', ', ', 'true']          
+    expected = ['duration', '(', 'foo(', 'HLF', ')', ', ', 'true', ')']          
     assert(actual[0] == expected)  
     
     actual = lang.preprocess_start_duration([lang.preprocess_func_helper(lang.tokenize('start foo: EITH + HLF')[0])])
-    expected = ['start', 'foo(', 'EITH', '+', 'HLF', ')', ', ', 'true']  
+    expected = ['start', '(', 'foo(', 'EITH', '+', 'HLF', ')', ', ', 'true', ')']  
     assert(actual[0] == expected)      
         
     end

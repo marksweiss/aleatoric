@@ -3,6 +3,7 @@
 # BOILERPLATE FOR ALL user_instruction.rb FILES
 # for calling sign(), swing(), swing?() no_swing(), meets_condition?()
 $LOAD_PATH << "../../lib"
+require 'composer'
 require 'util' 
 include Aleatoric
 # /BOILERPLATE FOR ALL user_instruction.rb FILES
@@ -795,7 +796,4 @@ set_ensemble_postplay_instruction("Instruction 14", &instruction_14_ensemble_pre
 # BOILERPLATE FOR ALL user_instruction.rb FILES
 # end
 # /BOILERPLATE FOR ALL user_instruction.rb FILES
-
-
-
 

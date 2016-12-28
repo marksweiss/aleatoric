@@ -231,7 +231,7 @@ class ComposerAST
   #  which is then evaluated at interpretation time in compser.rb start() and duration() handlers
   @@note_durations = ['WHL', 'WHOLE', 'HLF', 'HALF', 'QRTR', 'QUARTER', 
                       'EITH', 'EIGHTH', 'SIXTEENTH', 'SXTNTH', 'THRTYSCND', 
-                      'THIRTYSECOND', 'SXTYFRTH', 'SIXTHFOURTH']
+                      'THIRTYSECOND', 'SXTYFRTH', 'SIXTYFOURTH']
 
   # NOTE: A hack to support testing. This must be first line in test scripts but it breaks the
   #  assignment preprocessing which assumes all assignment statements start the file.
@@ -405,6 +405,10 @@ class ComposerAST
     tkns.each do |tkn_line|
       # Test each line for being note start or duration attribute      
       if tkn_line[0] == 'start' or tkn_line[0] == 'duration'
+        # Wrap 'start' and 'duration' function call args in parens, start(args, true)
+        # This is because arg lists that themselves include parentheses will fail ruby parse
+        # because we append another argument to start and duration below, the 'true' for is_duration_set_using_const
+        tkn_line.insert(1, "(")
         len = tkn_line.length
         # Test remaining tokens for being a duration constant, e.g. 'WHL', 'HLF'
         tkn_line[1..len-1].each do |tkn|
@@ -417,6 +421,7 @@ class ComposerAST
             break
           end
         end
+        tkn_line.push(")")
       end
       tkns_out << tkn_line  
     end
