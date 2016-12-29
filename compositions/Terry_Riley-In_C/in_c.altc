@@ -64,20 +64,8 @@ ensemble "In C Orchestra" do
   players "Player 1"#, "Player 2", "Player 3", "Player 4", "Player 5", "Player 6", "Player 7", "Player 8"
   
   phrase "1" do 
-    note { 
-      start legato_start(0.0, EITH)
-      duration legato_duration(EITH)
-      volume _default_volume
-      pitch C4
-      func_table 1
-    }
-    note {
-      start legato_start(0.0 + EITH, QRTR)
-      duration legato_duration(QRTR)
-      volume _default_volume
-      pitch E4
-      func_table 1
-    }
+    note {start legato_start(0.0, EITH); duration legato_duration(EITH); volume _default_volume; pitch C4; func_table 1}
+    note {start legato_start(0.0 + EITH, QRTR); duration legato_duration(QRTR); volume _default_volume; pitch E4; func_table 1}
   end 
 end
     # note
