@@ -2,9 +2,6 @@ $LOAD_PATH << psub("../lib")
 require_relative 'util'
 require_relative 'score'
 
-# TEMP DEBUG
-# require 'ruby-debug' ; Debugger.start
-
 module Aleatoric
 
 # Player has a score of notes that it is currently choosing to play from.

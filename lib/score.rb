@@ -154,7 +154,9 @@ class ScoreWriter < Score
     s = ''
     case @format
     when :csound
-      s << "#include \"#{$csound_score_include_file_name}\""
+      if $csound_score_include_file_name.length > 0
+        s << "#include \"#{$csound_score_include_file_name}\""
+      end
       s << "\n"
       s << "\n"
     when :midi
@@ -177,15 +179,15 @@ end
 class Measure < Score
   attr_reader :start
   
-  def initialize(name, start=0.0)    
+  def initialize(name, st=0.0)    
     super(name)
-    @start = start    
+    @start = st    
   end
   
   # Resets the start time of all notes in this Score to value passed in param start
   # param [Float] the value to set for the start attribute for all Notes in the Score
-  def reset_notes(start)
-    @start = start
+  def reset_notes(st)
+    @start = st
     @notes = @notes.collect do |note| 
       new_note = note.dup
       new_note.start(new_note.start + @start)

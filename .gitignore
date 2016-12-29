@@ -1,4 +1,7 @@
 *.swp
 *DS_Store
 test/composer_test_results.txt
+test/*.wav
 test/*.altc
+lib/.byebug_history
+lib/tempflush

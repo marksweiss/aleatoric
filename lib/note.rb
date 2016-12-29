@@ -63,8 +63,8 @@ class Note
     end
   end
   # alias midi name to csound name
-  def time(start=nil)
-    self.start(start)
+  def time(st=nil)
+    self.start(st)
   end
 
   def duration(duration=nil)
@@ -186,7 +186,7 @@ class Note
           ret.concat(sprintf("%.5f", val) + " ")
         else
           ret.concat("#{val} ")
-        end	  
+        end
       end          
       ret.concat("; #{@name}")
       if @to_s_with_debug_info 
@@ -207,7 +207,7 @@ class Note
           ret.concat(sprintf(" %.5f", val) + "  ")
         else
           ret.concat(" #{val}  ")
-        end	 
+        end
       end
       ret.chop!
       ret.concat("; #{@name}")
@@ -234,7 +234,7 @@ class Note
   end
 
   # Creates accessors for newly created attributes of the object
-  def method_missing(name, val)         
+  def method_missing(name, val=nil)
     @note_attrs[name] = val
     @ordered_keys << name unless @ordered_keys.include? name
     def_accessor name
