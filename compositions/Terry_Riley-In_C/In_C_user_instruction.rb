@@ -709,7 +709,7 @@ instruction_14_repeat_until_test_post = lambda do
   # Violates encapsulation -- needs to know about module scope variable defined above
   # NOTE REPEAT UNTIL NAME PASSED TO set_repeat_until_stop() *** MUST MATCH ***
   #  NAME PASSED TO set_repeat_until_stop_postplay_test()  
-  if @@in_c_ensemble.reached_conclusion?
+  if In_C_Ensemble.in_c_ensemble.reached_conclusion?
     set_repeat_until_stop "... each player drops out as he or she wishes."
   end
 end
@@ -734,7 +734,7 @@ instruction_14_ensemble_pre = lambda do |container|
     
     # In practice, variations in duration from swing, added notes for phase align changes can lead to significant delta
     #  in when players arrive at the same phrase, so we need this
-    # Use flags to just all this block once, which which catches each player up to the one farthest ahead
+    # Use flags to just all this block once, which catches each player up to the one farthest ahead
     # Get current phrase of any player because all are on the last phrase
     aleatoric_players = aleatoric_ensemble.get_players
     durations = aleatoric_players[0].current_phrase.notes.collect {|note| note.duration}
@@ -788,13 +788,8 @@ instruction_14_ensemble_pre = lambda do |container|
     
     # ****
     # Set flag for repeat_until() handler to detect and end the performance
-    @@in_c_ensemble.reached_conclusion = true
+    In_C_Ensemble.in_c_ensemble.reached_conclusion = true
   end  
 end
 set_ensemble_postplay_instruction("Instruction 14", &instruction_14_ensemble_pre)
-
-
-# BOILERPLATE FOR ALL user_instruction.rb FILES
-# end
-# /BOILERPLATE FOR ALL user_instruction.rb FILES
 

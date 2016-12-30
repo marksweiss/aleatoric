@@ -73,445 +73,445 @@ ensemble "In C Orchestra" do
     note {start D_4 + D_8; duration D_4; volume VOL; pitch E4; func_table 1}
   end
 
-  phrase "3" do
-    note {start 0.0; duration D_8; volume REST; pitch C4; func_table 1}
-    note {start D_8; duration D_8; volume VOL; pitch E4; func_table 1}
-    note {start D_4; duration D_8; volume VOL; pitch F4;}
-    note {start D_4 + D_8; duration D_8; volume VOL; pitch E4; func_table 1}
-  end
+  # phrase "3" do
+  #   note {start 0.0; duration D_8; volume REST; pitch C4; func_table 1}
+  #   note {start D_8; duration D_8; volume VOL; pitch E4; func_table 1}
+  #   note {start D_4; duration D_8; volume VOL; pitch F4;}
+  #   note {start D_4 + D_8; duration D_8; volume VOL; pitch E4; func_table 1}
+  # end
 
-  phrase "4" do
-    note {start 0.0; duration D_8; volume REST; pitch C4; func_table 1}
-    note {start D_8; duration D_8; volume VOL; pitch E4; func_table 1}
-    note {start D_4; duration D_8; volume VOL; pitch F4; func_table 1}
-    note {start D_4 + D_8; duration D_8; volume VOL; pitch G4; func_table 1}
-  end
+  # phrase "4" do
+  #   note {start 0.0; duration D_8; volume REST; pitch C4; func_table 1}
+  #   note {start D_8; duration D_8; volume VOL; pitch E4; func_table 1}
+  #   note {start D_4; duration D_8; volume VOL; pitch F4; func_table 1}
+  #   note {start D_4 + D_8; duration D_8; volume VOL; pitch G4; func_table 1}
+  # end
 
-  phrase "5" do
-    note {start legato_start(0.0, (2.0 * D_1)); duration D_8; volume VOL; pitch E4; func_table 1}
-    note {start D_8; duration D_8; volume VOL; pitch F4; func_table 1}
-    note {start D_4; duration D_8; volume VOL; pitch G4; func_table 1}
-    note {start D_4 + D_8; duration D_8; volume REST; pitch C4; func_table 1}
-  end
+  # phrase "5" do
+  #   note {start legato_start(0.0, (2.0 * D_1)); duration D_8; volume VOL; pitch E4; func_table 1}
+  #   note {start D_8; duration D_8; volume VOL; pitch F4; func_table 1}
+  #   note {start D_4; duration D_8; volume VOL; pitch G4; func_table 1}
+  #   note {start D_4 + D_8; duration D_8; volume REST; pitch C4; func_table 1}
+  # end
 
-  phrase "6" do
-    note {start legato_start(0.0, D_1); duration legato_duration(D_1); volume VOL; pitch C5; func_table 1}
-    note {start legato_start(D_1, D_1); duration legato_duration(D_1); volume VOL; pitch C5; func_table 1}
-  end
+  # phrase "6" do
+  #   note {start legato_start(0.0, D_1); duration legato_duration(D_1); volume VOL; pitch C5; func_table 1}
+  #   note {start legato_start(D_1, D_1); duration legato_duration(D_1); volume VOL; pitch C5; func_table 1}
+  # end
 
-  phrase "7" do
-    note {start 0.0; duration D_4; volume REST; pitch C4; func_table 1}
-    note {start D_4; duration D_4; volume REST; pitch C4; func_table 1}
-    note {start D_2; duration D_4; volume REST; pitch C4; func_table 1}
-    note {start D_2 + D_4; duration D_8; volume REST; pitch C4; func_table 1}
-    note {start D_2 + D_4 + D_8; duration D_16; volume VOL; pitch C4; func_table 1}
-    note {start D_2 + D_4 + D_8 + D_16; duration D_16; volume VOL; pitch C4; func_table 1}
-    note {start D_1; duration D_8; volume REST; pitch C4; func_table 1}
-    note {start D_1 + D_8; duration D_4; volume REST; pitch C4; func_table 1}
-    note {start D_1 + D_4 + D_8; duration D_4; volume REST; pitch C4; func_table 1}
-    note {start D_1 + D_2 + D_8; duration D_4; volume REST; pitch C4; func_table 1}
-    note {start D_1 + D_2 + D_4 + D_8; duration D_4; volume REST; pitch C4; func_table 1}
-  end
+  # phrase "7" do
+  #   note {start 0.0; duration D_4; volume REST; pitch C4; func_table 1}
+  #   note {start D_4; duration D_4; volume REST; pitch C4; func_table 1}
+  #   note {start D_2; duration D_4; volume REST; pitch C4; func_table 1}
+  #   note {start D_2 + D_4; duration D_8; volume REST; pitch C4; func_table 1}
+  #   note {start D_2 + D_4 + D_8; duration D_16; volume VOL; pitch C4; func_table 1}
+  #   note {start D_2 + D_4 + D_8 + D_16; duration D_16; volume VOL; pitch C4; func_table 1}
+  #   note {start D_1; duration D_8; volume REST; pitch C4; func_table 1}
+  #   note {start D_1 + D_8; duration D_4; volume REST; pitch C4; func_table 1}
+  #   note {start D_1 + D_4 + D_8; duration D_4; volume REST; pitch C4; func_table 1}
+  #   note {start D_1 + D_2 + D_8; duration D_4; volume REST; pitch C4; func_table 1}
+  #   note {start D_1 + D_2 + D_4 + D_8; duration D_4; volume REST; pitch C4; func_table 1}
+  # end
 
-  phrase "8" do
-    note {start 0.0; duration D_1 + D_2; volume VOL; pitch G4; func_table 1}
-    note {start legato_start(D_1 + D_2, D_1); duration legato_duration(D_1); volume VOL; pitch F4; func_table 1}
-    note {start legato_start((2.0 * D_1) + D_2, D_1); duration legato_duration(D_1); volume VOL; pitch F4; func_table 1}
-  end
+  # phrase "8" do
+  #   note {start 0.0; duration D_1 + D_2; volume VOL; pitch G4; func_table 1}
+  #   note {start legato_start(D_1 + D_2, D_1); duration legato_duration(D_1); volume VOL; pitch F4; func_table 1}
+  #   note {start legato_start((2.0 * D_1) + D_2, D_1); duration legato_duration(D_1); volume VOL; pitch F4; func_table 1}
+  # end
 
-  phrase "9" do
-    note {start 0.0; duration D_16; volume VOL; pitch B4; func_table 1}
-    note {start D_16; duration D_16; volume VOL; pitch G4; func_table 1}
-    note {start D_8; duration D_8; volume REST; pitch C4; func_table 1}
-    note {start D_4; duration D_4; volume REST; pitch C4; func_table 1}
-    note {start D_2; duration D_4; volume REST; pitch C4; func_table 1}
-    note {start D_2 + D_4; duration D_4; volume REST; pitch C4; func_table 1}
-  end
+  # phrase "9" do
+  #   note {start 0.0; duration D_16; volume VOL; pitch B4; func_table 1}
+  #   note {start D_16; duration D_16; volume VOL; pitch G4; func_table 1}
+  #   note {start D_8; duration D_8; volume REST; pitch C4; func_table 1}
+  #   note {start D_4; duration D_4; volume REST; pitch C4; func_table 1}
+  #   note {start D_2; duration D_4; volume REST; pitch C4; func_table 1}
+  #   note {start D_2 + D_4; duration D_4; volume REST; pitch C4; func_table 1}
+  # end
 
-  phrase "10" do
-    note {start 0.0; duration D_16; volume VOL; pitch B4; func_table 1}
-    note {start D_16; duration D_16; volume VOL; pitch G4; func_table 1}
-  end
+  # phrase "10" do
+  #   note {start 0.0; duration D_16; volume VOL; pitch B4; func_table 1}
+  #   note {start D_16; duration D_16; volume VOL; pitch G4; func_table 1}
+  # end
 
-  phrase "11" do
-    note {start 0.0; duration D_16; volume VOL; pitch F4; func_table 1}
-    note {start D_16; duration D_16; volume VOL; pitch G4; func_table 1}
-    note {start D_8; duration D_16; volume VOL; pitch B4; func_table 1}
-    note {start D_8 + D_16; duration D_16; volume VOL; pitch G4; func_table 1}
-    note {start D_4; duration D_16; volume VOL; pitch B4; func_table 1}
-    note {start D_4 + D_16; duration D_16; volume VOL; pitch G4; func_table 1}
-  end
+  # phrase "11" do
+  #   note {start 0.0; duration D_16; volume VOL; pitch F4; func_table 1}
+  #   note {start D_16; duration D_16; volume VOL; pitch G4; func_table 1}
+  #   note {start D_8; duration D_16; volume VOL; pitch B4; func_table 1}
+  #   note {start D_8 + D_16; duration D_16; volume VOL; pitch G4; func_table 1}
+  #   note {start D_4; duration D_16; volume VOL; pitch B4; func_table 1}
+  #   note {start D_4 + D_16; duration D_16; volume VOL; pitch G4; func_table 1}
+  # end
 
-  phrase "12" do
-    note {start 0.0; duration D_8; volume VOL; pitch F4; func_table 1}
-    note {start D_8; duration D_8; volume VOL; pitch G4; func_table 1}
-    note {start D_4; duration D_1; volume VOL; pitch B4; func_table 1}
-    note {start D_4 + D_1; duration D_4; volume VOL; pitch C5; func_table 1}
-  end
+  # phrase "12" do
+  #   note {start 0.0; duration D_8; volume VOL; pitch F4; func_table 1}
+  #   note {start D_8; duration D_8; volume VOL; pitch G4; func_table 1}
+  #   note {start D_4; duration D_1; volume VOL; pitch B4; func_table 1}
+  #   note {start D_4 + D_1; duration D_4; volume VOL; pitch C5; func_table 1}
+  # end
 
-  phrase "13" do
-    note {start 0.0; duration D_16; volume VOL; pitch B4; func_table 1}
-    note {start D_16; duration D_16 + D_32; volume VOL; pitch G4; func_table 1}
-    note {start D_8 + D_32; duration D_16; volume VOL; pitch G4; func_table 1}
-    note {start D_8 + D_16 + D_32; duration D_16; volume VOL; pitch F4; func_table 1}
-    note {start D_4 + D_32; duration D_8; volume VOL; pitch G4; func_table 1}
-    note {start D_4 + D_8 + D_32; duration D_8 + D_16; volume REST; pitch C4; func_table 1}
-    note {start legato_start(D_2 + D_16 + D_32, D_16); duration legato_duration(D_16); volume VOL; pitch G4; func_table 1}
-    note {start legato_start(D_2 + D_8 + D_32, D_2 + D_4); duration legato_duration(D_2 + D_4); volume VOL; pitch G4; func_table 1}
-  end
+  # phrase "13" do
+  #   note {start 0.0; duration D_16; volume VOL; pitch B4; func_table 1}
+  #   note {start D_16; duration D_16 + D_32; volume VOL; pitch G4; func_table 1}
+  #   note {start D_8 + D_32; duration D_16; volume VOL; pitch G4; func_table 1}
+  #   note {start D_8 + D_16 + D_32; duration D_16; volume VOL; pitch F4; func_table 1}
+  #   note {start D_4 + D_32; duration D_8; volume VOL; pitch G4; func_table 1}
+  #   note {start D_4 + D_8 + D_32; duration D_8 + D_16; volume REST; pitch C4; func_table 1}
+  #   note {start legato_start(D_2 + D_16 + D_32, D_16); duration legato_duration(D_16); volume VOL; pitch G4; func_table 1}
+  #   note {start legato_start(D_2 + D_8 + D_32, D_2 + D_4); duration legato_duration(D_2 + D_4); volume VOL; pitch G4; func_table 1}
+  # end
 
-  phrase "14" do
-    note {start 0.0; duration D_1; volume VOL; pitch C5; func_table 1}
-    note {start D_1; duration D_1; volume VOL; pitch B4; func_table 1}
-    note {start 2.0 * D_1; duration D_1; volume VOL; pitch G4; func_table 1}
-    note {start 3.0 * D_1; duration D_1; volume VOL; pitch F4S; func_table 1}
-  end
+  # phrase "14" do
+  #   note {start 0.0; duration D_1; volume VOL; pitch C5; func_table 1}
+  #   note {start D_1; duration D_1; volume VOL; pitch B4; func_table 1}
+  #   note {start 2.0 * D_1; duration D_1; volume VOL; pitch G4; func_table 1}
+  #   note {start 3.0 * D_1; duration D_1; volume VOL; pitch F4S; func_table 1}
+  # end
 
-  phrase "15" do
-    note {start 0.0; duration D_16; volume VOL; pitch G4; func_table 1}
-    note {start D_16; duration D_8 + D_16; volume REST; pitch C4; func_table 1}
-    note {start D_4; duration D_4; volume REST; pitch C4; func_table 1}
-    note {start D_2; duration D_4; volume REST; pitch C4; func_table 1}
-    note {start D_2 + D_4; duration D_4; volume REST; pitch C4; func_table 1}
-  end
+  # phrase "15" do
+  #   note {start 0.0; duration D_16; volume VOL; pitch G4; func_table 1}
+  #   note {start D_16; duration D_8 + D_16; volume REST; pitch C4; func_table 1}
+  #   note {start D_4; duration D_4; volume REST; pitch C4; func_table 1}
+  #   note {start D_2; duration D_4; volume REST; pitch C4; func_table 1}
+  #   note {start D_2 + D_4; duration D_4; volume REST; pitch C4; func_table 1}
+  # end
 
-  phrase "16" do
-    note {start 0.0; duration D_16; volume VOL; pitch G4; func_table 1}
-    note {start D_16; duration D_16; volume VOL; pitch B4; func_table 1}
-    note {start D_8; duration D_16; volume VOL; pitch C5; func_table 1}
-    note {start D_8 + D_16; duration D_16; volume VOL; pitch B4; func_table 1}
-  end
+  # phrase "16" do
+  #   note {start 0.0; duration D_16; volume VOL; pitch G4; func_table 1}
+  #   note {start D_16; duration D_16; volume VOL; pitch B4; func_table 1}
+  #   note {start D_8; duration D_16; volume VOL; pitch C5; func_table 1}
+  #   note {start D_8 + D_16; duration D_16; volume VOL; pitch B4; func_table 1}
+  # end
 
-  phrase "17" do
-    note {start 0.0; duration D_16; volume VOL; pitch B4; func_table 1}
-    note {start D_16; duration D_16; volume VOL; pitch C5; func_table 1}
-    note {start D_8; duration D_16; volume VOL; pitch B4; func_table 1}
-    note {start D_8 + D_16; duration D_16; volume VOL; pitch C5; func_table 1}
-    note {start D_4; duration D_16; volume VOL; pitch B4; func_table 1}
-    note {start D_4 + D_16; duration D_16; volume REST; pitch C4; func_table 1}
-  end
+  # phrase "17" do
+  #   note {start 0.0; duration D_16; volume VOL; pitch B4; func_table 1}
+  #   note {start D_16; duration D_16; volume VOL; pitch C5; func_table 1}
+  #   note {start D_8; duration D_16; volume VOL; pitch B4; func_table 1}
+  #   note {start D_8 + D_16; duration D_16; volume VOL; pitch C5; func_table 1}
+  #   note {start D_4; duration D_16; volume VOL; pitch B4; func_table 1}
+  #   note {start D_4 + D_16; duration D_16; volume REST; pitch C4; func_table 1}
+  # end
 
-  phrase "18" do
-    note {start 0.0; duration D_16; volume VOL; pitch E4; func_table 1}
-    note {start D_16; duration D_16; volume VOL; pitch F4S; func_table 1}
-    note {start D_8; duration D_16; volume VOL; pitch E4; func_table 1}
-    note {start D_8 + D_16; duration D_16; volume VOL; pitch F4S; func_table 1}
-    note {start D_4; duration D_8 + D_16; volume VOL; pitch E4; func_table 1}
-    note {start D_4 + D_8 + D_16; duration D_16; volume VOL; pitch E4; func_table 1}
-  end
+  # phrase "18" do
+  #   note {start 0.0; duration D_16; volume VOL; pitch E4; func_table 1}
+  #   note {start D_16; duration D_16; volume VOL; pitch F4S; func_table 1}
+  #   note {start D_8; duration D_16; volume VOL; pitch E4; func_table 1}
+  #   note {start D_8 + D_16; duration D_16; volume VOL; pitch F4S; func_table 1}
+  #   note {start D_4; duration D_8 + D_16; volume VOL; pitch E4; func_table 1}
+  #   note {start D_4 + D_8 + D_16; duration D_16; volume VOL; pitch E4; func_table 1}
+  # end
 
-  phrase "19" do
-    note {start 0.0; duration D_4 + D_8; volume REST; pitch E4; func_table 1}
-    note {start D_4 + D_8; duration D_4 + D_8; volume VOL; pitch G5; func_table 1}
-  end
+  # phrase "19" do
+  #   note {start 0.0; duration D_4 + D_8; volume REST; pitch E4; func_table 1}
+  #   note {start D_4 + D_8; duration D_4 + D_8; volume VOL; pitch G5; func_table 1}
+  # end
 
-  phrase "20" do
-    note {start 0.0; duration D_16; volume VOL; pitch E4; func_table 1}
-    note {start D_16; duration D_16; volume VOL; pitch F4S; func_table 1}
-    note {start D_8; duration D_16; volume VOL; pitch E4; func_table 1}
-    note {start D_8 + D_16; duration D_16; volume VOL; pitch F4S; func_table 1}
-    note {start D_4; duration D_8 + D_16; volume VOL; pitch G3; func_table 1}
-    note {start D_4 + D_8 + D_16; duration D_16; volume VOL; pitch E4; func_table 1}
-    note {start D_2; duration D_16; volume VOL; pitch F4S; func_table 1}
-    note {start D_2 + D_16; duration D_16; volume VOL; pitch E4; func_table 1}
-    note {start D_2 + D_8; duration D_16; volume VOL; pitch F4S; func_table 1}
-    note {start D_2 + D_8 + D_16; duration D_16; volume VOL; pitch E4; func_table 1}
-  end
+  # phrase "20" do
+  #   note {start 0.0; duration D_16; volume VOL; pitch E4; func_table 1}
+  #   note {start D_16; duration D_16; volume VOL; pitch F4S; func_table 1}
+  #   note {start D_8; duration D_16; volume VOL; pitch E4; func_table 1}
+  #   note {start D_8 + D_16; duration D_16; volume VOL; pitch F4S; func_table 1}
+  #   note {start D_4; duration D_8 + D_16; volume VOL; pitch G3; func_table 1}
+  #   note {start D_4 + D_8 + D_16; duration D_16; volume VOL; pitch E4; func_table 1}
+  #   note {start D_2; duration D_16; volume VOL; pitch F4S; func_table 1}
+  #   note {start D_2 + D_16; duration D_16; volume VOL; pitch E4; func_table 1}
+  #   note {start D_2 + D_8; duration D_16; volume VOL; pitch F4S; func_table 1}
+  #   note {start D_2 + D_8 + D_16; duration D_16; volume VOL; pitch E4; func_table 1}
+  # end
 
-  phrase "21" do
-    note {start 0.0; duration D_2 + D_4; volume VOL; pitch F4S; func_table 1}
-  end
+  # phrase "21" do
+  #   note {start 0.0; duration D_2 + D_4; volume VOL; pitch F4S; func_table 1}
+  # end
 
-  phrase "22" do
-    note {start 0.0; duration D_4 + D_8; volume VOL; pitch E4; func_table 1}
-    note {start D_4 + D_8; duration D_4 + D_8; volume VOL; pitch E4; func_table 1}
-    note {start 2.0 * (D_4 + D_8); duration D_4 + D_8; volume VOL; pitch E4; func_table 1}
-    note {start 3.0 * (D_4 + D_8); duration D_4 + D_8; volume VOL; pitch E4; func_table 1}
-    note {start 4.0 * (D_4 + D_8); duration D_4 + D_8; volume VOL; pitch E4; func_table 1}
-    note {start 5.0 * (D_4 + D_8); duration D_4 + D_8; volume VOL; pitch F4S; func_table 1}
-    note {start 6.0 * (D_4 + D_8); duration D_4 + D_8; volume VOL; pitch G4; func_table 1}
-    note {start 7.0 * (D_4 + D_8); duration D_4 + D_8; volume VOL; pitch A4; func_table 1}
-    note {start 8.0 * (D_4 + D_8); duration D_8; volume VOL; pitch B4; func_table 1}
-  end
+  # phrase "22" do
+  #   note {start 0.0; duration D_4 + D_8; volume VOL; pitch E4; func_table 1}
+  #   note {start D_4 + D_8; duration D_4 + D_8; volume VOL; pitch E4; func_table 1}
+  #   note {start 2.0 * (D_4 + D_8); duration D_4 + D_8; volume VOL; pitch E4; func_table 1}
+  #   note {start 3.0 * (D_4 + D_8); duration D_4 + D_8; volume VOL; pitch E4; func_table 1}
+  #   note {start 4.0 * (D_4 + D_8); duration D_4 + D_8; volume VOL; pitch E4; func_table 1}
+  #   note {start 5.0 * (D_4 + D_8); duration D_4 + D_8; volume VOL; pitch F4S; func_table 1}
+  #   note {start 6.0 * (D_4 + D_8); duration D_4 + D_8; volume VOL; pitch G4; func_table 1}
+  #   note {start 7.0 * (D_4 + D_8); duration D_4 + D_8; volume VOL; pitch A4; func_table 1}
+  #   note {start 8.0 * (D_4 + D_8); duration D_8; volume VOL; pitch B4; func_table 1}
+  # end
 
-  phrase "23" do
-    note {start 0.0; duration D_8; volume VOL; pitch E4; func_table 1}
-    note {start D_8; duration D_4 + D_8; volume VOL; pitch F4S; func_table 1}
-    note {start D_2; duration D_4 + D_8; volume VOL; pitch F4S; func_table 1}
-    note {start D_2 + D_4 + D_8; duration D_4 + D_8; volume VOL; pitch F4S; func_table 1}
-    note {start D_2 + (2.0 * (D_4 + D_8)); duration D_4 + D_8; volume VOL; pitch F4S; func_table 1}
-    note {start D_2 + (3.0 * (D_4 + D_8)); duration D_4 + D_8; volume VOL; pitch F4S; func_table 1}
-    note {start D_2 + (4.0 * (D_4 + D_8)); duration D_4 + D_8; volume VOL; pitch G4; func_table 1}
-    note {start D_2 + (5.0 * (D_4 + D_8)); duration D_4 + D_8; volume VOL; pitch A4; func_table 1}
-    note {start D_2 + (6.0 * (D_4 + D_8)); duration D_4; volume VOL; pitch B4; func_table 1}
-  end
+  # phrase "23" do
+  #   note {start 0.0; duration D_8; volume VOL; pitch E4; func_table 1}
+  #   note {start D_8; duration D_4 + D_8; volume VOL; pitch F4S; func_table 1}
+  #   note {start D_2; duration D_4 + D_8; volume VOL; pitch F4S; func_table 1}
+  #   note {start D_2 + D_4 + D_8; duration D_4 + D_8; volume VOL; pitch F4S; func_table 1}
+  #   note {start D_2 + (2.0 * (D_4 + D_8)); duration D_4 + D_8; volume VOL; pitch F4S; func_table 1}
+  #   note {start D_2 + (3.0 * (D_4 + D_8)); duration D_4 + D_8; volume VOL; pitch F4S; func_table 1}
+  #   note {start D_2 + (4.0 * (D_4 + D_8)); duration D_4 + D_8; volume VOL; pitch G4; func_table 1}
+  #   note {start D_2 + (5.0 * (D_4 + D_8)); duration D_4 + D_8; volume VOL; pitch A4; func_table 1}
+  #   note {start D_2 + (6.0 * (D_4 + D_8)); duration D_4; volume VOL; pitch B4; func_table 1}
+  # end
 
-  phrase "24" do
-    note {start 0.0; duration D_8; volume VOL; pitch E4; func_table 1}
-    note {start D_8; duration D_8; volume VOL; pitch F4S; func_table 1}
-    note {start D_4; duration D_4 + D_8; volume VOL; pitch G4; func_table 1}
-    note {start D_2 + D_8; duration D_4 + D_8; volume VOL; pitch G4; func_table 1}
-    note {start D_1; duration D_4 + D_8; volume VOL; pitch G4; func_table 1}
-    note {start D_1 + D_4 + D_8; duration D_4 + D_8; volume VOL; pitch G4; func_table 1}
-    note {start D_1 + (2.0 * (D_4 + D_8)); duration D_4 + D_8; volume VOL; pitch G4; func_table 1}
-    note {start D_1 + (3.0 * (D_4 + D_8)); duration D_4 + D_8; volume VOL; pitch A4; func_table 1}
-    note {start D_1 + (4.0 * (D_4 + D_8)); duration D_8; volume VOL; pitch B4; func_table 1}
-  end
+  # phrase "24" do
+  #   note {start 0.0; duration D_8; volume VOL; pitch E4; func_table 1}
+  #   note {start D_8; duration D_8; volume VOL; pitch F4S; func_table 1}
+  #   note {start D_4; duration D_4 + D_8; volume VOL; pitch G4; func_table 1}
+  #   note {start D_2 + D_8; duration D_4 + D_8; volume VOL; pitch G4; func_table 1}
+  #   note {start D_1; duration D_4 + D_8; volume VOL; pitch G4; func_table 1}
+  #   note {start D_1 + D_4 + D_8; duration D_4 + D_8; volume VOL; pitch G4; func_table 1}
+  #   note {start D_1 + (2.0 * (D_4 + D_8)); duration D_4 + D_8; volume VOL; pitch G4; func_table 1}
+  #   note {start D_1 + (3.0 * (D_4 + D_8)); duration D_4 + D_8; volume VOL; pitch A4; func_table 1}
+  #   note {start D_1 + (4.0 * (D_4 + D_8)); duration D_8; volume VOL; pitch B4; func_table 1}
+  # end
 
-  phrase "25" do
-    note {start 0.0; duration D_8; volume VOL; pitch E4; func_table 1}
-    note {start D_8; duration D_8; volume VOL; pitch F4S; func_table 1}
-    note {start D_4; duration D_4 + D_8; volume VOL; pitch G4; func_table 1}
-    note {start D_2 + D_8; duration D_4 + D_8; volume VOL; pitch A4; func_table 1}
-    note {start D_1; duration D_4 + D_8; volume VOL; pitch A4; func_table 1}
-    note {start D_1 + D_4 + D_8; duration D_4 + D_8; volume VOL; pitch A4; func_table 1}
-    note {start D_1 + (2.0 * (D_4 + D_8)); duration D_4 + D_8; volume VOL; pitch A4; func_table 1}
-    note {start D_1 + (3.0 * (D_4 + D_8)); duration D_4 + D_8; volume VOL; pitch A4; func_table 1}
-    note {start D_1 + (4.0 * (D_4 + D_8)); duration D_8; volume VOL; pitch B4; func_table 1}
-  end
+  # phrase "25" do
+  #   note {start 0.0; duration D_8; volume VOL; pitch E4; func_table 1}
+  #   note {start D_8; duration D_8; volume VOL; pitch F4S; func_table 1}
+  #   note {start D_4; duration D_4 + D_8; volume VOL; pitch G4; func_table 1}
+  #   note {start D_2 + D_8; duration D_4 + D_8; volume VOL; pitch A4; func_table 1}
+  #   note {start D_1; duration D_4 + D_8; volume VOL; pitch A4; func_table 1}
+  #   note {start D_1 + D_4 + D_8; duration D_4 + D_8; volume VOL; pitch A4; func_table 1}
+  #   note {start D_1 + (2.0 * (D_4 + D_8)); duration D_4 + D_8; volume VOL; pitch A4; func_table 1}
+  #   note {start D_1 + (3.0 * (D_4 + D_8)); duration D_4 + D_8; volume VOL; pitch A4; func_table 1}
+  #   note {start D_1 + (4.0 * (D_4 + D_8)); duration D_8; volume VOL; pitch B4; func_table 1}
+  # end
 
-  phrase "26" do
-    note {start 0.0; duration D_8; volume VOL; pitch E4; func_table 1}
-    note {start D_8; duration D_8; volume VOL; pitch F4S; func_table 1}
-    note {start D_4; duration D_8; volume VOL; pitch G4; func_table 1}
-    note {start D_4 + D_8; duration D_8; volume VOL; pitch A4; func_table 1}
-    note {start D_2; duration D_4 + D_8; volume VOL; pitch B4; func_table 1}
-    note {start D_2 + D_4 + D_8; duration D_4 + D_8; volume VOL; pitch B4; func_table 1}
-    note {start D_1 + D_4; duration D_4 + D_8; volume VOL; pitch B4; func_table 1}
-    note {start D_1 + D_2 + D_8; duration D_4 + D_8; volume VOL; pitch B4; func_table 1}
-    note {start 2.0 * D_1; duration D_4 + D_8; volume VOL; pitch B4; func_table 1}
-  end
+  # phrase "26" do
+  #   note {start 0.0; duration D_8; volume VOL; pitch E4; func_table 1}
+  #   note {start D_8; duration D_8; volume VOL; pitch F4S; func_table 1}
+  #   note {start D_4; duration D_8; volume VOL; pitch G4; func_table 1}
+  #   note {start D_4 + D_8; duration D_8; volume VOL; pitch A4; func_table 1}
+  #   note {start D_2; duration D_4 + D_8; volume VOL; pitch B4; func_table 1}
+  #   note {start D_2 + D_4 + D_8; duration D_4 + D_8; volume VOL; pitch B4; func_table 1}
+  #   note {start D_1 + D_4; duration D_4 + D_8; volume VOL; pitch B4; func_table 1}
+  #   note {start D_1 + D_2 + D_8; duration D_4 + D_8; volume VOL; pitch B4; func_table 1}
+  #   note {start 2.0 * D_1; duration D_4 + D_8; volume VOL; pitch B4; func_table 1}
+  # end
 
-  phrase "27" do
-    note {start 0.0; duration D_16; volume VOL; pitch E4; func_table 1}
-    note {start D_16; duration D_16; volume VOL; pitch F4S; func_table 1}
-    note {start D_8; duration D_16; volume VOL; pitch E4; func_table 1}
-    note {start D_8 + D_16; duration D_16; volume VOL; pitch F4S; func_table 1}
-    note {start D_4; duration D_8; volume VOL; pitch G4; func_table 1}
-    note {start D_4 + D_8; duration D_16; volume VOL; pitch E4; func_table 1}
-    note {start D_4 + D_8 + D_16; duration D_16; volume VOL; pitch G4; func_table 1}
-    note {start D_2; duration D_16; volume VOL; pitch F4S; func_table 1}
-    note {start D_2 + D_16; duration D_16; volume VOL; pitch E4; func_table 1}
-    note {start D_2 + D_8; duration D_16; volume VOL; pitch F4S; func_table 1}
-    note {start D_2 + D_8 + D_16; duration D_16; volume VOL; pitch E4; func_table 1}
-  end
+  # phrase "27" do
+  #   note {start 0.0; duration D_16; volume VOL; pitch E4; func_table 1}
+  #   note {start D_16; duration D_16; volume VOL; pitch F4S; func_table 1}
+  #   note {start D_8; duration D_16; volume VOL; pitch E4; func_table 1}
+  #   note {start D_8 + D_16; duration D_16; volume VOL; pitch F4S; func_table 1}
+  #   note {start D_4; duration D_8; volume VOL; pitch G4; func_table 1}
+  #   note {start D_4 + D_8; duration D_16; volume VOL; pitch E4; func_table 1}
+  #   note {start D_4 + D_8 + D_16; duration D_16; volume VOL; pitch G4; func_table 1}
+  #   note {start D_2; duration D_16; volume VOL; pitch F4S; func_table 1}
+  #   note {start D_2 + D_16; duration D_16; volume VOL; pitch E4; func_table 1}
+  #   note {start D_2 + D_8; duration D_16; volume VOL; pitch F4S; func_table 1}
+  #   note {start D_2 + D_8 + D_16; duration D_16; volume VOL; pitch E4; func_table 1}
+  # end
 
-  phrase "28" do
-    note {start 0.0; duration D_16; volume VOL; pitch E4; func_table 1}
-    note {start D_16; duration D_16; volume VOL; pitch F4S; func_table 1}
-    note {start D_8; duration D_16; volume VOL; pitch E4; func_table 1}
-    note {start D_8 + D_16; duration D_16; volume VOL; pitch F4S; func_table 1}
-    note {start D_4; duration D_8 + D_16; volume VOL; pitch E4; func_table 1}
-    note {start D_4 + D_8 + D_16; duration D_16; volume VOL; pitch E4; func_table 1}
-  end
+  # phrase "28" do
+  #   note {start 0.0; duration D_16; volume VOL; pitch E4; func_table 1}
+  #   note {start D_16; duration D_16; volume VOL; pitch F4S; func_table 1}
+  #   note {start D_8; duration D_16; volume VOL; pitch E4; func_table 1}
+  #   note {start D_8 + D_16; duration D_16; volume VOL; pitch F4S; func_table 1}
+  #   note {start D_4; duration D_8 + D_16; volume VOL; pitch E4; func_table 1}
+  #   note {start D_4 + D_8 + D_16; duration D_16; volume VOL; pitch E4; func_table 1}
+  # end
 
-  phrase "29" do
-    note {start 0.0; duration D_2 + D_4; volume VOL; pitch E4; func_table 1}
-    note {start D_2 + D_4; duration D_2 + D_4; volume VOL; pitch G4; func_table 1}
-    note {start D_1 + D_2; duration D_2 + D_4; volume VOL; pitch C5; func_table 1}
-  end
+  # phrase "29" do
+  #   note {start 0.0; duration D_2 + D_4; volume VOL; pitch E4; func_table 1}
+  #   note {start D_2 + D_4; duration D_2 + D_4; volume VOL; pitch G4; func_table 1}
+  #   note {start D_1 + D_2; duration D_2 + D_4; volume VOL; pitch C5; func_table 1}
+  # end
 
-  phrase "30" do
-    note {start 0.0; duration D_1 + D_2; volume VOL; pitch C5; func_table 1}
-  end
+  # phrase "30" do
+  #   note {start 0.0; duration D_1 + D_2; volume VOL; pitch C5; func_table 1}
+  # end
 
-  phrase "31" do
-    note {start 0.0; duration D_16; volume VOL; pitch G4; func_table 1}
-    note {start D_16; duration D_16; volume VOL; pitch F4; func_table 1}
-    note {start D_8; duration D_16; volume VOL; pitch G4; func_table 1}
-    note {start D_8 + D_16; duration D_16; volume VOL; pitch B4; func_table 1}
-    note {start D_4; duration D_16; volume VOL; pitch G4; func_table 1}
-    note {start D_4 + D_16; duration D_16; volume VOL; pitch B4; func_table 1}
-  end
+  # phrase "31" do
+  #   note {start 0.0; duration D_16; volume VOL; pitch G4; func_table 1}
+  #   note {start D_16; duration D_16; volume VOL; pitch F4; func_table 1}
+  #   note {start D_8; duration D_16; volume VOL; pitch G4; func_table 1}
+  #   note {start D_8 + D_16; duration D_16; volume VOL; pitch B4; func_table 1}
+  #   note {start D_4; duration D_16; volume VOL; pitch G4; func_table 1}
+  #   note {start D_4 + D_16; duration D_16; volume VOL; pitch B4; func_table 1}
+  # end
 
-  phrase "32" do
-    note {start 0.0; duration D_16; volume VOL; pitch F4; func_table 1}
-    note {start D_16; duration D_16; volume VOL; pitch G4; func_table 1}
-    note {start D_8; duration D_16; volume VOL; pitch F4; func_table 1}
-    note {start D_8 + D_16; duration D_16; volume VOL; pitch G4; func_table 1}
-    note {start D_4; duration D_16; volume VOL; pitch B4; func_table 1}
-    note {start legato_start(D_4 + D_16, D_16); duration legato_duration(D_16); volume VOL; pitch F4; func_table 1}
-    note {start legato_start(D_4 + D_8, D_2 + D_4); duration legato_duration(D_2 + D_4); volume VOL; pitch F4; func_table 1}
-    note {start D_1 + D_8; duration D_4 + D_8; volume VOL; pitch G4; func_table 1}
-  end
+  # phrase "32" do
+  #   note {start 0.0; duration D_16; volume VOL; pitch F4; func_table 1}
+  #   note {start D_16; duration D_16; volume VOL; pitch G4; func_table 1}
+  #   note {start D_8; duration D_16; volume VOL; pitch F4; func_table 1}
+  #   note {start D_8 + D_16; duration D_16; volume VOL; pitch G4; func_table 1}
+  #   note {start D_4; duration D_16; volume VOL; pitch B4; func_table 1}
+  #   note {start legato_start(D_4 + D_16, D_16); duration legato_duration(D_16); volume VOL; pitch F4; func_table 1}
+  #   note {start legato_start(D_4 + D_8, D_2 + D_4); duration legato_duration(D_2 + D_4); volume VOL; pitch F4; func_table 1}
+  #   note {start D_1 + D_8; duration D_4 + D_8; volume VOL; pitch G4; func_table 1}
+  # end
 
-  phrase "33" do
-    note {start 0.0; duration D_16; volume VOL; pitch G4; func_table 1}
-    note {start D_16; duration D_16; volume VOL; pitch F4; func_table 1}
-    note {start D_8; duration D_8; volume REST; pitch C4; func_table 1}
-  end
+  # phrase "33" do
+  #   note {start 0.0; duration D_16; volume VOL; pitch G4; func_table 1}
+  #   note {start D_16; duration D_16; volume VOL; pitch F4; func_table 1}
+  #   note {start D_8; duration D_8; volume REST; pitch C4; func_table 1}
+  # end
 
-  phrase "34" do
-    note {start 0.0; duration D_16; volume VOL; pitch G4; func_table 1}
-    note {start D_16; duration D_16; volume VOL; pitch F4; func_table 1}
-  end
+  # phrase "34" do
+  #   note {start 0.0; duration D_16; volume VOL; pitch G4; func_table 1}
+  #   note {start D_16; duration D_16; volume VOL; pitch F4; func_table 1}
+  # end
 
-  phrase "35" do
-    note {start 0.0; duration D_16; volume VOL; pitch F4; func_table 1}
-    note {start D_16; duration D_16; volume VOL; pitch G4; func_table 1}
-    note {start D_8; duration D_16; volume VOL; pitch B4; func_table 1}
-    note {start D_8 + D_16; duration D_16; volume VOL; pitch G4; func_table 1}
-    note {start D_4; duration D_16; volume VOL; pitch B4; func_table 1}
-    note {start D_4 + D_16; duration D_16; volume VOL; pitch G4; func_table 1}
-    note {start D_4 + D_8; duration D_16; volume VOL; pitch B4; func_table 1}
-    note {start D_4 + D_8 + D_16; duration D_16; volume VOL; pitch G4; func_table 1}
-    note {start D_2; duration D_16; volume VOL; pitch B4; func_table 1}
-    note {start D_2 + D_16; duration D_16; volume VOL; pitch G4; func_table 1}
-    note {start D_2 + D_8; duration D_8; volume REST; pitch C4; func_table 1}
-    note {start D_2 + D_4; duration D_4; volume REST; pitch C4; func_table 1}
-    note {start D_1; duration D_4; volume REST; pitch C4; func_table 1}
-    note {start D_1 + D_4; duration D_4; volume REST; pitch C4; func_table 1}
-    note {start D_1 + D_2; duration D_4; volume VOL; pitch A4S; func_table 1}
-    note {start D_1 + D_2 + D_4; duration D_2 + D_4; volume VOL; pitch G5; func_table 1}
-    note {start (2.0 * D_1) + D_2; duration D_8; volume VOL; pitch A5; func_table 1}
-    note {start legato_start((2.0 * D_1) + D_2 + D_8, D_8); duration legato_duration(D_8); volume VOL; pitch G5; func_table 1}
-    note {start legato_start((2.0 * D_1) + D_2 + D_4, D_8); duration legato_duration(D_8); volume VOL; pitch G5; func_table 1}
-    note {start (2.0 * D_1) + D_2 + D_4 + D_8; duration D_8; volume VOL; pitch B5; func_table 1}
-    note {start 3.0 * D_1; duration D_4 + D_8; volume VOL; pitch A5; func_table 1}
-    note {start (3.0 * D_1) + D_4 + D_8; duration D_8; volume VOL; pitch G5; func_table 1}
-    note {start (3.0 * D_1) + D_2; duration D_2 + D_4; volume VOL; pitch E5; func_table 1}
-    note {start (4.0 * D_1) + D_4; duration D_8; volume VOL; pitch G5; func_table 1}
-    note {start legato_start((4.0 * D_1) + D_4 + D_8, D_8); duration legato_duration(D_8); volume VOL; pitch F5S; func_table 1}
-    note {start legato_start((4.0 * D_1) + D_2, D_2 + D_4); duration legato_duration(D_2 + D_4); volume VOL; pitch F5S; func_table 1}
-    note {start (5.0 * D_1) + D_4; duration D_4; volume REST; pitch C4; func_table 1}
-    note {start (5.0 * D_1) + D_2; duration D_4; volume REST; pitch C4; func_table 1}
-    note {start (5.0 * D_1) + D_2 + D_4; duration D_8; volume REST; pitch C4; func_table 1}
-    note {start legato_start((5.0 * D_1) + D_2 + D_4 + D_8, D_8); duration legato_duration(D_8); volume VOL; pitch E5; func_table 1}
-    note {start legato_start(6.0 * D_1, D_2); duration legato_duration(D_2); volume VOL; pitch E5; func_table 1}
-    note {start (6.0 * D_1) + D_2; duration D_1 + D_2; volume VOL; pitch F5; func_table 1}
-  end
+  # phrase "35" do
+  #   note {start 0.0; duration D_16; volume VOL; pitch F4; func_table 1}
+  #   note {start D_16; duration D_16; volume VOL; pitch G4; func_table 1}
+  #   note {start D_8; duration D_16; volume VOL; pitch B4; func_table 1}
+  #   note {start D_8 + D_16; duration D_16; volume VOL; pitch G4; func_table 1}
+  #   note {start D_4; duration D_16; volume VOL; pitch B4; func_table 1}
+  #   note {start D_4 + D_16; duration D_16; volume VOL; pitch G4; func_table 1}
+  #   note {start D_4 + D_8; duration D_16; volume VOL; pitch B4; func_table 1}
+  #   note {start D_4 + D_8 + D_16; duration D_16; volume VOL; pitch G4; func_table 1}
+  #   note {start D_2; duration D_16; volume VOL; pitch B4; func_table 1}
+  #   note {start D_2 + D_16; duration D_16; volume VOL; pitch G4; func_table 1}
+  #   note {start D_2 + D_8; duration D_8; volume REST; pitch C4; func_table 1}
+  #   note {start D_2 + D_4; duration D_4; volume REST; pitch C4; func_table 1}
+  #   note {start D_1; duration D_4; volume REST; pitch C4; func_table 1}
+  #   note {start D_1 + D_4; duration D_4; volume REST; pitch C4; func_table 1}
+  #   note {start D_1 + D_2; duration D_4; volume VOL; pitch A4S; func_table 1}
+  #   note {start D_1 + D_2 + D_4; duration D_2 + D_4; volume VOL; pitch G5; func_table 1}
+  #   note {start (2.0 * D_1) + D_2; duration D_8; volume VOL; pitch A5; func_table 1}
+  #   note {start legato_start((2.0 * D_1) + D_2 + D_8, D_8); duration legato_duration(D_8); volume VOL; pitch G5; func_table 1}
+  #   note {start legato_start((2.0 * D_1) + D_2 + D_4, D_8); duration legato_duration(D_8); volume VOL; pitch G5; func_table 1}
+  #   note {start (2.0 * D_1) + D_2 + D_4 + D_8; duration D_8; volume VOL; pitch B5; func_table 1}
+  #   note {start 3.0 * D_1; duration D_4 + D_8; volume VOL; pitch A5; func_table 1}
+  #   note {start (3.0 * D_1) + D_4 + D_8; duration D_8; volume VOL; pitch G5; func_table 1}
+  #   note {start (3.0 * D_1) + D_2; duration D_2 + D_4; volume VOL; pitch E5; func_table 1}
+  #   note {start (4.0 * D_1) + D_4; duration D_8; volume VOL; pitch G5; func_table 1}
+  #   note {start legato_start((4.0 * D_1) + D_4 + D_8, D_8); duration legato_duration(D_8); volume VOL; pitch F5S; func_table 1}
+  #   note {start legato_start((4.0 * D_1) + D_2, D_2 + D_4); duration legato_duration(D_2 + D_4); volume VOL; pitch F5S; func_table 1}
+  #   note {start (5.0 * D_1) + D_4; duration D_4; volume REST; pitch C4; func_table 1}
+  #   note {start (5.0 * D_1) + D_2; duration D_4; volume REST; pitch C4; func_table 1}
+  #   note {start (5.0 * D_1) + D_2 + D_4; duration D_8; volume REST; pitch C4; func_table 1}
+  #   note {start legato_start((5.0 * D_1) + D_2 + D_4 + D_8, D_8); duration legato_duration(D_8); volume VOL; pitch E5; func_table 1}
+  #   note {start legato_start(6.0 * D_1, D_2); duration legato_duration(D_2); volume VOL; pitch E5; func_table 1}
+  #   note {start (6.0 * D_1) + D_2; duration D_1 + D_2; volume VOL; pitch F5; func_table 1}
+  # end
 
-  phrase "36" do
-    note {start 0.0; duration D_16; volume VOL; pitch F4; func_table 1}
-    note {start D_16; duration D_16; volume VOL; pitch G4; func_table 1}
-    note {start D_8; duration D_16; volume VOL; pitch B4; func_table 1}
-    note {start D_8 + D_16; duration D_16; volume VOL; pitch G4; func_table 1}
-    note {start D_4; duration D_16; volume VOL; pitch B4; func_table 1}
-    note {start D_4 + D_16; duration D_16; volume VOL; pitch G4; func_table 1}
-  end
+  # phrase "36" do
+  #   note {start 0.0; duration D_16; volume VOL; pitch F4; func_table 1}
+  #   note {start D_16; duration D_16; volume VOL; pitch G4; func_table 1}
+  #   note {start D_8; duration D_16; volume VOL; pitch B4; func_table 1}
+  #   note {start D_8 + D_16; duration D_16; volume VOL; pitch G4; func_table 1}
+  #   note {start D_4; duration D_16; volume VOL; pitch B4; func_table 1}
+  #   note {start D_4 + D_16; duration D_16; volume VOL; pitch G4; func_table 1}
+  # end
 
-  phrase "37" do
-    note {start 0.0; duration D_16; volume VOL; pitch F4; func_table 1}
-    note {start D_16; duration D_16; volume VOL; pitch G4; func_table 1}
-  end
+  # phrase "37" do
+  #   note {start 0.0; duration D_16; volume VOL; pitch F4; func_table 1}
+  #   note {start D_16; duration D_16; volume VOL; pitch G4; func_table 1}
+  # end
 
-  phrase "38" do
-    note {start 0.0; duration D_16; volume VOL; pitch F4; func_table 1}
-    note {start D_16; duration D_16; volume VOL; pitch G4; func_table 1}
-    note {start D_8; duration D_16; volume VOL; pitch B4; func_table 1}
-  end
+  # phrase "38" do
+  #   note {start 0.0; duration D_16; volume VOL; pitch F4; func_table 1}
+  #   note {start D_16; duration D_16; volume VOL; pitch G4; func_table 1}
+  #   note {start D_8; duration D_16; volume VOL; pitch B4; func_table 1}
+  # end
 
-  phrase "39" do
-    note {start 0.0; duration D_16; volume VOL; pitch B4; func_table 1}
-    note {start D_16; duration D_16; volume VOL; pitch G4; func_table 1}
-    note {start D_8; duration D_16; volume VOL; pitch F4; func_table 1}
-    note {start D_8 + D_16; duration D_16; volume VOL; pitch G4; func_table 1}
-    note {start D_4; duration D_16; volume VOL; pitch B4; func_table 1}
-    note {start D_4 + D_16; duration D_16; volume VOL; pitch C5; func_table 1}
-  end
+  # phrase "39" do
+  #   note {start 0.0; duration D_16; volume VOL; pitch B4; func_table 1}
+  #   note {start D_16; duration D_16; volume VOL; pitch G4; func_table 1}
+  #   note {start D_8; duration D_16; volume VOL; pitch F4; func_table 1}
+  #   note {start D_8 + D_16; duration D_16; volume VOL; pitch G4; func_table 1}
+  #   note {start D_4; duration D_16; volume VOL; pitch B4; func_table 1}
+  #   note {start D_4 + D_16; duration D_16; volume VOL; pitch C5; func_table 1}
+  # end
 
-  phrase "40" do
-    note {start 0.0; duration D_16; volume VOL; pitch B4; func_table 1}
-    note {start D_16; duration D_16; volume VOL; pitch F4; func_table 1}
-  end
+  # phrase "40" do
+  #   note {start 0.0; duration D_16; volume VOL; pitch B4; func_table 1}
+  #   note {start D_16; duration D_16; volume VOL; pitch F4; func_table 1}
+  # end
 
-  phrase "41" do
-    note {start 0.0; duration D_16; volume VOL; pitch B4; func_table 1}
-    note {start D_16; duration D_16; volume VOL; pitch G4; func_table 1}
-  end
+  # phrase "41" do
+  #   note {start 0.0; duration D_16; volume VOL; pitch B4; func_table 1}
+  #   note {start D_16; duration D_16; volume VOL; pitch G4; func_table 1}
+  # end
 
-  phrase "42" do
-    note {start 0.0; duration D_1; volume VOL; pitch C5; func_table 1}
-    note {start D_1; duration D_1; volume VOL; pitch B4; func_table 1}
-    note {start 2.0 * D_1; duration D_1; volume VOL; pitch A4; func_table 1}
-    note {start 3.0 * D_1; duration D_1; volume VOL; pitch C4; func_table 1}
-  end
+  # phrase "42" do
+  #   note {start 0.0; duration D_1; volume VOL; pitch C5; func_table 1}
+  #   note {start D_1; duration D_1; volume VOL; pitch B4; func_table 1}
+  #   note {start 2.0 * D_1; duration D_1; volume VOL; pitch A4; func_table 1}
+  #   note {start 3.0 * D_1; duration D_1; volume VOL; pitch C4; func_table 1}
+  # end
 
-  phrase "43" do
-    note {start 0.0; duration D_16; volume VOL; pitch F5; func_table 1}
-    note {start D_16; duration D_16; volume VOL; pitch E5; func_table 1}
-    note {start D_8; duration D_16; volume VOL; pitch F5; func_table 1}
-    note {start D_8 + D_16; duration D_16; volume VOL; pitch E5; func_table 1}
-    note {start D_4; duration D_8; volume VOL; pitch E5; func_table 1}
-    note {start D_4 + D_8; duration D_8; volume VOL; pitch E5; func_table 1}
-    note {start D_2; duration D_8; volume VOL; pitch E5; func_table 1}
-    note {start D_2 + D_8; duration D_16; volume VOL; pitch F5; func_table 1}
-    note {start D_2 + D_8 + D_16; duration D_16; volume VOL; pitch E5; func_table 1}
-  end
+  # phrase "43" do
+  #   note {start 0.0; duration D_16; volume VOL; pitch F5; func_table 1}
+  #   note {start D_16; duration D_16; volume VOL; pitch E5; func_table 1}
+  #   note {start D_8; duration D_16; volume VOL; pitch F5; func_table 1}
+  #   note {start D_8 + D_16; duration D_16; volume VOL; pitch E5; func_table 1}
+  #   note {start D_4; duration D_8; volume VOL; pitch E5; func_table 1}
+  #   note {start D_4 + D_8; duration D_8; volume VOL; pitch E5; func_table 1}
+  #   note {start D_2; duration D_8; volume VOL; pitch E5; func_table 1}
+  #   note {start D_2 + D_8; duration D_16; volume VOL; pitch F5; func_table 1}
+  #   note {start D_2 + D_8 + D_16; duration D_16; volume VOL; pitch E5; func_table 1}
+  # end
 
-  phrase "44" do
-    note {start 0.0; duration D_8; volume VOL; pitch F5; func_table 1}
-    note {start legato_start(D_8, D_8); duration legato_duration(D_8); volume VOL; pitch E5; func_table 1}
-    note {start legato_start(D_4, D_8); duration legato_duration(D_8); volume VOL; pitch E5; func_table 1}
-    note {start D_4 + D_8; duration D_8; volume VOL; pitch E5; func_table 1}
-    note {start D_2; duration D_4; volume VOL; pitch C5; func_table 1}
-  end
+  # phrase "44" do
+  #   note {start 0.0; duration D_8; volume VOL; pitch F5; func_table 1}
+  #   note {start legato_start(D_8, D_8); duration legato_duration(D_8); volume VOL; pitch E5; func_table 1}
+  #   note {start legato_start(D_4, D_8); duration legato_duration(D_8); volume VOL; pitch E5; func_table 1}
+  #   note {start D_4 + D_8; duration D_8; volume VOL; pitch E5; func_table 1}
+  #   note {start D_2; duration D_4; volume VOL; pitch C5; func_table 1}
+  # end
 
-  phrase "45" do
-    note {start 0.0; duration D_4; volume VOL; pitch D5; func_table 1}
-    note {start D_4; duration D_4; volume VOL; pitch D5; func_table 1}
-    note {start D_2; duration D_4; volume VOL; pitch G4; func_table 1}
-  end
+  # phrase "45" do
+  #   note {start 0.0; duration D_4; volume VOL; pitch D5; func_table 1}
+  #   note {start D_4; duration D_4; volume VOL; pitch D5; func_table 1}
+  #   note {start D_2; duration D_4; volume VOL; pitch G4; func_table 1}
+  # end
 
-  phrase "46" do
-    note {start 0.0; duration D_16; volume VOL; pitch G4; func_table 1}
-    note {start D_16; duration D_16; volume VOL; pitch D5; func_table 1}
-    note {start D_8; duration D_16; volume VOL; pitch E5; func_table 1}
-    note {start D_8 + D_16; duration D_16; volume VOL; pitch D5; func_table 1}
-    note {start D_4; duration D_8; volume REST; pitch C4; func_table 1}
-    note {start D_4 + D_8; duration D_8; volume VOL; pitch G4; func_table 1}
-    note {start D_2; duration D_8; volume REST; pitch C4; func_table 1}
-    note {start D_2 + D_8; duration D_8; volume VOL; pitch G4; func_table 1}
-    note {start D_2 + D_4; duration D_8; volume REST; pitch C4; func_table 1}
-    note {start D_2 + D_4 + D_8; duration D_8; volume VOL; pitch G4; func_table 1}
-    note {start D_1; duration D_16; volume VOL; pitch G4; func_table 1}
-    note {start D_1 + D_16; duration D_16; volume VOL; pitch D5; func_table 1}
-    note {start D_1 + D_8; duration D_16; volume VOL; pitch E5; func_table 1}
-    note {start D_1 + D_8 + D_16; duration D_16; volume VOL; pitch D5; func_table 1}
-  end
+  # phrase "46" do
+  #   note {start 0.0; duration D_16; volume VOL; pitch G4; func_table 1}
+  #   note {start D_16; duration D_16; volume VOL; pitch D5; func_table 1}
+  #   note {start D_8; duration D_16; volume VOL; pitch E5; func_table 1}
+  #   note {start D_8 + D_16; duration D_16; volume VOL; pitch D5; func_table 1}
+  #   note {start D_4; duration D_8; volume REST; pitch C4; func_table 1}
+  #   note {start D_4 + D_8; duration D_8; volume VOL; pitch G4; func_table 1}
+  #   note {start D_2; duration D_8; volume REST; pitch C4; func_table 1}
+  #   note {start D_2 + D_8; duration D_8; volume VOL; pitch G4; func_table 1}
+  #   note {start D_2 + D_4; duration D_8; volume REST; pitch C4; func_table 1}
+  #   note {start D_2 + D_4 + D_8; duration D_8; volume VOL; pitch G4; func_table 1}
+  #   note {start D_1; duration D_16; volume VOL; pitch G4; func_table 1}
+  #   note {start D_1 + D_16; duration D_16; volume VOL; pitch D5; func_table 1}
+  #   note {start D_1 + D_8; duration D_16; volume VOL; pitch E5; func_table 1}
+  #   note {start D_1 + D_8 + D_16; duration D_16; volume VOL; pitch D5; func_table 1}
+  # end
 
-  phrase "47" do
-    note {start 0.0; duration D_16; volume VOL; pitch D5; func_table 1}
-    note {start D_16; duration D_16; volume VOL; pitch E5; func_table 1}
-    note {start D_8; duration D_16; volume VOL; pitch D5; func_table 1}
-  end
+  # phrase "47" do
+  #   note {start 0.0; duration D_16; volume VOL; pitch D5; func_table 1}
+  #   note {start D_16; duration D_16; volume VOL; pitch E5; func_table 1}
+  #   note {start D_8; duration D_16; volume VOL; pitch D5; func_table 1}
+  # end
 
-  phrase "48" do
-    note {start 0.0; duration D_1 + D_2; volume VOL; pitch G4; func_table 1}
-    note {start D_1 + D_2; duration D_1; volume VOL; pitch G4; func_table 1}
-    note {start legato_start((2.0 * D_1) + D_2, D_1); duration legato_duration(D_1); volume VOL; pitch F4; func_table 1}
-    note {start legato_start((3.0 * D_1) + D_2, D_4); duration legato_duration(D_4); volume VOL; pitch F4; func_table 1}
-  end
+  # phrase "48" do
+  #   note {start 0.0; duration D_1 + D_2; volume VOL; pitch G4; func_table 1}
+  #   note {start D_1 + D_2; duration D_1; volume VOL; pitch G4; func_table 1}
+  #   note {start legato_start((2.0 * D_1) + D_2, D_1); duration legato_duration(D_1); volume VOL; pitch F4; func_table 1}
+  #   note {start legato_start((3.0 * D_1) + D_2, D_4); duration legato_duration(D_4); volume VOL; pitch F4; func_table 1}
+  # end
       
-  phrase "49" do
-    note {start 0.0; duration D_16; volume VOL; pitch F4; func_table 1}
-    note {start D_16; duration D_16; volume VOL; pitch G4; func_table 1}
-    note {start D_8; duration D_16; volume VOL; pitch A4S; func_table 1}
-    note {start D_8 + D_16; duration D_16; volume VOL; pitch G4; func_table 1}
-    note {start D_4; duration D_16; volume VOL; pitch A4S; func_table 1}
-    note {start D_4 + D_16; duration D_16; volume VOL; pitch G4; func_table 1}
-  end
+  # phrase "49" do
+  #   note {start 0.0; duration D_16; volume VOL; pitch F4; func_table 1}
+  #   note {start D_16; duration D_16; volume VOL; pitch G4; func_table 1}
+  #   note {start D_8; duration D_16; volume VOL; pitch A4S; func_table 1}
+  #   note {start D_8 + D_16; duration D_16; volume VOL; pitch G4; func_table 1}
+  #   note {start D_4; duration D_16; volume VOL; pitch A4S; func_table 1}
+  #   note {start D_4 + D_16; duration D_16; volume VOL; pitch G4; func_table 1}
+  # end
 
-  phrase "50" do
-    note {start 0.0; duration D_16; volume VOL; pitch F4; func_table 1}
-    note {start D_16; duration D_16; volume VOL; pitch G4; func_table 1}
-  end
+  # phrase "50" do
+  #   note {start 0.0; duration D_16; volume VOL; pitch F4; func_table 1}
+  #   note {start D_16; duration D_16; volume VOL; pitch G4; func_table 1}
+  # end
 
-  phrase "51" do
-    note {start 0.0; duration D_16; volume VOL; pitch F4; func_table 1}
-    note {start D_16; duration D_16; volume VOL; pitch G4; func_table 1}
-    note {start D_8; duration D_16; volume VOL; pitch A4S; func_table 1}
-  end
+  # phrase "51" do
+  #   note {start 0.0; duration D_16; volume VOL; pitch F4; func_table 1}
+  #   note {start D_16; duration D_16; volume VOL; pitch G4; func_table 1}
+  #   note {start D_8; duration D_16; volume VOL; pitch A4S; func_table 1}
+  # end
 
-  phrase "52" do
-    note {start 0.0; duration D_16; volume VOL; pitch G4; func_table 1}
-    note {start D_16; duration D_16; volume VOL; pitch A4S; func_table 1}
-  end
+  # phrase "52" do
+  #   note {start 0.0; duration D_16; volume VOL; pitch G4; func_table 1}
+  #   note {start D_16; duration D_16; volume VOL; pitch A4S; func_table 1}
+  # end
 
-  phrase "53" do
-    note {start 0.0; duration D_16; volume VOL; pitch A4S; func_table 1}
-    note {start D_16; duration D_16; volume VOL; pitch G4; func_table 1}
-  end
+  # phrase "53" do
+  #   note {start 0.0; duration D_16; volume VOL; pitch A4S; func_table 1}
+  #   note {start D_16; duration D_16; volume VOL; pitch G4; func_table 1}
+  # end
 end
 
 # Instruction block for each aleatoric instruction in the original score of "In C"
@@ -611,11 +611,11 @@ end
 # Tell the Ensemble to perform, tell all Players in the Ensemble to play
 # 'repeat' the 'play' command (that is, have each member of the Ensemble go through all the Instructions)
 #   until the 'continue' condition is met
-# repeat_until "... each player drops out as he or she wishes." do 
+repeat_until "... each player drops out as he or she wishes." do 
   play do 
     ensembles "In C Orchestra"
   end 
-# end
+end
 
 write "../compositions/Terry_Riley-In_C/In_C.sco" do 
   format    :csound
