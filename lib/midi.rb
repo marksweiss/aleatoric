@@ -33,7 +33,7 @@ class MidiManager
   attr_accessor :import_volume
   
   DEFAULT_BPM = 120
-  MIDI_TICKS_PER_QRTR_NOTE = 960.0
+  MIDI_TICKS_PER_D_4_NOTE = 960.0
   START_TIME_APPEND_NOTE = 0
   
   def initialize(name=nil, bpm=nil)

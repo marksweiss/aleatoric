@@ -35,21 +35,21 @@ class Meter_Test < MiniTest::Unit::TestCase
   def test__quantize
     puts "test__quantize ENTERED"
 
-    meter = Meter.new(quantize=true, beats_per_measure=4, beat_length=QRTR)
+    meter = Meter.new(quantize=true, beats_per_measure=4, beat_length=D_4)
     
     note1 = MockNote.new
-    note1.duration = QRTR
+    note1.duration = D_4
     note1.start = 0.0
     note2 = MockNote.new
-    note2.duration = QRTR
-    note2.start = QRTR
+    note2.duration = D_4
+    note2.start = D_4
     
     expected_note1 = MockNote.new
     expected_note1.start(0.0)
-    expected_note1.duration(HLF)
+    expected_note1.duration(D_2)
     expected_note2 = MockNote.new
-    expected_note2.start(HLF)
-    expected_note2.duration(HLF)
+    expected_note2.start(D_2)
+    expected_note2.duration(D_2)
 
     actual = meter.quantize([note1, note2])    
     expected = [expected_note1, expected_note2]

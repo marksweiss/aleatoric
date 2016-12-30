@@ -21,7 +21,7 @@ PLAYER_SETTINGS = {
   
   # Player Phrase Advance
   # Player must play each phrase at least this long
-  "min_repeat_phrase_count" => 3, # WHL * 2.0, # QRTR * (45.0 + rand(15).to_f),
+  "min_repeat_phrase_count" => 3, # D_1 * 2.0, # D_4 * (45.0 + rand(15).to_f),
   # The most important factor governing advance of Players through phrases, this is simply
   #  the percentage prob that they advance on any given iteration  
   "phrase_advance_prob" => 0.18, # 0.11, 
@@ -40,9 +40,9 @@ PLAYER_SETTINGS = {
   "adj_phase_count_threshold" => 5,
   "adj_phase_prob_increase_factor" => 1.0,
   # The length of the rest Note (in seconds) inserted if a Player is adjusting its phase  
-  "phase_adj_dur" => SXTYFRTH * 0.05,
+  "phase_adj_dur" => D_64 * 0.05,
   # Players are adjusted out of phase initially a tiny bit, to make it easier for midi file to play
-  "init_adj_phase_dur" => SXTYFRTH * 0.02,
+  "init_adj_phase_dur" => D_64 * 0.02,
   
   # Prob that a Player will seek unison on any given iteration.  The idea is that
   #  to seek unison the Ensemble and all the Players must seek unison  
@@ -154,7 +154,7 @@ ENSEMBLE_SETTINGS = {
 # Add this to store properties global to the score and need to be stored in module-scope vars
 #  because used by the instruction handlers
 SCORE_SETTINGS = {
-  "last_phrase_dur" => WHL
+  "last_phrase_dur" => D_1
 }
 # *************************
 
@@ -1045,7 +1045,7 @@ instruction_14_ensemble_post = lambda do |container|
     #  "Kashmir," player 0 had no notes until many measures in, so it broke on a divide by 0 below.
     #  Also, it wasn't meaningful in that case of imported MIDI where each measure is the same
     #  duration and each is imported as a seprate phrase, so the duration of the last "phrase"
-    #  is known -- it's the duration of one measure in the meter of the input (i.e. 4/4 == WHL)
+    #  is known -- it's the duration of one measure in the meter of the input (i.e. 4/4 == D_1)
     # durations = aleatoric_players[0].current_phrase.notes.collect {|note| note.duration}
     #last_phrase_dur = SCORE_SETTINGS['last_phrase_dur'] # durations.inject(0) {|sum, x| sum + x}
     # Get the start time past current latest start time so all crescendo notes start after that

@@ -31,9 +31,11 @@ def main
   #  to name that file [file_name - extension]_user_instruction.rb
   #  e.g. if the composition is "In_C.altc" then the instruction file is "In_C_user_instruction.rb"
   user_instr_file_name = options[:score_file_name]
+  if user_instr_file_name.length > 0
+    user_instr_file_name = user_instr_file_name.split("/").last
+    user_instr_file_name = user_instr_file_name.split(".")[0] + "_user_instruction"
+  end
   ext_idx = options[:score_file_name].downcase.rindex(".altc")
-  user_instr_file_name = options[:score_file_name][0..(ext_idx-1)] unless ext_idx.nil?
-  user_instr_file_name += "_user_instruction.rb"
   
   $ARG_FORMAT = options[:format]
   if options[:format] == :csound
@@ -48,30 +50,26 @@ def main
   File.open(file_name_tmp, "w") do |f| 
     # VERBOSE
     t = Time.now; puts "Started writing preprocessed score file at #{t}"
-    # VERBOSE
  
     header = ""
     if user_instr_file_name.nil?
-      header + "require 'user_instruction'\n"
+      header += "require_relative 'user_instruction'\n\n"
     else
-      header + "require '" + user_instr_file_name + "'\n"
+      header += "require_relative '" + user_instr_file_name + "'\n\n"
     end
     f << "module Aleatoric\n\n" + header + script + "\n\nend\n"
     
     # VERBOSE
     t_new = Time.now; puts "Writing preprocessed score file took #{(t_new - t) * 1000.0} milliseconds"
-    # VERBOSE
   end  
   
   # VERBOSE
   t = Time.now; puts "Started interpreting and rendering score #{t}"   
-  # /VERBOSE
   
   load file_name_tmp
 
   # VERBOSE
   t_new = Time.now; puts "Interpreting and rendering score took #{(t_new - t) * 1000.0} milliseconds"
-  # /VERBOSE    
 end
 
 main

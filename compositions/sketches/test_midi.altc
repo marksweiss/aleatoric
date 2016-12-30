@@ -6,7 +6,7 @@ phrase "1"
       # TODO - Open bug, must declare Channel first before Instrument
       channel     0 
       instrument  MIDI_Reed_Organ
-      duration    HLF
+      duration    D_2
       velocity    100 
       pitch       64
 
@@ -16,7 +16,7 @@ phrase "2"
       # TODO - Open bug, must declare Channel first before Instrument
       channel     1       
       instrument  MIDI_Xylophone
-      duration    SXTNTH
+      duration    D_16
       velocity    80
       pitch       127
       

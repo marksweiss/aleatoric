@@ -51,11 +51,11 @@ f_start: index, is_rest
   end
   
 f_dur: index
-  x = EITH
+  x = D_8
   if rand(20) == 0
-    x = WHL + (rand(0.1))
+    x = D_1 + (rand(0.1))
   else
-    dur = [EITH, SXTNTH, EITH, SXTNTH, EITH, SXTNTH, QRTR, SXTNTH]
+    dur = [D_8, D_16, D_8, D_16, D_8, D_16, D_4, D_16]
     x = dur[index % 8] + (rand(0.1))
   end
   x
@@ -186,14 +186,14 @@ repeat _num_steps
     repeat _num_steps
       note "C7 Down"
         instrument  1      
-        start       loop_step_u: _start5, SXTYFRTH + (rand(0.1)/500), index - 1
+        start       loop_step_u: _start5, D_64 + (rand(0.1)/500), index - 1
         duration    f_dur: index
         amplitude   f_amp: index, 0.2 
         pitch       loop_step_d: C7, 0.01, index
         func_table  1
       note "C6 Up"
         instrument  1      
-        start       loop_step_u: _start4, SXTYFRTH + (rand(0.1)/500), index - 1
+        start       loop_step_u: _start4, D_64 + (rand(0.1)/500), index - 1
         duration    f_dur: index
         amplitude   f_amp: index, 0.2 
         pitch       loop_step_u: C6, 0.01, index
@@ -201,14 +201,14 @@ repeat _num_steps
 
       note "C7 Down"
         instrument  1      
-        start       loop_step_u: _start5 + (SXTYFRTH * _num_steps), SXTYFRTH + (rand(0.1)/500), index - 1
+        start       loop_step_u: _start5 + (D_64 * _num_steps), D_64 + (rand(0.1)/500), index - 1
         duration    f_dur: index
         amplitude   f_amp: index, 0.2 
         pitch       loop_step_d: C7, 0.01, index
         func_table  1
       note "C6 Up"
         instrument  1      
-        start       loop_step_u: _start4 + (SXTYFRTH * _num_steps), SXTYFRTH + (rand(0.1)/500), index - 1
+        start       loop_step_u: _start4 + (D_64 * _num_steps), D_64 + (rand(0.1)/500), index - 1
         duration    f_dur: index
         amplitude   f_amp: index, 0.2 
         pitch       loop_step_u: C6, 0.01, index
@@ -216,14 +216,14 @@ repeat _num_steps
         
       note "C7 Down"
         instrument  1      
-        start       loop_step_u: _start6, THRTYSCND + (rand(0.1)/250), index - 1
+        start       loop_step_u: _start6, D_32 + (rand(0.1)/250), index - 1
         duration    f_dur: index
         amplitude   f_amp: index, 0.1 
         pitch       loop_step_d: C5, 0.01, index
         func_table  1
       note "C6 Up"
         instrument  1      
-        start       loop_step_u: _start7, THRTYSCND + (rand(0.1)/250), index - 1
+        start       loop_step_u: _start7, D_32 + (rand(0.1)/250), index - 1
         duration    f_dur: index
         amplitude   f_amp: index, 0.1 
         pitch       loop_step_u: C4, 0.01, index
@@ -231,15 +231,15 @@ repeat _num_steps
 
       note "Melody"
         instrument  1      
-        start       loop_step_u: _start4, SXTYFRTH + (rand(0.1)/500), index - 1
-        duration    THRTYSCND + (rand(0.1)/250) # f_dur: index
+        start       loop_step_u: _start4, D_64 + (rand(0.1)/500), index - 1
+        duration    D_32 + (rand(0.1)/250) # f_dur: index
         amplitude   f_amp: index, 0.2
         pitch       f_pitch: index, 0.0
         func_table  1 
       note "Melody"
         instrument  1      
-        start       loop_step_u: _start4 + (SXTYFRTH * _num_steps), SXTYFRTH + (rand(0.1)/500), index - 1
-        duration    THRTYSCND + (rand(0.1)/250) # f_dur: index
+        start       loop_step_u: _start4 + (D_64 * _num_steps), D_64 + (rand(0.1)/500), index - 1
+        duration    D_32 + (rand(0.1)/250) # f_dur: index
         amplitude   f_amp: index, 0.2
         pitch       f_pitch: index, 1.0
         func_table  1        

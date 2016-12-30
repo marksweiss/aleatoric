@@ -18,8 +18,8 @@ phrase "1"
   repeat _num_steps 
     note "1 1"
       instrument  1      
-      start       (index * SXTNTH) * swing(0.998, 5, 0.001)
-      duration    EITH * swing(0.98, 5, 0.01)
+      start       (index * D_16) * swing(0.998, 5, 0.001)
+      duration    D_8 * swing(0.98, 5, 0.01)
       amplitude   (sin: index) * 600
       pitch       C2
       func_table  1
@@ -28,8 +28,8 @@ phrase "2"
   repeat _num_steps * 2
     note "2 1"
       instrument  1      
-      start       (index * THRTYSCND) * swing(0.998, 5, 0.001)
-      duration    SXTNTH * swing(0.998, 5, 0.001)
+      start       (index * D_32) * swing(0.998, 5, 0.001)
+      duration    D_16 * swing(0.998, 5, 0.001)
       amplitude   (sin: index) * 500
       pitch       C4
       func_table  1     
@@ -38,8 +38,8 @@ phrase "3"
   repeat _num_steps 
     note "3 1"
       instrument  1      
-      start       (index * SXTNTH) * swing(0.996, 9, 0.001)
-      duration    EITH * swing(0.96, 5, 0.02)
+      start       (index * D_16) * swing(0.996, 9, 0.001)
+      duration    D_8 * swing(0.96, 5, 0.02)
       amplitude   (sin: index) * 600
       pitch       F2
       func_table  1
@@ -48,8 +48,8 @@ phrase "4"
   repeat _num_steps * 2
     note "4 1"
       instrument  1      
-      start       (index * THRTYSCND) * swing(0.996, 9, 0.001)
-      duration    SXTNTH * swing(0.996, 9, 0.001)
+      start       (index * D_32) * swing(0.996, 9, 0.001)
+      duration    D_16 * swing(0.996, 9, 0.001)
       amplitude   (sin: index) * 500
       pitch       F4
       func_table  1
@@ -59,8 +59,8 @@ phrase "5"
   repeat _num_steps 
     note "5 1"
       instrument  1      
-      start       ((SXTNTH * index) + ((index * SXTNTH) * swing(0.998, 5, 0.001)))
-      duration    EITH * swing(0.8, 4, 0.1)
+      start       ((D_16 * index) + ((index * D_16) * swing(0.998, 5, 0.001)))
+      duration    D_8 * swing(0.8, 4, 0.1)
       amplitude   (sin: index) * 600
       pitch       C1 * swing(0.998, 5, 0.001)
       func_table  1
@@ -69,8 +69,8 @@ phrase "6"
   repeat _num_steps * 2
     note "6 1"
       instrument  1      
-      start       ((SXTNTH * index) + ((index * THRTYSCND) * swing(0.998, 5, 0.001)))
-      duration    SXTNTH * swing(0.98, 5, 0.01)
+      start       ((D_16 * index) + ((index * D_32) * swing(0.998, 5, 0.001)))
+      duration    D_16 * swing(0.98, 5, 0.01)
       amplitude   (sin: index) * 500
       pitch       C7 * swing(0.998, 5, 0.001)
       func_table  1     

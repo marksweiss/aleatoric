@@ -7,7 +7,7 @@ module Aleatoric
 # that is to force the notes to land on the closest beats.
 class Meter
   
-  def initialize(quantizing=true, beats_per_measure=4, beat_length=QRTR)
+  def initialize(quantizing=true, beats_per_measure=4, beat_length=D_4)
     @quantizing = quantizing
     @beats_per_measure = beats_per_measure
     @beat_length = beat_length

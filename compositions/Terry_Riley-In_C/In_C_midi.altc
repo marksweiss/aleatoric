@@ -71,1847 +71,1847 @@ ensemble "In C Orchestra"
   players "Player 1", "Player 2", "Player 3", "Player 4" , "Player 5"#, "Player 6", "Player 7", "Player 8", "Player 9", "Player 10", "Player 11", "Player 12"
     phrase "1"
     note
-      start legato_start: 0.0, EITH
-      duration legato_duration: EITH
+      start legato_start: 0.0, D_8
+      duration legato_duration: D_8
       volume _default_volume
       pitch C4
 
     note
-      start legato_start: 0.0 + EITH, QRTR
-      duration legato_duration: QRTR
+      start legato_start: 0.0 + D_8, D_4
+      duration legato_duration: D_4
       volume _default_volume
       pitch E4
 
     note
-      start legato_start: EITH + QRTR, EITH
-      duration legato_duration: EITH
+      start legato_start: D_8 + D_4, D_8
+      duration legato_duration: D_8
       volume _default_volume
       pitch C4
 
     note
-      start legato_start: HLF, QRTR
-      duration legato_duration: QRTR
+      start legato_start: D_2, D_4
+      duration legato_duration: D_4
       volume _default_volume
       pitch E4
 
     note
-      start legato_start: HLF + QRTR, EITH
-      duration legato_duration: EITH
+      start legato_start: D_2 + D_4, D_8
+      duration legato_duration: D_8
       volume _default_volume
       pitch C4
 
     note
-      start legato_start: HLF + QRTR + EITH, QRTR
-      duration legato_duration: QRTR
+      start legato_start: D_2 + D_4 + D_8, D_4
+      duration legato_duration: D_4
       volume _default_volume
       pitch E4
 
   phrase "2"
     note
-      start legato_start: 0.0, EITH
-      duration legato_duration: EITH
+      start legato_start: 0.0, D_8
+      duration legato_duration: D_8
       volume _default_volume
       pitch C4
 
     note
-      start legato_start: EITH, EITH
-      duration legato_duration: EITH
+      start legato_start: D_8, D_8
+      duration legato_duration: D_8
       volume _default_volume
       pitch E4
 
     note
-      start QRTR
-      duration EITH
+      start D_4
+      duration D_8
       volume _default_volume
       pitch F4
 
     note
-      start QRTR + EITH
-      duration EITH
+      start D_4 + D_8
+      duration D_8
       volume _default_volume
       pitch E4
 
   phrase "3"
     note
       start 0.0
-      duration EITH
+      duration D_8
       volume REST
       pitch C4
 
     note
-      start EITH
-      duration EITH
+      start D_8
+      duration D_8
       volume _default_volume
       pitch E4
 
     note
-      start QRTR
-      duration EITH
+      start D_4
+      duration D_8
       volume _default_volume
       pitch F4
     note
-      start QRTR + EITH
-      duration EITH
+      start D_4 + D_8
+      duration D_8
       volume _default_volume
       pitch E4
 
   phrase "4"
     note
       start 0.0
-      duration EITH
+      duration D_8
       volume REST
       pitch C4
 
     note
-      start EITH
-      duration EITH
+      start D_8
+      duration D_8
       volume _default_volume
       pitch E4
 
     note
-      start QRTR
-      duration EITH
+      start D_4
+      duration D_8
       volume _default_volume
       pitch F4
 
     note
-      start QRTR + EITH
-      duration EITH
+      start D_4 + D_8
+      duration D_8
       volume _default_volume
       pitch G4
 
   phrase "5"
     note
       start 0.0
-      duration EITH
+      duration D_8
       volume REST
       pitch C4
 
     note
-      start EITH
-      duration EITH
+      start D_8
+      duration D_8
       volume _default_volume
       pitch E4
 
     note
-      start QRTR
-      duration EITH
+      start D_4
+      duration D_8
       volume _default_volume
       pitch F4
 
     note
-      start QRTR
-      duration EITH
+      start D_4
+      duration D_8
       volume _default_volume
       pitch G4
 
     note
-      start HLF
-      duration EITH
+      start D_2
+      duration D_8
       volume REST
       pitch C4
 
   phrase "6"
     note
-      start legato_start: 0.0, WHL
-      duration legato_duration: WHL
+      start legato_start: 0.0, D_1
+      duration legato_duration: D_1
       volume _default_volume
       pitch C5
 
     note
-      start legato_start: WHL, WHL
-      duration legato_duration: WHL
+      start legato_start: D_1, D_1
+      duration legato_duration: D_1
       volume _default_volume
       pitch C5
 
   phrase "7"
     note
       start 0.0
-      duration QRTR
+      duration D_4
       volume REST
       pitch C4
 
     note
-      start QRTR
-      duration QRTR
+      start D_4
+      duration D_4
       volume REST
       pitch C4
 
     note
-      start HLF
-      duration QRTR
+      start D_2
+      duration D_4
       volume REST
       pitch C4
 
     note
-      start HLF + QRTR
-      duration EITH
+      start D_2 + D_4
+      duration D_8
       volume REST
       pitch C4
 
     note
-      start HLF + QRTR + EITH
-      duration EITH
+      start D_2 + D_4 + D_8
+      duration D_8
       volume _default_volume
       pitch C4
 
     note
-      start WHL
-      duration SXTNTH
+      start D_1
+      duration D_16
       volume _default_volume
       pitch C4
 
     note
-      start WHL + SXTNTH
-      duration EITH
+      start D_1 + D_16
+      duration D_8
       volume _default_volume
       pitch C4
 
     note
-      start WHL + EITH + SXTNTH
-      duration EITH
+      start D_1 + D_8 + D_16
+      duration D_8
       volume REST
       pitch C4
 
     note
-      start WHL + QRTR + SXTNTH
-      duration QRTR
+      start D_1 + D_4 + D_16
+      duration D_4
       volume REST
       pitch C4
 
     note
-      start WHL + HLF + SXTNTH
-      duration QRTR
+      start D_1 + D_2 + D_16
+      duration D_4
       volume REST
       pitch C4
 
     note
-      start WHL + HLF + QRTR + SXTNTH
-      duration QRTR
+      start D_1 + D_2 + D_4 + D_16
+      duration D_4
       volume REST
       pitch C4
 
     note
-      start WHL + HLF + HLF + SXTNTH
-      duration QRTR
+      start D_1 + D_2 + D_2 + D_16
+      duration D_4
       volume REST
       pitch C4
 
   phrase "8"
     note
       start 0.0
-      duration WHL + HLF
+      duration D_1 + D_2
       volume _default_volume
       pitch G4
 
     note
-      start legato_start: WHL + HLF, WHL
-      duration legato_duration: WHL
+      start legato_start: D_1 + D_2, D_1
+      duration legato_duration: D_1
       volume _default_volume
       pitch F4
 
     note
-      start legato_start: 2.0 * WHL + HLF, WHL
-      duration legato_duration: WHL
+      start legato_start: 2.0 * D_1 + D_2, D_1
+      duration legato_duration: D_1
       volume _default_volume
       pitch F4
 
   phrase "9"
     note
       start 0.0
-      duration SXTNTH
+      duration D_16
       volume _default_volume
       pitch B4
 
     note
-      start SXTNTH
-      duration SXTNTH
+      start D_16
+      duration D_16
       volume _default_volume
       pitch G4
 
     note
-      start EITH
-      duration EITH
+      start D_8
+      duration D_8
       volume REST
       pitch C4
 
     note
-      start QRTR
-      duration QRTR
+      start D_4
+      duration D_4
       volume REST
       pitch C4
 
     note
-      start HLF
-      duration QRTR
+      start D_2
+      duration D_4
       volume REST
       pitch C4
 
     note
-      start HLF + QRTR
-      duration QRTR
+      start D_2 + D_4
+      duration D_4
       volume REST
       pitch C4
 
   phrase "10"
     note
       start 0.0
-      duration SXTNTH
+      duration D_16
       volume _default_volume
       pitch B4
 
     note
-      start SXTNTH
-      duration SXTNTH
+      start D_16
+      duration D_16
       volume _default_volume
       pitch G4
 
   phrase "11"
     note
       start 0.0
-      duration SXTNTH
+      duration D_16
       volume _default_volume
       pitch F4
 
     note
-      start EITH
-      duration SXTNTH
+      start D_8
+      duration D_16
       volume _default_volume
       pitch G4
 
     note
-      start EITH + SXTNTH
-      duration SXTNTH
+      start D_8 + D_16
+      duration D_16
       volume _default_volume
       pitch B4
 
     note
-      start QRTR
-      duration SXTNTH
+      start D_4
+      duration D_16
       volume _default_volume
       pitch G4
 
     note
-      start QRTR + SXTNTH
-      duration SXTNTH
+      start D_4 + D_16
+      duration D_16
       volume _default_volume
       pitch B4    
 
     note
-      start QRTR + EITH
-      duration SXTNTH
+      start D_4 + D_8
+      duration D_16
       volume _default_volume
       pitch G4
 
   phrase "12"
     note
       start 0.0
-      duration EITH
+      duration D_8
       volume _default_volume
       pitch F4
 
     note
-      start EITH
-      duration EITH
+      start D_8
+      duration D_8
       volume _default_volume
       pitch G4
 
     note
-      start QRTR
-      duration WHL
+      start D_4
+      duration D_1
       volume _default_volume
       pitch B4
 
     note
-      start QRTR + WHL
-      duration QRTR
+      start D_4 + D_1
+      duration D_4
       volume _default_volume
       pitch C5
 
   phrase "13"
     note
       start 0.0
-      duration SXTNTH
+      duration D_16
       volume _default_volume
       pitch B4
 
     note
-      start SXTNTH
-      duration SXTNTH + THRTYSCND
+      start D_16
+      duration D_16 + D_32
       volume _default_volume
       pitch G4
 
     note
-      start EITH + THRTYSCND
-      duration SXTNTH
+      start D_8 + D_32
+      duration D_16
       volume _default_volume
       pitch G4
 
     note
-      start EITH + SXTNTH + THRTYSCND
-      duration SXTNTH
+      start D_8 + D_16 + D_32
+      duration D_16
       volume _default_volume
       pitch F4
 
     note
-      start QRTR + THRTYSCND
-      duration EITH
+      start D_4 + D_32
+      duration D_8
       volume _default_volume
       pitch G4    
 
     note
-      start QRTR + EITH + THRTYSCND
-      duration EITH + SXTNTH
+      start D_4 + D_8 + D_32
+      duration D_8 + D_16
       volume REST
       pitch C4
 
     note
-      start legato_start: HLF + SXTNTH + THRTYSCND, SXTNTH
-      duration legato_duration: SXTNTH
+      start legato_start: D_2 + D_16 + D_32, D_16
+      duration legato_duration: D_16
       volume _default_volume
       pitch G4
 
     note
-      start legato_start: HLF + EITH + THRTYSCND, HLF + QRTR
-      duration legato_duration: HLF + QRTR
+      start legato_start: D_2 + D_8 + D_32, D_2 + D_4
+      duration legato_duration: D_2 + D_4
       volume _default_volume
       pitch G4
 
   phrase "14"
     note
       start 0.0
-      duration WHL
+      duration D_1
       volume _default_volume
       pitch C5
 
     note
-      start WHL
-      duration WHL
+      start D_1
+      duration D_1
       volume _default_volume
       pitch B4
 
     note
-      start 2.0 * WHL
-      duration WHL
+      start 2.0 * D_1
+      duration D_1
       volume _default_volume
       pitch G4    
 
     note
-      start 3.0 * WHL
-      duration WHL
+      start 3.0 * D_1
+      duration D_1
       volume _default_volume
       pitch F4S    
 
   phrase "15"
     note
       start 0.0
-      duration SXTNTH
+      duration D_16
       volume _default_volume
       pitch G4
 
     note
-      start SXTNTH
-      duration EITH + SXTNTH
+      start D_16
+      duration D_8 + D_16
       volume REST
       pitch C4
 
     note
-      start QRTR
-      duration QRTR
+      start D_4
+      duration D_4
       volume REST
       pitch C4    
 
     note
-      start HLF
-      duration QRTR
+      start D_2
+      duration D_4
       volume REST
       pitch C4    
 
     note
-      start HLF + QRTR
-      duration QRTR
+      start D_2 + D_4
+      duration D_4
       volume REST
       pitch C4
 
   phrase "16"
     note
       start 0.0
-      duration SXTNTH
+      duration D_16
       volume _default_volume
       pitch G4
 
     note
-      start EITH
-      duration SXTNTH
+      start D_8
+      duration D_16
       volume _default_volume
       pitch B4
 
     note
-      start EITH + SXTNTH
-      duration SXTNTH
+      start D_8 + D_16
+      duration D_16
       volume _default_volume
       pitch C5    
 
     note
-      start QRTR
-      duration SXTNTH
+      start D_4
+      duration D_16
       volume _default_volume
       pitch B4
 
   phrase "17"
     note
       start 0.0
-      duration SXTNTH
+      duration D_16
       volume _default_volume
       pitch B4
 
     note
-      start EITH
-      duration SXTNTH
+      start D_8
+      duration D_16
       volume _default_volume
       pitch C5
 
     note
-      start EITH + SXTNTH
-      duration SXTNTH
+      start D_8 + D_16
+      duration D_16
       volume _default_volume
       pitch B4    
 
     note
-      start QRTR
-      duration SXTNTH
+      start D_4
+      duration D_16
       volume _default_volume
       pitch C5
 
     note
-      start QRTR + SXTNTH
-      duration SXTNTH
+      start D_4 + D_16
+      duration D_16
       volume _default_volume
       pitch B4
 
     note
-      start QRTR + EITH
-      duration SXTNTH
+      start D_4 + D_8
+      duration D_16
       volume REST
       pitch C4    
 
   phrase "18"
     note
       start 0.0
-      duration SXTNTH
+      duration D_16
       volume _default_volume
       pitch E4
 
     note
-      start EITH
-      duration SXTNTH
+      start D_8
+      duration D_16
       volume _default_volume
       pitch F4S
 
     note
-      start EITH + SXTNTH
-      duration SXTNTH
+      start D_8 + D_16
+      duration D_16
       volume _default_volume
       pitch E4    
 
     note
-      start QRTR
-      duration SXTNTH
+      start D_4
+      duration D_16
       volume _default_volume
       pitch F4S
 
     note
-      start QRTR + SXTNTH
-      duration EITH + SXTNTH
+      start D_4 + D_16
+      duration D_8 + D_16
       volume _default_volume
       pitch E4
 
     note
-      start QRTR + EITH
-      duration EITH
+      start D_4 + D_8
+      duration D_8
       volume _default_volume
       pitch E4    
 
   phrase "19"
     note
       start 0.0
-      duration QRTR + EITH
+      duration D_4 + D_8
       volume REST
       pitch E4
 
     note
-      start QRTR + EITH
-      duration QRTR + EITH
+      start D_4 + D_8
+      duration D_4 + D_8
       volume _default_volume
       pitch G5
 
   phrase "20"
     note
       start 0.0
-      duration SXTNTH
+      duration D_16
       volume _default_volume
       pitch E4
 
     note
-      start EITH
-      duration SXTNTH
+      start D_8
+      duration D_16
       volume _default_volume
       pitch F4S
 
     note
-      start EITH + SXTNTH
-      duration SXTNTH
+      start D_8 + D_16
+      duration D_16
       volume _default_volume
       pitch E4    
 
     note
-      start QRTR
-      duration SXTNTH
+      start D_4
+      duration D_16
       volume _default_volume
       pitch F4S
 
     note
-      start QRTR + SXTNTH
-      duration SXTNTH + THRTYSCND
+      start D_4 + D_16
+      duration D_16 + D_32
       volume _default_volume
       pitch G3
 
     note
-      start QRTR + EITH + THRTYSCND
-      duration SXTNTH
+      start D_4 + D_8 + D_32
+      duration D_16
       volume _default_volume
       pitch E4   
 
     note
-      start QRTR + EITH + SXTNTH + THRTYSCND
-      duration SXTNTH
+      start D_4 + D_8 + D_16 + D_32
+      duration D_16
       volume _default_volume
       pitch F4S
 
     note
-      start HLF + THRTYSCND
-      duration SXTNTH
+      start D_2 + D_32
+      duration D_16
       volume _default_volume
       pitch E4
 
     note
-      start HLF + SXTNTH + THRTYSCND
-      duration SXTNTH
+      start D_2 + D_16 + D_32
+      duration D_16
       volume _default_volume
       pitch F4S
 
     note
-      start HLF + EITH + THRTYSCND
-      duration SXTNTH
+      start D_2 + D_8 + D_32
+      duration D_16
       volume _default_volume
       pitch E4    
 
   phrase "21"
     note
       start 0.0
-      duration HLF + QRTR
+      duration D_2 + D_4
       volume _default_volume
       pitch F4S
 
   phrase "22"
     note
       start 0.0
-      duration QRTR + EITH
+      duration D_4 + D_8
       volume _default_volume
       pitch E4
 
     note
-      start QRTR + EITH
-      duration QRTR + EITH
+      start D_4 + D_8
+      duration D_4 + D_8
       volume _default_volume
       pitch E4
 
     note
-      start 2.0 *  QRTR + EITH
-      duration QRTR + EITH
+      start 2.0 *  D_4 + D_8
+      duration D_4 + D_8
       volume _default_volume
       pitch E4    
 
     note
-      start 3.0 *  QRTR + EITH
-      duration QRTR + EITH
+      start 3.0 *  D_4 + D_8
+      duration D_4 + D_8
       volume _default_volume
       pitch E4
 
     note
-      start 4.0 *  QRTR + EITH
-      duration QRTR + EITH
+      start 4.0 *  D_4 + D_8
+      duration D_4 + D_8
       volume _default_volume
       pitch E4
 
     note
-      start 5.0 *  QRTR + EITH
-      duration QRTR + EITH
+      start 5.0 *  D_4 + D_8
+      duration D_4 + D_8
       volume _default_volume
       pitch F4S
 
     note
-      start 6.0 *  QRTR + EITH
-      duration QRTR + EITH
+      start 6.0 *  D_4 + D_8
+      duration D_4 + D_8
       volume _default_volume
       pitch G4
 
     note
-      start 7.0 *  QRTR + EITH
-      duration QRTR + EITH
+      start 7.0 *  D_4 + D_8
+      duration D_4 + D_8
       volume _default_volume
       pitch A4
 
     note
-      start 8.0 *  QRTR + EITH
-      duration EITH
+      start 8.0 *  D_4 + D_8
+      duration D_8
       volume _default_volume
       pitch B4
 
   phrase "23"
     note
       start 0.0
-      duration EITH
+      duration D_8
       volume _default_volume
       pitch E4
 
     note
-      start EITH
-      duration QRTR + EITH
+      start D_8
+      duration D_4 + D_8
       volume _default_volume
       pitch F4S
 
     note
-      start HLF
-      duration QRTR + EITH
+      start D_2
+      duration D_4 + D_8
       volume _default_volume
       pitch F4S    
 
     note
-      start HLF +  QRTR + EITH
-      duration QRTR + EITH
+      start D_2 +  D_4 + D_8
+      duration D_4 + D_8
       volume _default_volume
       pitch F4S
 
     note
-      start HLF +  2.0 *  QRTR + EITH
-      duration QRTR + EITH
+      start D_2 +  2.0 *  D_4 + D_8
+      duration D_4 + D_8
       volume _default_volume
       pitch F4S
 
     note
-      start HLF +  3.0 *  QRTR + EITH
-      duration QRTR + EITH
+      start D_2 +  3.0 *  D_4 + D_8
+      duration D_4 + D_8
       volume _default_volume
       pitch F4S    
 
     note
-      start HLF +  4.0 *  QRTR + EITH
-      duration QRTR + EITH
+      start D_2 +  4.0 *  D_4 + D_8
+      duration D_4 + D_8
       volume _default_volume
       pitch G4
 
     note
-      start HLF +  5.0 *  QRTR + EITH
-      duration QRTR + EITH
+      start D_2 +  5.0 *  D_4 + D_8
+      duration D_4 + D_8
       volume _default_volume
       pitch A4
 
     note
-      start HLF +  6.0 *  QRTR + EITH
-      duration QRTR
+      start D_2 +  6.0 *  D_4 + D_8
+      duration D_4
       volume _default_volume
       pitch B4
 
   phrase "24"
     note
       start 0.0
-      duration EITH
+      duration D_8
       volume _default_volume
       pitch E4
 
     note
-      start EITH
-      duration EITH
+      start D_8
+      duration D_8
       volume _default_volume
       pitch F4S
 
     note
-      start QRTR
-      duration QRTR + EITH
+      start D_4
+      duration D_4 + D_8
       volume _default_volume
       pitch G4    
 
     note
-      start HLF + EITH
-      duration QRTR + EITH
+      start D_2 + D_8
+      duration D_4 + D_8
       volume _default_volume
       pitch G4
 
     note
-      start WHL
-      duration QRTR + EITH
+      start D_1
+      duration D_4 + D_8
       volume _default_volume
       pitch G4
 
     note
-      start WHL +  QRTR + EITH
-      duration QRTR + EITH
+      start D_1 +  D_4 + D_8
+      duration D_4 + D_8
       volume _default_volume
       pitch G4    
 
     note
-      start WHL +  2.0 *  QRTR + EITH
-      duration QRTR + EITH
+      start D_1 +  2.0 *  D_4 + D_8
+      duration D_4 + D_8
       volume _default_volume
       pitch G4
 
     note
-      start WHL +  3.0 *  QRTR + EITH
-      duration QRTR + EITH
+      start D_1 +  3.0 *  D_4 + D_8
+      duration D_4 + D_8
       volume _default_volume
       pitch A4
 
     note
-      start WHL +  4.0 *  QRTR + EITH
-      duration EITH
+      start D_1 +  4.0 *  D_4 + D_8
+      duration D_8
       volume _default_volume
       pitch B4
 
   phrase "25"
     note
       start 0.0
-      duration EITH
+      duration D_8
       volume _default_volume
       pitch E4
 
     note
-      start EITH
-      duration EITH
+      start D_8
+      duration D_8
       volume _default_volume
       pitch F4S
 
     note
-      start QRTR
-      duration QRTR + EITH
+      start D_4
+      duration D_4 + D_8
       volume _default_volume
       pitch G4    
 
     note
-      start HLF + EITH
-      duration QRTR + EITH
+      start D_2 + D_8
+      duration D_4 + D_8
       volume _default_volume
       pitch A4
 
     note
-      start WHL
-      duration QRTR + EITH
+      start D_1
+      duration D_4 + D_8
       volume _default_volume
       pitch A4
 
     note
-      start WHL +  QRTR + EITH
-      duration QRTR + EITH
+      start D_1 +  D_4 + D_8
+      duration D_4 + D_8
       volume _default_volume
       pitch A4    
 
     note
-      start WHL +  2.0 *  QRTR + EITH
-      duration QRTR + EITH
+      start D_1 +  2.0 *  D_4 + D_8
+      duration D_4 + D_8
       volume _default_volume
       pitch A4
 
     note
-      start WHL +  3.0 *  QRTR + EITH
-      duration QRTR + EITH
+      start D_1 +  3.0 *  D_4 + D_8
+      duration D_4 + D_8
       volume _default_volume
       pitch A4
 
     note
-      start WHL +  4.0 *  QRTR + EITH
-      duration EITH
+      start D_1 +  4.0 *  D_4 + D_8
+      duration D_8
       volume _default_volume
       pitch B4
 
   phrase "26"
     note
       start 0.0
-      duration EITH
+      duration D_8
       volume _default_volume
       pitch E4
 
     note
-      start EITH
-      duration EITH
+      start D_8
+      duration D_8
       volume _default_volume
       pitch F4S
 
     note
-      start QRTR
-      duration EITH
+      start D_4
+      duration D_8
       volume _default_volume
       pitch G4    
 
     note
-      start QRTR + EITH
-      duration EITH
+      start D_4 + D_8
+      duration D_8
       volume _default_volume
       pitch A4    
 
     note
-      start HLF
-      duration QRTR + EITH
+      start D_2
+      duration D_4 + D_8
       volume _default_volume
       pitch B4
 
     note
-      start HLF + QRTR + EITH
-      duration QRTR + EITH
+      start D_2 + D_4 + D_8
+      duration D_4 + D_8
       volume _default_volume
       pitch B4
 
     note
-      start WHL + QRTR
-      duration QRTR + EITH
+      start D_1 + D_4
+      duration D_4 + D_8
       volume _default_volume
       pitch B4    
 
     note
-      start WHL + HLF + EITH
-      duration QRTR + EITH
+      start D_1 + D_2 + D_8
+      duration D_4 + D_8
       volume _default_volume
       pitch B4
 
     note
-      start 2.0 * WHL
-      duration QRTR + EITH
+      start 2.0 * D_1
+      duration D_4 + D_8
       volume _default_volume
       pitch B4   
 
   phrase "27"
     note
       start 0.0
-      duration SXTNTH
+      duration D_16
       volume _default_volume
       pitch E4
 
     note
-      start SXTNTH
-      duration SXTNTH
+      start D_16
+      duration D_16
       volume _default_volume
       pitch F4S
 
     note
-      start EITH
-      duration SXTNTH
+      start D_8
+      duration D_16
       volume _default_volume
       pitch E4    
 
     note
-      start EITH + SXTNTH
-      duration SXTNTH
+      start D_8 + D_16
+      duration D_16
       volume _default_volume
       pitch F4S    
 
     note
-      start QRTR
-      duration EITH
+      start D_4
+      duration D_8
       volume _default_volume
       pitch G4
 
     note
-      start QRTR + EITH
-      duration SXTNTH
+      start D_4 + D_8
+      duration D_16
       volume _default_volume
       pitch E4
 
     note
-      start QRTR + EITH + SXTNTH
-      duration SXTNTH
+      start D_4 + D_8 + D_16
+      duration D_16
       volume _default_volume
       pitch G4    
 
     note
-      start HLF
-      duration SXTNTH
+      start D_2
+      duration D_16
       volume _default_volume
       pitch F4S
 
     note
-      start HLF + SXTNTH
-      duration SXTNTH
+      start D_2 + D_16
+      duration D_16
       volume _default_volume
       pitch E4
 
     note
-      start HLF + EITH
-      duration SXTNTH
+      start D_2 + D_8
+      duration D_16
       volume _default_volume
       pitch F4S
 
     note
-      start HLF + EITH + SXTNTH
-      duration SXTNTH
+      start D_2 + D_8 + D_16
+      duration D_16
       volume _default_volume
       pitch E4
 
   phrase "28"
     note
       start 0.0
-      duration SXTNTH
+      duration D_16
       volume _default_volume
       pitch E4
 
     note
-      start SXTNTH
-      duration SXTNTH
+      start D_16
+      duration D_16
       volume _default_volume
       pitch F4S
 
     note
-      start EITH
-      duration SXTNTH
+      start D_8
+      duration D_16
       volume _default_volume
       pitch E4    
 
     note
-      start EITH + SXTNTH
-      duration SXTNTH
+      start D_8 + D_16
+      duration D_16
       volume _default_volume
       pitch F4S
 
     note
-      start QRTR
-      duration EITH + SXTNTH
+      start D_4
+      duration D_8 + D_16
       volume _default_volume
       pitch E4
 
     note
-      start QRTR + EITH + SXTNTH
-      duration SXTNTH
+      start D_4 + D_8 + D_16
+      duration D_16
       volume _default_volume
       pitch E4
 
   phrase "29"
     note
       start 0.0
-      duration HLF + QRTR
+      duration D_2 + D_4
       volume _default_volume
       pitch E4
 
     note
-      start HLF + QRTR
-      duration HLF + QRTR
+      start D_2 + D_4
+      duration D_2 + D_4
       volume _default_volume
       pitch G4
 
     note
-      start WHL + HLF
-      duration HLF + QRTR
+      start D_1 + D_2
+      duration D_2 + D_4
       volume _default_volume
       pitch C5
 
   phrase "30"
     note
       start 0.0
-      duration WHL + HLF
+      duration D_1 + D_2
       volume _default_volume
       pitch C5
 
   phrase "31"
     note
       start 0.0
-      duration SXTNTH
+      duration D_16
       volume _default_volume
       pitch G4
 
     note
-      start SXTNTH
-      duration SXTNTH
+      start D_16
+      duration D_16
       volume _default_volume
       pitch F4
 
     note
-      start EITH
-      duration SXTNTH
+      start D_8
+      duration D_16
       volume _default_volume
       pitch G4    
 
     note
-      start EITH + SXTNTH
-      duration SXTNTH
+      start D_8 + D_16
+      duration D_16
       volume _default_volume
       pitch B4
 
     note
-      start QRTR
-      duration SXTNTH
+      start D_4
+      duration D_16
       volume _default_volume
       pitch G4
 
     note
-      start QRTR + SXTNTH
-      duration SXTNTH
+      start D_4 + D_16
+      duration D_16
       volume _default_volume
       pitch B4
 
   phrase "32"
     note
       start 0.0
-      duration SXTNTH
+      duration D_16
       volume _default_volume
       pitch F4
 
     note
-      start SXTNTH
-      duration SXTNTH
+      start D_16
+      duration D_16
       volume _default_volume
       pitch G4
 
     note
-      start EITH
-      duration SXTNTH
+      start D_8
+      duration D_16
       volume _default_volume
       pitch F4    
 
     note
-      start EITH + SXTNTH
-      duration SXTNTH
+      start D_8 + D_16
+      duration D_16
       volume _default_volume
       pitch G4
 
     note
-      start QRTR
-      duration SXTNTH
+      start D_4
+      duration D_16
       volume _default_volume
       pitch B4
 
     note
-      start legato_start: QRTR + SXTNTH, SXTNTH
-      duration legato_duration: SXTNTH
+      start legato_start: D_4 + D_16, D_16
+      duration legato_duration: D_16
       volume _default_volume
       pitch F4
 
     note
-      start legato_start: QRTR + EITH, HLF + QRTR
-      duration legato_duration: HLF + QRTR
+      start legato_start: D_4 + D_8, D_2 + D_4
+      duration legato_duration: D_2 + D_4
       volume _default_volume
       pitch F4
 
     note
-      start WHL + EITH
-      duration QRTR + EITH
+      start D_1 + D_8
+      duration D_4 + D_8
       volume _default_volume
       pitch G4  
 
   phrase "33"
     note
       start 0.0
-      duration SXTNTH
+      duration D_16
       volume _default_volume
       pitch G4
 
     note
-      start SXTNTH
-      duration SXTNTH
+      start D_16
+      duration D_16
       volume _default_volume
       pitch F4
 
     note
-      start EITH
-      duration EITH
+      start D_8
+      duration D_8
       volume REST
       pitch C4  
 
   phrase "34"
     note
       start 0.0
-      duration SXTNTH
+      duration D_16
       volume _default_volume
       pitch G4
 
     note
-      start SXTNTH
-      duration SXTNTH
+      start D_16
+      duration D_16
       volume _default_volume
       pitch F4
 
   phrase "35"
     note
       start 0.0
-      duration SXTNTH
+      duration D_16
       volume _default_volume
       pitch F4
 
     note
-      start SXTNTH
-      duration SXTNTH
+      start D_16
+      duration D_16
       volume _default_volume
       pitch G4
 
     note
-      start EITH
-      duration SXTNTH
+      start D_8
+      duration D_16
       volume _default_volume
       pitch B4    
 
     note
-      start EITH + SXTNTH
-      duration SXTNTH
+      start D_8 + D_16
+      duration D_16
       volume _default_volume
       pitch G4
 
     note
-      start QRTR
-      duration SXTNTH
+      start D_4
+      duration D_16
       volume _default_volume
       pitch B4
 
     note
-      start QRTR + SXTNTH
-      duration SXTNTH
+      start D_4 + D_16
+      duration D_16
       volume _default_volume
       pitch G4
 
     note
-      start QRTR + EITH
-      duration SXTNTH
+      start D_4 + D_8
+      duration D_16
       volume _default_volume
       pitch B4    
 
     note
-      start QRTR + EITH + SXTNTH
-      duration SXTNTH
+      start D_4 + D_8 + D_16
+      duration D_16
       volume _default_volume
       pitch G4
 
     note
-      start HLF
-      duration SXTNTH
+      start D_2
+      duration D_16
       volume _default_volume
       pitch B4
 
     note
-      start HLF + SXTNTH
-      duration SXTNTH
+      start D_2 + D_16
+      duration D_16
       volume _default_volume
       pitch G4
 
     note
-      start HLF + EITH
-      duration EITH
+      start D_2 + D_8
+      duration D_8
       volume REST
       pitch C4    
 
     note
-      start HLF + QRTR
-      duration QRTR
+      start D_2 + D_4
+      duration D_4
       volume REST
       pitch C4
 
     note
-      start WHL
-      duration QRTR
+      start D_1
+      duration D_4
       volume REST
       pitch C4   
 
     note
-      start WHL + QRTR
-      duration QRTR
+      start D_1 + D_4
+      duration D_4
       volume REST
       pitch C4 
 
     note
-      start WHL + HLF
-      duration QRTR
+      start D_1 + D_2
+      duration D_4
       volume _default_volume
       pitch A4S  # BFlat    
 
     note
-      start WHL + HLF + QRTR
-      duration HLF + QRTR
+      start D_1 + D_2 + D_4
+      duration D_2 + D_4
       volume _default_volume
       pitch G5
 
     note
-      start 2.0 * WHL + HLF
-      duration EITH
+      start 2.0 * D_1 + D_2
+      duration D_8
       volume _default_volume
       pitch A5
 
     note
-      start legato_start: 2.0 * WHL + HLF + EITH, EITH
-      duration legato_duration: EITH
+      start legato_start: 2.0 * D_1 + D_2 + D_8, D_8
+      duration legato_duration: D_8
       volume _default_volume
       pitch G5
 
     note
-      start  legato_start: 2.0 * WHL + HLF + QRTR, EITH
-      duration legato_duration: EITH
+      start  legato_start: 2.0 * D_1 + D_2 + D_4, D_8
+      duration legato_duration: D_8
       volume _default_volume
       pitch G5
 
     note
-      start  2.0 * WHL + HLF + QRTR + EITH
-      duration EITH
+      start  2.0 * D_1 + D_2 + D_4 + D_8
+      duration D_8
       volume _default_volume
       pitch B5
 
     note
-      start  3.0 * WHL
-      duration QRTR + EITH
+      start  3.0 * D_1
+      duration D_4 + D_8
       volume _default_volume
       pitch A5   
 
     note
-      start  3.0 * WHL + QRTR + EITH
-      duration EITH
+      start  3.0 * D_1 + D_4 + D_8
+      duration D_8
       volume _default_volume
       pitch G5
 
     note
-      start  3.0 * WHL + HLF
-      duration HLF + QRTR
+      start  3.0 * D_1 + D_2
+      duration D_2 + D_4
       volume _default_volume
       pitch E5
 
     note
-      start  4.0 * WHL + QRTR
-      duration EITH
+      start  4.0 * D_1 + D_4
+      duration D_8
       volume _default_volume
       pitch G5
 
     note
-      start  legato_start: 4.0 * WHL + QRTR + EITH, EITH
-      duration legato_duration: EITH
+      start  legato_start: 4.0 * D_1 + D_4 + D_8, D_8
+      duration legato_duration: D_8
       volume _default_volume
       pitch F5S
 
     note
-      start  legato_start: 4.0 * WHL + HLF, HLF + QRTR
-      duration legato_duration: HLF + QRTR
+      start  legato_start: 4.0 * D_1 + D_2, D_2 + D_4
+      duration legato_duration: D_2 + D_4
       volume _default_volume
       pitch F5S
 
     note
-      start  5.0 * WHL + QRTR
-      duration QRTR
+      start  5.0 * D_1 + D_4
+      duration D_4
       volume REST
       pitch C4
 
     note
-      start  5.0 * WHL + HLF
-      duration QRTR
+      start  5.0 * D_1 + D_2
+      duration D_4
       volume REST
       pitch C4
 
     note
-      start  5.0 * WHL + HLF + QRTR
-      duration EITH
+      start  5.0 * D_1 + D_2 + D_4
+      duration D_8
       volume REST
       pitch C4
 
     note
-      start legato_start: 5.0 * WHL + HLF + QRTR + EITH, EITH
-      duration legato_duration: EITH
+      start legato_start: 5.0 * D_1 + D_2 + D_4 + D_8, D_8
+      duration legato_duration: D_8
       volume _default_volume
       pitch E5
 
     note
-      start legato_start: 6.0 * WHL, HLF
-      duration legato_duration: HLF
+      start legato_start: 6.0 * D_1, D_2
+      duration legato_duration: D_2
       volume _default_volume
       pitch E5
 
     note
-      start  6.0 * WHL + HLF
-      duration WHL + HLF
+      start  6.0 * D_1 + D_2
+      duration D_1 + D_2
       volume _default_volume
       pitch F5     
 
   phrase "36"
     note
       start 0.0
-      duration SXTNTH
+      duration D_16
       volume _default_volume
       pitch F4
 
     note
-      start SXTNTH
-      duration SXTNTH
+      start D_16
+      duration D_16
       volume _default_volume
       pitch G4
 
     note
-      start EITH
-      duration SXTNTH
+      start D_8
+      duration D_16
       volume _default_volume
       pitch B4
 
     note
-      start EITH + SXTNTH
-      duration SXTNTH
+      start D_8 + D_16
+      duration D_16
       volume _default_volume
       pitch G4
 
     note
-      start QRTR
-      duration SXTNTH
+      start D_4
+      duration D_16
       volume _default_volume
       pitch B4
 
     note
-      start QRTR + SXTNTH
-      duration SXTNTH
+      start D_4 + D_16
+      duration D_16
       volume _default_volume
       pitch G4    
 
   phrase "37"
     note
       start 0.0
-      duration SXTNTH
+      duration D_16
       volume _default_volume
       pitch F4
 
     note
-      start SXTNTH
-      duration SXTNTH
+      start D_16
+      duration D_16
       volume _default_volume
       pitch G4   
 
   phrase "38"
     note
       start 0.0
-      duration SXTNTH
+      duration D_16
       volume _default_volume
       pitch F4
 
     note
-      start SXTNTH
-      duration SXTNTH
+      start D_16
+      duration D_16
       volume _default_volume
       pitch G4
 
     note
-      start EITH
-      duration SXTNTH
+      start D_8
+      duration D_16
       volume _default_volume
       pitch B4    
 
   phrase "39"
     note
       start 0.0
-      duration SXTNTH
+      duration D_16
       volume _default_volume
       pitch B4
 
     note
-      start SXTNTH
-      duration SXTNTH
+      start D_16
+      duration D_16
       volume _default_volume
       pitch G4
 
     note
-      start EITH
-      duration SXTNTH
+      start D_8
+      duration D_16
       volume _default_volume
       pitch F4
 
     note
-      start EITH + SXTNTH
-      duration SXTNTH
+      start D_8 + D_16
+      duration D_16
       volume _default_volume
       pitch G4
 
     note
-      start QRTR
-      duration SXTNTH
+      start D_4
+      duration D_16
       volume _default_volume
       pitch B4
 
     note
-      start QRTR + SXTNTH
-      duration SXTNTH
+      start D_4 + D_16
+      duration D_16
       volume _default_volume
       pitch C5     
 
   phrase "40"
     note
       start 0.0
-      duration SXTNTH
+      duration D_16
       volume _default_volume
       pitch B4
 
     note
-      start SXTNTH
-      duration SXTNTH
+      start D_16
+      duration D_16
       volume _default_volume
       pitch F4   
 
   phrase "41"
     note
       start 0.0
-      duration SXTNTH
+      duration D_16
       volume _default_volume
       pitch B4
 
     note
-      start SXTNTH
-      duration SXTNTH
+      start D_16
+      duration D_16
       volume _default_volume
       pitch G4   
 
   phrase "42"
     note
       start 0.0
-      duration WHL
+      duration D_1
       volume _default_volume
       pitch C5
 
     note
-      start WHL
-      duration WHL
+      start D_1
+      duration D_1
       volume _default_volume
       pitch B4
 
     note
-      start 2.0 * WHL
-      duration WHL
+      start 2.0 * D_1
+      duration D_1
       volume _default_volume
       pitch A4
 
     note
-      start 3.0 * WHL
-      duration WHL
+      start 3.0 * D_1
+      duration D_1
       volume _default_volume
       pitch C4    
 
   phrase "43"
     note
       start 0.0
-      duration SXTNTH
+      duration D_16
       volume _default_volume
       pitch F5
 
     note
-      start SXTNTH
-      duration SXTNTH
+      start D_16
+      duration D_16
       volume _default_volume
       pitch E5
 
     note
-      start EITH
-      duration SXTNTH
+      start D_8
+      duration D_16
       volume _default_volume
       pitch F5
 
     note
-      start EITH + SXTNTH
-      duration SXTNTH
+      start D_8 + D_16
+      duration D_16
       volume _default_volume
       pitch E5
 
     note
-      start QRTR
-      duration EITH
+      start D_4
+      duration D_8
       volume _default_volume
       pitch E5    
 
     note
-      start QRTR + EITH
-      duration EITH
+      start D_4 + D_8
+      duration D_8
       volume _default_volume
       pitch E5
 
     note
-      start HLF
-      duration EITH
+      start D_2
+      duration D_8
       volume _default_volume
       pitch E5
 
     note
-      start HLF + EITH
-      duration SXTNTH
+      start D_2 + D_8
+      duration D_16
       volume _default_volume
       pitch F5 
 
     note
-      start HLF + EITH + SXTNTH
-      duration SXTNTH
+      start D_2 + D_8 + D_16
+      duration D_16
       volume _default_volume
       pitch E5 
 
   phrase "44"
     note
       start 0.0
-      duration EITH
+      duration D_8
       volume _default_volume
       pitch F5
 
     note
-      start legato_start: EITH, EITH
-      duration legato_duration: EITH
+      start legato_start: D_8, D_8
+      duration legato_duration: D_8
       volume _default_volume
       pitch E5
 
     note
-      start legato_start: QRTR, EITH
-      duration legato_duration: EITH
+      start legato_start: D_4, D_8
+      duration legato_duration: D_8
       volume _default_volume
       pitch E5
 
     note
-      start QRTR + EITH
-      duration EITH
+      start D_4 + D_8
+      duration D_8
       volume _default_volume
       pitch E5
 
     note
-      start HLF
-      duration QRTR
+      start D_2
+      duration D_4
       volume _default_volume
       pitch C5 
 
   phrase "45"
     note
       start 0.0
-      duration QRTR
+      duration D_4
       volume _default_volume
       pitch D5
 
     note
-      start QRTR
-      duration QRTR
+      start D_4
+      duration D_4
       volume _default_volume
       pitch D5
 
     note
-      start HLF
-      duration QRTR
+      start D_2
+      duration D_4
       volume _default_volume
       pitch G4 
 
   phrase "46"
     note
       start 0.0
-      duration SXTNTH
+      duration D_16
       volume _default_volume
       pitch G4
 
     note
-      start SXTNTH
-      duration SXTNTH
+      start D_16
+      duration D_16
       volume _default_volume
       pitch D5
 
     note
-      start EITH
-      duration SXTNTH
+      start D_8
+      duration D_16
       volume _default_volume
       pitch E5
 
     note
-      start EITH + SXTNTH
-      duration SXTNTH
+      start D_8 + D_16
+      duration D_16
       volume _default_volume
       pitch D5
 
     note
-      start QRTR
-      duration EITH
+      start D_4
+      duration D_8
       volume REST
       pitch C4
 
     note
-      start QRTR + EITH
-      duration EITH
+      start D_4 + D_8
+      duration D_8
       volume _default_volume
       pitch G4    
 
     note
-      start HLF
-      duration EITH
+      start D_2
+      duration D_8
       volume REST
       pitch C4
 
     note
-      start HLF + EITH
-      duration EITH
+      start D_2 + D_8
+      duration D_8
       volume _default_volume
       pitch G4    
 
     note
-      start HLF + QRTR
-      duration EITH
+      start D_2 + D_4
+      duration D_8
       volume REST
       pitch C4
 
     note
-      start HLF + QRTR + EITH
-      duration EITH
+      start D_2 + D_4 + D_8
+      duration D_8
       volume _default_volume
       pitch G4
 
     note
-      start WHL
-      duration SXTNTH
+      start D_1
+      duration D_16
       volume _default_volume
       pitch G4
 
     note
-      start WHL + SXTNTH
-      duration SXTNTH
+      start D_1 + D_16
+      duration D_16
       volume _default_volume
       pitch D5
 
     note
-      start WHL + EITH
-      duration SXTNTH
+      start D_1 + D_8
+      duration D_16
       volume _default_volume
       pitch E5
 
     note
-      start WHL + EITH + SXTNTH
-      duration SXTNTH
+      start D_1 + D_8 + D_16
+      duration D_16
       volume _default_volume
       pitch D5
 
   phrase "47"
     note
       start 0.0
-      duration SXTNTH
+      duration D_16
       volume _default_volume
       pitch D5
 
     note
-      start SXTNTH
-      duration SXTNTH
+      start D_16
+      duration D_16
       volume _default_volume
       pitch E5
 
     note
-      start EITH
-      duration SXTNTH
+      start D_8
+      duration D_16
       volume _default_volume
       pitch D5
 
   phrase "48"
     note
       start 0.0
-      duration WHL + HLF
+      duration D_1 + D_2
       volume _default_volume
       pitch G4
 
     note
-      start WHL + HLF
-      duration WHL
+      start D_1 + D_2
+      duration D_1
       volume _default_volume
       pitch G4
 
     note
-      start legato_start: 2.0 * WHL + HLF, WHL
-      duration legato_duration: WHL
+      start legato_start: 2.0 * D_1 + D_2, D_1
+      duration legato_duration: D_1
       volume _default_volume
       pitch F4
 
     note
-      start legato_start: 3.0 * WHL + HLF, QRTR
-      duration legato_duration: QRTR
+      start legato_start: 3.0 * D_1 + D_2, D_4
+      duration legato_duration: D_4
       volume _default_volume
       pitch F4
 
   phrase "49"
     note
       start 0.0
-      duration SXTNTH
+      duration D_16
       volume _default_volume
       pitch F4
 
     note
-      start SXTNTH
-      duration SXTNTH
+      start D_16
+      duration D_16
       volume _default_volume
       pitch G4
 
     note
-      start EITH
-      duration SXTNTH
+      start D_8
+      duration D_16
       volume _default_volume
       pitch A4S # B Flat
 
     note
-      start EITH + SXTNTH
-      duration SXTNTH
+      start D_8 + D_16
+      duration D_16
       volume _default_volume
       pitch G4
 
     note
-      start QRTR
-      duration SXTNTH
+      start D_4
+      duration D_16
       volume _default_volume
       pitch A4S  
 
     note
-      start QRTR + SXTNTH
-      duration SXTNTH
+      start D_4 + D_16
+      duration D_16
       volume _default_volume
       pitch G4    
 
   phrase "50"
     note
       start 0.0
-      duration SXTNTH
+      duration D_16
       volume _default_volume
       pitch F4
 
     note
-      start SXTNTH
-      duration SXTNTH
+      start D_16
+      duration D_16
       volume _default_volume
       pitch G4  
 
   phrase "51"
     note
       start 0.0
-      duration SXTNTH
+      duration D_16
       volume _default_volume
       pitch F4
 
     note
-      start SXTNTH
-      duration SXTNTH
+      start D_16
+      duration D_16
       volume _default_volume
       pitch G4
 
     note
-      start EITH
-      duration SXTNTH
+      start D_8
+      duration D_16
       volume _default_volume
       pitch A4S # B Flat    
 
   phrase "52"
     note
       start 0.0
-      duration SXTNTH
+      duration D_16
       volume _default_volume
       pitch G4
 
     note
-      start SXTNTH
-      duration SXTNTH
+      start D_16
+      duration D_16
       volume _default_volume
       pitch A4S # B Flat    
 
   phrase "53"
     note
       start 0.0
-      duration SXTNTH
+      duration D_16
       volume _default_volume
       pitch A4S # B Flat
 
     note
-      start SXTNTH
-      duration SXTNTH
+      start D_16
+      duration D_16
       volume _default_volume
       pitch G4
 

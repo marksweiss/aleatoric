@@ -25,7 +25,7 @@ repeat _num_steps
     note "Measure 1 1"
       instrument  1      
       start       index
-      duration    SXTNTH
+      duration    D_16
       amplitude   decay: _amp_fctr, index
       pitch       C4 + (cycle: index, _num_steps)
       func_table  1
@@ -33,14 +33,14 @@ repeat _num_steps
     note "Measure 1 2"
       instrument  1      
       start       index 
-      duration    SXTNTH
+      duration    D_16
       amplitude   decay: _amp_fctr, index
       pitch       C2 + (cycle: index, _num_steps)
       func_table  1      
     note "Measure 1 3"
       instrument  1      
       start       index
-      duration    SXTNTH
+      duration    D_16
       amplitude   decay: _amp_fctr, index
       pitch       C1 + (cycle: index, _num_steps)
       func_table  1

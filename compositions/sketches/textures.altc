@@ -64,28 +64,28 @@ phrase "p1"
       # Open Bug: channel must be declared before instrument
       channel     0 
       instrument  MIDI_Blown_Bottle
-      duration    SXTYFRTH
+      duration    D_64
       velocity    cycle_i: index, _cycle_rng
       pitch       C6 + (rng_cycle_i: index, _octave_rng)
 
     note "p1 n1 rest 1"
       channel     0 
       instrument  MIDI_Blown_Bottle
-      duration    SXTYFRTH
+      duration    D_64
       velocity    0
       pitch       Cneg1
       
     note "p1 n2"
       channel     1       
       instrument  MIDI_Shakuhachi
-      duration    SXTYFRTH
+      duration    D_64
       velocity    cycle_i: index, _cycle_rng
       pitch       E8 + (rng_cycle_i: index, _octave_rng)
       
     note "p1 n2 rest 1"
       channel     1 
       instrument  MIDI_Shakuhachi
-      duration    SXTYFRTH
+      duration    D_64
       velocity    0
       pitch       Cneg1      
 
@@ -96,39 +96,39 @@ phrase "p2"
       # Open Bug: channel must be declared before instrument
       channel     0 
       instrument  MIDI_Blown_Bottle
-      duration    THRTYSCND
+      duration    D_32
       velocity    cycle_i: index, _cycle_rng
       pitch       C5 + (rng_cycle_i: index, _octave_rng)
 
     note "p2 n1 rest 1"
       channel     0 
       instrument  MIDI_Blown_Bottle
-      duration    THRTYSCND
+      duration    D_32
       velocity    0
       pitch       Cneg1
       
     note "p2 n2"
       channel     1       
       instrument  MIDI_Shakuhachi
-      duration    THRTYSCND
+      duration    D_32
       velocity    cycle_i: index, _cycle_rng
       pitch       E7 + (rng_cycle_i: index, _octave_rng)
       
     note "p2 n2 rest 1"
       channel     1 
       instrument  MIDI_Shakuhachi
-      duration    THRTYSCND
+      duration    D_32
       velocity    0
       pitch       Cneg1      
       
 phrase "p0"  
-  # TODO THIS SHOULD WORK! repeat ((_pi_rng * _loops_factor) * SXTYFRTH) 
+  # TODO THIS SHOULD WORK! repeat ((_pi_rng * _loops_factor) * D_64) 
   repeat 10
     note "p0 n1"
       # Open Bug: channel must be declared before instrument
       channel     2 
       instrument  MIDI_Oboe
-      duration    WHL
+      duration    D_1
       velocity    60
       pitch       F0S      
       

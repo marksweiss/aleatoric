@@ -379,28 +379,28 @@ class ComposerAST_Test < MiniTest::Unit::TestCase
 
     lang = ComposerAST.new
 
-    actual = lang.preprocess_start_duration(lang.tokenize("start EITH\n"))            
-    expected = ['start', '(', 'EITH', ', ', 'true', ')']        
+    actual = lang.preprocess_start_duration(lang.tokenize("start D_8\n"))            
+    expected = ['start', '(', 'D_8', ', ', 'true', ')']        
     assert(actual[0] == expected)
 
-    actual = lang.preprocess_start_duration(lang.tokenize("duration HLF\n"))        
-    expected = ['duration', '(', 'HLF', ', ', 'true', ')']    
+    actual = lang.preprocess_start_duration(lang.tokenize("duration D_2\n"))        
+    expected = ['duration', '(', 'D_2', ', ', 'true', ')']    
     assert(actual[0] == expected)
     
-    actual = lang.preprocess_start_duration(lang.tokenize("duration WHL + HLF\n"))        
-    expected = ['duration', '(', 'WHL', '+', 'HLF', ', ', 'true', ')']    
+    actual = lang.preprocess_start_duration(lang.tokenize("duration D_1 + D_2\n"))        
+    expected = ['duration', '(', 'D_1', '+', 'D_2', ', ', 'true', ')']    
     assert(actual[0] == expected)
 
-    actual = lang.preprocess_start_duration(lang.tokenize("start WHL + HLF\n"))        
-    expected = ['start', '(', 'WHL', '+', 'HLF', ', ', 'true', ')']    
+    actual = lang.preprocess_start_duration(lang.tokenize("start D_1 + D_2\n"))        
+    expected = ['start', '(', 'D_1', '+', 'D_2', ', ', 'true', ')']    
     assert(actual[0] == expected)
     
-    actual = lang.preprocess_start_duration([lang.preprocess_func_helper(lang.tokenize('duration foo: HLF')[0])])
-    expected = ['duration', '(', 'foo(', 'HLF', ')', ', ', 'true', ')']          
+    actual = lang.preprocess_start_duration([lang.preprocess_func_helper(lang.tokenize('duration foo: D_2')[0])])
+    expected = ['duration', '(', 'foo(', 'D_2', ')', ', ', 'true', ')']          
     assert(actual[0] == expected)  
     
-    actual = lang.preprocess_start_duration([lang.preprocess_func_helper(lang.tokenize('start foo: EITH + HLF')[0])])
-    expected = ['start', '(', 'foo(', 'EITH', '+', 'HLF', ')', ', ', 'true', ')']  
+    actual = lang.preprocess_start_duration([lang.preprocess_func_helper(lang.tokenize('start foo: D_8 + D_2')[0])])
+    expected = ['start', '(', 'foo(', 'D_8', '+', 'D_2', ')', ', ', 'true', ')']  
     assert(actual[0] == expected)      
         
     end

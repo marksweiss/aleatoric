@@ -136,8 +136,8 @@ times_two: x
 #  or a quarter note is 1 sec. or a whole note is 4 secs.
 # Default tempo is 60, so if this isn't set above holds
 # If it is set, AND durations are specified using duration constants
-#  such as WHL, HLF, etc.  The reason for this is that if the score specifies
-#  exact tempos in seconds, not just "relative" lengths such as WHL etc. then
+#  such as D_1, D_2, etc.  The reason for this is that if the score specifies
+#  exact tempos in seconds, not just "relative" lengths such as D_1 etc. then
 #  those exact tempos should be honored
 tempo 30
 
@@ -146,15 +146,15 @@ measure "Measure 1"
   note "1"
     instrument  1 
     start       0.0 
-    duration    WHL+HLF  
+    duration    D_1+D_2  
     amplitude   1000
     pitch       7.01
     func_table  1
 
   note "2"
     instrument  1 
-    start       EITH
-    duration    times_two: HLF 
+    start       D_8
+    duration    times_two: D_2 
     amplitude   1100
     pitch       7.02
     func_table  1
@@ -162,7 +162,7 @@ measure "Measure 1"
   note "3"
     instrument  1 
     start       0.0 
-    duration    QRTR
+    duration    D_4
     amplitude   1200
     pitch       7.03
     func_table  1
@@ -175,15 +175,15 @@ measure "Measure 2"
   note "4"
     instrument  1 
     start       0.0 
-    duration    WHL+HLF  
+    duration    D_1+D_2  
     amplitude   1000
     pitch       7.01
     func_table  1
 
   note "5"
     instrument  1 
-    start       QRTR + QRTR 
-    duration    HLF
+    start       D_4 + D_4 
+    duration    D_2
     amplitude   1100
     pitch       7.02
     func_table  1
@@ -191,7 +191,7 @@ measure "Measure 2"
   note "6"
     instrument  1 
     start       0.0 
-    duration    QRTR
+    duration    D_4
     amplitude   1200
     pitch       7.03
     func_table  1
@@ -212,7 +212,7 @@ measure "Measure 1"
   note "1"
     instrument  1 
     start       0.0 
-    duration    WHL
+    duration    D_1
     amplitude   1000
     pitch       7.01
     func_table  1
@@ -220,7 +220,7 @@ measure "Measure 1"
   note "2"
     instrument  1 
     start       1.0 
-    duration    HLF
+    duration    D_2
     amplitude   1100
     pitch       7.02
     func_table  1
@@ -228,7 +228,7 @@ measure "Measure 1"
   note "3"
     instrument  1 
     start       0.0 
-    duration    QRTR
+    duration    D_4
     amplitude   1200
     pitch       7.03
     func_table  1

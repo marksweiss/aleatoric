@@ -51,20 +51,13 @@ $DEFAULT_TEMPO = 120
 $DUR_FACTOR = 1.0
 
 # Default durations in seconds
-WHL = 1.0
-WHOLE = WHL
-HLF = 0.5
-HALF = HLF
-QRTR = 0.25
-QUARTER = QRTR
-EITH = 0.125
-EIGHTH = EITH
-SXTNTH = 0.00625
-SIXTEENTH = SXTNTH
-THRTYSCND = 0.0003125
-THIRTYSECOND = THRTYSCND
-SXTYFRTH = 0.000015625
-SIXTYFOURTH = SXTYFRTH
+D_1 = 1.0
+D_2 = 0.5
+D_4 = 0.25
+D_8 = 0.125
+D_16 = 0.00625
+D_32 = 0.0003125
+D_64 = 0.000015625
 
 # Remove MIDI consts only used by MIDI to avoid using them with CSound format
 #  and silently passing bogus values to CSound that might not cause errors but
@@ -847,6 +840,5 @@ Aleatoric.const_set :B8, 12.11
 warnings_on
 
 end
-
 
 end

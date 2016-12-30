@@ -153,12 +153,12 @@ class In_C_Player
     @ensemble = ensemble
     @num_phrases = num_phrases
     @handle = handle
-	  # Offset into @phrases that this player is currently playing
-	  @phrases_idx = 0
-	  @cur_start = 0.0
-	  # Count of how many times Player has adjusted phase, to support testing against
-	  #  adj_phase_count_threshold to apply adj_phase_prob_increase_factor in adj_phase?
-	  @adj_phase_count = 0
+    # Offset into @phrases that this player is currently playing
+    @phrases_idx = 0
+    @cur_start = 0.0
+    # Count of how many times Player has adjusted phase, to support testing against
+    #  adj_phase_count_threshold to apply adj_phase_prob_increase_factor in adj_phase?
+    @adj_phase_count = 0
     # Indicator that the Player is at rest
     @at_rest = false        
   end
@@ -213,7 +213,7 @@ class In_C_Player
   def rest?
     # More likely to stay at rest if already at rest -- the Player is "listening"
     stay_at_rest_factor = @at_rest ? @stay_at_rest_prob_factor : NO_FACTOR
-	  meets_condition?(@rest_prob_factor * stay_at_rest_factor)
+    meets_condition?(@rest_prob_factor * stay_at_rest_factor)
   end
 
   # PREPLAY note.start(note.start - @phase_adj_dur), phrase.insert_note(0, CSnd::Note.rest(note, @phase_adj_dur, @pid))  
@@ -231,7 +231,7 @@ class In_C_Player
     # Calculate a ratio for this phrase's max amp vs. all in the ensemble
     # If within range up or down we'll adjust amp up or down
     ensemble_max_amp = @ensemble.max_player_amp 
-	  ensemble_max_amp = 1 if ensemble_max_amp == 0
+    ensemble_max_amp = 1 if ensemble_max_amp == 0
     amp_ratio = max_amp(phrase).to_f / ensemble_max_amp.to_f
 
     # Do we adjust the volume?
@@ -258,7 +258,7 @@ class In_C_Player
   def transpose_shift(phrase)	
     shift = @transpose_no_shift
 
-  	if meets_condition?(@transpose_prob_factor)
+    if meets_condition?(@transpose_prob_factor)
       # Figure out if we shift up or down, it depends on the length of notes in the phrase ...
       # ... so get mean length of all notes in current phrase ...
       durations = phrase.attr_slice(:duration)
@@ -267,9 +267,9 @@ class In_C_Player
       #  module Aleatoric, apparently, not code that includes it, such as here
       # Note also that module-level free methods from util.rb, where #sum() is
       #  can be called here.
-	    # mean_dur = durations.sum / durations.length
-	    dur_sum = durations.inject(0) {|sum, x| sum + x}
-	    mean_dur = dur_sum / durations.length
+      # mean_dur = durations.sum / durations.length
+      dur_sum = durations.inject(0) {|sum, x| sum + x}
+      mean_dur = dur_sum / durations.length
       
       # ... and test it against the threshold for favoring down transpose
       if meets_condition?(@transpose_down_prob_factor) and mean_dur >= @transpose_down_dur_threshold
@@ -364,6 +364,8 @@ class In_C_Ensemble
     
   attr_reader     :name, :num_players, :num_phrases, :unison_count, :players
   attr_writer     :reached_conclusion
+  @@al_players = {}
+  @@in_c_ensemble = nil
 
   def initialize(name, handle)
     @name = name
@@ -504,25 +506,24 @@ end
 # This is exposed by the API and it passes arrays of all the main entities
 #  in Composer to the callback, namely Notes, Scores, Measures, Phrases, Sections, Players, Ensembles
 in_c_players = {}
-@@al_players = {}
 in_c_init_play_handler = lambda do |notes, scores, measures, phrases, sections, players, ensembles|
   # Instantiate In_C_Ensemble and In_C_Players, these are used by the Instruction handlers
   #  to implement the Instructions
-  players.each {|player| @@al_players[player.handle] = player}
+  players.each {|player| In_C_Ensemble.al_players[player.handle] = player}
   ensemble_handle = ensembles.first.handle
   player_handles = players.collect {|p| p.handle}
   # Construct with reference to Composer Ensemble object
-  @@in_c_ensemble = In_C_Ensemble.new("In C Orchestra", ensemble_handle)
+  In_C_Ensemble.in_c_ensemble = In_C_Ensemble.new("In C Orchestra", ensemble_handle)
   # Call to create accessors from settings  
-  @@in_c_ensemble.def_accessors
+  In_C_Ensemble.in_c_ensemble.def_accessors
   num_phrases = PLAYER_SETTINGS["num_phrases"]
   ENSEMBLE_SETTINGS["num_players"].times do |j|
-    player = In_C_Player.new(@@in_c_ensemble, num_phrases, player_handles[j])
+    player = In_C_Player.new(In_C_Ensemble.in_c_ensemble, num_phrases, player_handles[j])
     player.def_accessors
     # Reverse key mapping of Composer Player handle to this shadowing In_C_Player
     in_c_players[player_handles[j]] = player  
   end
-  @@in_c_ensemble.players = in_c_players  
+  In_C_Ensemble.in_c_ensemble.players = in_c_players  
 end
 set_play_init_handler("in_c_init_play_handler", &in_c_init_play_handler)
 # *************************
@@ -729,7 +730,7 @@ instruction_14_ensemble_pre = lambda do |container|
     aleatoric_ensemble.set_state("play_count", play_count + 1)
   end
   
-  if @@in_c_ensemble.reached_concluding_unison?
+  if In_C_Ensemble.in_c_ensemble.reached_concluding_unison?
     
     # In practice, variations in duration from swing, added notes for phase align changes can lead to significant delta
     #  in when players arrive at the same phrase, so we need this

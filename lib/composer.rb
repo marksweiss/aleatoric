@@ -390,7 +390,7 @@ end
 
 # $DUR_FACTOR is 1.0 by default, in global.rb
 # So if set here it changes tempo, which is applied to all notes
-#  set using duration constants, e.g. WHL, HLF, also in global.rb
+#  set using duration constants, e.g. D_1, D_2, also in global.rb
 def duration(arg, is_duration_set_using_const=false)
   arg *= $DUR_FACTOR if is_duration_set_using_const and $FORMAT != :midi
   @cur_note.duration arg
@@ -398,7 +398,7 @@ end
 
 # $DUR_FACTOR is 1.0 by default, in global.rb
 # So if set here it changes tempo, which is applied to all notes
-#  set using duration constants, e.g. WHL, HLF, also in global.rb
+#  set using duration constants, e.g. D_1, D_2, also in global.rb
 def tempo(new_tempo_bpm)
   # If notes explicitly declared in score, adjust each one by tempo duration factor
   if $FORMAT != :midi
@@ -479,10 +479,10 @@ def measure(name, &args_blk)
   # This lets sequences of measures not need to figure out their offset from the beginning
   # So you have this:
   #   note
-  #     start QRTR
+  #     start D_4
   # instead of this:
   #   note
-  #     start running_total_since_start + QRTR  
+  #     start running_total_since_start + D_4  
   @cur_measure = Measure.new(name, @cur_start)
   # NOTE: Need to wrap yield call (which processes notes) to put Note in scope as the 
   #  method_missing() handler or else the 'start' attribute from the script is trapped

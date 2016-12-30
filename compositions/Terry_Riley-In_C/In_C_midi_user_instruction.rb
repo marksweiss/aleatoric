@@ -21,7 +21,7 @@ PLAYER_SETTINGS = {
   
   # Player Phrase Advance
   # Player must play each phrase at least this long
-  "min_repeat_phrase_duration" => QRTR * (45.0 + rand(15).to_f),
+  "min_repeat_phrase_duration" => D_4 * (45.0 + rand(15).to_f),
   # The most important factor governing advance of Players through phrases, this is simply
   #  the percentage prob that they advance on any given iteration  
   "phrase_advance_prob" => 0.11, 
@@ -40,7 +40,7 @@ PLAYER_SETTINGS = {
   "adj_phase_count_threshold" => 1,
   "adj_phase_prob_increase_factor" => 1.0,
   # The length of the rest Note (in seconds) inserted if a Player is adjusting its phase  
-  "phase_adj_dur" => SXTYFRTH * 0.1,
+  "phase_adj_dur" => D_64 * 0.1,
   
   # Prob that a Player will seek unison on any given iteration.  The idea is that
   #  to seek unison the Ensemble and all the Players must seek unison  

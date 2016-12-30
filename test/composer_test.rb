@@ -694,46 +694,46 @@ reset_script_state
 meter 4,4
   quantize on
 
-# This tests case of not needing to quantize. Two HLF notes at correct start times that
+# This tests case of not needing to quantize. Two D_2 notes at correct start times that
 #  take up exactly the correct length of the measure
 measure "Measure 1"
 
   note "1"
     instrument  1 
     start       0.0 
-    duration    HLF
+    duration    D_2
     amplitude   1000
     pitch       7.01
     func_table  1
 
   note "2"
     instrument  1 
-    start       HLF 
-    duration    HLF
+    start       D_2 
+    duration    D_2
     amplitude   1100
     pitch       7.02
     func_table  1
 
 # This tests quantize
-# Each note is first mapped to QRTR, but that is only half the beat length of the meter
+# Each note is first mapped to D_4, but that is only half the beat length of the meter
 #  so then each is increased to reach the total necessary duration, and each maintains the same
-#  percentage of the total duration, so then each is moved from QRTR to HLF, since the meter
-#  is 4/4, which is 4 beats of QRTR notes, or one WHL note. Note this adjusts start time of second
+#  percentage of the total duration, so then each is moved from D_4 to D_2, since the meter
+#  is 4/4, which is 4 beats of D_4 notes, or one D_1 note. Note this adjusts start time of second
 #  note correctly also
 measure "Measure 2"
 
   note "1"
     instrument  1 
     start       0.0 
-    duration    QRTR
+    duration    D_4
     amplitude   1000
     pitch       7.01
     func_table  1
 
   note "2"
     instrument  1 
-    start       QRTR 
-    duration    QRTR
+    start       D_4 
+    duration    D_4
     amplitude   1100
     pitch       7.02
     func_table  1    
@@ -744,10 +744,10 @@ write "composer_test_results.txt"
 }
   tester, results = test_runner(test_name, throw_on_failure, script, lite_syntax)
   actual = results
-  expected0 = "i 1 0.00000 #{'%.5f' % HLF} 1000 7.01000 1 ; 1"
-  expected1 = "i 1 #{'%.5f' % HLF} #{'%.5f' % HLF} 1100 7.02000 1 ; 2"
-  expected2 = "i 1 0.00000 #{'%.5f' % HLF} 1000 7.01000 1 ; 1"
-  expected3 = "i 1 #{'%.5f' % HLF} #{'%.5f' % HLF} 1100 7.02000 1 ; 2"
+  expected0 = "i 1 0.00000 #{'%.5f' % D_2} 1000 7.01000 1 ; 1"
+  expected1 = "i 1 #{'%.5f' % D_2} #{'%.5f' % D_2} 1100 7.02000 1 ; 2"
+  expected2 = "i 1 0.00000 #{'%.5f' % D_2} 1000 7.01000 1 ; 1"
+  expected3 = "i 1 #{'%.5f' % D_2} #{'%.5f' % D_2} 1100 7.02000 1 ; 2"
   
   tester.assert(expected0 == actual[2])
   tester.assert(expected1 == actual[3])
@@ -772,8 +772,8 @@ times_two: x
 # Tempo is specified in bpm, i.e. 60 == 60 quarter notes/min
 #  or a quarter note is 1 sec. or a whole note is 4 secs.
 # If it is set, AND durations are specified using duration constants
-#  such as WHL, HLF, etc.  The reason for this is that if the score specifies
-#  exact tempos in seconds, not just "relative" lengths such as WHL etc. then
+#  such as D_1, D_2, etc.  The reason for this is that if the score specifies
+#  exact tempos in seconds, not just "relative" lengths such as D_1 etc. then
 #  those exact tempos should be honored
 tempo 30
 
@@ -782,15 +782,15 @@ measure "Measure 1"
   note "1"
     instrument  1 
     start       0.0 
-    duration    WHL+HLF  
+    duration    D_1+D_2  
     amplitude   1000
     pitch       7.01
     func_table  1
 
   note "2"
     instrument  1 
-    start       EITH
-    duration    times_two: HLF 
+    start       D_8
+    duration    times_two: D_2 
     amplitude   1100
     pitch       7.02
     func_table  1
@@ -798,7 +798,7 @@ measure "Measure 1"
   note "3"
     instrument  1 
     start       0.0 
-    duration    QRTR
+    duration    D_4
     amplitude   1200
     pitch       7.03
     func_table  1
@@ -811,15 +811,15 @@ measure "Measure 2"
   note "4"
     instrument  1 
     start       0.0 
-    duration    WHL+HLF  
+    duration    D_1+D_2  
     amplitude   1000
     pitch       7.01
     func_table  1
 
   note "5"
     instrument  1 
-    start       QRTR + QRTR 
-    duration    HLF
+    start       D_4 + D_4 
+    duration    D_2
     amplitude   1100
     pitch       7.02
     func_table  1
@@ -827,7 +827,7 @@ measure "Measure 2"
   note "6"
     instrument  1 
     start       0.0 
-    duration    QRTR
+    duration    D_4
     amplitude   1200
     pitch       7.03
     func_table  1
@@ -840,15 +840,15 @@ write "composer_test_results.txt"
   actual = results
 
   tempo_factor = $DEFAULT_TEMPO / 30        
-  expected0 = "i 1 0.00000 #{'%.5f' % ((WHL + HLF) * tempo_factor)} 1000 7.01000 1 ; 1"
-  expected1 = "i 1 #{'%.5f' % (EITH * tempo_factor)} #{'%.5f' % (HLF * 2.0 * tempo_factor)} 1100 7.02000 1 ; 2"
-  expected2 = "i 1 0.00000 #{'%.5f' % (QRTR * tempo_factor)} 1200 7.03000 1 ; 3"  
+  expected0 = "i 1 0.00000 #{'%.5f' % ((D_1 + D_2) * tempo_factor)} 1000 7.01000 1 ; 1"
+  expected1 = "i 1 #{'%.5f' % (D_8 * tempo_factor)} #{'%.5f' % (D_2 * 2.0 * tempo_factor)} 1100 7.02000 1 ; 2"
+  expected2 = "i 1 0.00000 #{'%.5f' % (D_4 * tempo_factor)} 1200 7.03000 1 ; 3"  
 
-  offset = ((WHL + HLF) * tempo_factor)           
+  offset = ((D_1 + D_2) * tempo_factor)           
   tempo_factor = $DEFAULT_TEMPO / 120
-  expected3 = "i 1 #{'%.5f' % offset} #{'%.5f' % ((WHL + HLF) * tempo_factor)} 1000 7.01000 1 ; 4"
-  expected4 = "i 1 #{'%.5f' % (offset + ((QRTR + QRTR) * tempo_factor))} #{'%.5f' % (HLF * tempo_factor)} 1100 7.02000 1 ; 5"
-  expected5 = "i 1 #{'%.5f' % offset} #{'%.5f' % (QRTR * tempo_factor)} 1200 7.03000 1 ; 6"
+  expected3 = "i 1 #{'%.5f' % offset} #{'%.5f' % ((D_1 + D_2) * tempo_factor)} 1000 7.01000 1 ; 4"
+  expected4 = "i 1 #{'%.5f' % (offset + ((D_4 + D_4) * tempo_factor))} #{'%.5f' % (D_2 * tempo_factor)} 1100 7.02000 1 ; 5"
+  expected5 = "i 1 #{'%.5f' % offset} #{'%.5f' % (D_4 * tempo_factor)} 1200 7.03000 1 ; 6"
 
   tester.assert(expected0 == actual[2])
   tester.assert(expected1 == actual[3])
@@ -876,7 +876,7 @@ measure "Measure 1"
   note "1"
     instrument  1 
     start       0.0 
-    duration    WHL
+    duration    D_1
     amplitude   1000
     pitch       7.01
     func_table  1
@@ -884,7 +884,7 @@ measure "Measure 1"
   note "2"
     instrument  1 
     start       1.0 
-    duration    HLF
+    duration    D_2
     amplitude   1100
     pitch       7.02
     func_table  1
@@ -892,7 +892,7 @@ measure "Measure 1"
   note "3"
     instrument  1 
     start       0.0 
-    duration    QRTR
+    duration    D_4
     amplitude   1200
     pitch       7.03
     func_table  1
@@ -903,9 +903,9 @@ write "composer_test_results.txt"
 }
   tester, results = test_runner(test_name, throw_on_failure, script, lite_syntax)
   actual = results         
-  expected0 = "i 1 0.00000 #{'%.5f' % WHL} 1000 7.01000 1 ; 1"
-  expected1 = "i 1 1.00000 #{'%.5f' % HLF} 1100 7.02000 1 ; 2"
-  expected2 = "i 1 0.00000 #{'%.5f' % QRTR} 1200 7.03000 1 ; 3"
+  expected0 = "i 1 0.00000 #{'%.5f' % D_1} 1000 7.01000 1 ; 1"
+  expected1 = "i 1 1.00000 #{'%.5f' % D_2} 1100 7.02000 1 ; 2"
+  expected2 = "i 1 0.00000 #{'%.5f' % D_4} 1200 7.03000 1 ; 3"
   tester.assert(expected0 == actual[2])
   tester.assert(expected1 == actual[3])
   tester.assert(expected2 == actual[4])
