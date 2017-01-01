@@ -176,6 +176,10 @@ class In_C_Player
   # Used by Ensemble to test if all phrases have reached the last phrase
   def reached_last_phrase?
     # TODO This should be ==, >= is a relic of a bug and trying to defend against it
+
+    # TEMP DEBUG
+    p "HANDLE #{@handle}  PHRASES_IDX #{@phrases_idx}"
+
     @phrases_idx >= @num_phrases
   end
   
@@ -711,7 +715,7 @@ instruction_14_repeat_until_test_post = lambda do
   # Violates encapsulation -- needs to know about module scope variable defined above
   # NOTE REPEAT UNTIL NAME PASSED TO set_repeat_until_stop() *** MUST MATCH ***
   #  NAME PASSED TO set_repeat_until_stop_postplay_test()  
-
+  if $IN_C_ENSEMBLE.reached_conclusion?
     set_repeat_until_stop "... each player drops out as he or she wishes."
   end
 end
