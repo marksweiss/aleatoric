@@ -110,7 +110,7 @@ PLAYER_SETTINGS = {
 # Ensemble State Management
 # These values govern the behavior of the Ensemble
 ENSEMBLE_SETTINGS = {
-  "num_players" => 5,
+  "num_players" => 8,
   # Threshold number of phrases behind the furthest ahead any Player is allowed to slip.
   # If they are more than N behind the leader, they must advance.     
   "phrases_idx_range_threshold" => 3,
@@ -169,14 +169,14 @@ class In_C_Player
     @ensemble = ensemble
     @num_phrases = num_phrases
     @handle = handle
-	  # Offset into @phrases that this player is currently playing
-	  @phrases_idx = 0
-	  @cur_start = 0.0
-	  # Count of how many times Player has played current phrase
-	  @cur_phrase_count = 0
-	  # Count of how many times Player has adjusted phase, to support testing against
-	  #  adj_phase_count_threshold to apply adj_phase_prob_increase_factor in adj_phase?
-	  @adj_phase_count = 0
+    # Offset into @phrases that this player is currently playing
+    @phrases_idx = 0
+    @cur_start = 0.0
+    # Count of how many times Player has played current phrase
+    @cur_phrase_count = 0
+    # Count of how many times Player has adjusted phase, to support testing against
+    #  adj_phase_count_threshold to apply adj_phase_prob_increase_factor in adj_phase?
+    @adj_phase_count = 0
     # Indicator that the Player is at rest
     @at_rest = false
     @repeating_cur_phrase = false        
@@ -225,19 +225,11 @@ class In_C_Player
   
   # Instruction 5, grouped with Instruction 3
   def play_next_phrase_too_far_behind?
-    # TEMP DEBUG
-    x = false
-    # TEMP DEBUG
-        
     can_advance = ! @has_advanced && ! @repeating_cur_phrase && ! reached_last_phrase?
     if can_advance and phrases_idx_too_far_behind?
       @has_advanced = true
       @cur_phrase_count = 0
       @phrases_idx += 1
-
-      # TEMP DEBUG
-      x = true
-      # TEMP DEBUG
     end
   
     # TEMP DEBUG
@@ -250,19 +242,11 @@ class In_C_Player
   
   # Instruction 6, grouped with Instructions 5 and 6
   def play_next_phrase_seeking_unison?
-    # TEMP DEBUG
-    x = false
-    # TEMP DEBUG
-        
     can_advance = ! @has_advanced && ! @repeating_cur_phrase && ! reached_last_phrase? 
     if can_advance and seeking_unison? 
       @has_advanced = true        
       @cur_phrase_count = 0
       @phrases_idx += 1
-
-      # TEMP DEBUG
-      x = true
-      # TEMP DEBUG      
     end    
 
     # TEMP DEBUG
@@ -279,11 +263,10 @@ class In_C_Player
     if not @ensemble.in_crescendo?
       # More likely to stay at rest if already at rest -- the Player is "listening"
       stay_at_rest_factor = @at_rest ? @stay_at_rest_prob_factor : NO_FACTOR
-  	  meets_condition?(@rest_prob_factor * stay_at_rest_factor)
-  
-  	else
-  	  false
-  	end
+      meets_condition?(@rest_prob_factor * stay_at_rest_factor)
+    else
+      false
+    end
   end
 
   # PREPLAY note.start(note.start - @phase_adj_dur), phrase.insert_note(0, CSnd::Note.rest(note, @phase_adj_dur, @pid))  
@@ -305,7 +288,7 @@ class In_C_Player
   def transpose_shift(phrase)	
     shift = @transpose_no_shift
 
-  	if meets_condition?(@transpose_prob_factor)
+    if meets_condition?(@transpose_prob_factor)
       # Figure out if we shift up or down, it depends on the length of notes in the phrase ...
       # ... so get mean length of all notes in current phrase ...
       durations = phrase.attr_slice(:duration)
@@ -314,9 +297,9 @@ class In_C_Player
       #  module Aleatoric, apparently, not code that includes it, such as here
       # Note also that module-level free methods from util.rb, where #sum() is
       #  can be called here.
-	    # mean_dur = durations.sum / durations.length
-	    dur_sum = durations.inject(0) {|sum, x| sum + x}
-	    mean_dur = dur_sum / durations.length
+      # mean_dur = durations.sum / durations.length
+      dur_sum = durations.inject(0) {|sum, x| sum + x}
+      mean_dur = dur_sum / durations.length
       
       # ... and test it against the threshold for favoring down transpose
       if meets_condition?(@transpose_down_prob_factor) and mean_dur >= @transpose_down_dur_threshold

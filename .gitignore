@@ -7,3 +7,5 @@ lib/.byebug_history
 lib/tempflush
 compositions/Terry_Riley-In_C/in_c.altc.tmp
 compositions/Terry_Riley-In_C/tempflush
+*.aiff
+compositions/Terry_Riley-In_C/In_C.aiff

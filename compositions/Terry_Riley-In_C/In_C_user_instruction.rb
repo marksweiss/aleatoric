@@ -10,6 +10,7 @@ include Aleatoric
 
 
 # IMPLEMENTATION OF THIS user_instruction.rb
+$IN_C_ENSEMBLE = nil
 
 # *************************
 # Player State Management
@@ -106,7 +107,7 @@ PLAYER_SETTINGS = {
 # Ensemble State Management
 # These values govern the behavior of the Ensemble
 ENSEMBLE_SETTINGS = {
-  "num_players" => 12,
+  "num_players" => 8,
   # Threshold number of phrases behind the furthest ahead any Player is allowed to slip.
   # If they are more than 3 behind the leader, they must advance.     
   "phrases_idx_range_threshold" => 3,
@@ -165,7 +166,7 @@ class In_C_Player
     
   # Player Public API
   # This is what the Instruction handlers call to control each Player on each call to play() in the Composer score
-  # Some methods public also so In_C_Ensemble can call them
+  # Some methods public also so IN_C_ENSEMBLE can call them
   public
 
   def phrases_index
@@ -362,10 +363,10 @@ end
 class In_C_Ensemble
   include Aleatoric
     
+  attr            :handle
   attr_reader     :name, :num_players, :num_phrases, :unison_count, :players
   attr_writer     :reached_conclusion
   @@al_players = {}
-  @@in_c_ensemble = nil
 
   def initialize(name, handle)
     @name = name
@@ -507,23 +508,24 @@ end
 #  in Composer to the callback, namely Notes, Scores, Measures, Phrases, Sections, Players, Ensembles
 in_c_players = {}
 in_c_init_play_handler = lambda do |notes, scores, measures, phrases, sections, players, ensembles|
-  # Instantiate In_C_Ensemble and In_C_Players, these are used by the Instruction handlers
+  # Instantiate IN_C_ENSEMBLE and In_C_Players, these are used by the Instruction handlers
   #  to implement the Instructions
   players.each {|player| In_C_Ensemble.al_players[player.handle] = player}
   ensemble_handle = ensembles.first.handle
   player_handles = players.collect {|p| p.handle}
-  # Construct with reference to Composer Ensemble object
-  In_C_Ensemble.in_c_ensemble = In_C_Ensemble.new("In C Orchestra", ensemble_handle)
+  # Add reference to Composer Ensemble object
+  $IN_C_ENSEMBLE = In_C_Ensemble.new("In C Orchestra", ensemble_handle)
+
   # Call to create accessors from settings  
-  In_C_Ensemble.in_c_ensemble.def_accessors
+  $IN_C_ENSEMBLE.def_accessors
   num_phrases = PLAYER_SETTINGS["num_phrases"]
   ENSEMBLE_SETTINGS["num_players"].times do |j|
-    player = In_C_Player.new(In_C_Ensemble.in_c_ensemble, num_phrases, player_handles[j])
+    player = In_C_Player.new($IN_C_ENSEMBLE, num_phrases, player_handles[j])
     player.def_accessors
     # Reverse key mapping of Composer Player handle to this shadowing In_C_Player
     in_c_players[player_handles[j]] = player  
   end
-  In_C_Ensemble.in_c_ensemble.players = in_c_players  
+  $IN_C_ENSEMBLE.players = in_c_players  
 end
 set_play_init_handler("in_c_init_play_handler", &in_c_init_play_handler)
 # *************************
@@ -531,7 +533,7 @@ set_play_init_handler("in_c_init_play_handler", &in_c_init_play_handler)
 
 # *************************
 # Composer Instruction and 'repeat until' Implementation
-# This uses the above classes to manage state of the In_C_Players and In_C_Ensemble, to encapsulate all the
+# This uses the above classes to manage state of the In_C_Players and IN_C_ENSEMBLE, to encapsulate all the
 #  predicates and computations that determine what actions each Player takes on each iteration of play().
 #  Here we apply the changes based on using these classes to the actual Composer Players and Ensemble, in the
 #  pre- and post-play handlers, access the Composer Players and Ensemble through the handler 'container' argument,
@@ -709,7 +711,7 @@ instruction_14_repeat_until_test_post = lambda do
   # Violates encapsulation -- needs to know about module scope variable defined above
   # NOTE REPEAT UNTIL NAME PASSED TO set_repeat_until_stop() *** MUST MATCH ***
   #  NAME PASSED TO set_repeat_until_stop_postplay_test()  
-  if In_C_Ensemble.in_c_ensemble.reached_conclusion?
+
     set_repeat_until_stop "... each player drops out as he or she wishes."
   end
 end
@@ -730,7 +732,7 @@ instruction_14_ensemble_pre = lambda do |container|
     aleatoric_ensemble.set_state("play_count", play_count + 1)
   end
   
-  if In_C_Ensemble.in_c_ensemble.reached_concluding_unison?
+  if $IN_C_ENSEMBLE.reached_concluding_unison?
     
     # In practice, variations in duration from swing, added notes for phase align changes can lead to significant delta
     #  in when players arrive at the same phrase, so we need this
@@ -788,7 +790,7 @@ instruction_14_ensemble_pre = lambda do |container|
     
     # ****
     # Set flag for repeat_until() handler to detect and end the performance
-    In_C_Ensemble.in_c_ensemble.reached_conclusion = true
+    $IN_C_ENSEMBLE.reached_conclusion = true
   end  
 end
 set_ensemble_postplay_instruction("Instruction 14", &instruction_14_ensemble_pre)

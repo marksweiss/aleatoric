@@ -9,9 +9,6 @@ require 'composer'
 require 'set'
 require 'thread'
 
-# TEMP DEBUG
-# require 'ruby-debug' ; Debugger.start
-
 ##
 # Set globals normally set by command line args when not running tests
 ##
@@ -82,11 +79,6 @@ def write_test_script(script, lite_syntax=false)
   else
     script = script_lines.join("\n")
   end
-
-  # TEMP DEBUG
-  # puts "\n\n Write Script \n\n"
-  # puts script
-  # puts "\n\n"
   
   # NOTE !!!!!!!!!!!!!!!!!!!!!!!
   # We needed a mutex here to guard from multiple method calls writing to the same file
@@ -153,13 +145,7 @@ dump_last_note
   tester, results = test_runner(test_name, throw_on_failure, script)
   actual = results.first
 
-  # TEMP DEBUG
-  puts actual
-
   expected = "i 1 0.00000 0.50000 1000 7.01000 1 ; note 1"  
-  
-  # TEMP DEBUG
-  puts expected
   
   tester.assert(expected == actual)
   puts tester.to_s  
