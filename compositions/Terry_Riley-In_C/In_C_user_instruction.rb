@@ -176,10 +176,6 @@ class In_C_Player
   # Used by Ensemble to test if all phrases have reached the last phrase
   def reached_last_phrase?
     # TODO This should be ==, >= is a relic of a bug and trying to defend against it
-
-    # TEMP DEBUG
-    p "HANDLE #{@handle}  PHRASES_IDX #{@phrases_idx}"
-
     @phrases_idx >= @num_phrases
   end
   
@@ -481,7 +477,7 @@ class In_C_Ensemble
   end
     
   def min_player_amp
-    (@players.collect {|p| p.max_amp(@@al_players[p.handle].current_phrase)}).max
+    (@players.collect {|p| p.min_amp(@@al_players[p.handle].current_phrase)}).min
   end
 
   def amp_range
@@ -514,7 +510,6 @@ in_c_players = {}
 in_c_init_play_handler = lambda do |notes, scores, measures, phrases, sections, players, ensembles|
   # Instantiate IN_C_ENSEMBLE and In_C_Players, these are used by the Instruction handlers
   #  to implement the Instructions
-  players.each {|player| In_C_Ensemble.al_players[player.handle] = player}
   ensemble_handle = ensembles.first.handle
   player_handles = players.collect {|p| p.handle}
   # Add reference to Composer Ensemble object

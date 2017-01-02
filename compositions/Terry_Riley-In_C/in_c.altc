@@ -1,4 +1,4 @@
-VOL = 500
+VOL = 800
 
 def legato_start(st, dur)
   adj_dur = ((dur * 1.03) - dur)

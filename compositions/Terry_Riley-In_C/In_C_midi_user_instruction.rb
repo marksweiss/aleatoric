@@ -3,12 +3,15 @@
 # BOILERPLATE FOR ALL user_instruction.rb FILES
 # for calling sign(), swing(), swing?() no_swing(), meets_condition?()
 $LOAD_PATH << "../../lib"
+require 'composer'
 require 'util' 
 include Aleatoric
 # /BOILERPLATE FOR ALL user_instruction.rb FILES
 
 
 # IMPLEMENTATION OF THIS user_instruction.rb
+$IN_C_ENSEMBLE = nil
+$AL_PLAYERS = {}
 
 # Used to restore volume if it has decrescendo'd to 0
 DEFAULT_VOLUME = 30
@@ -24,8 +27,9 @@ PLAYER_SETTINGS = {
   "min_repeat_phrase_duration" => D_4 * (45.0 + rand(15).to_f),
   # The most important factor governing advance of Players through phrases, this is simply
   #  the percentage prob that they advance on any given iteration  
-  "phrase_advance_prob" => 0.11, 
-  # Tunable parms for shifting playing of current phrase out of its current
+  "phrase_advance_prob" => 0.28, 
+
+  # Tunable params for shifting playing of current phrase out of its current
   #  phase, and also to shift it more in alignment.  Shift simple pre-pends
   #  a rest Note to current phrase before writing it to Score.  Supports
   #  score directive to adjust phase, and another to move in and out of phase
@@ -34,7 +38,7 @@ PLAYER_SETTINGS = {
   # Player Phrase Phase Adjustment
   # Percentage prob that a Player will adjust phase on any given iteration
   "adj_phase_prob_factor" => 0.02,
-  # Supports Instruction that Player this is too often in alignment should favor
+  # Supports Instruction that Player that is too often in alignment should favor
   #  trying to be out of phase a bit more. If Player hasn't adjusted phase
   #  this many times or more, then adj_phase_prob_increase_factor will be applied
   "adj_phase_count_threshold" => 1,
@@ -53,21 +57,6 @@ PLAYER_SETTINGS = {
   "rest_prob_factor" => 0.1,  
   # Factor multiplied by rest_prob_factor if the Player is already at rest  
   "stay_at_rest_prob_factor" => 1.5,
-  
-  # Player Volume Adjusment, De/Crescendo
-  # Tunable parms for adjusting volume up and down, and prob of making
-  #  an amp adjustment. Supports score directive to have crescendos and
-  #  decrescendos in the performance  
-  # Threshold for the ratio of this Players average amp for its current phrase
-  #  to the max average amp among all the Players. Ratio above/below this means the Player
-  #  will raise/lower its amp by amp_de/crescendo_adj_factor    
-  # "amp_adj_crescendo_ratio_threshold" => 1.0,
-  # "amp_crescendo_adj_factor" => 1.1,
-  # "amp_adj_diminuendo_ratio_threshold" => 1.0,
-  # "amp_diminuendo_adj_factor" => 0.9,
-  # Prob that a Player is seeking de/crescendo  
-  # "crescendo_prob_factor" => 0.4,
-  # "diminuendo_prob_factor" => 0.4,
   
   # Player Pitch Transpose
   # Tunable parms for transposing the playing of a phrase.  Suppports score directive
@@ -93,7 +82,7 @@ PLAYER_SETTINGS = {
   
   # Swing
   # Give notes a bit of variance in start time and duration. If not overdone 
-  #  gives a more human feel.  A tiny bit goes a long, long way ...
+  #  gives a more human feel. A tiny bit goes a long, long way ...
   # Use standard Aleatoric implementation in lib/util.rb
   # swing(base_val, num_steps, swing_step)
   #  returns a factor to multiply note.duration and note.start by
@@ -110,7 +99,7 @@ PLAYER_SETTINGS = {
 # Ensemble State Management
 # These values govern the behavior of the Ensemble
 ENSEMBLE_SETTINGS = {
-  "num_players" => 8,
+  "num_players" => 12,
   # Threshold number of phrases behind the furthest ahead any Player is allowed to slip.
   # If they are more than N behind the leader, they must advance.     
   "phrases_idx_range_threshold" => 3,
@@ -121,11 +110,14 @@ ENSEMBLE_SETTINGS = {
   #  must be for Ensemble to seek unison
   "max_phrases_idx_range_for_seeking_unison" => 2,
   
+  # Tunable params for adjusting volume up and down, and prob of making
+  #  an amp adjustment. Supports score directive to have crescendos and
+  #  decrescendos in the performance  
   # Crescendos before concluding section
   # Probability that the ensemble will de/crescendo in a unison
   "crescendo_prob_factor"=> 0.02,
   "decrescendo_prob_factor"=> 0.01,
-  # Maximum de/increase in volume (in CSound scale) that notes can gain in de/crescendo 
+  # Maximum de/increase in volume that notes can gain in de/crescendo 
   "crescendo_max_amp_range" => DEFAULT_VOLUME,
   "decrescendo_max_amp_range" => DEFAULT_VOLUME,
   # Minimum number of iterations over which a de/crescendo will take to de/increase volume by crescendo amount
@@ -139,7 +131,7 @@ ENSEMBLE_SETTINGS = {
   # This is the ratio of steps in the Conclusion to the total steps before the Conclusion  
   "conclusion_steps_ratio" => 0.06,
   # This extends the duration of the repetition of the last phrase
-  #  curing the final coda.  At the start of the coda each player
+  #  during the final coda.  At the start of the coda each player
   #  has its start time pushed ahead to be closer to the maximum
   #  so that they arrive at the end closer together.  This factor offsets the Player from
   #  repeating the last phrase until exactly reaching the Conclusion  
@@ -193,6 +185,9 @@ class In_C_Player
 
   # Used by Ensemble to test if all phrases have reached the last phrase
   def reached_last_phrase?
+    # TEMP DEBUG
+    p "HANDLE #{@handle}  PHRASES_IDX #{@phrases_idx}"
+    
     # TODO This should be ==, >= is a relic of a bug and trying to defend against it
     @phrases_idx >= @num_phrases
   end
@@ -358,7 +353,7 @@ class In_C_Player
   private
 
   def repeat_cur_phrase?
-    durations = @@al_players[self.handle].current_phrase.notes.collect {|note| note.duration}
+    durations = $AL_PLAYERS[self.handle].current_phrase.notes.collect {|note| note.duration}
     cur_phrase_dur = durations.inject(0) {|sum, x| sum + x} 
     
     # TEMP DEBUG
@@ -468,7 +463,7 @@ class In_C_Ensemble
   ## Player Amp methods
   # Public because In_C_Player needs to call it
   def max_player_amp    
-    (@players.collect {|p| p.max_amp(@@al_players[p.handle].current_phrase)}).max
+    (@players.collect {|p| p.max_amp($AL_PLAYERS[p.handle].current_phrase)}).max
   end
   ## /Player Amp methods
 
@@ -642,7 +637,7 @@ class In_C_Ensemble
   end
     
   def min_player_amp
-    (@players.collect {|p| p.max_amp(@@al_players[p.handle].current_phrase)}).max
+    (@players.collect {|p| p.min_amp($AL_PLAYERS[p.handle].current_phrase)}).min
   end
 
   def amp_range
@@ -672,25 +667,26 @@ end
 # This is exposed by the API and it passes arrays of all the main entities
 #  in Composer to the callback, namely Notes, Scores, Measures, Phrases, Sections, Players, Ensembles
 in_c_players = {}
-@@al_players = {}
 in_c_init_play_handler = lambda do |notes, scores, measures, phrases, sections, players, ensembles|
   # Instantiate In_C_Ensemble and In_C_Players, these are used by the Instruction handlers
   #  to implement the Instructions
-  players.each {|player| @@al_players[player.handle] = player}
+  players.each {|player| $AL_PLAYERS[player.handle] = player}
+
   ensemble_handle = ensembles.first.handle
   player_handles = players.collect {|p| p.handle}
   # Construct with reference to Composer Ensemble object
-  @@in_c_ensemble = In_C_Ensemble.new("In C Orchestra", ensemble_handle)
+  $IN_C_ENSEMBLE = In_C_Ensemble.new("In C Orchestra", ensemble_handle)
   # Call to create accessors from settings  
-  @@in_c_ensemble.def_accessors
+  $IN_C_ENSEMBLE.def_accessors
   num_phrases = PLAYER_SETTINGS["num_phrases"]
   ENSEMBLE_SETTINGS["num_players"].times do |j|
-    player = In_C_Player.new(@@in_c_ensemble, num_phrases, player_handles[j])
+    player = In_C_Player.new($IN_C_ENSEMBLE, num_phrases, player_handles[j])
     player.def_accessors
     # Reverse key mapping of Composer Player handle to this shadowing In_C_Player
+    # NOTE: Must assign players into this temporary map and then assigned that to global $IN_C_ENSEMBLE.players or get an allocation error. Ruby!
     in_c_players[player_handles[j]] = player  
   end
-  @@in_c_ensemble.players = in_c_players  
+  $IN_C_ENSEMBLE.players = in_c_players  
 end
 set_play_init_handler("in_c_init_play_handler", &in_c_init_play_handler)
 # *************************
@@ -918,7 +914,7 @@ instruction_14_repeat_until_test_post = lambda do
   # Violates encapsulation -- needs to know about module scope variable defined above
   # NOTE REPEAT UNTIL NAME PASSED TO set_repeat_until_stop() *** MUST MATCH ***
   #  NAME PASSED TO set_repeat_until_stop_postplay_test()  
-  if @@in_c_ensemble.reached_conclusion?
+  if $IN_C_ENSEMBLE.reached_conclusion?
     set_repeat_until_stop "... each player drops out as he or she wishes."
   end
 end
@@ -940,7 +936,7 @@ instruction_14_ensemble_post = lambda do |container|
     aleatoric_ensemble.set_state("play_count", play_count + 1)
   end
 
-  if @@in_c_ensemble.reached_concluding_unison?    
+  if $IN_C_ENSEMBLE.reached_concluding_unison?    
     
     # Verbose timing logging
     t = Time.now
@@ -994,7 +990,6 @@ instruction_14_ensemble_post = lambda do |container|
     puts "num_crescendo_steps #{num_crescendo_steps}"
     puts "volume_adj #{volume_adj}"
     
-    
     num_crescendos.times do
       # Walk half the steps and crescendo
       cur_volume_adj = volume_adj
@@ -1028,7 +1023,7 @@ instruction_14_ensemble_post = lambda do |container|
         
     # TEMP DEBUG
     puts "total loops #{aleatoric_players[0].total_loops}"
-    @@in_c_ensemble.players.each do |player|
+    $IN_C_ENSEMBLE.players.each do |player|
       puts "handle #{player.handle}  advanced on play next #{player.advanced_on_play_next}"
       puts "handle #{player.handle}  advanced on too far behind #{player.advanced_on_play_next2}"
       puts "handle #{player.handle}  advanced on seeking unison #{player.advanced_on_play_next3}"
@@ -1038,12 +1033,8 @@ instruction_14_ensemble_post = lambda do |container|
         
     # ****
     # Set flag for repeat_until() handler to detect and end the performance
-    @@in_c_ensemble.reached_conclusion = true    
+    $IN_C_ENSEMBLE.reached_conclusion = true    
   end  
 end
 set_ensemble_postplay_instruction("Instruction 14", &instruction_14_ensemble_post)
 
-
-# BOILERPLATE FOR ALL user_instruction.rb FILES
-# end
-# /BOILERPLATE FOR ALL user_instruction.rb FILES
