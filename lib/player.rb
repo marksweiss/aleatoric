@@ -20,7 +20,7 @@ class Player
   attr_accessor :preplay_hooks_ordered_names, :postplay_hooks_ordered_names, :improvising_hooks_ordered_names
   attr_accessor :preplay_hooks, :postplay_hooks, :improvising_hooks
   attr_accessor :state, :is_playing, :is_improvising, :out_notes
-  attr_accessor :current_start # Made this read/write becasue reset by player_test.rb
+  attr_accessor :current_start # Made this read/write because reset by player_test.rb
   attr_reader :total_loops   # VERBOSE
 
   @@NO_INDEX = -1

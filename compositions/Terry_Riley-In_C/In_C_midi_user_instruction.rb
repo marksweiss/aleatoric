@@ -8,11 +8,12 @@ require 'util'
 include Aleatoric
 # /BOILERPLATE FOR ALL user_instruction.rb FILES
 
+$AL_PLAYERS = {}
+$IN_C_ENSEMBLE = nil
+$IN_C_PLAYERS = {}
 
 # IMPLEMENTATION OF THIS user_instruction.rb
-$IN_C_ENSEMBLE = nil
-$AL_PLAYERS = {}
-
+#
 # Used to restore volume if it has decrescendo'd to 0
 DEFAULT_VOLUME = 30
 
@@ -24,7 +25,8 @@ PLAYER_SETTINGS = {
   
   # Player Phrase Advance
   # Player must play each phrase at least this long
-  "min_repeat_phrase_duration" => D_4 * (45.0 + rand(15).to_f),
+  # Insures that short phrases are played enough to counterpoint with longer phrases
+  "min_repeat_phrase_duration" => D_1,
   # The most important factor governing advance of Players through phrases, this is simply
   #  the percentage prob that they advance on any given iteration  
   "phrase_advance_prob" => 0.28, 
@@ -152,15 +154,16 @@ class In_C_Player
   
   attr_reader :ensemble, :handle, 
               :num_phrases, :phrases_idx, :adj_phase_count, :at_rest, :cur_phrase_count,
-              :swing_range_max_factor, :swing_range_min_factor, :swing_factor_range, :has_advanced,
-              :max_phrase_count, :advanced_on_play_next, :advanced_on_play_next2, :advanced_on_play_next3 # TEMP DEBUG
+              :swing_range_max_factor, :swing_range_min_factor, :swing_factor_range, :has_advanced
   attr_writer :cur_phrase_count
+  attr_accessor :name
   
 
-  def initialize(ensemble, num_phrases, handle)    
+  def initialize(ensemble, num_phrases, handle, name)    
     @ensemble = ensemble
     @num_phrases = num_phrases
     @handle = handle
+    @name = name
     # Offset into @phrases that this player is currently playing
     @phrases_idx = 0
     @cur_start = 0.0
@@ -185,11 +188,7 @@ class In_C_Player
 
   # Used by Ensemble to test if all phrases have reached the last phrase
   def reached_last_phrase?
-    # TEMP DEBUG
-    p "HANDLE #{@handle}  PHRASES_IDX #{@phrases_idx}"
-    
-    # TODO This should be ==, >= is a relic of a bug and trying to defend against it
-    @phrases_idx >= @num_phrases
+    @phrases_idx == @num_phrases
   end
   
   # Instruction 3
@@ -208,12 +207,6 @@ class In_C_Player
       @has_advanced = true
       @phrases_idx += 1
       @cur_phrase_count = 0
-  
-      # TEMP DEBUG
-      @advanced_on_play_next = -1 if @advanced_on_play_next.nil?
-      @advanced_on_play_next += 1 if @has_advanced
-      # TEMP DEBUG
-    
     end
     @has_advanced
   end
@@ -227,11 +220,6 @@ class In_C_Player
       @phrases_idx += 1
     end
   
-    # TEMP DEBUG
-    @advanced_on_play_next2 = -1 if @advanced_on_play_next2.nil?
-    @advanced_on_play_next2 += 1 if x
-    # TEMP DEBUG
-
     @has_advanced 
   end
   
@@ -243,11 +231,6 @@ class In_C_Player
       @cur_phrase_count = 0
       @phrases_idx += 1
     end    
-
-    # TEMP DEBUG
-    @advanced_on_play_next3 = -1 if @advanced_on_play_next3.nil?
-    @advanced_on_play_next3 += 1 if x
-    # TEMP DEBUG
     
     @has_advanced
   end
@@ -355,14 +338,6 @@ class In_C_Player
   def repeat_cur_phrase?
     durations = $AL_PLAYERS[self.handle].current_phrase.notes.collect {|note| note.duration}
     cur_phrase_dur = durations.inject(0) {|sum, x| sum + x} 
-    
-    # TEMP DEBUG
-    @max_phrase_count = 0 if @max_phrase_count.nil?
-    @max_phrase_count = @cur_phrase_count if @cur_phrase_count > @max_phrase_count
-    #puts "phrase count #{@cur_phrase_count}"
-    #puts "phrase duration #{@cur_phrase_count * cur_phrase_dur}"
-    #puts "@min_repeat_phrase_duration #{@min_repeat_phrase_duration}"
-               
     @cur_phrase_count * cur_phrase_dur < @min_repeat_phrase_duration
   end
 
@@ -666,7 +641,6 @@ end
 # Register a callback that will be run the first time play() is called
 # This is exposed by the API and it passes arrays of all the main entities
 #  in Composer to the callback, namely Notes, Scores, Measures, Phrases, Sections, Players, Ensembles
-in_c_players = {}
 in_c_init_play_handler = lambda do |notes, scores, measures, phrases, sections, players, ensembles|
   # Instantiate In_C_Ensemble and In_C_Players, these are used by the Instruction handlers
   #  to implement the Instructions
@@ -680,13 +654,13 @@ in_c_init_play_handler = lambda do |notes, scores, measures, phrases, sections, 
   $IN_C_ENSEMBLE.def_accessors
   num_phrases = PLAYER_SETTINGS["num_phrases"]
   ENSEMBLE_SETTINGS["num_players"].times do |j|
-    player = In_C_Player.new($IN_C_ENSEMBLE, num_phrases, player_handles[j])
+    player = In_C_Player.new($IN_C_ENSEMBLE, num_phrases, player_handles[j], $AL_PLAYERS[player_handles[j]].name)
     player.def_accessors
     # Reverse key mapping of Composer Player handle to this shadowing In_C_Player
     # NOTE: Must assign players into this temporary map and then assigned that to global $IN_C_ENSEMBLE.players or get an allocation error. Ruby!
-    in_c_players[player_handles[j]] = player  
+    $IN_C_PLAYERS[player_handles[j]] = player  
   end
-  $IN_C_ENSEMBLE.players = in_c_players  
+  $IN_C_ENSEMBLE.players = $IN_C_PLAYERS  
 end
 set_play_init_handler("in_c_init_play_handler", &in_c_init_play_handler)
 # *************************
@@ -748,7 +722,7 @@ set_player_preplay_instruction("Instruction 13", &instruction_13)
 #  from somewhere between 45 seconds and a minute and a half or longer."
 instruction_3_player_pre = lambda do |container, score|  
   # In_C_Players stowed in a Hash keyed to the handle() (a unique id) of the Aleatoric Player 
-  in_c_player = in_c_players[container.handle]  
+  in_c_player = $IN_C_PLAYERS[container.handle]  
   # In_C_Player stores all the state about a player.  Ask if this player is on the last phrase  
   container.increment_scores_index if in_c_player.play_next_phrase?
     
@@ -765,7 +739,7 @@ set_player_preplay_instruction("Instruction 3", &instruction_3_player_pre)
 #  amp changes overall is controlled in Ensemble setting 
 #  max_amp_range_for_seeking_crescendo
 instruction_4_ensemble_pre = lambda do |container|
-  in_c_ensemble = in_c_players.values[0].ensemble   
+  in_c_ensemble = $IN_C_PLAYERS.values[0].ensemble   
   if in_c_ensemble.seeking_crescendo?
     in_c_ensemble.set_crescendo_decrescendo
   elsif in_c_ensemble.seeking_decrescendo?
@@ -776,7 +750,7 @@ set_ensemble_preplay_instruction("Instruction 4", &instruction_4_ensemble_pre)
 
 # This adjusts the state of the ensemble tracking what step in a de/crescendo it's in
 instruction_4_ensemble_post = lambda do |container|
-  in_c_ensemble = in_c_players.values[0].ensemble  
+  in_c_ensemble = $IN_C_PLAYERS.values[0].ensemble  
   in_c_ensemble.crescendo_increment
 end
 set_ensemble_postplay_instruction("Instruction 4", &instruction_4_ensemble_post)
@@ -784,7 +758,7 @@ set_ensemble_postplay_instruction("Instruction 4", &instruction_4_ensemble_post)
 # This implements de/crescendo amp adjustment on each player after the ensemble handler sets whether
 #  or not the orchestra is in de/crescendo
 instruction_4_player_pre = lambda do |container, score|
-  in_c_player = in_c_players[container.handle]
+  in_c_player = $IN_C_PLAYERS[container.handle]
   in_c_ensemble = in_c_player.ensemble  
   # Ensemble manages current state of whether all Players are in de/crescendo, and if so by how
   #  much each Player adjusts their volume. All each Player does is call this, if there is 
@@ -802,7 +776,7 @@ set_player_preplay_instruction("Instruction 4", &instruction_4_player_pre)
 
 # "Each pattern can be played in unison or canonically in any alignment with itself or with its neighboring patterns.  ..."
 instruction_5_player_pre = lambda do |container, score|
-  in_c_player = in_c_players[container.handle]
+  in_c_player = $IN_C_PLAYERS[container.handle]
   # In_C_Player manages whether this player is changing its phase, that is its starting position 
   #  in its current phrase to not start at the same time as the last time it played.  
   # This in effect changes its "alignment" in playing relative to the other players
@@ -824,7 +798,7 @@ set_player_preplay_instruction("Instruction 5", &instruction_5_player_pre)
 
 #  "... As the performance progresses, performers should stay within 2 or 3 patterns of each other. ..."
 instruction_6_player_pre = lambda do |container, score|
-  in_c_player = in_c_players[container.handle]
+  in_c_player = $IN_C_PLAYERS[container.handle]
   container.increment_scores_index if in_c_player.play_next_phrase_too_far_behind?
   score
 end
@@ -845,7 +819,7 @@ set_player_preplay_instruction("Instruction 7", &instruction_7_player_pre)
 # Use this Instruction to apply swing, since original score speaks to players making tempo decisions
 # "The tempo is left to the discretion of the performers, obviously not too slow, but not faster than performers can comfortably play."
 instruction_8 = lambda do |container, score|
-  in_c_player = in_c_players[container.handle]
+  in_c_player = $IN_C_PLAYERS[container.handle]
   start_swing, dur_swing = in_c_player.swing_adj
   score.notes.each do |note| 
     note.start(note.start + (note.start * start_swing))
@@ -871,7 +845,7 @@ set_player_preplay_instruction("Instruction 9", &instruction_9_player_pre)
 # At the same time, if the players seem to be consistently too much in the same alignment of a pattern, 
 # they should try shifting their alignment by an eighth note or quarter note with what’s going on in the rest of the ensemble."
 instruction_10_player_pre = lambda do |container, score|
-  in_c_player = in_c_players[container.handle]
+  in_c_player = $IN_C_PLAYERS[container.handle]
   container.increment_scores_index if in_c_player.play_next_phrase_seeking_unison?
   score
 end
@@ -881,7 +855,7 @@ set_player_preplay_instruction("Instruction 10", &instruction_10_player_pre)
 #  a phrase or not.  If not, increment player counter on current phrase
 # Depends on separate checks in instruction handlers for instructions 3, 6 and 10
 instruction_3_6_10_player_post = lambda do |container|
-  in_c_player = in_c_players[container.handle]
+  in_c_player = $IN_C_PLAYERS[container.handle]
   # Now increment count after testing for have we played this phrase long enough  
   in_c_player.cur_phrase_count += 1 if not in_c_player.has_advanced
 end
@@ -891,7 +865,7 @@ set_player_postplay_instruction("Instruction 10", &instruction_3_6_10_player_pos
 # works best on the patterns containing notes of long durations. 
 # TODO HOW TO IMPLEMENT THIS PART OF THIS INSTRUCTION Augmentation of rhythmic values can also be effective."
 instruction_11_player_pre = lambda do |container, score|
-  in_c_player = in_c_players[container.handle]
+  in_c_player = $IN_C_PLAYERS[container.handle]
   shift = in_c_player.transpose_shift(score)
   score.notes.each {|note| note.pitch(note.pitch + shift)}
   score
@@ -957,7 +931,7 @@ instruction_14_ensemble_post = lambda do |container|
       num_plays_last_phrase = ((max_start - al_player.current_start) / last_phrase_dur).floor    
       # Append the notes of the last phrase to the output for this Player
       num_plays_last_phrase.times do 
-        in_c_player = in_c_players[al_player.handle]
+        in_c_player = $IN_C_PLAYERS[al_player.handle]
         phrase = al_player.current_phrase
         al_player.append_phrase_to_output(phrase=phrase, adj_start_to_current_start=true)        
       end
@@ -984,11 +958,6 @@ instruction_14_ensemble_post = lambda do |container|
     if (num_crescendo_steps * volume_adj) > (ENSEMBLE_SETTINGS["crescendo_max_amp_range"] * 2)
       num_crescendo_steps = ((ENSEMBLE_SETTINGS["crescendo_max_amp_range"] * 2).to_f / volume_adj.to_f).ceil
     end
-    
-    # TEMP DEBUG
-    puts "num_crescendos #{num_crescendos}"
-    puts "num_crescendo_steps #{num_crescendo_steps}"
-    puts "volume_adj #{volume_adj}"
     
     num_crescendos.times do
       # Walk half the steps and crescendo
@@ -1020,16 +989,6 @@ instruction_14_ensemble_post = lambda do |container|
     # Verbose timing logging
     t_new = Time.now
     puts "Appending concluding crescendos took #{(t_new - t) * 1000.0} milliseconds"      
-        
-    # TEMP DEBUG
-    puts "total loops #{aleatoric_players[0].total_loops}"
-    $IN_C_ENSEMBLE.players.each do |player|
-      puts "handle #{player.handle}  advanced on play next #{player.advanced_on_play_next}"
-      puts "handle #{player.handle}  advanced on too far behind #{player.advanced_on_play_next2}"
-      puts "handle #{player.handle}  advanced on seeking unison #{player.advanced_on_play_next3}"
-      puts "handle #{player.handle}  max phrase count #{player.max_phrase_count}"
-    end        
-    # TEMP DEBUG        
         
     # ****
     # Set flag for repeat_until() handler to detect and end the performance
