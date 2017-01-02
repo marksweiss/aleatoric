@@ -617,13 +617,13 @@ repeat_until "... each player drops out as he or she wishes." do
   end 
 end
 
-write "../compositions/Terry_Riley-In_C/In_C.sco" do 
+write "../compositions/Terry_Riley-In_C/csound/In_C.sco" do 
   format    :csound
   ensembles "In C Orchestra"
 end
 
 # Capture the performance in rendered sound file
-render "../compositions/Terry_Riley-In_C/In_C.aiff" do 
-  orchestra  "../compositions/Terry_Riley-In_C/markov_opt_1.orc"
+render "../compositions/Terry_Riley-In_C/csound/In_C.aiff" do 
+  orchestra  "../compositions/Terry_Riley-In_C/csound/markov_opt_1.orc"
 end
 

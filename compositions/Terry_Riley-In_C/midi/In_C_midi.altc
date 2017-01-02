@@ -642,13 +642,13 @@ end
 
 # ** NOTE: For debugging only.  NOT necessary for rendering to MIDI, can just
 #  have a 'render' block
-write "../compositions/Terry_Riley-In_C/In_C_mid.txt" do
+write "../compositions/Terry_Riley-In_C/midi/In_C_mid.txt" do
   format    :midi
   ensembles "In C Orchestra"
 end
 
 # Capture the performance in rendered sound file
-render "../compositions/Terry_Riley-In_C/In_C.mid" do
+render "../compositions/Terry_Riley-In_C/midi/In_C.mid" do
   ensembles "In C Orchestra"
 end
 
