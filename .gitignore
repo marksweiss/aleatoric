@@ -4,7 +4,7 @@
 *.tmp
 *.wav
 compositions/*/.txt
-compositions/Terry_Riley-In_C/In_C_mid.txt
+compositions/Terry_Riley-In_C/midi/In_C_mid.txt
 lib/.byebug_history
 lib/tempflush
 test/*.altc

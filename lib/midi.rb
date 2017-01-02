@@ -1,14 +1,13 @@
 $LOAD_PATH << psub("../lib")
 
 if include_win? or include_mac?
+# TODO Replace deprecated dep on 'dl' for 'fiddle'
 require 'dl/import'
 require 'midilib/sequence'
 require 'midilib/event'
 require 'midilib/consts'
 end
 
-
-# require 'ruby-debug' ; Debugger.start
 
 class AleatoricIllegalMidiOperationException < Exception; end
 class AleatoricFailedMidiLoadException < Exception; end
