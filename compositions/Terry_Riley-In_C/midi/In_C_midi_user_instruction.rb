@@ -21,15 +21,15 @@ DEFAULT_VOLUME = 30
 # Player State Management
 # These values govern the behavior of each Player
 PLAYER_SETTINGS = {
-  "num_phrases" => 53,
+  "num_phrases" => 4,# 53,
   
   # Player Phrase Advance
   # Player must play each phrase at least this long
   # Insures that short phrases are played enough to counterpoint with longer phrases
-  "min_repeat_phrase_duration" => D_1,
+  "min_repeat_phrase_duration" => D_1 * 2.0,
   # The most important factor governing advance of Players through phrases, this is simply
   #  the percentage prob that they advance on any given iteration  
-  "phrase_advance_prob" => 0.28, 
+  "phrase_advance_prob" => 0.11, 
 
   # Tunable params for shifting playing of current phrase out of its current
   #  phase, and also to shift it more in alignment.  Shift simple pre-pends

@@ -87,10 +87,10 @@ class MidiManager
     # Client can set channel and instrument in any order, so may get a call
     #  here where instrument has been set but channel hasn't yet been set.
     # See #channel() and #instrument() in composer.rb
-    return if channel.nil?
+    return if channel.nil? and self.channel.nil?
 
     if include_win? or include_mac?
-    self.channel(channel) if channel_nil?(channel)        
+    self.channel(channel) if channel_nil?(channel)
     @channel_tracks[channel].events << ProgramChange.new(channel, instrument, delta_time)
     @channel_instruments[channel] = instrument
     

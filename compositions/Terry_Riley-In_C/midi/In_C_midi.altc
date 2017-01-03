@@ -15,6 +15,9 @@ end
 
 # Declare format for rendering to a sound file. CSound and MIDI supported.
 format :midi
+# TODO TEMPO NOT SUPPORTED PROPERLY IN MIDI, See midi.rb#add_note()
+# THIS LINE HAS NO EFFECT RIGHT NOW
+tempo 30
 
 ##############################################################################
 # Transcribe the 53 phrases from the original score into Composer notation
@@ -30,7 +33,7 @@ player "Player 1" do
   channel 0
 end
 player "Player 2" do
-  instrument MIDI_Marimba
+  instrument MIDI_Vibraphone
   channel 1
  end
 player "Player 3" do
@@ -38,11 +41,11 @@ player "Player 3" do
   channel 2
 end
 player "Player 4" do
-  instrument MIDI_Pan_Flute
+  instrument MIDI_Vibraphone
   channel 3
 end
 player "Player 5" do
-  instrument MIDI_Pan_Flute
+  instrument MIDI_Flute
   channel 4
 end
 player "Player 6" do
@@ -50,7 +53,7 @@ player "Player 6" do
   channel 5
 end
 player "Player 7" do
-  instrument MIDI_Recorder
+  instrument MIDI_Church_Organ
   channel 6
 end
 player "Player 8" do
@@ -62,11 +65,12 @@ player "Player 9" do
   channel 8
 end
 player "Player 10" do
-  instrument MIDI_Recorder
-  channel 9  # MIDI_Piccolo
+  instrument MIDI_Church_Organ
+  # Skip channel == 9 because 10th channel in array of MIDI channels is percussion and uses separate and overlapping instrument const values
+  channel 10  # MIDI_Piccolo
 end
 player "Player 11" do
-  instrument MIDI_Recorder
+  instrument MIDI_Flute
   channel 11
 end
 player "Player 12" do

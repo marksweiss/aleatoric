@@ -51,13 +51,14 @@ $DEFAULT_TEMPO = 120
 $DUR_FACTOR = 1.0
 
 # Default durations in seconds
-D_1 = 1.0
-D_2 = 0.5
-D_4 = 0.25
-D_8 = 0.125
-D_16 = 0.00625
-D_32 = 0.0003125
-D_64 = 0.000015625
+TEMPO_ADJ = 2.0
+D_1 = 1.0 * TEMPO_ADJ
+D_2 = 0.5 * TEMPO_ADJ
+D_4 = 0.25 * TEMPO_ADJ  
+D_8 = 0.125 * TEMPO_ADJ
+D_16 = 0.00625 * TEMPO_ADJ
+D_32 = 0.0003125 * TEMPO_ADJ
+D_64 = 0.000015625 * TEMPO_ADJ
 
 # Remove MIDI consts only used by MIDI to avoid using them with CSound format
 #  and silently passing bogus values to CSound that might not cause errors but
